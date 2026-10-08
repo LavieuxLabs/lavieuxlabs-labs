@@ -18,13 +18,13 @@
 
 @utility bg-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
-@utility mask-fade-y {
-  mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+@utility mask-vignette {
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, black 25%, transparent 100%);
 }
 
 @utility mask-radial {
@@ -44,6 +44,46 @@ body {
 ::selection {
   background: rgba(45, 212, 191, 0.3);
   color: #fff;
+}
+
+@layer components {
+  .legal-prose h2 {
+    @apply text-xl font-semibold tracking-tight text-white sm:text-2xl;
+  }
+  .legal-prose h3 {
+    @apply mt-8 text-base font-medium text-white;
+  }
+  .legal-prose p {
+    @apply mt-4 text-[15px] leading-relaxed text-white/65;
+  }
+  .legal-prose ul,
+  .legal-prose ol {
+    @apply mt-4 space-y-2 pl-5 text-[15px] leading-relaxed text-white/65;
+  }
+  .legal-prose ul {
+    @apply list-disc marker:text-teal-300/50;
+  }
+  .legal-prose ol {
+    @apply list-[lower-alpha] marker:font-mono marker:text-teal-300/60;
+  }
+  .legal-prose strong {
+    @apply font-medium text-white/90;
+  }
+  .legal-prose a {
+    @apply text-teal-300 underline-offset-2 hover:underline;
+  }
+  .legal-prose table {
+    @apply mt-6 w-full overflow-hidden rounded-xl border border-white/[0.08] text-left text-sm;
+  }
+  .legal-prose th {
+    @apply border-b border-white/[0.08] bg-white/[0.03] px-4 py-3 font-mono text-[11px] font-normal uppercase tracking-[0.1em] text-white/45;
+  }
+  .legal-prose td {
+    @apply border-b border-white/[0.05] px-4 py-3 align-top text-white/65;
+  }
+  .legal-prose .note {
+    @apply mt-6 rounded-xl border border-teal-400/20 bg-teal-400/[0.04] px-5 py-4 text-sm text-white/70;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

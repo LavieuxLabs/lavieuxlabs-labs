@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, type PointerEvent } from "react";
+import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { Check, Pill, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, Pill, ShieldCheck } from "lucide-react";
 
 export type InitiativeMetric = {
   value: string;
@@ -19,6 +20,7 @@ export type InitiativeCardProps = {
   tags: string[];
   icon: "pill" | "shield";
   accent: "teal" | "indigo";
+  href: string;
   className?: string;
 };
 
@@ -29,6 +31,7 @@ const accents = {
     icon: "border-teal-400/25 bg-teal-400/10 text-teal-300",
     value: "text-teal-200",
     check: "text-teal-300",
+    link: "text-teal-200 hover:text-teal-100",
     chip: "border-teal-400/20 text-teal-200/80",
     bar: "from-teal-400/60",
   },
@@ -37,6 +40,7 @@ const accents = {
     icon: "border-indigo-400/25 bg-indigo-400/10 text-indigo-300",
     value: "text-indigo-200",
     check: "text-indigo-300",
+    link: "text-indigo-200 hover:text-indigo-100",
     chip: "border-indigo-400/20 text-indigo-200/80",
     bar: "from-indigo-400/60",
   },
@@ -54,6 +58,7 @@ export default function InitiativeCard({
   tags,
   icon,
   accent,
+  href,
   className = "",
 }: InitiativeCardProps) {
   const ref = useRef<HTMLElement>(null);
@@ -131,6 +136,16 @@ export default function InitiativeCard({
               {t}
             </span>
           ))}
+        </div>
+
+        <div className="mt-8 border-t border-white/[0.08] pt-6">
+          <Link
+            href={href}
+            className={`group/link inline-flex items-center gap-2 text-sm font-medium transition-colors ${tone.link}`}
+          >
+            Platform Detaylarını İncele
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1" />
+          </Link>
         </div>
       </div>
     </motion.article>
