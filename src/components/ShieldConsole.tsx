@@ -1,300 +1,401 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Check, Lock, PenLine, X } from "lucide-react";
+import { useMemo, useState, type KeyboardEvent } from "react";
+
+// Interactive Shield example in a data-table idiom (Geist data table / macOS Instruments): a
+// pre-claim queue, the rule-engine matches behind the selected claim's risk score, a decision
+// control, and an append-only audit trail whose entries are hash-chained (FNV-1a over the entry
+// and the previous hash). ICD-10 codes are real; SUT references name the real annex categories
+// (EK-2B fee-for-service, EK-2C diagnosis-based package). Claims and amounts are fictional.
 
 type Factor = { rule: string; label: string; weight: number };
+type Decision = "approved" | "corrected" | "held";
 
 type Claim = {
   id: string;
-  service: string;
-  unit: string;
-  amount: string;
-  score: number;
+  procedure: string;
+  icd: { code: string; label: string };
+  sut: { annex: "EK-2B" | "EK-2C"; label: string };
+  amount: number;
   factors: Factor[];
 };
 
-type Decision = "approved" | "corrected" | "rejected";
+type AuditEntry = { seq: number; time: string; actor: string; event: string; ref: string; prev: string; hash: string };
 
-type AuditEntry = {
-  seq: number;
-  time: string;
-  actor: string;
-  action: string;
-  ref: string;
-};
+const THRESHOLD = 40;
 
-// Fictional sample data for the illustrative console.
-const claims: Claim[] = [
+const CLAIMS: Claim[] = [
   {
     id: "CLM-24817",
-    service: "Ayakta tedavi · Görüntüleme",
-    unit: "Radyoloji",
-    amount: "₺4.820",
-    score: 78,
+    procedure: "Toraks BT",
+    icd: { code: "M54.5", label: "Bel ağrısı" },
+    sut: { annex: "EK-2B", label: "Hizmet başı" },
+    amount: 4820,
     factors: [
-      { rule: "R-112", label: "Tanı kodu ile işlem kodu uyumsuz", weight: 34 },
+      { rule: "R-112", label: "Tanı–işlem uyumsuzluğu", weight: 34 },
       { rule: "R-047", label: "Ön onay belgesi eksik", weight: 26 },
       { rule: "R-203", label: "30 gün içinde tekrar eden işlem", weight: 18 },
     ],
   },
   {
     id: "CLM-24822",
-    service: "Yatarak tedavi · Paket",
-    unit: "Genel Cerrahi",
-    amount: "₺38.150",
-    score: 61,
+    procedure: "Apendektomi paketi",
+    icd: { code: "K35.8", label: "Akut apandisit, diğer" },
+    sut: { annex: "EK-2C", label: "Tanıya dayalı paket" },
+    amount: 38150,
     factors: [
       { rule: "R-310", label: "Paket dışı malzeme kalemi", weight: 29 },
       { rule: "R-088", label: "Yatış süresi paket limitini aşıyor", weight: 22 },
-      { rule: "R-019", label: "Epikriz raporu imzasız", weight: 10 },
+      { rule: "R-019", label: "Epikriz imzasız", weight: 10 },
     ],
   },
   {
     id: "CLM-24830",
-    service: "Ayakta tedavi · Laboratuvar",
-    unit: "Biyokimya",
-    amount: "₺1.240",
-    score: 34,
+    procedure: "Biyokimya paneli",
+    icd: { code: "E11.9", label: "Tip 2 diyabet, komplikasyonsuz" },
+    sut: { annex: "EK-2B", label: "Hizmet başı" },
+    amount: 1240,
     factors: [
-      { rule: "R-156", label: "Aynı gün mükerrer tetkik kalemi", weight: 21 },
+      { rule: "R-156", label: "Aynı gün mükerrer tetkik", weight: 21 },
       { rule: "R-002", label: "Hekim branş kodu eksik", weight: 13 },
     ],
   },
   {
     id: "CLM-24836",
-    service: "Acil · Müdahale",
-    unit: "Acil Servis",
-    amount: "₺2.960",
-    score: 12,
-    factors: [{ rule: "R-074", label: "Triaj kodu ile işlem düzeyi sınırda", weight: 12 }],
+    procedure: "Acil müdahale",
+    icd: { code: "R07.4", label: "Göğüs ağrısı, tanımlanmamış" },
+    sut: { annex: "EK-2B", label: "Hizmet başı" },
+    amount: 2960,
+    factors: [{ rule: "R-074", label: "Triaj seviyesi ile işlem düzeyi sınırda", weight: 12 }],
   },
 ];
 
-const decisionLabels: Record<Decision, string> = {
-  approved: "Gönderime onaylandı",
-  corrected: "Düzeltmeye gönderildi",
-  rejected: "Gönderim durduruldu",
-};
+const scoreOf = (c: Claim) => c.factors.reduce((sum, f) => sum + f.weight, 0);
 
-const riskTone = (score: number) =>
-  score >= 70
-    ? {
-        text: "text-rose-300",
-        bar: "bg-rose-400",
-        chip: "border-rose-400/30 bg-rose-400/10 text-rose-200",
-        label: "Yüksek",
-      }
-    : score >= 40
-      ? {
-          text: "text-amber-300",
-          bar: "bg-amber-400",
-          chip: "border-amber-400/30 bg-amber-400/10 text-amber-200",
-          label: "Orta",
-        }
-      : {
-          text: "text-emerald-300",
-          bar: "bg-emerald-400",
-          chip: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200",
-          label: "Düşük",
-        };
+// Locale-independent so server and client render identical strings.
+const formatTRY = (value: number) => `₺${String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
 
-const initialAudit: AuditEntry[] = [
-  { seq: 1041, time: "09:12:04", actor: "system", action: "SCORE_COMPUTED · ruleset v3.8.1", ref: "CLM-24817" },
-  { seq: 1042, time: "09:12:05", actor: "system", action: "QUEUED_FOR_REVIEW · risk ≥ 40", ref: "CLM-24817" },
-];
-
-function timestamp() {
-  return new Date().toLocaleTimeString("tr-TR", { hour12: false });
+/** 64-bit FNV-1a as two 32-bit lanes; deterministic and synchronous (works during SSR). */
+function fnv1a64(input: string) {
+  let h1 = 0x811c9dc5;
+  let h2 = 0xcbf29ce4;
+  for (let i = 0; i < input.length; i++) {
+    const c = input.charCodeAt(i);
+    h1 = Math.imul(h1 ^ c, 0x01000193) >>> 0;
+    h2 = Math.imul(h2 ^ c, 0x01000193 ^ 0x5bd1e995) >>> 0;
+  }
+  return h1.toString(16).padStart(8, "0") + h2.toString(16).padStart(8, "0");
 }
 
-export default function ShieldConsole() {
-  const [selectedId, setSelectedId] = useState(claims[0].id);
-  const [decisions, setDecisions] = useState<Record<string, Decision>>({});
-  const [audit, setAudit] = useState<AuditEntry[]>(initialAudit);
+function append(log: AuditEntry[], entry: Omit<AuditEntry, "seq" | "prev" | "hash">): AuditEntry[] {
+  const last = log[log.length - 1];
+  const seq = last ? last.seq + 1 : 1041;
+  const prev = last ? last.hash : "0000000000000000";
+  const hash = fnv1a64(`${prev}|${seq}|${entry.time}|${entry.actor}|${entry.event}|${entry.ref}`);
+  return [...log, { ...entry, seq, prev, hash }];
+}
 
-  const selected = claims.find((c) => c.id === selectedId) ?? claims[0];
-  const tone = riskTone(selected.score);
+const INITIAL_AUDIT = [
+  { time: "09:12:04", actor: "system", event: "SCORE_COMPUTED", ref: "CLM-24817" },
+  { time: "09:12:05", actor: "system", event: "QUEUED_FOR_REVIEW", ref: "CLM-24817" },
+  { time: "09:12:05", actor: "system", event: "QUEUED_FOR_REVIEW", ref: "CLM-24822" },
+  { time: "09:12:06", actor: "system", event: "BELOW_THRESHOLD", ref: "CLM-24836" },
+].reduce<AuditEntry[]>((log, entry) => append(log, entry), []);
+
+const tier = (score: number) =>
+  score >= 70
+    ? { text: "text-rose-300", bar: "bg-rose-400/70" }
+    : score >= THRESHOLD
+      ? { text: "text-amber-300", bar: "bg-amber-400/70" }
+      : { text: "text-emerald-300", bar: "bg-emerald-400/70" };
+
+const decisionMeta: Record<Decision, { label: string; event: string; badge: string }> = {
+  approved: { label: "Onaylandı", event: "DECISION_APPROVED", badge: "text-emerald-200" },
+  corrected: { label: "Düzeltmede", event: "DECISION_CORRECTION", badge: "text-indigo-200" },
+  held: { label: "Durduruldu", event: "DECISION_HOLD", badge: "text-white/70" },
+};
+
+type Filter = "all" | "review" | "decided";
+const FILTERS: { value: Filter; label: string }[] = [
+  { value: "all", label: "Tümü" },
+  { value: "review", label: "İncelemede" },
+  { value: "decided", label: "Karar verildi" },
+];
+
+const shortHash = (h: string) => `${h.slice(0, 8)}…${h.slice(-4)}`;
+const now = () => new Date().toLocaleTimeString("tr-TR", { hour12: false });
+
+const cell = "px-3 py-2.5 first:pl-4 last:pr-4";
+const head = "px-3 py-2 text-left text-[11px] font-medium text-white/45 first:pl-4 last:pr-4";
+
+export default function ShieldConsole() {
+  const [selectedId, setSelectedId] = useState(CLAIMS[0].id);
+  const [decisions, setDecisions] = useState<Record<string, Decision>>({});
+  const [audit, setAudit] = useState<AuditEntry[]>(INITIAL_AUDIT);
+  const [filter, setFilter] = useState<Filter>("all");
+
+  const statusOf = (c: Claim) => {
+    const decided = decisions[c.id];
+    if (decided) return decisionMeta[decided];
+    if (scoreOf(c) >= THRESHOLD) return { label: "İncelemede", badge: "text-amber-200" };
+    return { label: "Eşik altı", badge: "text-white/55" };
+  };
+
+  const rows = useMemo(
+    () =>
+      CLAIMS.filter((c) => {
+        if (filter === "all") return true;
+        const decided = Boolean(decisions[c.id]);
+        return filter === "decided" ? decided : !decided && scoreOf(c) >= THRESHOLD;
+      }),
+    [filter, decisions],
+  );
+
+  const selected = CLAIMS.find((c) => c.id === selectedId) ?? CLAIMS[0];
+  const score = scoreOf(selected);
+  const t = tier(score);
   const decided = decisions[selected.id];
+  const canDecide = !decided && score >= THRESHOLD;
+  const selectedStatus = statusOf(selected);
 
   const decide = (decision: Decision) => {
     setDecisions((d) => ({ ...d, [selected.id]: decision }));
-    // Append-only: entries are only ever added, never edited or removed.
-    setAudit((log) => [
-      ...log,
-      {
-        seq: log[log.length - 1].seq + 1,
-        time: timestamp(),
-        actor: "reviewer.demo",
-        action: `DECISION_${decision.toUpperCase()} · ${selected.factors.map((f) => f.rule).join(", ")}`,
-        ref: selected.id,
-      },
-    ]);
+    setAudit((log) =>
+      append(log, { time: now(), actor: "reviewer.demo", event: decisionMeta[decision].event, ref: selected.id }),
+    );
+  };
+
+  const onRowKey = (e: KeyboardEvent<HTMLTableRowElement>, id: string) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setSelectedId(id);
+    }
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/[0.1] bg-navy-850/80 shadow-2xl shadow-black/40 backdrop-blur">
-      <div className="flex items-center justify-between border-b border-white/[0.08] px-4 py-3">
-        <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
-          <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
-          <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
-          <span className="ml-3 font-mono text-[11px] text-white/40">shield / inceleme-kuyruğu</span>
+    <div className="w-full min-w-0 overflow-hidden rounded-2xl border border-white/[0.06] bg-navy-800">
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.06] px-4 py-3">
+        <div className="flex items-baseline gap-2">
+          <p className="text-[13px] font-semibold text-white">Ön kontrol kuyruğu</p>
+          <span className="font-mono text-[12px] text-white/45 tabular-nums">{CLAIMS.length}</span>
         </div>
-        <span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-white/40">
-          Örnek · kurgusal veri
-        </span>
+        <div role="group" aria-label="Talepleri filtrele" className="flex rounded-lg bg-white/[0.04] p-0.5">
+          {FILTERS.map((f) => (
+            <button
+              key={f.value}
+              type="button"
+              aria-pressed={filter === f.value}
+              onClick={() => setFilter(f.value)}
+              className={`rounded-md px-2.5 py-1 text-[12px] transition-colors duration-150 ease-out ${
+                filter === f.value ? "bg-navy-850 text-white" : "text-white/55 hover:text-white"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
-        {/* Queue */}
-        <div className="border-b border-white/[0.08] lg:border-r lg:border-b-0">
-          <p className="px-4 pt-4 pb-2 text-[11px] font-medium uppercase tracking-wide text-white/35">
-            İşlem öncesi kuyruk · {claims.length} kayıt
-          </p>
-          <ul className="px-2 pb-2" role="listbox" aria-label="İnceleme kuyruğu">
-            {claims.map((c) => {
-              const t = riskTone(c.score);
+      {/* Claims table */}
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[620px] text-[13px]">
+          <caption className="sr-only">Gönderim öncesi talepler; bir satır seçerek ayrıntıları görün.</caption>
+          <thead className="border-b border-white/[0.06]">
+            <tr>
+              <th scope="col" className={head}>
+                Talep
+              </th>
+              <th scope="col" className={head}>
+                ICD-10
+              </th>
+              <th scope="col" className={head}>
+                SUT eki
+              </th>
+              <th scope="col" className={`${head} text-right`}>
+                Tutar
+              </th>
+              <th scope="col" className={head}>
+                Risk
+              </th>
+              <th scope="col" className={`${head} text-right`}>
+                Durum
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/[0.06]">
+            {rows.map((c) => {
+              const s = scoreOf(c);
+              const rt = tier(s);
+              const status = statusOf(c);
               const active = c.id === selectedId;
-              const d = decisions[c.id];
               return (
-                <li key={c.id}>
-                  <button
-                    type="button"
-                    role="option"
-                    aria-selected={active}
-                    onClick={() => setSelectedId(c.id)}
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-colors ${
-                      active ? "bg-white/[0.06]" : "hover:bg-white/[0.03]"
-                    }`}
-                  >
-                    <span className={`w-9 font-mono text-sm font-medium ${t.text}`}>{c.score}</span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate font-mono text-[12px] text-white/85">{c.id}</span>
-                      <span className="block truncate text-xs text-white/45">{c.service}</span>
+                <tr
+                  key={c.id}
+                  tabIndex={0}
+                  aria-selected={active}
+                  onClick={() => setSelectedId(c.id)}
+                  onKeyDown={(e) => onRowKey(e, c.id)}
+                  className={`cursor-pointer outline-none transition-colors duration-150 ease-out focus-visible:bg-white/[0.04] ${
+                    active ? "bg-white/[0.05]" : "hover:bg-white/[0.03]"
+                  }`}
+                >
+                  <td className={cell}>
+                    <span className="block font-mono text-[12.5px] text-white/90 tabular-nums">{c.id}</span>
+                    <span className="block text-[12px] text-white/50">{c.procedure}</span>
+                  </td>
+                  <td className={cell}>
+                    <span className="block font-mono text-[12.5px] text-white/80">{c.icd.code}</span>
+                    <span className="block max-w-[160px] truncate text-[12px] text-white/45">{c.icd.label}</span>
+                  </td>
+                  <td className={cell}>
+                    <span className="block font-mono text-[12.5px] text-white/80">{c.sut.annex}</span>
+                    <span className="block text-[12px] text-white/45">{c.sut.label}</span>
+                  </td>
+                  <td className={`${cell} text-right font-mono text-white/75 tabular-nums`}>{formatTRY(c.amount)}</td>
+                  <td className={cell}>
+                    <span className="flex items-center gap-2">
+                      <span className={`w-6 font-mono text-[12.5px] tabular-nums ${rt.text}`}>{s}</span>
+                      <span className="h-1 w-12 overflow-hidden rounded-full bg-white/[0.06]" aria-hidden="true">
+                        <span className={`block h-full rounded-full ${rt.bar}`} style={{ width: `${s}%` }} />
+                      </span>
                     </span>
-                    {d ? (
-                      <span className="rounded-full border border-white/10 px-2 py-0.5 text-[9.5px] font-medium uppercase tracking-wide text-white/50">
-                        Karar verildi
-                      </span>
-                    ) : (
-                      <span
-                        className={`rounded-full border px-2 py-0.5 text-[9.5px] font-medium uppercase tracking-wide ${t.chip}`}
-                      >
-                        {t.label}
-                      </span>
-                    )}
-                  </button>
-                </li>
+                  </td>
+                  <td className={`${cell} text-right`}>
+                    <span className={`text-[12px] font-medium ${status.badge}`}>{status.label}</span>
+                  </td>
+                </tr>
               );
             })}
-          </ul>
-        </div>
+            {rows.length === 0 && (
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-[12px] text-white/40">
+                  Bu filtrede talep yok.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
-        {/* Detail */}
-        <div className="p-5 sm:p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="font-mono text-[12px] text-white/50">{selected.id}</p>
-              <p className="mt-1 text-sm text-white">{selected.service}</p>
-              <p className="text-xs text-white/45">
-                {selected.unit} · {selected.amount}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-[11px] font-medium uppercase tracking-wide text-white/35">Red riski</p>
-              <p className={`text-4xl font-semibold tracking-tight ${tone.text}`}>
-                {selected.score}
-                <span className="text-base text-white/30">/100</span>
-              </p>
-            </div>
+      {/* Selected claim: rule-engine matches + decision */}
+      <div className="grid gap-px border-t border-white/[0.06] bg-white/[0.06] lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+        <section aria-label="Kural motoru eşleşmeleri" className="bg-navy-850 px-4 py-4">
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="text-[12px] font-medium text-white/60">
+              Kural motoru eşleşmeleri · <span className="font-mono text-white/80 tabular-nums">{selected.id}</span>
+            </p>
+            <p className="text-[11px] text-white/40">
+              ruleset <span className="font-mono tabular-nums">v3.8.1</span>
+            </p>
           </div>
-
-          <p className="mt-6 text-[11px] font-medium uppercase tracking-wide text-white/35">Skor bileşenleri</p>
-          <ul className="mt-3 space-y-3">
+          <ul className="mt-3 divide-y divide-white/[0.06]">
             {selected.factors.map((f) => (
-              <li key={f.rule}>
-                <div className="flex items-baseline justify-between gap-3 text-[13px]">
-                  <span className="text-white/75">
-                    <span className="mr-2 font-mono text-[11px] text-white/35">{f.rule}</span>
-                    {f.label}
+              <li key={f.rule} className="grid grid-cols-[52px_1fr_auto] items-center gap-3 py-2">
+                <span className="font-mono text-[12px] text-white/50">{f.rule}</span>
+                <span className="min-w-0">
+                  <span className="block truncate text-[13px] text-white/80">{f.label}</span>
+                  <span className="mt-1 block h-1 overflow-hidden rounded-full bg-white/[0.06]" aria-hidden="true">
+                    <span className={`block h-full rounded-full ${t.bar}`} style={{ width: `${f.weight}%` }} />
                   </span>
-                  <span className="font-mono text-white/60">+{f.weight}</span>
-                </div>
-                <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-white/[0.06]">
-                  <motion.div
-                    key={`${selected.id}-${f.rule}`}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${f.weight}%` }}
-                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                    className={`h-full rounded-full ${tone.bar}`}
-                  />
-                </div>
+                </span>
+                <span className="font-mono text-[12.5px] text-white/70 tabular-nums">+{f.weight}</span>
               </li>
             ))}
           </ul>
-
-          <div className="mt-6 border-t border-white/[0.08] pt-5">
-            {decided ? (
-              <p className="flex items-center gap-2 text-sm text-white/70">
-                <Lock className="h-4 w-4 text-white/40" />
-                {decisionLabels[decided]} · karar denetim izine yazıldı
-              </p>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => decide("approved")}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-[13px] text-emerald-100 hover:bg-emerald-400/20"
-                >
-                  <Check className="h-3.5 w-3.5" /> Onayla
-                </button>
-                <button
-                  type="button"
-                  onClick={() => decide("corrected")}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 px-3 py-2 text-[13px] text-white/80 hover:bg-white/5"
-                >
-                  <PenLine className="h-3.5 w-3.5" /> Düzeltmeye gönder
-                </button>
-                <button
-                  type="button"
-                  onClick={() => decide("rejected")}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-rose-400/30 bg-rose-400/10 px-3 py-2 text-[13px] text-rose-100 hover:bg-rose-400/20"
-                >
-                  <X className="h-3.5 w-3.5" /> Gönderimi durdur
-                </button>
-              </div>
-            )}
+          <div className="mt-2 flex items-baseline justify-between border-t border-white/[0.06] pt-2.5">
+            <span className="text-[12px] text-white/55">Red riski (Σ kural katkısı)</span>
+            <span className={`font-mono text-[15px] font-medium tabular-nums ${t.text}`}>
+              {score}
+              <span className="text-white/35">/100</span>
+            </span>
           </div>
-        </div>
+        </section>
+
+        <section aria-label="Karar" className="flex flex-col bg-navy-850 px-4 py-4">
+          <p className="text-[12px] font-medium text-white/60">Uzman kararı</p>
+          <p className="mt-1 text-[12px] leading-relaxed text-white/45">
+            {canDecide
+              ? `Risk eşiği ${THRESHOLD} aşıldı; gönderim kararı uzmana bırakıldı.`
+              : decided
+                ? "Karar denetim izine eklendi; kayıt değiştirilemez."
+                : `Skor eşik (${THRESHOLD}) altında; talep incelemeye alınmadı.`}
+          </p>
+          {canDecide ? (
+            <div className="mt-auto flex flex-wrap gap-2 pt-4">
+              {(["approved", "corrected", "held"] as const).map((d) => (
+                <button
+                  key={d}
+                  type="button"
+                  onClick={() => decide(d)}
+                  className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-[12.5px] text-white/85 transition-colors duration-150 ease-out hover:bg-white/[0.07]"
+                >
+                  {d === "approved" ? "Onayla" : d === "corrected" ? "Düzeltmeye gönder" : "Gönderimi durdur"}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <span className={`mt-auto text-[12.5px] font-medium ${selectedStatus.badge}`}>{selectedStatus.label}</span>
+          )}
+        </section>
       </div>
 
-      {/* Audit log */}
-      <div className="border-t border-white/[0.08] bg-navy-950">
-        <div className="flex items-center justify-between px-4 py-2.5">
-          <p className="text-[11px] font-medium uppercase tracking-wide text-white/35">audit_log · append-only</p>
-          <Lock className="h-3.5 w-3.5 text-white/30" />
+      {/* Append-only, hash-chained audit trail */}
+      <section aria-label="Denetim izi" className="border-t border-white/[0.06] bg-navy-850">
+        <div className="flex items-baseline justify-between gap-3 px-4 pt-3 pb-2">
+          <p className="text-[12px] font-medium text-white/60">Denetim izi</p>
+          <p className="text-[11px] text-white/40">Yalnızca ekleme · her kayıt önceki hash&apos;i içerir</p>
         </div>
-        <ol className="max-h-44 overflow-y-auto px-4 pb-4 font-mono text-[11.5px] leading-6">
-          <AnimatePresence initial={false}>
-            {audit.map((e) => (
-              <motion.li
-                key={e.seq}
-                initial={{ opacity: 0, x: -6 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="flex gap-3 whitespace-nowrap text-white/50"
-              >
-                <span className="text-white/25">#{e.seq}</span>
-                <span>{e.time}</span>
-                <span className="text-indigo-300/80">{e.actor}</span>
-                <span className="truncate text-white/70">{e.action}</span>
-                <span className="ml-auto text-white/35">{e.ref}</span>
-              </motion.li>
-            ))}
-          </AnimatePresence>
-        </ol>
-      </div>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[620px] text-[12px]">
+            <thead className="border-y border-white/[0.06]">
+              <tr>
+                <th scope="col" className={head}>
+                  Sıra
+                </th>
+                <th scope="col" className={head}>
+                  Zaman
+                </th>
+                <th scope="col" className={head}>
+                  Aktör
+                </th>
+                <th scope="col" className={head}>
+                  Olay
+                </th>
+                <th scope="col" className={head}>
+                  Talep
+                </th>
+                <th scope="col" className={`${head} text-right`}>
+                  Hash
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/[0.06]">
+              {audit
+                .slice(-5)
+                .reverse()
+                .map((e, i) => (
+                  <tr key={e.seq} className={i === 0 ? "text-white/85" : "text-white/55"}>
+                    <td className={`${cell} py-2 font-mono tabular-nums`}>{e.seq}</td>
+                    <td className={`${cell} py-2 font-mono tabular-nums`}>{e.time}</td>
+                    <td className={`${cell} py-2`}>{e.actor}</td>
+                    <td className={`${cell} py-2 font-mono`}>{e.event}</td>
+                    <td className={`${cell} py-2 font-mono tabular-nums`}>{e.ref}</td>
+                    <td
+                      className={`${cell} py-2 text-right font-mono tabular-nums`}
+                      title={`prev ${e.prev} → ${e.hash}`}
+                    >
+                      {shortHash(e.hash)}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="px-4 pt-2 pb-3 text-[11px] text-white/35">
+          Örnek · kurgusal talepler. ICD-10 kodları gerçek; SUT sütunu ilgili eki gösterir.
+        </p>
+      </section>
     </div>
   );
 }

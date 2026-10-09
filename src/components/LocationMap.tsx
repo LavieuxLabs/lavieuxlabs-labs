@@ -15,13 +15,13 @@ export default function LocationMap() {
   const showMap = loadedOnce || consent?.external === true;
 
   return (
-    <div className="grid overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
+    <div className="grid overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
       {/* Address card */}
-      <div className="flex flex-col border-b border-white/[0.08] p-6 sm:p-8 lg:border-r lg:border-b-0">
-        <p className="text-xs font-medium uppercase tracking-wide text-white/60">Ar-Ge yerleşkesi</p>
+      <div className="flex flex-col border-b border-white/[0.06] p-6 sm:p-8 lg:border-r lg:border-b-0">
+        <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">Ar-Ge yerleşkesi</p>
         <div className="mt-6 flex gap-3.5">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-teal-400/25 bg-teal-400/10">
-            <Building2 className="h-[18px] w-[18px] text-teal-300" strokeWidth={1.7} />
+          <span className="flex h-10 w-6 shrink-0 items-start pt-0.5">
+            <Building2 className="h-[18px] w-[18px] text-white/45" strokeWidth={1.7} aria-hidden="true" />
           </span>
           <div>
             <h3 className="text-[15px] font-medium text-white">{OFFICE.institution}</h3>
@@ -40,7 +40,7 @@ export default function LocationMap() {
           href={OFFICE_MAP_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-auto inline-flex items-center gap-1.5 pt-8 text-sm font-medium text-teal-200 transition-colors hover:text-teal-100"
+          className="mt-auto inline-flex items-center gap-1.5 pt-8 text-sm font-medium text-white/80 transition-colors duration-150 ease-out hover:text-white"
         >
           Google Haritalar&apos;da yol tarifi al
           <ArrowUpRight className="h-4 w-4" />
@@ -69,15 +69,15 @@ export default function LocationMap() {
           <div className="absolute inset-0 flex items-center justify-center p-6">
             <div aria-hidden="true" className="bg-grid mask-radial absolute inset-0" />
             <div aria-hidden="true" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              <span className="absolute -inset-5 rounded-full border border-teal-300/25" />
+              <span className="absolute -inset-5 rounded-full border border-white/15" />
             </div>
-            <div className="relative max-w-sm rounded-xl border border-white/10 bg-navy-850/85 p-5 text-center backdrop-blur-xl">
-              <MapPin className="mx-auto h-5 w-5 text-teal-300" />
+            <div className="relative max-w-sm rounded-xl border border-white/[0.06] bg-navy-800 p-5 text-center">
+              <MapPin className="mx-auto h-5 w-5 text-white/60" aria-hidden="true" />
               <p className="mt-3 text-sm text-white/80">Harita Google tarafından sağlanır.</p>
               <p className="mt-1.5 text-xs leading-relaxed text-white/45">
                 Haritayı yüklediğinizde IP adresiniz gibi veriler Google&apos;a aktarılır ve Google çerezleri
                 kullanılabilir. Ayrıntılar:{" "}
-                <Link href="/legal/cookies" className="text-teal-300 hover:underline">
+                <Link href="/legal/cookies" className="text-white/80 underline-offset-2 hover:underline">
                   Çerez Politikası
                 </Link>
               </p>
@@ -85,7 +85,7 @@ export default function LocationMap() {
                 <button
                   type="button"
                   onClick={() => setLoadedOnce(true)}
-                  className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-navy-900 hover:bg-teal-200"
+                  className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-navy-900 transition-colors duration-150 ease-out hover:bg-white/90"
                 >
                   Haritayı yükle
                 </button>

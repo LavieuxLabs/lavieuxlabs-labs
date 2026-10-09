@@ -1,39 +1,44 @@
 import type { Metadata } from "next";
 import {
   BookOpen,
+  FileCheck2,
   FlaskConical,
   GitCompare,
   GraduationCap,
   Hospital,
   Lock,
+  LockKeyhole,
   Microscope,
   Repeat,
+  ShieldAlert,
   Target,
   Users,
+  Workflow,
 } from "lucide-react";
 import PageHero from "@/components/PageHero";
 import SectionHeader from "@/components/SectionHeader";
 import CtaPanel from "@/components/CtaPanel";
 import Reveal from "@/components/Reveal";
+import SpecCard, { type SpecRow } from "@/components/SpecCard";
 
 export const metadata: Metadata = {
   title: "Hakkımızda",
   description:
-    "LavieuxLabs; klinik güvenliği bir mühendislik disiplini olarak ele alan, deterministik ve denetlenebilir sağlık teknolojileri geliştiren bir Ar-Ge kolektifidir.",
+    "LavieuxLabs, ilaç güvenliği ve hastane faturalaması için test edilebilir karar destek yazılımı geliştiren bir Ar-Ge ekibidir.",
 };
 
 const pillars = [
   {
     icon: Target,
     label: "Vizyon",
-    title: "Her klinik ve operasyonel kararın gerekçesinin gösterilebildiği bir sağlık sistemi.",
-    body: "Karar destek sistemlerinin güvenilirliği, ne kadar “akıllı” göründükleriyle değil; çıktılarının ne kadar tekrarlanabilir, açıklanabilir ve denetlenebilir olduğuyla ölçülmelidir.",
+    title: "Her klinik ve idari kararın nedeni gösterilebilmeli.",
+    body: "Bir karar destek sisteminin değeri ne kadar akıllı göründüğüyle değil, sonucunu tekrar üretip nedenini gösterebilmesiyle ölçülür.",
   },
   {
     icon: FlaskConical,
     label: "Misyon",
-    title: "Regüle alanlar için kanıta dayalı, test edilebilir yazılım üretmek.",
-    body: "İlaç güvenliği ve gelir bütünlüğü gibi hata maliyetinin yüksek olduğu alanlarda, klinisyen ve operasyon uzmanlarının yerine değil, yanında çalışan sistemler geliştiriyoruz.",
+    title: "Hata maliyeti yüksek alanlar için test edilebilir yazılım.",
+    body: "İlaç güvenliği ve faturalama gibi alanlarda hekimin ve uzmanın yerine geçen değil, işini kolaylaştıran araçlar yapıyoruz.",
   },
 ];
 
@@ -68,23 +73,87 @@ const comparison = [
 const rnd = [
   {
     icon: BookOpen,
-    title: "Kanıt hiyerarşisi",
-    body: "Kurallar; resmi ürün bilgileri, klinik kılavuzlar ve hakemli literatürden türetilir. Her kural kaynağına bağlanır.",
+    title: "Kaynağı belli kurallar",
+    body: "Kurallar resmi ürün bilgilerinden (KÜB/KT), klinik kılavuzlardan ve hakemli literatürden çıkarılır. Her kural kaynağını gösterir.",
+    rows: [
+      { label: "Kaynaklar", value: "KÜB / KT · kılavuzlar · hakemli literatür" },
+      { label: "İzlenebilirlik", value: "Kural → kaynak" },
+    ] as SpecRow[],
   },
   {
     icon: GitCompare,
-    title: "Gereksinimden teste izlenebilirlik",
-    body: "Her klinik gereksinim, onu uygulayan kurala ve doğrulayan test senaryosuna bağlanır.",
+    title: "Gereksinimden teste iz",
+    body: "Her klinik gereksinim, onu uygulayan kurala ve onu sınayan teste bağlıdır.",
+    rows: [
+      { label: "Zincir", value: "Gereksinim → kural → test" },
+      { label: "Otomatik test", value: "2.480+", mono: true },
+    ] as SpecRow[],
   },
   {
     icon: Repeat,
     title: "Kontrollü değişiklik",
-    body: "Bilgi tabanı ve kural setleri sürümlenir; hiçbir değişiklik gözden geçirme ve otomatik testten geçmeden yayına alınmaz.",
+    body: "Kural setleri sürümlenir. Hiçbir değişiklik gözden geçirilmeden ve testten geçmeden yayına çıkmaz.",
+    rows: [
+      { label: "Sürümleme", value: "Kural seti · bilgi tabanı" },
+      { label: "Kapı", value: "Gözden geçirme + regresyon testi" },
+    ] as SpecRow[],
   },
   {
     icon: Lock,
-    title: "Tasarımda güvenlik ve gizlilik",
-    body: "Veri minimizasyonu, rol tabanlı erişim ve değiştirilemez denetim izi; sonradan eklenen özellikler değil, mimarinin başlangıç koşullarıdır.",
+    title: "Baştan güvenlik ve gizlilik",
+    body: "Az veri toplamak, rol bazlı erişim ve değiştirilemeyen kayıt sonradan eklenmedi; sistem bunlarla başladı.",
+    rows: [
+      { label: "Kontroller", value: "Veri minimizasyonu · RBAC" },
+      { label: "Kayıt", value: "Append-only denetim izi" },
+    ] as SpecRow[],
+  },
+];
+
+const regulatory = [
+  {
+    id: "REG-01",
+    icon: FileCheck2,
+    title: "AB Tıbbi Cihaz Yönetmeliği",
+    body: "PharmaDeux, ilaç tedavisi kararlarına bilgi sağlayan bir yazılım olduğu için MDR kapsamına giriyor.",
+    rows: [
+      { label: "Mevzuat", value: "MDR 2017/745 · Ek VIII Kural 11" },
+      { label: "Hedef", value: "SaMD · Sınıf IIa" },
+      { label: "CE işareti", value: "Henüz yok" },
+    ] as SpecRow[],
+    status: { label: "Sınıf IIa hedefi", tone: "prep" as const },
+  },
+  {
+    id: "REG-02",
+    icon: Workflow,
+    title: "Yazılım yaşam döngüsü ve risk",
+    body: "Geliştirme ve risk yönetimi süreçleri bu standartlara göre kuruluyor.",
+    rows: [
+      { label: "Yaşam döngüsü", value: "IEC 62304" },
+      { label: "Risk", value: "ISO 14971" },
+    ] as SpecRow[],
+    status: { label: "Mimari uyum", tone: "input" as const },
+  },
+  {
+    id: "REG-03",
+    icon: ShieldAlert,
+    title: "Kalite yönetim sistemi",
+    body: "Kalite yönetim sistemi ve kullanılabilirlik çalışması yol haritasında.",
+    rows: [
+      { label: "KYS", value: "ISO 13485" },
+      { label: "Kullanılabilirlik", value: "IEC 62366-1" },
+    ] as SpecRow[],
+    status: { label: "Yol haritasında", tone: "prep" as const },
+  },
+  {
+    id: "REG-04",
+    icon: LockKeyhole,
+    title: "Bilgi güvenliği ve kişisel veri",
+    body: "Kişisel veriler KVKK'ya göre işlenir; güvenlik kontrolleri ISO/IEC 27001'e göre kuruluyor.",
+    rows: [
+      { label: "Mevzuat", value: "6698 sayılı KVKK · md. 12" },
+      { label: "Kontroller", value: "ISO/IEC 27001" },
+    ] as SpecRow[],
+    status: { label: "Kontrol setine uyum hedefi", tone: "input" as const },
   },
 ];
 
@@ -92,22 +161,38 @@ const collaboration = [
   {
     icon: Hospital,
     title: "Klinik danışma",
-    body: "Kural setleri ve kullanıcı akışları, alanında deneyimli klinisyen ve klinik eczacılarla birlikte tasarlanır ve gözden geçirilir.",
+    body: "Kural setleri ve ekranlar, klinisyenler ve klinik eczacılarla birlikte yazılır ve gözden geçirilir.",
+    rows: [
+      { label: "Paydaşlar", value: "Klinisyen · klinik eczacı" },
+      { label: "Çıktı", value: "Gözden geçirilmiş kural setleri" },
+    ] as SpecRow[],
   },
   {
     icon: Microscope,
-    title: "Etik ve veri yönetişimi",
-    body: "Gerçek veriyle yürütülen her çalışma etik kurul onayına, anonimleştirmeye ve kurumla imzalanan veri işleme sözleşmesine tabidir.",
+    title: "Etik kurul ve veri",
+    body: "Gerçek veriyle yapılan her çalışma etik kurul onayı, anonimleştirme ve kurumla imzalanan veri işleme sözleşmesi gerektirir.",
+    rows: [
+      { label: "Önkoşul", value: "Etik kurul onayı · DPA" },
+      { label: "Veri", value: "Anonimleştirilmiş, KVKK uyumlu" },
+    ] as SpecRow[],
   },
   {
     icon: GraduationCap,
-    title: "Akademik çıktı",
-    body: "Doğrulama çalışmalarını, iş birliği yapan kurumlarla birlikte bilimsel yayın standartlarında raporlamayı hedefleriz.",
+    title: "Yayın",
+    body: "Doğrulama çalışmalarını ortak kurumlarla birlikte hakemli dergilerde yayımlamayı hedefliyoruz.",
+    rows: [
+      { label: "Hedef", value: "Hakemli yayın" },
+      { label: "Raporlama", value: "Duyarlılık · özgüllük · PPV" },
+    ] as SpecRow[],
   },
   {
     icon: Users,
     title: "Sahadan geri bildirim",
-    body: "Pilot kullanıcılarının geri bildirimleri yapılandırılmış biçimde toplanır ve ürün gereksinimlerine izlenebilir şekilde aktarılır.",
+    body: "Pilot kullanıcıların geri bildirimi düzenli toplanır ve hangi gereksinime dönüştüğü takip edilir.",
+    rows: [
+      { label: "Toplama", value: "Yapılandırılmış form" },
+      { label: "İzlenebilirlik", value: "Geri bildirim → gereksinim" },
+    ] as SpecRow[],
   },
 ];
 
@@ -116,13 +201,13 @@ export default function AboutPage() {
     <main className="relative isolate flex-1 overflow-x-clip">
       <PageHero
         breadcrumbs={[{ href: "/", label: "Ana sayfa" }, { label: "Hakkımızda" }]}
-        eyebrow="LavieuxLabs Ar-Ge Kolektifi"
+        eyebrow="Hakkımızda"
         title={
           <>
-            Klinik güvenliği bir <span className="text-white/50">mühendislik disiplini</span> olarak ele alıyoruz.
+            İlaç güvenliği ve faturalama için <span className="text-white/50">test edilebilir yazılım yapıyoruz.</span>
           </>
         }
-        description="LavieuxLabs; klinik farmakoloji, sağlık operasyonları ve yazılım mühendisliğini bir araya getiren bir sağlık teknolojileri Ar-Ge kolektifidir. Hata maliyetinin yüksek olduğu alanlarda deterministik, test edilebilir ve insan denetimine açık sistemler geliştiriyoruz."
+        description="LavieuxLabs, klinik farmakoloji, sağlık operasyonları ve yazılım mühendisliğini bir araya getiren bir Ar-Ge ekibi. Hatanın hastaya ya da kuruma pahalıya mal olduğu işler için, her sonucu yeniden üretilebilen ve kararı insana bırakan sistemler geliştiriyoruz."
       />
 
       {/* Vision & mission */}
@@ -132,13 +217,15 @@ export default function AboutPage() {
             <Reveal
               key={label}
               delay={i * 0.08}
-              className="rounded-2xl border border-white/[0.08] bg-navy-850/70 p-7 backdrop-blur-sm sm:p-9"
+              className="rounded-2xl border border-white/[0.06] bg-navy-850 p-7 sm:p-9"
             >
               <div className="flex items-center gap-3">
-                <Icon className="h-5 w-5 text-teal-300" strokeWidth={1.6} />
-                <p className="text-xs font-medium uppercase tracking-wide text-white/45">{label}</p>
+                <Icon className="h-5 w-5 text-white/45" strokeWidth={1.6} aria-hidden="true" />
+                <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{label}</p>
               </div>
-              <h2 className="mt-6 text-xl font-semibold leading-snug tracking-tight text-white sm:text-2xl">{title}</h2>
+              <h2 className="mt-6 text-xl leading-snug font-semibold tracking-[-0.03em] text-white sm:text-2xl">
+                {title}
+              </h2>
               <p className="mt-4 text-sm leading-relaxed text-white/55">{body}</p>
             </Reveal>
           ))}
@@ -149,16 +236,16 @@ export default function AboutPage() {
       <section className="py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            eyebrow="Deterministik tıp felsefesi"
-            title="Klinik karar yolunda olasılık değil, kanıt."
-            description="Olasılıksal ve üretken modeller araştırma ve analiz için değerli araçlardır. Ancak bir ilaç istemini durdurabilecek ya da bir hastanın tedavisini etkileyebilecek bir uyarı, tekrarlanabilir ve kaynağına kadar izlenebilir olmalıdır. Bu nedenle klinik ve operasyonel karar yolunda kural tabanlı determinizmi esas alıyoruz."
+            eyebrow="Neden kural tabanlı"
+            title="Karar anında tahmin değil, kural."
+            description="Olasılıksal ve üretken modeller araştırma ve analiz için faydalı. Ama bir reçeteyi durdurabilecek bir uyarının her seferinde aynı sonucu vermesi ve hangi kaynaktan geldiğinin gösterilebilmesi gerekir. Bu yüzden karar anında kural tabanlı sistem kullanıyoruz."
           />
 
-          <Reveal className="mt-14 overflow-hidden rounded-2xl border border-white/[0.08] bg-navy-850/80 backdrop-blur-sm">
-            <div className="hidden grid-cols-[180px_1fr_1fr] border-b border-white/[0.08] bg-white/[0.03] text-xs font-medium uppercase tracking-wide md:grid">
-              <div className="px-6 py-4 text-white/40">Ölçüt</div>
-              <div className="px-6 py-4 text-white/40">Olasılıksal model</div>
-              <div className="px-6 py-4 text-teal-300/80">Kural tabanlı determinizm</div>
+          <Reveal className="mt-14 overflow-hidden rounded-2xl border border-white/[0.06] bg-navy-850">
+            <div className="hidden grid-cols-[180px_1fr_1fr] border-b border-white/[0.06] text-[11px] font-medium tracking-wider uppercase md:grid">
+              <div className="px-6 py-4 text-white/45">Ölçüt</div>
+              <div className="px-6 py-4 text-white/45">Olasılıksal model</div>
+              <div className="px-6 py-4 text-white/70">Kural tabanlı sistem</div>
             </div>
             <dl className="divide-y divide-white/[0.06]">
               {comparison.map((row) => (
@@ -173,9 +260,9 @@ export default function AboutPage() {
                     </span>
                     {row.probabilistic}
                   </dd>
-                  <dd className="text-sm leading-relaxed text-white/80 md:border-l md:border-white/[0.06] md:bg-teal-400/[0.03] md:px-6 md:py-5">
+                  <dd className="text-sm leading-relaxed text-white/80 md:border-l md:border-white/[0.06] md:bg-white/[0.02] md:px-6 md:py-5">
                     <span className="mr-2 text-[10px] font-medium uppercase tracking-wide text-white/60 md:hidden">
-                      Deterministik
+                      Kural tabanlı
                     </span>
                     {row.deterministic}
                   </dd>
@@ -190,16 +277,32 @@ export default function AboutPage() {
       <section className="py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            eyebrow="Ar-Ge disiplini"
-            title="Kanıttan koda, koddan teste."
-            description="Teknokent ölçeğinde bir Ar-Ge ekibi olarak, regüle bir ürünün gerektirdiği izlenebilirlik ve değişiklik kontrolünü ilk satır koddan itibaren uyguluyoruz."
+            eyebrow="Çalışma biçimi"
+            title="Kaynaktan koda, koddan teste."
+            description="Düzenlemeye tabi bir ürünün gerektirdiği izlenebilirliği ve değişiklik kontrolünü ilk günden uyguluyoruz."
           />
-          <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.08] sm:grid-cols-2 lg:grid-cols-4">
-            {rnd.map(({ icon: Icon, title, body }, i) => (
-              <Reveal key={title} delay={i * 0.05} className="bg-navy-850/90 p-6 sm:p-7">
-                <Icon className="h-5 w-5 text-white/45" strokeWidth={1.6} />
-                <h3 className="mt-5 text-base font-medium text-white">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/55">{body}</p>
+          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {rnd.map(({ icon, title, body, rows }, i) => (
+              <Reveal key={title} delay={i * 0.04} className="h-full">
+                <SpecCard icon={icon} title={title} body={body} rows={rows} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Regulatory and quality framework */}
+      <section className="py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="Kalite ve regülasyon"
+            title="Hangi standarda göre, hangi aşamadayız."
+            description="Referans aldığımız standartları ve her birinde nerede olduğumuzu yazdık. Bu bir sertifika beyanı değildir."
+          />
+          <div className="mt-14 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {regulatory.map((r, i) => (
+              <Reveal key={r.id} delay={i * 0.04} className="h-full">
+                <SpecCard id={r.id} icon={r.icon} title={r.title} body={r.body} rows={r.rows} status={r.status} />
               </Reveal>
             ))}
           </div>
@@ -211,19 +314,14 @@ export default function AboutPage() {
         <div className="mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[1fr_1.4fr] lg:px-8">
           <SectionHeader
             eyebrow="Klinik iş birliği"
-            title="Sahayla birlikte, sahaya rağmen değil."
-            description="Bir klinik karar destek sistemi, ancak onu kullanacak ekiplerin iş akışına ve klinik muhakemesine saygı gösterdiğinde güvenli olabilir."
+            title="Sahadaki ekiplerle birlikte geliştiriyoruz."
+            description="Bir karar destek sistemi, onu kullanacak ekibin iş akışına uymuyorsa güvenli olamaz."
           />
           <ul className="grid gap-4 sm:grid-cols-2">
-            {collaboration.map(({ icon: Icon, title, body }, i) => (
+            {collaboration.map(({ icon, title, body, rows }, i) => (
               <li key={title}>
-                <Reveal
-                  delay={i * 0.05}
-                  className="h-full rounded-2xl border border-white/[0.08] bg-navy-850/70 p-6 backdrop-blur-sm transition-colors hover:border-white/[0.16]"
-                >
-                  <Icon className="h-5 w-5 text-teal-300/80" strokeWidth={1.6} />
-                  <h3 className="mt-4 text-base font-medium text-white">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/55">{body}</p>
+                <Reveal delay={i * 0.04} className="h-full">
+                  <SpecCard icon={icon} title={title} body={body} rows={rows} />
                 </Reveal>
               </li>
             ))}
@@ -232,11 +330,11 @@ export default function AboutPage() {
       </section>
 
       <CtaPanel
-        eyebrow="Birlikte çalışalım"
-        title="Klinik, kurumsal ve akademik iş birliklerine açığız."
-        description="Pilot çalışmalar, retrospektif doğrulama projeleri veya akademik iş birlikleri için bizimle iletişime geçin."
+        eyebrow="İletişim"
+        title="Pilot, doğrulama ya da akademik iş birliği için yazın."
+        description="Klinik, kurumsal ya da akademik bir çalışma fikriniz varsa kısa bir mesaj yeterli."
         primaryHref="/contact?solution=academic"
-        primaryLabel="İletişime geçin"
+        primaryLabel="Bize yazın"
       />
     </main>
   );

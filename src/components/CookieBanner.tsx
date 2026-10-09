@@ -249,7 +249,7 @@ export default function CookieBanner() {
                     transition={{ duration: 0.25 }}
                     className="overflow-hidden"
                   >
-                    <ul className="mt-4 divide-y divide-white/[0.07] rounded-xl border border-white/[0.08]">
+                    <ul className="mt-4 divide-y divide-white/[0.06] rounded-xl border border-white/[0.06]">
                       {categories.map((c) => (
                         <li key={c.key} className="flex items-start justify-between gap-4 p-3.5">
                           <div>
@@ -273,7 +273,7 @@ export default function CookieBanner() {
               </AnimatePresence>
             </div>
 
-            <div className="flex flex-col gap-2 border-t border-white/[0.07] bg-white/[0.02] p-4 sm:flex-row sm:items-center sm:justify-end">
+            <div className="flex flex-col gap-2 border-t border-white/[0.06] bg-white/[0.02] p-4 sm:flex-row sm:items-center sm:justify-end">
               {customizing ? (
                 <button
                   type="button"

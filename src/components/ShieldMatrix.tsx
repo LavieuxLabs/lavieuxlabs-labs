@@ -106,9 +106,9 @@ function initialState(): State {
 }
 
 const badge = {
-  review: "bg-amber-400/10 text-amber-200/90",
-  approved: "bg-emerald-400/10 text-emerald-200",
-  corrected: "bg-indigo-400/10 text-indigo-200",
+  review: "text-amber-200/90",
+  approved: "text-emerald-200",
+  corrected: "text-indigo-200",
 };
 const badgeLabel = { review: "İncelemede", approved: "Onaylandı", corrected: "Düzeltmede" };
 
@@ -134,7 +134,7 @@ export default function ShieldMatrix() {
       <div className="relative min-w-0 flex-1">
         <section
           aria-label="Fatura ön kontrolü"
-          className="relative z-10 rounded-2xl border border-white/[0.08] bg-navy-800"
+          className="relative z-10 rounded-2xl border border-white/[0.06] bg-navy-800"
         >
           <header className="flex items-baseline justify-between gap-3 px-4 pt-3.5 pb-2.5">
             <div className="min-w-0">
@@ -143,8 +143,11 @@ export default function ShieldMatrix() {
                 {invoiceNo(state.n)}
               </p>
             </div>
-            <p className="shrink-0 text-[11px] text-white/45 font-mono tabular-nums">
-              Ön kontrol {Math.min(state.scan, ITEMS_PER_INVOICE)}/{ITEMS_PER_INVOICE}
+            <p className="shrink-0 text-[11px] text-white/45">
+              Ön kontrol{" "}
+              <span className="font-mono tabular-nums">
+                {Math.min(state.scan, ITEMS_PER_INVOICE)}/{ITEMS_PER_INVOICE}
+              </span>
             </p>
           </header>
           <ul className="divide-y divide-white/[0.06] border-t border-white/[0.06]">
@@ -163,12 +166,10 @@ export default function ShieldMatrix() {
                   </span>
                   <span className="flex w-[64px] shrink-0 justify-end">
                     {isFlagged ? (
-                      <span className={`rounded-full px-2 py-0.5 text-[10.5px] font-medium ${badge.review}`}>
-                        İncelemede
-                      </span>
+                      <span className={`text-[11px] font-medium ${badge.review}`}>İncelemede</span>
                     ) : done ? (
-                      <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-400/15">
-                        <Check className="h-3 w-3 text-emerald-300" strokeWidth={2.5} aria-hidden="true" />
+                      <span className="flex items-center">
+                        <Check className="h-3.5 w-3.5 text-emerald-300" strokeWidth={2.25} aria-hidden="true" />
                         <span className="sr-only">Doğrulandı</span>
                       </span>
                     ) : active ? (
@@ -186,7 +187,7 @@ export default function ShieldMatrix() {
         {/* Back layer: the provision record that verified items are committed to */}
         <section
           aria-label="Provizyon kaydı"
-          className="relative mx-3 -mt-3 rounded-b-2xl border border-t-0 border-white/[0.08] bg-navy-850 px-4 pt-6 pb-3"
+          className="relative mx-3 -mt-3 rounded-b-2xl border border-t-0 border-white/[0.06] bg-navy-850 px-4 pt-6 pb-3"
         >
           <div className="flex items-baseline justify-between">
             <p className="text-[12px] font-semibold text-white/80">Provizyon kaydı</p>
@@ -205,8 +206,9 @@ export default function ShieldMatrix() {
                   className="flex items-center justify-between gap-3 py-2 text-[12px]"
                 >
                   <span className="text-white/70 font-mono tabular-nums">{row.invoice}</span>
-                  <span className="text-white/45 font-mono tabular-nums">
-                    {row.count} kalem · {formatTRY(row.total)}
+                  <span className="text-white/45">
+                    <span className="font-mono tabular-nums">{row.count}</span> kalem ·{" "}
+                    <span className="font-mono tabular-nums">{formatTRY(row.total)}</span>
                   </span>
                 </motion.li>
               ))}
@@ -217,12 +219,10 @@ export default function ShieldMatrix() {
 
       {/* Review queue and audit trail */}
       <aside aria-label="İnceleme kuyruğu ve denetim izi" className="w-full space-y-3 sm:w-[200px] sm:shrink-0">
-        <section className="rounded-2xl border border-white/[0.08] bg-navy-850">
+        <section className="rounded-2xl border border-white/[0.06] bg-navy-850">
           <header className="flex items-center justify-between px-3.5 pt-3 pb-2">
             <p className="text-[12px] font-semibold text-white/85">İnceleme kuyruğu</p>
-            <span className="rounded-full bg-white/[0.06] px-1.5 text-[11px] text-white/60 font-mono tabular-nums">
-              {state.queue.length}
-            </span>
+            <span className="font-mono text-[12px] text-white/50 tabular-nums">{state.queue.length}</span>
           </header>
           <ul className="min-h-[104px] divide-y divide-white/[0.06] border-t border-white/[0.06]">
             <AnimatePresence initial={false}>
@@ -238,9 +238,7 @@ export default function ShieldMatrix() {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[12px] text-white/85 font-mono tabular-nums">{item.id}</span>
-                    <span className={`rounded-full px-1.5 py-px text-[10px] font-medium ${badge[item.status]}`}>
-                      {badgeLabel[item.status]}
-                    </span>
+                    <span className={`text-[11px] font-medium ${badge[item.status]}`}>{badgeLabel[item.status]}</span>
                   </div>
                   <p className="mt-0.5 truncate text-[11px] text-white/45">{item.reason}</p>
                 </motion.li>
@@ -252,7 +250,7 @@ export default function ShieldMatrix() {
           </ul>
         </section>
 
-        <section className="rounded-2xl border border-white/[0.08] bg-navy-850">
+        <section className="rounded-2xl border border-white/[0.06] bg-navy-850">
           <header className="flex items-baseline justify-between px-3.5 pt-3 pb-2">
             <p className="text-[12px] font-semibold text-white/85">Denetim izi</p>
             <p className="text-[10.5px] text-white/40">Yalnızca ekleme</p>

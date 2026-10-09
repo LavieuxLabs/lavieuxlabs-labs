@@ -1,83 +1,125 @@
-"use client";
+import { Activity, Binary, FileCheck2, FileText, History, LockKeyhole, Network, UserCheck } from "lucide-react";
+import Reveal from "@/components/Reveal";
+import SpecCard, { type SpecRow } from "@/components/SpecCard";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { Binary, FileText, History, LockKeyhole, Network, UserCheck } from "lucide-react";
+type Standard = {
+  id: string;
+  icon: typeof Binary;
+  title: string;
+  body: string;
+  rows: SpecRow[];
+  status: { label: string; tone: "live" | "prep" | "input" };
+};
 
-const standards = [
+// Engineering and regulatory standards as datasheet cards. Status is stated plainly:
+// "Uygulamada" = built and tested, "Hazırlık" = in preparation, "Tasarım girdisi" = a reference
+// the architecture is designed against, not a certification claim.
+const standards: Standard[] = [
   {
-    code: "STD-01",
+    id: "STD-01",
     icon: Binary,
-    title: "Sıfır halüsinasyon",
-    body: "Klinik ve operasyonel karar yolunda üretken model çıktısı yer almaz. Her uyarı, sürümlenmiş ve izlenebilir bir kuraldan türetilir; aynı girdi her zaman aynı çıktıyı üretir.",
-    mechanism: "Deterministik kural motoru",
+    title: "Tekrarlanabilir karar",
+    body: "Karar yolunda üretken model yok. Aynı girdi ve kural sürümü her zaman aynı çıktıyı verir.",
+    rows: [
+      { label: "Mekanizma", value: "Sürümlenmiş kural motoru" },
+      { label: "Otomatik test", value: "2.480+", mono: true },
+      { label: "Referans", value: "IEC 62304 yaşam döngüsü" },
+    ],
+    status: { label: "Uygulamada", tone: "live" },
   },
   {
-    code: "STD-02",
+    id: "STD-02",
     icon: History,
     title: "Değiştirilemez denetim izi",
-    body: "Her değerlendirme, karar ve kullanıcı müdahalesi yalnızca eklenebilir kayıtlara yazılır. Kayıtlar sonradan düzenlenemez; karar bağlamı denetim anında eksiksiz yeniden kurulabilir.",
-    mechanism: "Append-only audit log",
+    body: "Her değerlendirme ve karar yalnızca eklenebilir kayda yazılır; her kayıt bir öncekinin özetini taşır.",
+    rows: [
+      { label: "Mekanizma", value: "Append-only · kayıt özeti zinciri" },
+      { label: "Kapsam", value: "Girdi · kural sürümü · aktör · zaman" },
+      { label: "Referans", value: "ISO/IEC 27001 kayıt kontrolleri" },
+    ],
+    status: { label: "Uygulamada", tone: "live" },
   },
   {
-    code: "STD-03",
+    id: "STD-03",
     icon: UserCheck,
     title: "İnsan denetimi",
-    body: "Sistemler öneri ve risk sinyali üretir; nihai kararı yetkili klinisyen veya operasyon uzmanı verir. Onay, ret ve gerekçe aynı kayıt zincirine bağlanır.",
-    mechanism: "Human-in-the-loop",
+    body: "Sistem öneri ve risk sinyali üretir; nihai kararı yetkili klinisyen veya uzman verir.",
+    rows: [
+      { label: "Mekanizma", value: "Human-in-the-loop kuyruğu" },
+      { label: "Kayıt", value: "Onay · düzeltme · gerekçe" },
+      { label: "Referans", value: "MDR Ek I · genel güvenlik gereklilikleri" },
+    ],
+    status: { label: "Uygulamada", tone: "live" },
   },
   {
-    code: "STD-04",
+    id: "STD-04",
     icon: FileText,
     title: "Açıklanabilirlik",
-    body: "Her risk skoru ve uyarı; tetikleyen kural, etkilenen parametre ve eşik değeriyle birlikte sunulur. Gerekçesi gösterilemeyen skor üretilmez.",
-    mechanism: "Bileşen bazlı skor açıklaması",
+    body: "Her uyarı ve skor; tetikleyen kural, parametre ve eşikle birlikte sunulur.",
+    rows: [
+      { label: "Çıktı", value: "Kural kimliği · değer · eşik" },
+      { label: "Skor", value: "Σ kural katkısı" },
+      { label: "Aralık", value: "0–100", mono: true },
+    ],
+    status: { label: "Uygulamada", tone: "live" },
   },
   {
-    code: "STD-05",
+    id: "STD-05",
+    icon: Activity,
+    title: "Klinik ölçüm protokolleri",
+    body: "Klinik parametreler doğru yöntem ve birimle hesaplanır; skor ile ölçüm karıştırılmaz.",
+    rows: [
+      { label: "QTc", value: "Fridericia · QT / ∛RR · ms" },
+      { label: "QT riski", value: "Tisdale skoru · 0–21 puan" },
+      { label: "Böbrek", value: "eGFR · CKD-EPI 2021 · mL/dk/1,73 m²" },
+    ],
+    status: { label: "Uygulamada", tone: "live" },
+  },
+  {
+    id: "STD-06",
     icon: Network,
     title: "Birlikte çalışabilirlik",
-    body: "Klinik veri modeli HL7 FHIR R4 kaynakları üzerine kurgulanır; kurumsal sistemlerle standart arayüzler üzerinden veri alışverişi hedeflenir.",
-    mechanism: "HL7 FHIR R4",
+    body: "Klinik veri modeli HL7 FHIR R4 kaynakları üzerine kurulur.",
+    rows: [
+      { label: "Standart", value: "HL7 FHIR R4" },
+      { label: "Kaynaklar", value: "MedicationRequest · Observation · Condition" },
+      { label: "Terminoloji", value: "ATC · ICD-10 · UCUM" },
+    ],
+    status: { label: "Uygulamada", tone: "live" },
   },
   {
-    code: "STD-06",
+    id: "STD-07",
     icon: LockKeyhole,
-    title: "Erişim ve izolasyon",
-    body: "Rol tabanlı erişim kontrolüyle her kullanıcı yalnızca yetkisi dahilindeki veriye ulaşır; multi-tenant mimaride kurum verileri birbirinden izole tutulur.",
-    mechanism: "RBAC · Multi-tenant",
+    title: "Veri güvenliği ve gizlilik",
+    body: "Rol tabanlı erişim ve kurum bazında izolasyon; kişisel veri yalnızca gerekli olduğu kadar işlenir.",
+    rows: [
+      { label: "Erişim", value: "RBAC · en az yetki" },
+      { label: "İzolasyon", value: "Multi-tenant" },
+      { label: "Çerçeve", value: "KVKK md. 12 · ISO/IEC 27001" },
+    ],
+    status: { label: "Tasarım girdisi", tone: "input" },
+  },
+  {
+    id: "STD-08",
+    icon: FileCheck2,
+    title: "Regülasyon hazırlığı",
+    body: "PharmaDeux, MDR Kural 11 kapsamında tıbbi cihaz yazılımı olarak konumlandırılır. CE işareti henüz yoktur.",
+    rows: [
+      { label: "Mevzuat", value: "MDR 2017/745 · Kural 11" },
+      { label: "Hedef sınıf", value: "SaMD · Sınıf IIa" },
+      { label: "Süreçler", value: "IEC 62304 · ISO 14971" },
+    ],
+    status: { label: "Hazırlık", tone: "prep" },
   },
 ];
 
 export default function StandardsGrid() {
-  const reduced = useReducedMotion();
-
   return (
-    <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.08] sm:grid-cols-2 lg:grid-cols-3">
-      {standards.map(({ code, icon: Icon, title, body, mechanism }, i) => (
-        <motion.div
-          key={code}
-          initial={reduced ? false : { opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6, delay: (i % 3) * 0.08 }}
-          className="group relative flex flex-col bg-navy-850 p-6 transition-colors duration-150 ease-out hover:bg-navy-800 sm:p-8"
-        >
-          <div className="flex items-center justify-between">
-            <Icon
-              className="h-5 w-5 text-white/40 transition-colors duration-150 ease-out group-hover:text-teal-300"
-              strokeWidth={1.6}
-            />
-            <span className="font-mono text-[10.5px] tracking-[0.16em] text-white/25">{code}</span>
-          </div>
-          <h3 className="mt-6 text-lg font-medium tracking-tight text-white">{title}</h3>
-          <p className="mt-2.5 text-sm leading-relaxed text-white/55">{body}</p>
-          <div className="mt-auto pt-6">
-            <span className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
-              <span className="h-px w-4 bg-teal-300/50 transition-all duration-150 ease-out group-hover:w-7" />
-              {mechanism}
-            </span>
-          </div>
-        </motion.div>
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {standards.map((s, i) => (
+        <Reveal key={s.id} delay={(i % 4) * 0.04} className="h-full">
+          <SpecCard id={s.id} icon={s.icon} title={s.title} body={s.body} rows={s.rows} status={s.status} />
+        </Reveal>
       ))}
     </div>
   );

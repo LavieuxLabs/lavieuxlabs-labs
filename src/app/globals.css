@@ -6,7 +6,7 @@
  * Red / amber / green stay reserved for clinical severity and risk states (rose/amber in components).
  */
 :root {
-  --background: #0f1b2d;
+  --background: #0b131f;
   --foreground: #e6edf5;
   --muted: #9aabbf;
   --line: rgba(255, 255, 255, 0.07);
@@ -22,12 +22,12 @@
 }
 
 @theme {
-  /* Navy surfaces: 950 deep (footer, ledgers) · 900 page · 850 surface · 800 card · 700 border */
-  --color-navy-950: #0c1726;
-  --color-navy-900: #0f1b2d;
-  --color-navy-850: #15253b;
-  --color-navy-800: #1a2d47;
-  --color-navy-700: #2a4262;
+  /* Surface steps (depth comes from these, never from glow): 950 deep (footer) · 900 base · 850 card/surface · 800 elevated console/modal · 700 border */
+  --color-navy-950: #080f19;
+  --color-navy-900: #0b131f;
+  --color-navy-850: #111c2b;
+  --color-navy-800: #162335;
+  --color-navy-700: #22344b;
 
   /* Product accents (academic: lavender for research collaborations) */
   --color-pharma: #4fc1b6;
@@ -79,8 +79,8 @@
 
 @utility bg-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.028) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
@@ -107,9 +107,20 @@ body {
   color: #fff;
 }
 
+/* Frosted navigation material. Solid when the user asks for reduced transparency. */
+@utility material-bar {
+  background-color: rgb(11 19 31 / 0.72);
+  /* Unprefixed only: Lightning CSS adds -webkit- itself; declaring both makes it keep just the prefixed one. */
+  backdrop-filter: blur(20px) saturate(150%);
+  @media (prefers-reduced-transparency: reduce) {
+    background-color: rgb(11 19 31);
+    backdrop-filter: none;
+  }
+}
+
 @layer components {
   .legal-prose h2 {
-    @apply text-xl font-semibold tracking-tight text-white sm:text-2xl;
+    @apply text-xl font-semibold tracking-[-0.03em] text-white sm:text-2xl;
   }
   .legal-prose h3 {
     @apply mt-8 text-base font-medium text-white;
@@ -134,10 +145,10 @@ body {
     @apply text-teal-300 underline-offset-2 hover:underline;
   }
   .legal-prose table {
-    @apply mt-6 w-full overflow-hidden rounded-xl border border-white/[0.08] text-left text-sm;
+    @apply mt-6 w-full overflow-hidden rounded-xl border border-white/[0.06] text-left text-sm;
   }
   .legal-prose th {
-    @apply border-b border-white/[0.08] bg-white/[0.03] px-4 py-3 text-[11px] font-medium uppercase tracking-wide text-white/45;
+    @apply border-b border-white/[0.06] bg-white/[0.03] px-4 py-3 text-[11px] font-medium uppercase tracking-wide text-white/45;
   }
   .legal-prose td {
     @apply border-b border-white/[0.05] px-4 py-3 align-top text-white/65;

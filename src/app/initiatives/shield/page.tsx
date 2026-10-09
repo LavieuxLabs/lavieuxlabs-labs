@@ -2,19 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowUpRight,
-  Building,
   Eye,
   FileClock,
   Gauge,
   Hourglass,
   Inbox,
-  KeyRound,
   ListChecks,
-  Lock,
   Receipt,
   Send,
   ShieldAlert,
-  Users,
 } from "lucide-react";
 import PageHero from "@/components/PageHero";
 import ShieldMatrix from "@/components/ShieldMatrix";
@@ -28,105 +24,119 @@ import ShieldConsole from "@/components/ShieldConsole";
 export const metadata: Metadata = {
   title: "Shield",
   description:
-    "Sağlık geri ödeme ve provizyon süreçlerinde fatura red riskini işlem öncesinde yakalayan açıklanabilir risk skoru ve insan denetimli karar platformu.",
+    "Hastane fatura ve provizyon süreçlerindeki SUT/SGK red risklerini işlem öncesinde tespit eden kurumsal denetim katmanı.",
 };
 
+const LABEL = "text-[11px] font-medium tracking-wider text-white/50 uppercase";
+
 const sections = [
-  { id: "problem", label: "Problem" },
-  { id: "mimari", label: "Operasyonel mimari" },
+  { id: "problem", label: "Sorun" },
+  { id: "mimari", label: "Nasıl çalışır" },
   { id: "konsol", label: "Risk skoru ve kuyruk" },
-  { id: "denetim", label: "Denetim izi" },
-  { id: "izolasyon", label: "İzolasyon ve erişim" },
+  { id: "denetim", label: "Denetim kaydı" },
+  { id: "izolasyon", label: "Erişim ve izolasyon" },
 ];
 
 const heroStats = [
-  { value: "Pre-claim", label: "İşlem öncesi red riski tespiti" },
-  { value: "HITL", label: "İnsan denetimli inceleme kuyruğu" },
-  { value: "Append-only", label: "Değiştirilemez denetim kaydı" },
-  { value: "RBAC", label: "Rol tabanlı erişim · multi-tenant" },
+  { value: "Gönderim öncesi", label: "Kontrol anı" },
+  { value: "0–100", label: "Risk skoru" },
+  { value: "Uzman onayı", label: "Karar" },
+  { value: "Append-only", label: "Denetim kaydı" },
 ];
 
 const problems = [
   {
     icon: Hourglass,
-    title: "Reaktif düzeltme döngüsü",
-    body: "Red kararı çoğu zaman fatura gönderildikten sonra öğrenilir. İtiraz, düzeltme ve yeniden gönderim; nakit akışını geciktirir ve operasyon ekiplerine tekrarlayan iş yükü bindirir.",
+    title: "Red geç öğreniliyor",
+    body: "Red kararı çoğu zaman fatura gönderildikten sonra gelir. İtiraz, düzeltme ve yeniden gönderim hem ödemeyi geciktirir hem ekibin vaktini alır.",
   },
   {
     icon: ListChecks,
-    title: "Sık değişen kurallar",
-    body: "Geri ödeme mevzuatı, paket tanımları ve kurum sözleşmeleri sık güncellenir. Kuralların bireysel deneyime dayalı takibi, tutarsız uygulamaya yol açar.",
+    title: "Kurallar sık değişiyor",
+    body: "SUT, paket tanımları ve kurum sözleşmeleri sık güncellenir. Kuralları kişisel deneyimle takip etmek, aynı kalemin farklı kişilerce farklı işlenmesine yol açar.",
   },
   {
     icon: Eye,
-    title: "Gerekçesiz skorlar",
-    body: "Neden yüksek riskli olduğu açıklanamayan bir skor, operasyon ekibine aksiyon alınabilir bilgi sunmaz ve denetimde savunulamaz.",
+    title: "Gerekçesiz skor işe yaramaz",
+    body: "Neden riskli olduğu söylenmeyen bir skor, ekibe ne yapması gerektiğini söylemez ve denetimde savunulamaz.",
   },
 ];
 
 const pipeline: FlowStep[] = [
   {
     icon: Receipt,
-    title: "İşlem ve provizyon verisi",
-    body: "Hizmet kalemleri, tanı ve işlem kodları, provizyon ve belge durumu gönderim öncesinde toplanır.",
-    detail: "Faturalama sistemine dokunmadan, gönderim öncesi katman",
+    title: "Fatura ve provizyon verisi",
+    body: "Hizmet kalemleri, tanı ve işlem kodları, provizyon ve belge durumu gönderimden önce toplanır.",
+    detail: "talep kalemleri · ICD-10 · SUT eki · provizyon durumu",
   },
   {
     icon: ShieldAlert,
-    title: "Pre-claim kural değerlendirmesi",
-    body: "Sürümlenmiş kural setleri; kod uyumu, belge eksikliği, limit ve mükerrerlik kontrollerini işlem öncesinde uygular.",
-    detail: "Sürümlenmiş kural setleri · tekrarlanabilir sonuç",
+    title: "Ön kontrol",
+    body: "Sürümlü kurallar kod uyumunu, eksik belgeyi, limitleri ve mükerrer kalemleri kontrol eder.",
+    detail: "sürümlü kural seti · tekrarlanabilir sonuç",
   },
   {
     icon: Gauge,
-    title: "Açıklanabilir risk skoru",
-    body: "Skor, kural bazlı bileşenlerin toplamıdır. Her bileşen kural kimliği ve katkı ağırlığıyla birlikte gösterilir.",
-    detail: "Skor = Σ kural katkısı",
+    title: "Risk skoru",
+    body: "Skor, tetiklenen kuralların katkılarının toplamıdır. Her katkı kural kimliğiyle birlikte görünür.",
+    detail: "Σ kural katkısı · 0–100",
   },
   {
     icon: Inbox,
     title: "İnceleme kuyruğu",
-    body: "Eşik üzerindeki işlemler, öncelik sırasıyla yetkili uzmanın kuyruğuna düşer. Sistem kendi başına gönderim kararı vermez.",
-    detail: "Human-in-the-loop",
+    body: "Eşiği aşan kalemler uzmanın kuyruğuna düşer. Shield kendi başına gönderim kararı vermez.",
+    detail: "eşik ≥ 40 · HITL",
   },
   {
     icon: Send,
-    title: "Karar ve gönderim",
-    body: "Uzman; onaylar, düzeltmeye gönderir veya gönderimi durdurur. Karar ve gerekçe işlemle birlikte saklanır.",
-    detail: "Onay · düzeltme · durdurma",
+    title: "Karar",
+    body: "Uzman onaylar, düzeltmeye gönderir ya da gönderimi durdurur. Karar ve gerekçe kalemle birlikte saklanır.",
+    detail: "onay · düzeltme · durdurma",
   },
   {
     icon: FileClock,
-    title: "Denetim izi",
-    body: "Skor hesaplaması, kural sürümü, kullanıcı kararı ve zaman damgası yalnızca eklenebilir kayda yazılır.",
-    detail: "Append-only audit log",
+    title: "Kayıt",
+    body: "Skor, kural sürümü, kararı veren kişi ve zaman yalnızca eklenebilir kayda yazılır.",
+    detail: "append-only · kayıt özeti zinciri",
   },
 ];
 
 const auditProps = [
   {
     title: "Yalnızca ekleme",
-    body: "Kayıtlar oluşturulduktan sonra güncellenemez veya silinemez; düzeltmeler bile yeni bir kayıt olarak eklenir.",
+    body: "Kayıt yazıldıktan sonra değiştirilemez ve silinemez. Düzeltme bile yeni bir kayıt olarak eklenir.",
   },
   {
     title: "Tam bağlam",
-    body: "Her kayıt; kural seti sürümünü, girdi özetini, skor bileşenlerini, aktörü ve zaman damgasını içerir.",
+    body: "Her kayıtta kural seti sürümü, girdinin özeti, skorun bileşenleri, kararı veren kişi ve zaman bulunur.",
   },
   {
-    title: "Yeniden kurulabilirlik",
-    body: "Geçmiş bir karar, o anki kural sürümü ve veriyle yeniden üretilerek denetim sırasında doğrulanabilir.",
+    title: "Yeniden üretilebilir",
+    body: "Geçmiş bir karar, o günkü kural sürümü ve veriyle aynen yeniden üretilip denetimde gösterilebilir.",
   },
   {
-    title: "Dışa aktarılabilirlik",
-    body: "Denetim kayıtları, iç denetim ve dış denetim süreçleri için yapılandırılmış biçimde dışa aktarılabilir.",
+    title: "Dışa aktarılabilir",
+    body: "Kayıtlar iç ve dış denetim için yapılandırılmış biçimde dışa aktarılabilir.",
   },
 ];
 
+const isolation = [
+  { label: "İzolasyon", value: "Her kurumun verisi, kuyruğu ve kaydı ayrı tutulur" },
+  { label: "Sorgu kapsamı", value: "Kurum kimliği her sorguda zorunlu" },
+  { label: "Erişim", value: "Rol bazında, en az yetki ilkesiyle" },
+];
+
 const roles = [
-  { role: "Kurum yöneticisi", scope: "Kullanıcı, rol ve eşik yapılandırması", access: "Yönetim" },
-  { role: "Gelir analisti", scope: "Kuyruk, raporlar ve trend analizleri", access: "Okuma" },
-  { role: "İnceleme uzmanı", scope: "Kuyruktaki işlemlere karar verme", access: "Karar" },
-  { role: "Denetçi", scope: "Denetim izi ve karar geçmişi", access: "Salt okunur" },
+  { role: "Kurum yöneticisi", scope: "Kullanıcıları, rolleri ve eşikleri ayarlar", access: "Yönetim" },
+  { role: "Gelir analisti", scope: "Kuyruğu, raporları ve eğilimleri görür", access: "Okuma" },
+  { role: "İnceleme uzmanı", scope: "Kuyruktaki kalemler için karar verir", access: "Karar" },
+  { role: "Denetçi", scope: "Kayıtları ve karar geçmişini inceler", access: "Salt okunur" },
+];
+
+const pilotAudiences = [
+  "Hastane faturalama ve gelir döngüsü birimleri",
+  "Provizyon ve SGK geri ödeme ekipleri",
+  "Birden çok hastanesi olan sağlık grupları",
 ];
 
 export default function ShieldPage() {
@@ -136,41 +146,47 @@ export default function ShieldPage() {
         visual={<ShieldMatrix />}
         visualClassName="relative mx-auto w-full max-w-[340px] sm:max-w-[560px]"
         below={
-          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.08] backdrop-blur-md lg:grid-cols-4">
+          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06] lg:grid-cols-4">
             {heroStats.map((s) => (
-              <div key={s.label} className="flex flex-col-reverse bg-navy-900/80 p-5">
+              <div key={s.label} className="flex flex-col-reverse bg-navy-900 p-5">
                 <dt className="mt-1.5 text-xs leading-snug text-white/50">{s.label}</dt>
-                <dd className="font-mono text-xl font-medium tracking-tight text-indigo-100 sm:text-2xl">{s.value}</dd>
+                <dd
+                  className={`text-xl font-medium tracking-[-0.01em] text-white sm:text-2xl ${
+                    /\d/.test(s.value) ? "font-mono tabular-nums" : ""
+                  }`}
+                >
+                  {s.value}
+                </dd>
               </div>
             ))}
           </dl>
         }
         breadcrumbs={[
           { href: "/", label: "Ana sayfa" },
-          { href: "/#platformlar", label: "Platformlar" },
+          { href: "/#platformlar", label: "Ürünler" },
           { label: "Shield" },
         ]}
-        eyebrow="Healthcare Revenue Integrity · Denial Risk OS"
+        eyebrow="Gelir bütünlüğü · provizyon denetimi"
         title={
           <>
-            Shield: <span className="text-white/50">red riskini fatura gönderilmeden önce görün.</span>
+            Shield. <span className="text-white/50">Red riskini fatura gönderilmeden önce görün.</span>
           </>
         }
-        description="Sağlık geri ödeme ve provizyon süreçlerinde red (denial) risklerini işlem öncesinde yakalayan; her skoru gerekçesiyle açıklayan ve kararı yetkili uzmana bırakan operasyonel karar platformu."
+        description="Hastane fatura ve provizyon süreçlerindeki SUT/SGK red risklerini işlem öncesinde tespit eden kurumsal denetim katmanı. Riskli kalem, nedeniyle birlikte uzmanın kuyruğuna düşer; gönderip göndermemeye uzman karar verir."
       >
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link
             href="/contact?solution=shield"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors hover:bg-indigo-200"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors duration-150 ease-out hover:bg-white/90"
           >
-            Demo / Niyet Mektubu (LOI)
-            <ArrowUpRight className="h-4 w-4" />
+            Demo veya pilot başvurusu
+            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </Link>
           <a
             href="#konsol"
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/[0.03] px-5 py-3 text-sm font-medium text-white backdrop-blur transition-colors hover:border-white/30"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/[0.06] px-5 py-3 text-sm font-medium text-white transition-colors duration-150 ease-out hover:bg-white/[0.1]"
           >
-            Etkileşimli örneği deneyin
+            Örneği deneyin
           </a>
         </div>
       </PageHero>
@@ -181,15 +197,15 @@ export default function ShieldPage() {
       <section id="problem" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            eyebrow="Problem tanımı"
-            title="Red kararı, gönderimden sonra öğrenildiğinde zaten geç kalınmıştır."
-            description="Gelir bütünlüğü kayıplarının önemli bir kısmı önlenebilir hatalardan doğar: eksik belge, kod uyumsuzluğu, limit aşımı. Bu hatalar işlem öncesinde, kural bazlı ve açıklanabilir biçimde yakalanabilir."
+            eyebrow="Sorun"
+            title="Red, gönderimden sonra öğrenildiğinde iş iki katına çıkar."
+            description="Reddedilen faturaların önemli bir kısmı önlenebilir hatalardan doğar: eksik belge, kod uyumsuzluğu, limit aşımı. Bunlar gönderimden önce, kuralla ve gerekçesiyle yakalanabilir."
           />
-          <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.08] md:grid-cols-3">
+          <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.06] md:grid-cols-3">
             {problems.map(({ icon: Icon, title, body }) => (
               <div key={title} className="bg-navy-850 p-6 sm:p-8">
-                <Icon className="h-5 w-5 text-indigo-300/80" strokeWidth={1.6} />
-                <h3 className="mt-5 text-base font-medium text-white">{title}</h3>
+                <Icon className="h-5 w-5 text-white/45" strokeWidth={1.6} aria-hidden="true" />
+                <h3 className="mt-5 text-base font-semibold tracking-[-0.01em] text-white">{title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/55">{body}</p>
               </div>
             ))}
@@ -197,13 +213,13 @@ export default function ShieldPage() {
         </div>
       </section>
 
-      {/* Architecture */}
+      {/* How it works */}
       <section id="mimari" className="relative scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            eyebrow="Operasyonel mimari"
-            title="Gönderim öncesinde konumlanan bir karar katmanı."
-            description="Shield, mevcut faturalama sistemlerinin yerini almaz; gönderim öncesinde çalışan, kural bazlı ve denetlenebilir bir kontrol katmanı olarak konumlanır."
+            eyebrow="Nasıl çalışır"
+            title="Faturalama sisteminizin önünde bir kontrol katmanı."
+            description="Shield mevcut faturalama sisteminin yerini almaz. Gönderimden hemen önce çalışır, kalemleri kurallarla kontrol eder ve şüpheli olanları uzmana gösterir."
           />
           <div className="mt-14">
             <FlowDiagram steps={pipeline} accent="indigo" />
@@ -217,26 +233,17 @@ export default function ShieldPage() {
           <div className="grid gap-14 lg:grid-cols-[1fr_1.6fr] lg:items-start">
             <div className="lg:sticky lg:top-40">
               <SectionHeader
-                eyebrow="Açıklanabilir skor · inceleme kuyruğu"
+                eyebrow="Risk skoru ve inceleme kuyruğu"
                 title="Her skorun arkasında okunabilir bir gerekçe."
-                description="Risk skoru, tetiklenen kuralların katkılarının toplamıdır. Uzman, hangi kuralın skoru ne kadar etkilediğini görür ve kararını bu gerekçeye dayandırır."
+                description="Risk skoru, tetiklenen kuralların katkılarının toplamıdır. Uzman hangi kuralın skoru ne kadar etkilediğini görür ve kararını buna göre verir."
               />
               <Reveal className="mt-8 space-y-3 text-sm text-white/55">
-                <p className="flex gap-3">
-                  <span className="font-mono text-indigo-300/80">01</span>
-                  Kuyruktan bir işlem seçin; skor bileşenleri kural kimlikleriyle görünür.
-                </p>
-                <p className="flex gap-3">
-                  <span className="font-mono text-indigo-300/80">02</span>
-                  Onaylayın, düzeltmeye gönderin veya gönderimi durdurun.
-                </p>
-                <p className="flex gap-3">
-                  <span className="font-mono text-indigo-300/80">03</span>
-                  Kararınız denetim izine yeni bir kayıt olarak eklenir; geri alınamaz.
-                </p>
+                <p>Kuyruktan bir talep seçin; skoru oluşturan kurallar listelenir.</p>
+                <p>Onaylayın, düzeltmeye gönderin ya da gönderimi durdurun.</p>
+                <p>Kararınız denetim kaydına yeni bir satır olarak eklenir ve geri alınamaz.</p>
               </Reveal>
             </div>
-            <Reveal>
+            <Reveal className="min-w-0">
               <ShieldConsole />
             </Reveal>
           </div>
@@ -247,15 +254,14 @@ export default function ShieldPage() {
       <section id="denetim" className="relative scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            eyebrow="Append-only audit log"
-            title="Değiştirilemez denetim altyapısı."
-            description="Bir kararın savunulabilir olması, o kararın hangi veri, hangi kural sürümü ve hangi kullanıcıyla verildiğinin eksiksiz gösterilebilmesine bağlıdır."
+            eyebrow="Denetim kaydı"
+            title="Kim, neyi, hangi kurala göre karar verdi."
+            description="Bir kararı savunabilmek için hangi veriyle, hangi kural sürümüyle ve kimin tarafından verildiğini eksiksiz gösterebilmek gerekir."
           />
-          <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.08] sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-4">
             {auditProps.map((p, i) => (
-              <Reveal key={p.title} delay={i * 0.05} className="bg-navy-850 p-6 sm:p-7">
-                <Lock className="h-4 w-4 text-indigo-300/70" />
-                <h3 className="mt-5 text-base font-medium text-white">{p.title}</h3>
+              <Reveal key={p.title} delay={i * 0.04} className="bg-navy-850 p-6 sm:p-7">
+                <h3 className="text-base font-semibold tracking-[-0.01em] text-white">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/55">{p.body}</p>
               </Reveal>
             ))}
@@ -263,63 +269,47 @@ export default function ShieldPage() {
         </div>
       </section>
 
-      {/* Isolation & RBAC */}
+      {/* Isolation & roles */}
       <section id="izolasyon" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
           <div>
             <SectionHeader
-              eyebrow="Multi-tenant · RBAC"
-              title="Kurum verisi kurumda kalır."
-              description="Her kurum, mantıksal olarak izole edilmiş bir kiracı (tenant) alanında çalışır. Sorgular, kuyruklar ve denetim kayıtları kiracı sınırını aşamaz; erişim, rol bazında en az yetki ilkesiyle tanımlanır."
+              eyebrow="Erişim ve izolasyon"
+              title="Kurumun verisi kurumda kalır."
+              description="Her kurum kendi alanında çalışır. Sorgular, kuyruklar ve kayıtlar başka bir kurumun verisine erişemez; kimin neyi görebileceği role göre belirlenir."
             />
-            <Reveal className="mt-10 grid grid-cols-3 gap-3">
-              {["Kurum A", "Kurum B", "Kurum C"].map((t) => (
-                <div key={t} className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
-                  <Building className="h-4 w-4 text-indigo-300/70" />
-                  <p className="mt-3 text-[13px] text-white/80">{t}</p>
-                  <div className="mt-3 space-y-1.5">
-                    {["Veri", "Kuyruk", "Audit"].map((layer) => (
-                      <div
-                        key={layer}
-                        className="rounded-md border border-white/[0.06] bg-navy-850 px-2 py-1 font-mono text-[10px] text-white/40"
-                      >
-                        {layer}
-                      </div>
-                    ))}
+            <Reveal className="mt-10">
+              <dl className="divide-y divide-white/[0.06] border-y border-white/[0.06]">
+                {isolation.map((row) => (
+                  <div key={row.label} className="grid grid-cols-[120px_1fr] gap-4 py-3">
+                    <dt className="text-[12px] text-white/45">{row.label}</dt>
+                    <dd className="text-[13.5px] text-white/80">{row.value}</dd>
                   </div>
-                </div>
-              ))}
+                ))}
+              </dl>
             </Reveal>
-            <p className="mt-4 flex items-center gap-2 font-mono text-[11px] text-white/35">
-              <KeyRound className="h-3.5 w-3.5" /> Kiracı kimliği her sorguda zorunlu kapsamdır
-            </p>
           </div>
 
-          <Reveal className="self-start overflow-hidden rounded-2xl border border-white/[0.08]">
-            <div className="flex items-center gap-2 border-b border-white/[0.08] bg-white/[0.03] px-5 py-3.5">
-              <Users className="h-4 w-4 text-white/40" />
-              <p className="text-xs font-medium uppercase tracking-wide text-white/45">Örnek rol matrisi</p>
-            </div>
+          <Reveal className="self-start overflow-hidden rounded-2xl border border-white/[0.06] bg-navy-850">
+            <p className={`border-b border-white/[0.06] px-5 py-3 ${LABEL}`}>Örnek rol tanımları</p>
             <table className="w-full text-left text-sm">
               <tbody className="divide-y divide-white/[0.06]">
                 {roles.map((r) => (
-                  <tr key={r.role} className="transition-colors hover:bg-white/[0.02]">
-                    <td className="px-5 py-4 align-top">
-                      <p className="text-white">{r.role}</p>
-                      <p className="mt-1 text-xs leading-relaxed text-white/45">{r.scope}</p>
+                  <tr key={r.role}>
+                    <td className="px-5 py-3.5 align-top">
+                      <p className="font-medium text-white">{r.role}</p>
+                      <p className="mt-0.5 text-xs leading-relaxed text-white/45">{r.scope}</p>
                     </td>
-                    <td className="px-5 py-4 text-right align-top">
-                      <span className="inline-block whitespace-nowrap rounded-full border border-indigo-400/20 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-indigo-200/80">
-                        {r.access}
-                      </span>
+                    <td className="px-5 py-3.5 text-right align-top">
+                      <span className={`whitespace-nowrap ${LABEL}`}>{r.access}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <p className="border-t border-white/[0.06] bg-white/[0.02] px-5 py-4 text-xs leading-relaxed text-white/40">
-              Roller ve yetki kapsamları kurum ihtiyacına göre yapılandırılır. Shield klinik tanı veya tedavi kararı
-              üretmez; operasyonel ve finansal süreçleri destekler.
+            <p className="border-t border-white/[0.06] px-5 py-4 text-xs leading-relaxed text-white/40">
+              Roller kurumun ihtiyacına göre ayarlanır. Shield tanı koymaz ve tedavi kararı vermez; yalnızca faturalama
+              ve provizyon süreçlerinde çalışır.
             </p>
           </Reveal>
         </div>
@@ -328,22 +318,14 @@ export default function ShieldPage() {
       <CtaPanel
         accent="indigo"
         eyebrow="Demo ve pilot"
-        title="Shield Demo / Niyet Mektubu (LOI)"
-        description="Kurumunuzun red örüntüleri üzerinde Shield'ın nasıl çalışacağını görmek için bir demo planlayın veya bağlayıcı olmayan bir Niyet Mektubu ile pilot kapsamını birlikte tanımlayalım."
+        title="Shield'ı kendi faturalarınızla görün."
+        description="Kurumunuzda en sık görülen red nedenleri üzerinde bir demo yapabiliriz. Pilot için kapsamı bağlayıcı olmayan bir Niyet Mektubu (LOI) ile birlikte yazıyoruz."
         primaryHref="/contact?solution=shield"
-        primaryLabel="Shield Demo / Niyet Mektubu (LOI)"
+        primaryLabel="Demo veya pilot başvurusu"
         aside={
-          <ul className="space-y-3 self-center">
-            {[
-              "Hastane gelir döngüsü ve faturalama birimleri",
-              "Provizyon ve geri ödeme operasyon ekipleri",
-              "Çok lokasyonlu sağlık grupları",
-            ].map((item) => (
-              <li
-                key={item}
-                className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-navy-850/70 px-4 py-3.5 text-sm text-white/70"
-              >
-                <Receipt className="h-4 w-4 shrink-0 text-indigo-300" strokeWidth={1.6} />
+          <ul className="divide-y divide-white/[0.06] self-center border-y border-white/[0.06]">
+            {pilotAudiences.map((item) => (
+              <li key={item} className="py-4 text-sm text-white/70">
                 {item}
               </li>
             ))}

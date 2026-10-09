@@ -18,11 +18,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "LavieuxLabs — Sağlık Teknolojileri Ar-Ge Kolektifi",
+    default: "LavieuxLabs — İlaç güvenliği ve faturalama için karar destek yazılımı",
     template: "%s · LavieuxLabs",
   },
   description:
-    "Klinik karar destek ve sağlık gelir bütünlüğü için deterministik, denetlenebilir ve insan denetimli sistemler: PharmaDeux CDSS ve Shield.",
+    "PharmaDeux reçete anında ilaç güvenliğini, Shield fatura gönderilmeden önce SUT/SGK red riskini kontrol eder. Son kararı her zaman yetkili kişi verir.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

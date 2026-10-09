@@ -4,13 +4,10 @@ import {
   Activity,
   ArrowUpRight,
   Binary,
-  ClipboardCheck,
   Database,
   FileSearch,
-  GitCompare,
   History,
   Layers,
-  Pill,
   Repeat,
   Scale,
   TriangleAlert,
@@ -27,44 +24,47 @@ import Reveal from "@/components/Reveal";
 export const metadata: Metadata = {
   title: "PharmaDeux CDSS",
   description:
-    "18 temel güvenlik düzleminde ilaç-ilaç etkileşimlerini, organ toksisitesini ve kümülatif organ yükünü denetleyen deterministik klinik karar destek sistemi.",
+    "Çoklu ilaç tedavilerinde toksisite ve kümülatif organ yükünü reçete anında hekime bildiren klinik karar destek sistemi.",
 };
 
+const LABEL = "text-[11px] font-medium tracking-wider text-white/50 uppercase";
+const hasDigit = (value: string) => /\d/.test(value);
+
 const sections = [
-  { id: "problem", label: "Problem" },
-  { id: "mimari", label: "Çözüm mimarisi" },
-  { id: "dogrulama", label: "Doğrulama kanıtları" },
+  { id: "problem", label: "Sorun" },
+  { id: "mimari", label: "Nasıl çalışır" },
+  { id: "dogrulama", label: "Doğrulama" },
   { id: "regulasyon", label: "Regülasyon" },
-  { id: "protokol", label: "Klinik protokol" },
+  { id: "protokol", label: "Klinik doğrulama planı" },
 ];
 
 const heroStats = [
-  { value: "18", label: "Temel güvenlik düzlemi" },
-  { value: "2.480+", label: "Otomatik birim / entegrasyon testi" },
-  { value: "FHIR R4", label: "HL7 veri standardı" },
+  { value: "18", label: "Güvenlik düzlemi" },
+  { value: "2.480+", label: "Otomatik test" },
+  { value: "FHIR R4", label: "Veri standardı" },
   { value: "THS 4", label: "Teknoloji hazırlık seviyesi" },
 ];
 
 const problems = [
   {
     icon: Layers,
-    title: "Polifarmasi",
-    body: "Beş ve üzeri eşzamanlı ilaç kullanımında olası etkileşim kombinasyonları hızla çoğalır. Kombinasyonların elle, tutarlı biçimde taranması klinik iş yükü içinde gerçekçi değildir.",
+    title: "Çoklu ilaç kullanımı",
+    body: "Beş veya daha fazla ilaç kullanan hastada olası etkileşim sayısı hızla artar. Bunları her reçetede elle taramak gerçekçi değil.",
   },
   {
     icon: Activity,
-    title: "Değişken organ fonksiyonu",
-    body: "Böbrek ve karaciğer fonksiyonundaki değişim, aynı reçetenin güvenlik profilini hasta bazında değiştirir. Doz uygunluğu, güncel laboratuvar değerleriyle birlikte değerlendirilmelidir.",
+    title: "Değişen böbrek ve karaciğer fonksiyonu",
+    body: "Aynı reçete eGFR'si 90 olan hastada güvenliyken 30 olan hastada doz ayarı gerektirebilir. Kontrol, güncel laboratuvar değerine bakmalı.",
   },
   {
     icon: Scale,
     title: "Kümülatif yük",
-    body: "Tek başına kabul edilebilir ilaçlar, aynı organ veya fizyolojik eksen üzerinde toplandığında klinik olarak anlamlı bir yük oluşturabilir. İkili etkileşim kontrolleri bu birikimi görmez.",
+    body: "Tek başına kabul edilebilir ilaçlar aynı organda toplandığında risk oluşturabilir. İki ilaca bakan etkileşim kontrolü bu birikimi görmez.",
   },
   {
     icon: TriangleAlert,
     title: "Uyarı yorgunluğu",
-    body: "Bağlamdan bağımsız ve düşük özgüllüklü uyarılar, klinisyenin uyarıları rutin olarak geçmesine yol açar. Kritik bir uyarının değeri, gürültünün içinde kaybolur.",
+    body: "Bağlama bakmayan uyarılar o kadar sık çıkar ki hekim hepsini geçmeye alışır. Önemli uyarı da bu kalabalıkta kaybolur.",
   },
 ];
 
@@ -73,39 +73,39 @@ const pairCounts = [5, 8, 10, 15].map((n) => ({ n, pairs: (n * (n - 1)) / 2 }));
 const pipeline: FlowStep[] = [
   {
     icon: Database,
-    title: "FHIR R4 veri alımı",
-    body: "Hasta, ilaç istemi, laboratuvar, tanı ve alerji verileri standart kaynaklar üzerinden alınır.",
+    title: "Veri alımı",
+    body: "Hasta, ilaç istemi, laboratuvar, tanı ve alerji bilgisi HL7 FHIR R4 kaynakları olarak alınır.",
     detail: "Patient · MedicationRequest · Observation · Condition · AllergyIntolerance",
   },
   {
     icon: Repeat,
-    title: "Normalizasyon",
-    body: "Etken madde, doz, birim ve uygulama yolu ortak bir terminolojiye eşlenir; eksik veri açıkça işaretlenir.",
-    detail: "Eksik veri → değerlendirme dışı değil, görünür uyarı",
+    title: "Eşleştirme",
+    body: "Etken madde, doz, birim ve uygulama yolu ortak kodlara çevrilir. Eksik bilgi işaretlenir, atlanmaz.",
+    detail: "ATC · UCUM birimleri · eksik veri bayrağı",
   },
   {
     icon: Binary,
-    title: "Deterministik kural motoru",
-    body: "Her istem, 18 güvenlik düzleminde sürümlenmiş kural setleriyle değerlendirilir. Aynı girdi her zaman aynı çıktıyı üretir.",
-    detail: "Sürümlenmiş kural setleri · olasılıksal çıkarım yok",
+    title: "Kural değerlendirmesi",
+    body: "Reçete 18 güvenlik düzleminde sürümlü kurallarla kontrol edilir. Aynı girdi her zaman aynı sonucu verir.",
+    detail: "18 düzlem · sürümlü kurallar",
   },
   {
     icon: FileSearch,
-    title: "Şiddet ve gerekçe",
-    body: "Bulgular şiddet düzeyine göre sınıflandırılır; her bulgu tetikleyen kural, parametre ve eşik değeriyle sunulur.",
-    detail: "Kural kimliği · tetikleyen değer · eşik",
+    title: "Bulgu ve gerekçe",
+    body: "Bulgu şiddet düzeyiyle birlikte gösterilir: hangi kural, hangi değer, hangi eşik.",
+    detail: "kural kimliği · tetikleyen değer · eşik",
   },
   {
     icon: UserCheck,
-    title: "Klinisyen kararı",
-    body: "Nihai karar klinisyendedir. Uyarıyı kabul, düzeltme veya gerekçeli geçme seçenekleri kayıt altına alınır.",
-    detail: "Human-in-the-loop",
+    title: "Hekim kararı",
+    body: "Son karar hekimindir. Uyarıyı kabul etmek, düzeltmek ya da gerekçe yazıp geçmek kayda geçer.",
+    detail: "kabul · düzeltme · gerekçeli geçme",
   },
   {
     icon: History,
-    title: "Denetim izi",
-    body: "Girdi, kural sürümü, bulgu ve klinisyen kararı yalnızca eklenebilir kayda yazılır.",
-    detail: "Append-only · geriye dönük yeniden kurulabilir",
+    title: "Kayıt",
+    body: "Girdi, kural sürümü, bulgu ve hekimin kararı yalnızca eklenebilir kayda yazılır.",
+    detail: "append-only · kayıt özeti zinciri",
   },
 ];
 
@@ -130,7 +130,7 @@ const planeGroups = [
     ],
   },
   {
-    title: "Hasta bağlamı ve doz",
+    title: "Hasta ve doz",
     planes: [
       "Doz aralığı uygunluğu",
       "Renal doz ayarı",
@@ -143,92 +143,72 @@ const planeGroups = [
 
 const validation = [
   {
-    title: "Otomatik test kapsamı",
+    title: "Otomatik test",
     value: "2.480+",
-    body: "Kural motoru, veri dönüşümleri ve entegrasyon katmanları; her değişiklikte çalışan otomatik birim ve entegrasyon testleriyle doğrulanır.",
-    wide: true,
+    body: "Kural motoru, veri dönüşümleri ve entegrasyonlar her değişiklikte otomatik testlerden geçer.",
   },
   {
-    title: "Birlikte çalışabilirlik",
+    title: "Veri standardı",
     value: "HL7 FHIR R4",
-    body: "Veri modeli FHIR R4 kaynakları üzerine kurgulanır; entegrasyon testleri standart kaynak yapıları üzerinden yürütülür.",
+    body: "Entegrasyon testleri gerçek FHIR R4 kaynak yapılarıyla çalışır.",
   },
   {
-    title: "Teknoloji hazırlık seviyesi",
+    title: "Hazırlık seviyesi",
     value: "THS 4",
-    body: "Bileşenler laboratuvar ortamında doğrulanmıştır. Bir sonraki aşama, ilgili ortamda retrospektif doğrulamadır.",
+    body: "Bileşenler laboratuvar ortamında doğrulandı. Sıradaki adım, anonimleştirilmiş gerçek vakalarla doğrulama.",
   },
   {
     title: "Tekrarlanabilirlik",
-    value: "Deterministik",
-    body: "Aynı girdi ve aynı kural sürümüyle yapılan her değerlendirme özdeş çıktı üretir; regresyon testleri bunu her sürümde denetler.",
-  },
-  {
-    title: "İzlenebilirlik",
-    value: "Kural → Test",
-    body: "Her kural, tanımlandığı klinik gereksinime ve onu doğrulayan test senaryolarına bağlanır.",
+    value: "Aynı girdi, aynı sonuç",
+    body: "Aynı girdi ve aynı kural sürümü her seferinde aynı sonucu verir. Regresyon testleri bunu her sürümde kontrol eder.",
   },
 ];
 
 const frameworks = [
-  {
-    code: "EU MDR 2017/745",
-    scope: "Tıbbi cihaz yönetmeliği · Ek VIII Kural 11 kapsamında yazılım sınıflandırması",
-    status: "Sınıf IIa hedefi",
-  },
-  {
-    code: "IEC 62304",
-    scope: "Tıbbi cihaz yazılımı yaşam döngüsü süreçleri",
-    status: "Mimari uyum",
-  },
-  {
-    code: "ISO 14971",
-    scope: "Tıbbi cihazlar için risk yönetimi",
-    status: "Mimari uyum",
-  },
-  {
-    code: "ISO 13485",
-    scope: "Tıbbi cihaz kalite yönetim sistemi",
-    status: "Yol haritasında",
-  },
-  {
-    code: "IEC 62366-1",
-    scope: "Kullanılabilirlik mühendisliği",
-    status: "Yol haritasında",
-  },
+  { code: "EU MDR 2017/745", scope: "Tıbbi cihaz yönetmeliği · Ek VIII Kural 11", status: "Sınıf IIa hedefi" },
+  { code: "IEC 62304", scope: "Tıbbi cihaz yazılımı yaşam döngüsü", status: "Mimari uyum" },
+  { code: "ISO 14971", scope: "Tıbbi cihazlarda risk yönetimi", status: "Mimari uyum" },
+  { code: "ISO 13485", scope: "Kalite yönetim sistemi", status: "Yol haritasında" },
+  { code: "IEC 62366-1", scope: "Kullanılabilirlik mühendisliği", status: "Yol haritasında" },
 ];
 
 const protocol = [
   {
     phase: "Faz 0",
     title: "Protokol ve etik kurul",
-    body: "Çalışma protokolü, birincil ve ikincil sonlanım noktaları ve veri yönetim planı hazırlanır; etik kurul başvurusu yapılır.",
-    status: "Hazırlık",
+    body: "Birincil ve ikincil sonlanım noktaları ile veri yönetim planı yazılır, etik kurula başvurulur.",
+    status: "Hazırlıkta",
   },
   {
     phase: "Faz 1",
-    title: "Retrospektif veri seti",
-    body: "İş birliği yapılan kurumdan, anonimleştirilmiş geçmiş reçete ve laboratuvar verileri KVKK'ya uygun olarak temin edilir.",
-    status: "Planlanan",
+    title: "Geçmiş veri",
+    body: "Ortak kurumdan anonimleştirilmiş eski reçete ve laboratuvar verileri KVKK'ya uygun şekilde alınır.",
+    status: "Planlandı",
   },
   {
     phase: "Faz 2",
     title: "Referans standart",
-    body: "Bağımsız klinik eczacı ve hekim paneli, aynı vakaları sistemi görmeden değerlendirerek referans standardı oluşturur.",
-    status: "Planlanan",
+    body: "Sistemi görmeyen bağımsız bir klinik eczacı ve hekim paneli aynı vakaları değerlendirir.",
+    status: "Planlandı",
   },
   {
     phase: "Faz 3",
     title: "Kör karşılaştırma",
-    body: "Sistem çıktıları referans standartla karşılaştırılır; duyarlılık, özgüllük, pozitif prediktif değer ve uyarı yükü raporlanır.",
-    status: "Planlanan",
+    body: "Sistemin bulguları panelin kararlarıyla karşılaştırılır. Duyarlılık, özgüllük, pozitif prediktif değer ve uyarı sayısı raporlanır.",
+    status: "Planlandı",
   },
   {
     phase: "Faz 4",
     title: "Klinik değerlendirme raporu",
-    body: "Bulgular, MDR kapsamındaki klinik değerlendirme dokümantasyonuna ve prospektif pilot tasarımına girdi olarak aktarılır.",
-    status: "Planlanan",
+    body: "Sonuçlar MDR klinik değerlendirme dosyasına ve ileriye dönük pilot tasarımına aktarılır.",
+    status: "Planlandı",
   },
+];
+
+const pilotAudiences = [
+  "Klinik eczacılık ve ilaç güvenliği ekipleri",
+  "Üniversite ve eğitim-araştırma hastaneleri",
+  "Geçmiş veriyle doğrulama çalışması yapabilecek kurumlar",
 ];
 
 export default function PharmaDeuxPage() {
@@ -238,41 +218,43 @@ export default function PharmaDeuxPage() {
         visual={<PharmaCapsule />}
         visualClassName="relative mx-auto aspect-[4/5] w-full max-w-[360px] sm:aspect-square sm:max-w-[420px] lg:max-w-[520px]"
         below={
-          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.08] backdrop-blur-md lg:grid-cols-4">
+          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06] lg:grid-cols-4">
             {heroStats.map((s) => (
-              <div key={s.label} className="flex flex-col-reverse bg-navy-900/80 p-5">
+              <div key={s.label} className="flex flex-col-reverse bg-navy-900 p-5">
                 <dt className="mt-1.5 text-xs leading-snug text-white/50">{s.label}</dt>
-                <dd className="font-mono text-xl font-medium tracking-tight text-teal-100 sm:text-2xl">{s.value}</dd>
+                <dd className="font-mono text-xl font-medium tracking-[-0.01em] text-white tabular-nums sm:text-2xl">
+                  {s.value}
+                </dd>
               </div>
             ))}
           </dl>
         }
         breadcrumbs={[
           { href: "/", label: "Ana sayfa" },
-          { href: "/#platformlar", label: "Platformlar" },
+          { href: "/#platformlar", label: "Ürünler" },
           { label: "PharmaDeux CDSS" },
         ]}
-        eyebrow="Klinik Karar Destek Sistemi · SaMD"
+        eyebrow="Klinik karar destek · ilaç güvenliği"
         title={
           <>
-            PharmaDeux CDSS: <span className="text-white/50">reçete anında deterministik ilaç güvenliği.</span>
+            PharmaDeux CDSS. <span className="text-white/50">Reçete yazılırken ilaç güvenliğini kontrol eder.</span>
           </>
         }
-        description="İlaç-ilaç etkileşimlerini, organ toksisitesini ve kümülatif organ yükünü 18 temel güvenlik düzleminde denetleyen; her bulgusunu gerekçesiyle sunan ve nihai kararı klinisyene bırakan klinik güvenlik motoru."
+        description="Çoklu ilaç tedavilerinde toksisite ve kümülatif organ yükünü reçete anında hekime bildiren klinik karar destek sistemi. Her uyarı, onu tetikleyen kural ve eşik değeriyle birlikte gösterilir; son karar hekimindir."
       >
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link
             href="/contact?solution=pharmadeux"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors hover:bg-teal-200"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors duration-150 ease-out hover:bg-white/90"
           >
-            Pilot Başvurusu (LOI)
-            <ArrowUpRight className="h-4 w-4" />
+            Pilot başvurusu (LOI)
+            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </Link>
           <a
             href="#mimari"
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/[0.03] px-5 py-3 text-sm font-medium text-white backdrop-blur transition-colors hover:border-white/30"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/[0.06] px-5 py-3 text-sm font-medium text-white transition-colors duration-150 ease-out hover:bg-white/[0.1]"
           >
-            Mimariyi inceleyin
+            Nasıl çalıştığını görün
           </a>
         </div>
       </PageHero>
@@ -283,46 +265,47 @@ export default function PharmaDeuxPage() {
       <section id="problem" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            eyebrow="Problem tanımı"
-            title="Polifarmasi ve önlenebilir ilaç hataları."
-            description="İlaç güvenliği, tek bir etkileşim kontrolünden ibaret değildir. Risk; ilaç sayısı, organ fonksiyonu ve birikimli etkilerin kesişiminde ortaya çıkar."
+            eyebrow="Sorun"
+            title="Çoklu ilaç kullanımında riski elle izlemek zor."
+            description="Risk yalnızca iki ilacın etkileşiminden doğmaz. İlaç sayısı, böbrek ve karaciğer fonksiyonu ve aynı organa binen toplam yük birlikte değerlendirilmelidir."
           />
 
           <div className="mt-14 grid gap-5 lg:grid-cols-[1.4fr_1fr]">
-            <div className="grid gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.08] sm:grid-cols-2">
+            <div className="grid gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.06] sm:grid-cols-2">
               {problems.map(({ icon: Icon, title, body }) => (
                 <div key={title} className="bg-navy-850 p-6 sm:p-7">
-                  <Icon className="h-5 w-5 text-teal-300/80" strokeWidth={1.6} />
-                  <h3 className="mt-5 text-base font-medium text-white">{title}</h3>
+                  <Icon className="h-5 w-5 text-white/45" strokeWidth={1.6} aria-hidden="true" />
+                  <h3 className="mt-5 text-base font-semibold tracking-[-0.01em] text-white">{title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-white/55">{body}</p>
                 </div>
               ))}
             </div>
 
-            <Reveal className="flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 sm:p-7">
-              <p className="text-xs font-medium uppercase tracking-wide text-white/40">Kombinatoryal büyüme</p>
+            <Reveal className="flex flex-col rounded-2xl border border-white/[0.06] bg-navy-850 p-6 sm:p-7">
+              <p className={LABEL}>İkili kombinasyon sayısı</p>
               <p className="mt-3 text-sm leading-relaxed text-white/60">
-                n eşzamanlı ilaç için yalnızca ikili kombinasyon sayısı n(n−1)/2 olarak büyür. Üçlü ve daha üst düzey
-                birikimli etkiler bu sayının dışındadır.
+                n ilaç için ikili kombinasyon sayısı n(n−1)/2&apos;dir. Üçlü ve daha karmaşık etkiler bu sayıya dahil
+                değildir.
               </p>
               <table className="mt-6 w-full text-left text-sm">
                 <thead>
-                  <tr className="border-b border-white/[0.08] text-xs font-medium uppercase tracking-wide text-white/40">
-                    <th className="py-2 font-normal">İlaç sayısı</th>
-                    <th className="py-2 text-right font-normal">İkili kombinasyon</th>
+                  <tr className="border-b border-white/[0.06] text-[11px] text-white/45">
+                    <th className="py-2 font-medium">İlaç sayısı</th>
+                    <th className="py-2 text-right font-medium">İkili kombinasyon</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-white/[0.06]">
                   {pairCounts.map(({ n, pairs }) => (
-                    <tr key={n} className="border-b border-white/[0.05]">
-                      <td className="py-2.5 font-mono text-white/70">{n}</td>
+                    <tr key={n}>
+                      <td className="py-2.5 font-mono text-white/70 tabular-nums">{n}</td>
                       <td className="py-2.5 text-right">
                         <span className="inline-flex items-center gap-3">
                           <span
-                            className="h-1.5 rounded-full bg-gradient-to-r from-teal-400/30 to-teal-300"
+                            className="h-1 rounded-sm bg-pharma/60"
                             style={{ width: `${(pairs / 105) * 120}px` }}
+                            aria-hidden="true"
                           />
-                          <span className="w-10 font-mono text-teal-100">{pairs}</span>
+                          <span className="w-10 font-mono text-white tabular-nums">{pairs}</span>
                         </span>
                       </td>
                     </tr>
@@ -330,21 +313,21 @@ export default function PharmaDeuxPage() {
                 </tbody>
               </table>
               <p className="mt-auto pt-6 text-xs leading-relaxed text-white/40">
-                Dünya Sağlık Örgütü, ilaç hatalarının küresel yıllık maliyetini yaklaşık 42 milyar ABD doları olarak
-                tahmin etmektedir. <span className="text-white/30">— DSÖ, Medication Without Harm (2017)</span>
+                Dünya Sağlık Örgütü, ilaç hatalarının dünya genelindeki yıllık maliyetini yaklaşık 42 milyar ABD doları
+                olarak tahmin ediyor. <span className="text-white/30">DSÖ, Medication Without Harm (2017)</span>
               </p>
             </Reveal>
           </div>
         </div>
       </section>
 
-      {/* Architecture */}
+      {/* How it works */}
       <section id="mimari" className="relative scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            eyebrow="Çözüm mimarisi"
-            title="Veriden karara, her adımı izlenebilir bir hat."
-            description="PharmaDeux, klinik veriyi standart kaynaklardan alır, deterministik olarak değerlendirir ve kararı gerekçesiyle klinisyene sunar. Hattın hiçbir adımında olasılıksal çıkarım yoktur."
+            eyebrow="Nasıl çalışır"
+            title="Reçeteden kayda altı adım."
+            description="Veri standart kaynaklardan alınır, kurallarla değerlendirilir ve sonuç gerekçesiyle hekime gösterilir. Hiçbir adımda olasılıksal tahmin kullanılmaz."
           />
           <div className="mt-14">
             <FlowDiagram steps={pipeline} />
@@ -353,46 +336,40 @@ export default function PharmaDeuxPage() {
           <div className="mt-20">
             <Reveal className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-white/60">18 güvenlik düzlemi</p>
-                <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white">
-                  Dört klinik alanda yapılandırılmış denetim
+                <p className={LABEL}>18 güvenlik düzlemi</p>
+                <h3 className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-white">
+                  Dört başlık altında 18 kontrol
                 </h3>
               </div>
               <p className="max-w-md text-sm leading-relaxed text-white/50">
-                Her düzlem bağımsız olarak sürümlenir, test edilir ve gerektiğinde kurum politikasına göre eşik
-                değerleri yapılandırılır.
+                Her kontrolün kendi sürümü ve testi var. Eşik değerleri kurumun politikasına göre ayarlanabilir.
               </p>
             </Reveal>
-            <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {planeGroups.map((group, gi) => {
-                const offset = planeGroups.slice(0, gi).reduce((sum, g) => sum + g.planes.length, 0);
-                return (
-                  <Reveal
-                    key={group.title}
-                    delay={gi * 0.06}
-                    className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5"
-                  >
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-medium text-white">{group.title}</h4>
-                      <span className="font-mono text-[10.5px] text-white/30">{group.planes.length} düzlem</span>
+            <Reveal className="mt-8">
+              <div className="grid gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.06] md:grid-cols-2 xl:grid-cols-4">
+                {planeGroups.map((group, gi) => {
+                  const offset = planeGroups.slice(0, gi).reduce((sum, g) => sum + g.planes.length, 0);
+                  return (
+                    <div key={group.title} className="bg-navy-850 p-5">
+                      <div className="flex items-baseline justify-between">
+                        <h4 className="text-sm font-semibold text-white">{group.title}</h4>
+                        <span className="font-mono text-[11px] text-white/40 tabular-nums">{group.planes.length}</span>
+                      </div>
+                      <ul className="mt-3 divide-y divide-white/[0.06]">
+                        {group.planes.map((plane, pi) => (
+                          <li key={plane} className="flex items-baseline gap-3 py-2">
+                            <span className="font-mono text-[11px] text-white/35 tabular-nums">
+                              P{String(offset + pi + 1).padStart(2, "0")}
+                            </span>
+                            <span className="text-[13px] text-white/70">{plane}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul className="mt-4 space-y-1.5">
-                      {group.planes.map((plane, pi) => (
-                        <li
-                          key={plane}
-                          className="group flex items-center gap-3 rounded-lg border border-white/[0.05] bg-navy-850 px-3 py-2.5 transition-colors hover:border-teal-400/30"
-                        >
-                          <span className="font-mono text-[10.5px] text-teal-300/60">
-                            P{String(offset + pi + 1).padStart(2, "0")}
-                          </span>
-                          <span className="text-[13px] text-white/70 group-hover:text-white">{plane}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </Reveal>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -401,33 +378,27 @@ export default function PharmaDeuxPage() {
       <section id="dogrulama" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            eyebrow="Doğrulama kanıtları"
-            title="Güven, iddiayla değil test edilebilirlikle kurulur."
-            description="Her kural, klinik gereksinimden test senaryosuna kadar izlenebilir. Yazılım değişiklikleri, otomatik test hattından geçmeden yayına alınmaz."
+            eyebrow="Doğrulama"
+            title="Neyi, nasıl test ediyoruz."
+            description="Her kural bir klinik gereksinime ve onu doğrulayan testlere bağlı. Testten geçmeyen değişiklik yayına çıkmaz."
           />
-          <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {validation.map((v, i) => (
-              <Reveal
-                key={v.title}
-                delay={(i % 4) * 0.05}
-                className={`rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 sm:p-7 ${
-                  v.wide ? "md:col-span-2 lg:row-span-2 lg:flex lg:flex-col lg:justify-between" : ""
-                }`}
-              >
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wide text-white/40">{v.title}</p>
-                  <p
-                    className={`mt-3 font-semibold tracking-tight text-teal-100 ${
-                      v.wide ? "text-5xl sm:text-6xl" : "text-2xl"
+          <Reveal className="mt-14">
+            <dl className="grid gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-4">
+              {validation.map((v) => (
+                <div key={v.title} className="flex flex-col bg-navy-850 p-6">
+                  <dt className={LABEL}>{v.title}</dt>
+                  <dd
+                    className={`mt-3 text-2xl font-semibold tracking-[-0.03em] text-white ${
+                      hasDigit(v.value) ? "font-mono tabular-nums" : ""
                     }`}
                   >
                     {v.value}
-                  </p>
+                  </dd>
+                  <dd className="mt-3 text-sm leading-relaxed text-white/55">{v.body}</dd>
                 </div>
-                <p className={`text-sm leading-relaxed text-white/55 ${v.wide ? "mt-6 max-w-md" : "mt-3"}`}>{v.body}</p>
-              </Reveal>
-            ))}
-          </div>
+              ))}
+            </dl>
+          </Reveal>
         </div>
       </section>
 
@@ -437,121 +408,103 @@ export default function PharmaDeuxPage() {
           <div>
             <SectionHeader
               eyebrow="Regülasyon"
-              title="MDR Sınıf IIa SaMD için kurgulanan mimari."
-              description="PharmaDeux, ilaç tedavisine ilişkin kararları bilgilendiren bir yazılım olarak, AB Tıbbi Cihaz Yönetmeliği (MDR) Kural 11 kapsamında Sınıf IIa hedefiyle tasarlanmaktadır."
+              title="MDR kapsamında Sınıf IIa hedefliyoruz."
+              description="PharmaDeux, ilaç tedavisi kararlarına bilgi sağlayan bir yazılım olduğu için AB Tıbbi Cihaz Yönetmeliği'nin (MDR) 11. kuralına giriyor. Henüz CE işareti yok."
             />
-            <Reveal className="mt-8 rounded-2xl border border-teal-400/20 bg-teal-400/[0.04] p-6">
-              <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
-                <ClipboardCheck className="h-4 w-4" />
-                Taslak kullanım amacı
-              </p>
+            <Reveal className="mt-8 rounded-2xl border border-white/[0.06] bg-navy-850 p-6">
+              <p className={LABEL}>Kullanım amacı (taslak)</p>
               <p className="mt-3 text-sm leading-relaxed text-white/70">
-                Yetkili sağlık profesyonellerine, ilaç istemlerine ilişkin potansiyel güvenlik risklerini gerekçeleriyle
-                sunarak karar sürecini desteklemek. Sistem tanı koymaz, tedavi önermez ve klinisyen kararının yerini
-                almaz.
+                Reçeteyle ilgili olası güvenlik risklerini gerekçeleriyle göstererek yetkili sağlık profesyonelinin
+                kararına destek olmak. Sistem tanı koymaz, tedavi önermez ve hekimin kararının yerini almaz.
               </p>
             </Reveal>
           </div>
 
-          <Reveal className="overflow-hidden rounded-2xl border border-white/[0.08]">
+          <Reveal className="min-w-0 overflow-hidden rounded-2xl border border-white/[0.06] bg-navy-850">
             <table className="w-full text-left text-sm">
-              <thead className="bg-white/[0.03] text-xs font-medium uppercase tracking-wide text-white/40">
+              <thead className="border-b border-white/[0.06] text-[11px] text-white/45">
                 <tr>
-                  <th className="px-5 py-3.5 font-normal">Çerçeve</th>
-                  <th className="hidden px-5 py-3.5 font-normal sm:table-cell">Kapsam</th>
-                  <th className="px-5 py-3.5 text-right font-normal">Durum</th>
+                  <th className="px-5 py-3 font-medium">Çerçeve</th>
+                  <th className="hidden px-5 py-3 font-medium sm:table-cell">Kapsam</th>
+                  <th className="px-5 py-3 text-right font-medium">Durum</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/[0.06]">
                 {frameworks.map((f) => (
-                  <tr key={f.code} className="transition-colors hover:bg-white/[0.02]">
-                    <td className="px-5 py-4 align-top">
-                      <p className="font-mono text-[13px] text-white">{f.code}</p>
+                  <tr key={f.code}>
+                    <td className="px-5 py-3.5 align-top">
+                      <p className="font-mono text-[13px] text-white tabular-nums">{f.code}</p>
                       <p className="mt-1 text-xs leading-relaxed text-white/45 sm:hidden">{f.scope}</p>
                     </td>
-                    <td className="hidden px-5 py-4 align-top text-[13px] leading-relaxed text-white/55 sm:table-cell">
+                    <td className="hidden px-5 py-3.5 align-top text-[13px] leading-relaxed text-white/55 sm:table-cell">
                       {f.scope}
                     </td>
-                    <td className="px-5 py-4 text-right align-top">
-                      <span className="inline-block whitespace-nowrap rounded-full border border-white/10 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-teal-200/80">
-                        {f.status}
-                      </span>
+                    <td className="px-5 py-3.5 text-right align-top">
+                      <span className={`whitespace-nowrap ${LABEL}`}>{f.status}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <p className="border-t border-white/[0.06] bg-white/[0.02] px-5 py-4 text-xs leading-relaxed text-white/40">
-              PharmaDeux henüz CE işareti taşımamaktadır ve piyasaya arz edilmemiştir. Ayrıntılar için{" "}
-              <Link href="/legal/quality" className="text-teal-300 hover:underline">
-                Kalite ve MDR çerçevesi
-              </Link>
-              .
+            <p className="border-t border-white/[0.06] px-5 py-4 text-xs leading-relaxed text-white/40">
+              PharmaDeux henüz piyasaya sunulmadı. Ayrıntılar için{" "}
+              <Link href="/legal/quality" className="text-white/70 underline-offset-2 hover:text-white hover:underline">
+                Kalite ve MDR
+              </Link>{" "}
+              sayfasına bakabilirsiniz.
             </p>
           </Reveal>
         </div>
       </section>
 
-      {/* Clinical protocol */}
+      {/* Clinical validation plan */}
       <section id="protokol" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            eyebrow="Retrospektif klinik protokol"
-            title="Laboratuvardan kliniğe, ölçülebilir bir doğrulama yolu."
-            description="Prospektif kullanım öncesinde PharmaDeux'nün performansı, gerçek ancak anonimleştirilmiş geçmiş vakalar üzerinde bağımsız bir referans standarda karşı ölçülür."
+            eyebrow="Klinik doğrulama planı"
+            title="Kullanıma girmeden önce geçmiş vakalarla ölçüyoruz."
+            description="PharmaDeux'nün performansı, anonimleştirilmiş gerçek vakalar üzerinde bağımsız bir uzman paneline karşı ölçülecek."
           />
-          <ol className="relative mt-14 space-y-4 border-l border-white/[0.08] pl-6 sm:pl-8">
-            {protocol.map((p, i) => (
-              <li key={p.phase} className="relative">
-                <span
-                  aria-hidden="true"
-                  className={`absolute top-6 -left-[29px] h-2.5 w-2.5 rounded-full border sm:-left-[37px] ${
-                    i === 0 ? "border-teal-300 bg-teal-300" : "border-white/30 bg-navy-900"
-                  }`}
-                />
-                <Reveal delay={i * 0.05}>
-                  <div className="grid gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 transition-colors hover:border-white/[0.14] sm:grid-cols-[110px_1fr_auto] sm:items-start sm:gap-6 sm:p-6">
-                    <span className="text-xs tracking-wide text-white/60 font-medium uppercase">{p.phase}</span>
-                    <div>
-                      <h3 className="text-base font-medium text-white">{p.title}</h3>
-                      <p className="mt-1.5 text-sm leading-relaxed text-white/55">{p.body}</p>
-                    </div>
-                    <span
-                      className={`justify-self-start rounded-full border px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide sm:justify-self-end ${i === 0 ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-200" : "border-white/10 text-white/45"}`}
-                    >
-                      {p.status}
-                    </span>
+          <Reveal className="mt-14">
+            <ol className="divide-y divide-white/[0.06] overflow-hidden rounded-2xl border border-white/[0.06] bg-navy-850">
+              {protocol.map((p, i) => (
+                <li
+                  key={p.phase}
+                  className="grid gap-2 p-5 sm:grid-cols-[96px_1fr_120px] sm:items-baseline sm:gap-6 sm:p-6"
+                >
+                  <span className="font-mono text-[12px] text-white/50 tabular-nums">{p.phase}</span>
+                  <div>
+                    <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-white">{p.title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-white/55">{p.body}</p>
                   </div>
-                </Reveal>
-              </li>
-            ))}
-          </ol>
-          <Reveal className="mt-8 flex items-start gap-3 text-sm text-white/50">
-            <GitCompare className="mt-0.5 h-4 w-4 shrink-0 text-white/40" />
-            İş birliği yapan kurumlar protokol tasarımına katkı verebilir; veri yalnızca etik kurul onayı ve kurumla
-            imzalanan veri işleme sözleşmesi kapsamında işlenir.
+                  <span
+                    className={`text-[11px] font-medium tracking-wider uppercase sm:text-right ${
+                      i === 0 ? "text-white/80" : "text-white/40"
+                    }`}
+                  >
+                    {p.status}
+                  </span>
+                </li>
+              ))}
+            </ol>
           </Reveal>
+          <p className="mt-6 max-w-2xl text-sm leading-relaxed text-white/50">
+            Ortak kurumlar protokolün yazımına katılabilir. Veri yalnızca etik kurul onayı ve kurumla imzalanan veri
+            işleme sözleşmesi kapsamında kullanılır.
+          </p>
         </div>
       </section>
 
       <CtaPanel
-        eyebrow="Pilot programı"
-        title="PharmaDeux için Pilot Başvurusu (LOI)"
-        description="Retrospektif doğrulama çalışmasına katılmak veya kurumunuzda bir pilot kapsamı tanımlamak için bağlayıcı olmayan bir Niyet Mektubu ile başlayın."
+        eyebrow="Pilot program"
+        title="PharmaDeux pilotu için bize yazın."
+        description="Geçmiş vakalarla doğrulama çalışmasına katılmak ya da kendi kurumunuzda bir pilot tanımlamak için bağlayıcı olmayan bir Niyet Mektubu (LOI) ile başlayabiliriz."
         primaryHref="/contact?solution=pharmadeux"
-        primaryLabel="PharmaDeux için Pilot Başvurusu (LOI)"
+        primaryLabel="Pilot başvurusu (LOI)"
         aside={
-          <ul className="space-y-3 self-center">
-            {[
-              "Klinik eczacılık ve ilaç güvenliği ekipleri",
-              "Üniversite ve eğitim-araştırma hastaneleri",
-              "Retrospektif veri iş birliği yapabilecek kurumlar",
-            ].map((item) => (
-              <li
-                key={item}
-                className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-navy-850/70 px-4 py-3.5 text-sm text-white/70"
-              >
-                <Pill className="h-4 w-4 shrink-0 text-teal-300" strokeWidth={1.6} />
+          <ul className="divide-y divide-white/[0.06] self-center border-y border-white/[0.06]">
+            {pilotAudiences.map((item) => (
+              <li key={item} className="py-4 text-sm text-white/70">
                 {item}
               </li>
             ))}

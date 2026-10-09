@@ -35,7 +35,7 @@ export default function PageHero({
         {breadcrumbs && (
           <Reveal>
             <nav aria-label="Konum" className="mb-8">
-              <ol className="flex flex-wrap items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-white/40">
+              <ol className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium tracking-wider text-white/40 uppercase">
                 {breadcrumbs.map((c, i) => (
                   <li key={c.label} className="flex items-center gap-1.5">
                     {i > 0 && <ChevronRight className="h-3 w-3" />}
@@ -60,13 +60,10 @@ export default function PageHero({
         >
           <div>
             <Reveal>
-              <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium uppercase tracking-wide text-white/60 backdrop-blur">
-                <span className="h-1.5 w-1.5 rounded-full bg-teal-300" />
-                {eyebrow}
-              </p>
+              <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{eyebrow}</p>
             </Reveal>
             <Reveal delay={0.08}>
-              <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-[56px]">
+              <h1 className="mt-5 max-w-4xl text-4xl leading-[1.05] font-semibold tracking-[-0.03em] text-white sm:text-5xl lg:text-[56px]">
                 {title}
               </h1>
             </Reveal>

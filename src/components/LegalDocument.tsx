@@ -23,7 +23,7 @@ export default function LegalDocument({ eyebrow, title, summary, sections, curre
       <section className="relative isolate pt-32 pb-12 sm:pt-40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <nav aria-label="Konum">
-            <ol className="flex flex-wrap items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-white/40">
+            <ol className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium tracking-wider text-white/40 uppercase">
               <li>
                 <Link href="/" className="hover:text-white">
                   Ana sayfa
@@ -41,16 +41,16 @@ export default function LegalDocument({ eyebrow, title, summary, sections, curre
               </li>
             </ol>
           </nav>
-          <p className="mt-8 text-xs font-medium uppercase tracking-wide text-white/60">{eyebrow}</p>
-          <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight text-white sm:text-5xl">{title}</h1>
+          <p className="mt-8 text-[11px] font-medium tracking-wider text-white/50 uppercase">{eyebrow}</p>
+          <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">{title}</h1>
           <div className="mt-5 max-w-2xl text-base leading-relaxed text-white/60">{summary}</div>
           <p className="mt-6 font-mono text-xs text-white/35">Son güncelleme: {LEGAL_LAST_UPDATED}</p>
         </div>
       </section>
 
       <div className="mx-auto grid max-w-7xl gap-12 px-4 pb-24 sm:px-6 lg:grid-cols-[260px_1fr] lg:px-8 sm:pb-32">
-        <aside className="lg:sticky lg:top-24 lg:self-start">
-          <nav aria-label="İçindekiler" className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
+        <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+          <nav aria-label="İçindekiler" className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
             <p className="text-[11px] font-medium uppercase tracking-wide text-white/35">İçindekiler</p>
             <ol className="mt-4 space-y-2">
               {sections.map((s, i) => (
@@ -65,7 +65,7 @@ export default function LegalDocument({ eyebrow, title, summary, sections, curre
           </nav>
           <nav
             aria-label="Diğer politikalar"
-            className="mt-4 hidden rounded-2xl border border-white/[0.08] p-5 lg:block"
+            className="mt-4 hidden rounded-2xl border border-white/[0.06] p-5 lg:block"
           >
             <p className="text-[11px] font-medium uppercase tracking-wide text-white/35">Diğer politikalar</p>
             <ul className="mt-4 space-y-2">
@@ -82,12 +82,12 @@ export default function LegalDocument({ eyebrow, title, summary, sections, curre
           </nav>
         </aside>
 
-        <article className="legal-prose max-w-3xl">
+        <article className="legal-prose max-w-3xl min-w-0">
           {sections.map((s, i) => (
             <section
               key={s.id}
               id={s.id}
-              className="scroll-mt-24 border-t border-white/[0.08] py-10 first:border-t-0 first:pt-0"
+              className="scroll-mt-24 border-t border-white/[0.06] py-10 first:border-t-0 first:pt-0"
             >
               <h2>
                 <span className="mr-3 font-mono text-sm text-teal-300/60">{String(i + 1).padStart(2, "0")}</span>

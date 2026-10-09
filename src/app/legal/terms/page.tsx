@@ -130,7 +130,7 @@ export default function TermsPage() {
       currentHref="/legal/terms"
       eyebrow="Yasal"
       title="Kullanım Şartları ve Koşulları"
-      summary="LavieuxLabs web sitesinin kullanımına ilişkin koşulları, içeriklerin niteliğini ve tarafların sorumluluklarını açıklıyoruz."
+      summary="Bu siteyi kullanırken geçerli olan koşulları ve sitedeki içeriğin ne olduğunu, ne olmadığını yazdık."
       sections={sections}
     />
   );

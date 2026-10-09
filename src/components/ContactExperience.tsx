@@ -28,11 +28,8 @@ export default function ContactExperience({ initialSolution = "pharmadeux" }: { 
     <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.5fr] lg:px-8">
       <div className="space-y-10">
         <section aria-labelledby="process-title">
-          <p
-            id="process-title"
-            className={`text-xs font-medium uppercase tracking-wide transition-colors duration-150 ease-out ${content.accent.text}`}
-          >
-            Süreç nasıl işler?
+          <p id="process-title" className="text-[11px] font-medium tracking-wider text-white/50 uppercase">
+            Süreç
           </p>
           <div aria-live="polite">
             <AnimatePresence mode="wait" initial={false}>
@@ -46,9 +43,7 @@ export default function ContactExperience({ initialSolution = "pharmadeux" }: { 
               >
                 {content.steps.map(({ icon: Icon, title, body }, i) => (
                   <li key={title} className="flex gap-4">
-                    <div
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${content.accent.stepIcon}`}
-                    >
+                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center ${content.accent.text}`}>
                       <Icon className="h-4 w-4" strokeWidth={1.7} />
                     </div>
                     <div>
@@ -63,13 +58,13 @@ export default function ContactExperience({ initialSolution = "pharmadeux" }: { 
           </div>
         </section>
 
-        <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
-          <p className="text-xs font-medium uppercase tracking-wide text-white/40">Doğrudan iletişim</p>
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+          <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">E-posta</p>
           <a
             href={`mailto:${CONTACT_EMAIL}`}
             className="mt-3 inline-flex items-center gap-2 font-mono text-sm text-white transition-colors hover:text-teal-200"
           >
-            <Mail className={`h-4 w-4 transition-colors duration-150 ease-out ${content.accent.text}`} />
+            <Mail className="h-4 w-4 text-white/45" aria-hidden="true" />
             {CONTACT_EMAIL}
           </a>
           <p className="mt-4 text-xs leading-relaxed text-white/40">

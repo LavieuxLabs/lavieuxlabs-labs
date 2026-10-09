@@ -27,14 +27,13 @@ export default function CtaPanel({
     <section className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-navy-850 px-6 py-12 sm:px-12 sm:py-16">
+          <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-navy-850 px-6 py-12 sm:px-12 sm:py-16">
             <div className={`grid gap-12 ${aside ? "lg:grid-cols-[1.1fr_1fr] lg:gap-16" : ""}`}>
               <div>
-                <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-white/60">
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" aria-hidden="true" />
-                  {eyebrow}
-                </p>
-                <h2 className="mt-5 max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">{title}</h2>
+                <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{eyebrow}</p>
+                <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.03em] text-white sm:text-4xl">
+                  {title}
+                </h2>
                 <p className="mt-5 max-w-xl text-base leading-relaxed text-white/60">{description}</p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Link

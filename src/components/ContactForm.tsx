@@ -247,7 +247,7 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
   const border = (key: keyof Fields) => (errors[key] ? "border-rose-400/50" : "border-white/[0.1]");
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] backdrop-blur-md">
+    <div className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-md">
       <div
         aria-hidden="true"
         className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r via-white/10 to-transparent ${accent.topRule}`}
@@ -262,12 +262,12 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
             role="status"
           >
             <CheckCircle2 className="h-8 w-8 text-emerald-300" strokeWidth={1.6} />
-            <h2 className="mt-6 text-2xl font-semibold tracking-tight text-white">Talebiniz hazırlandı.</h2>
+            <h2 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-white">Talebiniz hazırlandı.</h2>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60">
               E-posta istemciniz, bilgilerinizi içeren bir taslakla açıldı. Göndermeniz yeterli; ekibimiz talebinizi
               inceleyerek {fields.email.trim()} adresinden size dönüş yapacaktır.
             </p>
-            <dl className="mt-8 w-full divide-y divide-white/[0.06] rounded-xl border border-white/[0.08] text-sm">
+            <dl className="mt-8 w-full divide-y divide-white/[0.06] rounded-xl border border-white/[0.06] text-sm">
               {[
                 ["Kurum", fields.organization],
                 ["Çözüm", solutions.find((s) => s.value === solution)?.label],
@@ -502,7 +502,7 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
               )}
             </div>
 
-            <div className="flex flex-col gap-4 border-t border-white/[0.08] pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-4 border-t border-white/[0.06] pt-6 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs leading-relaxed text-white/40">
                 Gönder&apos;e tıkladığınızda talebiniz, e-posta istemcinizde {CONTACT_EMAIL} adresine hazır bir taslak
                 olarak açılır.

@@ -286,19 +286,20 @@ export default function PharmaCapsule() {
             ref={(el) => {
               nodeRefs.current[k] = el;
             }}
-            className={`absolute ${node.position} w-[140px] rounded-2xl border border-white/[0.08] bg-navy-850 px-3.5 py-3 sm:w-[172px]`}
+            className={`absolute ${node.position} w-[140px] rounded-2xl border border-white/[0.06] bg-navy-850 px-3.5 py-3 sm:w-[172px]`}
           >
             <div className="flex flex-col">
               <span className="text-[11px] font-semibold tracking-[0.01em] text-pharma">{node.code}</span>
               <span className="mt-1.5 text-[12px] leading-tight text-white/60">{node.label}</span>
-              <span className="mt-0.5 text-[19px] font-semibold tracking-[-0.01em] text-white font-mono tabular-nums sm:text-[21px]">
+              <span
+                className={`mt-0.5 text-[19px] font-semibold tracking-[-0.01em] text-white sm:text-[21px] ${/\d/.test(node.value) ? "font-mono tabular-nums" : ""}`}
+              >
                 {node.value}
               </span>
               <span className="mt-2.5 h-[3px] overflow-hidden rounded-full bg-white/[0.06]" aria-hidden="true">
                 <span className="block h-full rounded-full bg-pharma/70" style={{ width: `${node.level * 100}%` }} />
               </span>
               <span className="mt-2 flex items-center gap-1.5 text-[11px] leading-tight text-white/50">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400/80" aria-hidden="true" />
                 {node.status}
               </span>
             </div>

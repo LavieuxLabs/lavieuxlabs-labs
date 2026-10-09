@@ -132,9 +132,9 @@ export default function CookiesPage() {
   return (
     <LegalDocument
       currentHref="/legal/cookies"
-      eyebrow="Çerez yönetimi"
+      eyebrow="Yasal"
       title="Çerez Politikası"
-      summary="Web sitemizde hangi çerezleri ve benzeri teknolojileri, hangi amaçlarla kullandığımızı ve tercihlerinizi nasıl yönetebileceğinizi açıklıyoruz."
+      summary="Bu sitede hangi çerezleri ve benzeri teknolojileri neden kullandığımızı ve tercihinizi nasıl değiştirebileceğinizi anlatıyoruz."
       sections={sections}
     />
   );

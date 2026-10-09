@@ -5,6 +5,7 @@ export type FlowStep = {
   icon: LucideIcon;
   title: string;
   body: string;
+  /** Payload or guarantee of the stage; " · "-separated values render as mono tokens. */
   detail?: string;
 };
 
@@ -16,48 +17,59 @@ type FlowDiagramProps = {
 // Literal class strings so Tailwind can detect them at build time.
 const tones = {
   teal: {
-    card: "hover:border-teal-400/30 hover:bg-teal-400/[0.04]",
-    icon: "group-hover:text-teal-300",
-    line: "from-teal-300/50",
+    rail: "group-hover:bg-pharma/70",
+    node: "group-hover:border-pharma group-hover:bg-pharma",
+    icon: "group-hover:text-pharma",
   },
   indigo: {
-    card: "hover:border-indigo-400/30 hover:bg-indigo-400/[0.05]",
-    icon: "group-hover:text-indigo-300",
-    line: "from-indigo-300/50",
+    rail: "group-hover:bg-shield/70",
+    node: "group-hover:border-shield group-hover:bg-shield",
+    icon: "group-hover:text-shield",
   },
 };
 
+/**
+ * A data pipeline (e.g. HL7 FHIR ingest → rule engine → clinician → audit) drawn as stages on a
+ * single hairline rail instead of boxed cards. Each stage lists what it carries as mono tokens.
+ */
 export default function FlowDiagram({ steps, accent = "teal" }: FlowDiagramProps) {
   const tone = tones[accent];
 
   return (
-    <ol className="relative grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+    <ol className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       {steps.map(({ icon: Icon, title, body, detail }, i) => (
-        <li key={title} className="relative">
-          <Reveal delay={(i % 3) * 0.06} className="h-full">
-            <div
-              className={`group relative flex h-full flex-col rounded-xl border border-white/[0.08] bg-white/[0.02] p-5 transition-[border-color,background-color,box-shadow] duration-150 ease-out ${tone.card}`}
-            >
-              <div className="flex items-center justify-between">
-                <Icon
-                  className={`h-5 w-5 text-white/45 transition-colors duration-150 ease-out ${tone.icon}`}
-                  strokeWidth={1.6}
-                />
-                <span className="font-mono text-[10.5px] tracking-[0.16em] text-white/30">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-              </div>
-              <h3 className="mt-4 text-[15px] font-medium text-white">{title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-white/55">{body}</p>
-              {detail && (
-                <p className="mt-auto pt-4 font-mono text-[11px] leading-relaxed text-white/40">
-                  <span
-                    className={`mr-2 inline-block h-px w-4 bg-gradient-to-r ${tone.line} to-transparent align-middle`}
-                  />
-                  {detail}
-                </p>
-              )}
+        <li key={title} className="group relative min-w-0">
+          <Reveal delay={(i % 6) * 0.04} className="h-full">
+            {/* Rail segment with a stage node */}
+            <div className="relative flex items-center" aria-hidden="true">
+              <span
+                className={`relative z-10 h-2.5 w-2.5 shrink-0 rounded-full border border-white/30 bg-navy-900 transition-colors duration-150 ease-out ${tone.node}`}
+              />
+              <span className={`h-px flex-1 bg-white/[0.12] transition-colors duration-150 ease-out ${tone.rail}`} />
             </div>
+
+            <div className="mt-5 flex items-center gap-2">
+              <Icon
+                className={`h-4 w-4 text-white/40 transition-colors duration-150 ease-out ${tone.icon}`}
+                strokeWidth={1.6}
+                aria-hidden="true"
+              />
+              <span className="font-mono text-[11px] text-white/35 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+            </div>
+            <h3 className="mt-2 text-[15px] font-medium text-white">{title}</h3>
+            <p className="mt-1.5 text-[13.5px] leading-relaxed text-white/55">{body}</p>
+            {detail && (
+              <ul className="mt-3 flex flex-wrap gap-1.5" aria-label={`${title} · veri`}>
+                {detail.split(" · ").map((token) => (
+                  <li
+                    key={token}
+                    className="rounded-md border border-white/[0.06] bg-white/[0.02] px-1.5 py-0.5 font-mono text-[11px] text-white/55"
+                  >
+                    {token}
+                  </li>
+                ))}
+              </ul>
+            )}
           </Reveal>
         </li>
       ))}

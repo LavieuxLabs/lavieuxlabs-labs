@@ -40,13 +40,13 @@ export const products = [
   {
     href: "/initiatives/pharmadeux",
     name: "PharmaDeux CDSS",
-    description: "18 Düzlemli Klinik Güvenlik & Deterministik Karar Motoru",
+    description: "Reçete anında ilaç güvenliği kontrolü",
     icon: "pill",
   },
   {
     href: "/initiatives/shield",
     name: "Shield",
-    description: "Sağlık Gelir Bütünlüğü & Provizyon Red OS",
+    description: "Fatura gönderilmeden önce red riski kontrolü",
     icon: "shield",
   },
 ] as const;
@@ -66,11 +66,11 @@ export const legalLinks = [
 
 export const footerColumns = [
   {
-    title: "Platformlar",
+    title: "Ürünler",
     links: [
       { href: "/initiatives/pharmadeux", label: "PharmaDeux CDSS" },
       { href: "/initiatives/shield", label: "Shield" },
-      { href: "/#platformlar", label: "Tüm platformlar" },
+      { href: "/#platformlar", label: "Tüm ürünler" },
     ],
   },
   {
@@ -78,15 +78,15 @@ export const footerColumns = [
     links: [
       { href: "/about", label: "Hakkımızda" },
       { href: "/contact", label: "İletişim" },
-      { href: "/contact?solution=pharmadeux", label: "Pilot Başvurusu (LOI)" },
+      { href: "/contact?solution=pharmadeux", label: "Pilot başvurusu (LOI)" },
     ],
   },
   {
     title: "Standartlar",
     links: [
-      { href: "/#standartlar", label: "Mühendislik ilkeleri" },
-      { href: "/#yaklasim", label: "Karar zinciri" },
-      { href: "/legal/quality", label: "Kalite ve MDR çerçevesi" },
+      { href: "/#standartlar", label: "Sekiz kural" },
+      { href: "/#yaklasim", label: "Doğrulama ve karar" },
+      { href: "/legal/quality", label: "Kalite ve MDR" },
     ],
   },
 ];

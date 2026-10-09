@@ -226,9 +226,9 @@ export default function PrivacyPage() {
   return (
     <LegalDocument
       currentHref="/legal/privacy"
-      eyebrow="KVKK Aydınlatma Metni"
+      eyebrow="Yasal · KVKK aydınlatma metni"
       title="Gizlilik ve KVKK Politikası"
-      summary="Kişisel verilerinizi hangi amaçlarla, hangi hukuki sebeplere dayanarak işlediğimizi ve 6698 sayılı Kanun kapsamındaki haklarınızı nasıl kullanabileceğinizi açıklıyoruz."
+      summary="Hangi kişisel verinizi neden işlediğimizi, hangi hukuki sebebe dayandığımızı ve 6698 sayılı Kanun'daki haklarınızı nasıl kullanacağınızı anlatıyoruz."
       sections={sections}
     />
   );

@@ -158,9 +158,9 @@ export default function QualityPage() {
   return (
     <LegalDocument
       currentHref="/legal/quality"
-      eyebrow="Kalite · Bilgi güvenliği · MDR"
-      title="Kalite, Bilgi Güvenliği ve MDR Standartları"
-      summary="Regüle bir alanda güven; süreçlerin, standartların ve sınırların açıkça beyan edilmesiyle kurulur. Ürün geliştirmede referans aldığımız çerçeveyi ve mevcut düzenleyici durumumuzu burada paylaşıyoruz."
+      eyebrow="Yasal · Kalite ve regülasyon"
+      title="Kalite, Bilgi Güvenliği ve MDR"
+      summary="Ürünleri geliştirirken hangi standartları referans aldığımızı ve düzenleyici süreçte bugün nerede olduğumuzu yazdık. Bu sayfa bir sertifika beyanı değildir."
       sections={sections}
     />
   );

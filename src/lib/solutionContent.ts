@@ -28,7 +28,6 @@ export type SolutionContent = {
     inputFocus: string;
     checkbox: string;
     buttonHover: string;
-    stepIcon: string;
     topRule: string;
   };
 };
@@ -67,7 +66,6 @@ export const solutionContent: Record<SolutionValue, SolutionContent> = {
       inputFocus: "focus:border-pharma/60 focus:ring-pharma/20",
       checkbox: "accent-pharma",
       buttonHover: "hover:bg-teal-100",
-      stepIcon: "border-pharma/25 bg-pharma/[0.08] text-pharma",
       topRule: "from-pharma/70",
     },
   },
@@ -92,7 +90,7 @@ export const solutionContent: Record<SolutionValue, SolutionContent> = {
       },
       {
         icon: Workflow,
-        title: "Pre-claim canlı entegrasyon",
+        title: "Gönderim öncesi canlı entegrasyon",
         body: "Shield, gönderim öncesi katman olarak faturalama akışınıza bağlanır; işaretlenen işlemler uzman kuyruğunda değerlendirilir.",
       },
     ],
@@ -103,7 +101,6 @@ export const solutionContent: Record<SolutionValue, SolutionContent> = {
       inputFocus: "focus:border-shield/60 focus:ring-shield/20",
       checkbox: "accent-shield",
       buttonHover: "hover:bg-indigo-100",
-      stepIcon: "border-shield/25 bg-shield/[0.08] text-shield",
       topRule: "from-shield/70",
     },
   },
@@ -139,7 +136,6 @@ export const solutionContent: Record<SolutionValue, SolutionContent> = {
       inputFocus: "focus:border-academic/60 focus:ring-academic/20",
       checkbox: "accent-academic",
       buttonHover: "hover:bg-academic-soft",
-      stepIcon: "border-academic/25 bg-academic/[0.08] text-academic",
       topRule: "from-academic/70",
     },
   },
