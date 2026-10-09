@@ -60,11 +60,11 @@ export default function StandardsGrid() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.6, delay: (i % 3) * 0.08 }}
-          className="group relative flex flex-col bg-[#070a10] p-6 transition-colors duration-300 hover:bg-[#0a0e16] sm:p-8"
+          className="group relative flex flex-col bg-navy-850 p-6 transition-colors duration-150 ease-out hover:bg-navy-800 sm:p-8"
         >
           <div className="flex items-center justify-between">
             <Icon
-              className="h-5 w-5 text-white/40 transition-colors duration-300 group-hover:text-teal-300"
+              className="h-5 w-5 text-white/40 transition-colors duration-150 ease-out group-hover:text-teal-300"
               strokeWidth={1.6}
             />
             <span className="font-mono text-[10.5px] tracking-[0.16em] text-white/25">{code}</span>
@@ -72,8 +72,8 @@ export default function StandardsGrid() {
           <h3 className="mt-6 text-lg font-medium tracking-tight text-white">{title}</h3>
           <p className="mt-2.5 text-sm leading-relaxed text-white/55">{body}</p>
           <div className="mt-auto pt-6">
-            <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-teal-300/70">
-              <span className="h-px w-4 bg-teal-300/50 transition-all duration-300 group-hover:w-7" />
+            <span className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
+              <span className="h-px w-4 bg-teal-300/50 transition-all duration-150 ease-out group-hover:w-7" />
               {mechanism}
             </span>
           </div>

@@ -27,8 +27,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
+    // suppressHydrationWarning only covers <html>'s own attributes: browser extensions inject
+    // attributes here (e.g. jd-enabled) before React hydrates. data-scroll-behavior lets Next.js
+    // turn off CSS smooth scrolling during route transitions (Next 16 opt-in).
     <html
       lang="tr"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="relative flex min-h-full flex-col bg-background font-sans text-foreground">

@@ -27,23 +27,11 @@ export default function CtaPanel({
     <section className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="relative isolate overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.02] px-6 py-12 backdrop-blur-sm sm:px-12 sm:py-16">
-            <div aria-hidden="true" className="absolute inset-0 -z-10">
-              <div
-                className={`absolute -top-32 -right-24 h-80 w-80 rounded-full blur-3xl ${
-                  accent === "teal" ? "bg-teal-400/10" : "bg-indigo-400/12"
-                }`}
-              />
-              <div className="absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-emerald-400/[0.06] blur-3xl" />
-            </div>
-
+          <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-navy-850 px-6 py-12 sm:px-12 sm:py-16">
             <div className={`grid gap-12 ${aside ? "lg:grid-cols-[1.1fr_1fr] lg:gap-16" : ""}`}>
               <div>
-                <p className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-300/80">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60 motion-reduce:animate-none" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                  </span>
+                <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-white/60">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" aria-hidden="true" />
                   {eyebrow}
                 </p>
                 <h2 className="mt-5 max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">{title}</h2>
@@ -51,7 +39,7 @@ export default function CtaPanel({
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Link
                     href={primaryHref}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-[#06080d] transition-colors hover:bg-teal-200"
+                    className={`inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors ${accent === "teal" ? "hover:bg-teal-100" : "hover:bg-indigo-100"}`}
                   >
                     {primaryLabel}
                     <ArrowUpRight className="h-4 w-4" />

@@ -2,16 +2,10 @@
 
 import { useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, CheckCircle2, GraduationCap, Loader2, Mail, Pill, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, Loader2, Mail } from "lucide-react";
 import { CONTACT_EMAIL, solutions, type SolutionValue } from "@/lib/site";
-
-const solutionMeta: Record<SolutionValue, { icon: typeof Pill; hint: string }> = {
-  pharmadeux: { icon: Pill, hint: "Klinik karar destek · ilaç güvenliği" },
-  shield: { icon: ShieldCheck, hint: "Gelir bütünlüğü · red riski" },
-  academic: { icon: GraduationCap, hint: "Araştırma ve doğrulama projeleri" },
-};
+import { solutionContent } from "@/lib/solutionContent";
 
 const requestTypes = ["Niyet Mektubu (LOI) / Pilot", "Ürün demosu", "Retrospektif doğrulama iş birliği", "Genel bilgi"];
 
@@ -30,13 +24,12 @@ type Fields = {
   name: string;
   title: string;
   email: string;
-  solution: SolutionValue;
   requestType: string;
   message: string;
   consent: boolean;
 };
 
-type Errors = Partial<Record<keyof Fields, string>>;
+type Errors = Partial<Record<keyof Fields | "solution", string>>;
 
 export const LIMITS = {
   organization: 120,
@@ -101,7 +94,7 @@ function isSolution(value: string | null): value is SolutionValue {
   return solutions.some((s) => s.value === value);
 }
 
-function validate(f: Fields): Errors {
+function validate(f: Fields, solution: SolutionValue): Errors {
   const errors: Errors = {};
 
   if (f.organization.length < 2) errors.organization = "Kurum adını giriniz.";
@@ -124,15 +117,15 @@ function validate(f: Fields): Errors {
   else if (f.message.length > LIMITS.message) errors.message = `Mesaj en fazla ${LIMITS.message} karakter olabilir.`;
   else if (MARKUP_PATTERN.test(f.message)) errors.message = "Mesaj HTML, betik veya bağlantı kodu içeremez.";
 
-  if (!isSolution(f.solution) || !requestTypes.includes(f.requestType))
+  if (!isSolution(solution) || !requestTypes.includes(f.requestType))
     errors.solution = "Lütfen geçerli bir çözüm ve talep türü seçiniz.";
 
   if (!f.consent) errors.consent = "Devam etmek için aydınlatma metnini onaylamanız gerekir.";
   return errors;
 }
 
-function buildMailto(f: Fields) {
-  const solutionLabel = solutions.find((s) => s.value === f.solution)?.label ?? f.solution;
+function buildMailto(f: Fields, solution: SolutionValue) {
+  const solutionLabel = solutions.find((s) => s.value === solution)?.label ?? solution;
   const subject = `[${solutionLabel}] ${f.requestType} — ${f.organization}`;
   const body = [
     `Kurum: ${f.organization}`,
@@ -147,6 +140,7 @@ function buildMailto(f: Fields) {
 }
 
 function Field({
+  className,
   label,
   htmlFor,
   error,
@@ -154,6 +148,7 @@ function Field({
   hint,
   children,
 }: {
+  className?: string;
   label: string;
   htmlFor: string;
   error?: string;
@@ -162,7 +157,7 @@ function Field({
   children: ReactNode;
 }) {
   return (
-    <div>
+    <div className={className}>
       <label htmlFor={htmlFor} className="flex items-baseline justify-between text-[13px] font-medium text-white/80">
         {label}
         {optional && <span className="font-mono text-[10.5px] font-normal text-white/30">opsiyonel</span>}
@@ -179,17 +174,24 @@ function Field({
   );
 }
 
-const inputClass =
-  "w-full rounded-lg border bg-[#06080d]/70 px-3.5 py-2.5 text-sm text-white placeholder:text-white/25 outline-none transition-colors focus:border-teal-300/50 focus:ring-2 focus:ring-teal-300/15";
+const inputBase =
+  "w-full rounded-lg border bg-navy-900/70 px-3.5 py-2.5 text-sm text-white placeholder:text-white/30 outline-none transition-colors focus:ring-2";
 
-export default function ContactForm({ initialSolution = "pharmadeux" }: { initialSolution?: SolutionValue }) {
+type ContactFormProps = {
+  solution: SolutionValue;
+  onSolutionChange: (solution: SolutionValue) => void;
+};
+
+export default function ContactForm({ solution, onSolutionChange }: ContactFormProps) {
   const uid = useId();
+  const content = solutionContent[solution];
+  const accent = content.accent;
+  const inputClass = `${inputBase} ${accent.inputFocus}`;
   const [fields, setFields] = useState<Fields>({
     organization: "",
     name: "",
     title: "",
     email: "",
-    solution: initialSolution,
     requestType: requestTypes[0],
     message: "",
     consent: false,
@@ -220,14 +222,14 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
 
     const clean = sanitize(fields);
     setFields(clean);
-    const found = validate(clean);
+    const found = validate(clean, solution);
     setErrors(found);
     if (Object.keys(found).length > 0) {
       const first = Object.keys(found)[0];
       document.getElementById(`${uid}-${first}`)?.focus();
       return;
     }
-    const link = buildMailto(clean);
+    const link = buildMailto(clean, solution);
     setMailto(link);
     setStatus("submitting");
     window.setTimeout(() => {
@@ -246,6 +248,10 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] backdrop-blur-md">
+      <div
+        aria-hidden="true"
+        className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r via-white/10 to-transparent ${accent.topRule}`}
+      />
       <AnimatePresence mode="wait" initial={false}>
         {status === "sent" ? (
           <motion.div
@@ -264,7 +270,7 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
             <dl className="mt-8 w-full divide-y divide-white/[0.06] rounded-xl border border-white/[0.08] text-sm">
               {[
                 ["Kurum", fields.organization],
-                ["Çözüm", solutions.find((s) => s.value === fields.solution)?.label],
+                ["Çözüm", solutions.find((s) => s.value === solution)?.label],
                 ["Talep türü", fields.requestType],
               ].map(([k, v]) => (
                 <div key={k} className="flex justify-between gap-4 px-4 py-3">
@@ -277,7 +283,7 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
               {mailto && (
                 <a
                   href={mailto}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-[#06080d] hover:bg-teal-200"
+                  className={`inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-navy-900 ${accent.buttonHover}`}
                 >
                   <Mail className="h-4 w-4" />
                   E-posta istemcisini tekrar aç
@@ -293,7 +299,7 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
             </div>
             <p className="mt-6 text-xs text-white/40">
               E-posta istemciniz açılmadıysa talebinizi doğrudan{" "}
-              <a href={`mailto:${CONTACT_EMAIL}`} className="font-mono text-teal-300 hover:underline">
+              <a href={`mailto:${CONTACT_EMAIL}`} className={`font-mono hover:underline ${accent.text}`}>
                 {CONTACT_EMAIL}
               </a>{" "}
               adresine iletebilirsiniz.
@@ -330,26 +336,33 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
               <legend className="text-[13px] font-medium text-white/80">İlgilenilen çözüm</legend>
               <div className="mt-2 grid gap-2 sm:grid-cols-3">
                 {solutions.map((s) => {
-                  const { icon: Icon, hint } = solutionMeta[s.value];
-                  const checked = fields.solution === s.value;
+                  const { icon: Icon, hint, accent: cardAccent } = solutionContent[s.value];
+                  const checked = solution === s.value;
                   return (
                     <label
                       key={s.value}
-                      className={`relative flex cursor-pointer flex-col rounded-xl border p-3.5 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-teal-300/30 ${
+                      className={`relative flex cursor-pointer flex-col rounded-xl border p-3.5 transition-colors duration-150 ease-out has-[:focus-visible]:ring-2 ${cardAccent.focusRing} ${
                         checked
-                          ? "border-teal-300/40 bg-teal-400/[0.07]"
+                          ? cardAccent.selectedCard
                           : "border-white/[0.1] hover:border-white/20 hover:bg-white/[0.02]"
                       }`}
                     >
                       <input
                         type="radio"
+                        id={`${uid}-solution-${s.value}`}
                         name="solution"
                         value={s.value}
                         checked={checked}
-                        onChange={() => set("solution", s.value)}
+                        onChange={() => {
+                          onSolutionChange(s.value);
+                          if (errors.solution) setErrors((e) => ({ ...e, solution: undefined }));
+                        }}
                         className="sr-only"
                       />
-                      <Icon className={`h-4 w-4 ${checked ? "text-teal-300" : "text-white/40"}`} strokeWidth={1.8} />
+                      <Icon
+                        className={`h-4 w-4 transition-colors duration-150 ease-out ${checked ? cardAccent.text : "text-white/40"}`}
+                        strokeWidth={1.8}
+                      />
                       <span className="mt-3 text-[13px] font-medium text-white">{s.label}</span>
                       <span className="mt-0.5 text-[11.5px] leading-snug text-white/45">{hint}</span>
                     </label>
@@ -360,28 +373,21 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
             </fieldset>
 
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="Kurum adı" htmlFor={`${uid}-organization`} error={errors.organization}>
+              <Field
+                className="sm:col-span-2"
+                label="Kurum adı"
+                htmlFor={`${uid}-organization`}
+                error={errors.organization}
+              >
                 <input
                   {...errorProps("organization")}
                   autoComplete="organization"
                   maxLength={LIMITS.organization}
                   value={fields.organization}
                   onChange={(e) => set("organization", e.target.value)}
-                  placeholder="Örn. … Eğitim ve Araştırma Hastanesi"
+                  placeholder={content.placeholders.organization}
                   className={`${inputClass} ${border("organization")}`}
                 />
-              </Field>
-              <Field label="Talep türü" htmlFor={`${uid}-requestType`}>
-                <select
-                  id={`${uid}-requestType`}
-                  value={fields.requestType}
-                  onChange={(e) => set("requestType", e.target.value)}
-                  className={`${inputClass} border-white/[0.1] [&>option]:bg-[#0a0d14]`}
-                >
-                  {requestTypes.map((t) => (
-                    <option key={t}>{t}</option>
-                  ))}
-                </select>
               </Field>
               <Field label="İlgili kişi" htmlFor={`${uid}-name`} error={errors.name}>
                 <input
@@ -394,14 +400,32 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
                   className={`${inputClass} ${border("name")}`}
                 />
               </Field>
-              <Field label="Unvan / görev" htmlFor={`${uid}-title`} error={errors.title} optional>
+              <Field label="Talep türü" htmlFor={`${uid}-requestType`}>
+                <select
+                  id={`${uid}-requestType`}
+                  value={fields.requestType}
+                  onChange={(e) => set("requestType", e.target.value)}
+                  className={`${inputClass} border-white/[0.1] [&>option]:bg-navy-850`}
+                >
+                  {requestTypes.map((t) => (
+                    <option key={t}>{t}</option>
+                  ))}
+                </select>
+              </Field>
+              <Field
+                className="sm:col-span-2"
+                label="Unvan / görev"
+                htmlFor={`${uid}-title`}
+                error={errors.title}
+                optional
+              >
                 <input
                   {...errorProps("title")}
                   autoComplete="organization-title"
                   maxLength={LIMITS.title}
                   value={fields.title}
                   onChange={(e) => set("title", e.target.value)}
-                  placeholder="Örn. Klinik Eczacı, Gelir Döngüsü Müdürü"
+                  placeholder={content.placeholders.title}
                   className={`${inputClass} ${border("title")}`}
                 />
               </Field>
@@ -436,7 +460,7 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
               error={errors.message}
               hint={
                 <span className="flex justify-between gap-4">
-                  <span>Düz metin; HTML veya betik kodu kabul edilmez.</span>
+                  <span>Düz metin; lütfen hasta verisi paylaşmayınız.</span>
                   <span className="font-mono tabular-nums">
                     {fields.message.length}/{LIMITS.message}
                   </span>
@@ -449,7 +473,7 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
                 maxLength={LIMITS.message}
                 value={fields.message}
                 onChange={(e) => set("message", e.target.value)}
-                placeholder="Kurumunuzun ihtiyacını, hedeflediğiniz pilot kapsamını veya iş birliği fikrinizi kısaca açıklayınız. Lütfen hasta verisi paylaşmayınız."
+                placeholder={content.placeholders.message}
                 className={`${inputClass} resize-y ${border("message")}`}
               />
             </Field>
@@ -461,11 +485,11 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
                   type="checkbox"
                   checked={fields.consent}
                   onChange={(e) => set("consent", e.target.checked)}
-                  className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-teal-400"
+                  className={`mt-0.5 h-4 w-4 shrink-0 cursor-pointer ${accent.checkbox}`}
                 />
                 <span>
                   Kişisel verilerimin, talebimin yanıtlanması amacıyla{" "}
-                  <Link href="/legal/privacy" className="text-teal-300 underline-offset-2 hover:underline">
+                  <Link href="/legal/privacy" className={`underline-offset-2 hover:underline ${accent.text}`}>
                     KVKK Aydınlatma Metni
                   </Link>{" "}
                   kapsamında işleneceğini okudum ve anladım.
@@ -486,7 +510,7 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-[#06080d] transition-colors hover:bg-teal-200 disabled:opacity-70"
+                className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors disabled:opacity-70 ${accent.buttonHover}`}
               >
                 {status === "submitting" ? (
                   <>
@@ -504,10 +528,4 @@ export default function ContactForm({ initialSolution = "pharmadeux" }: { initia
       </AnimatePresence>
     </div>
   );
-}
-
-export function ContactFormFromParams() {
-  const params = useSearchParams();
-  const solution = params.get("solution");
-  return <ContactForm initialSolution={isSolution(solution) ? solution : undefined} />;
 }

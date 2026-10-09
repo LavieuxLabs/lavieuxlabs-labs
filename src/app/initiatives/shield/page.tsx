@@ -17,7 +17,7 @@ import {
   Users,
 } from "lucide-react";
 import PageHero from "@/components/PageHero";
-import ShieldOrb from "@/components/ShieldOrb";
+import ShieldMatrix from "@/components/ShieldMatrix";
 import InPageNav from "@/components/InPageNav";
 import SectionHeader from "@/components/SectionHeader";
 import FlowDiagram, { type FlowStep } from "@/components/FlowDiagram";
@@ -133,11 +133,12 @@ export default function ShieldPage() {
   return (
     <main className="relative flex-1 overflow-x-clip">
       <PageHero
-        visual={<ShieldOrb />}
+        visual={<ShieldMatrix />}
+        visualClassName="relative mx-auto w-full max-w-[340px] sm:max-w-[560px]"
         below={
           <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.08] backdrop-blur-md lg:grid-cols-4">
             {heroStats.map((s) => (
-              <div key={s.label} className="flex flex-col-reverse bg-[#06080d]/80 p-5">
+              <div key={s.label} className="flex flex-col-reverse bg-navy-900/80 p-5">
                 <dt className="mt-1.5 text-xs leading-snug text-white/50">{s.label}</dt>
                 <dd className="font-mono text-xl font-medium tracking-tight text-indigo-100 sm:text-2xl">{s.value}</dd>
               </div>
@@ -152,10 +153,7 @@ export default function ShieldPage() {
         eyebrow="Healthcare Revenue Integrity · Denial Risk OS"
         title={
           <>
-            Shield:{" "}
-            <span className="bg-gradient-to-r from-indigo-200 to-sky-200 bg-clip-text text-transparent">
-              red riskini fatura gönderilmeden önce görün.
-            </span>
+            Shield: <span className="text-white/50">red riskini fatura gönderilmeden önce görün.</span>
           </>
         }
         description="Sağlık geri ödeme ve provizyon süreçlerinde red (denial) risklerini işlem öncesinde yakalayan; her skoru gerekçesiyle açıklayan ve kararı yetkili uzmana bırakan operasyonel karar platformu."
@@ -163,7 +161,7 @@ export default function ShieldPage() {
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link
             href="/contact?solution=shield"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-[#06080d] transition-colors hover:bg-indigo-200"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors hover:bg-indigo-200"
           >
             Demo / Niyet Mektubu (LOI)
             <ArrowUpRight className="h-4 w-4" />
@@ -189,7 +187,7 @@ export default function ShieldPage() {
           />
           <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.08] md:grid-cols-3">
             {problems.map(({ icon: Icon, title, body }) => (
-              <div key={title} className="bg-[#070a10] p-6 sm:p-8">
+              <div key={title} className="bg-navy-850 p-6 sm:p-8">
                 <Icon className="h-5 w-5 text-indigo-300/80" strokeWidth={1.6} />
                 <h3 className="mt-5 text-base font-medium text-white">{title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/55">{body}</p>
@@ -255,7 +253,7 @@ export default function ShieldPage() {
           />
           <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.08] sm:grid-cols-2 lg:grid-cols-4">
             {auditProps.map((p, i) => (
-              <Reveal key={p.title} delay={i * 0.05} className="bg-[#070a10] p-6 sm:p-7">
+              <Reveal key={p.title} delay={i * 0.05} className="bg-navy-850 p-6 sm:p-7">
                 <Lock className="h-4 w-4 text-indigo-300/70" />
                 <h3 className="mt-5 text-base font-medium text-white">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/55">{p.body}</p>
@@ -283,7 +281,7 @@ export default function ShieldPage() {
                     {["Veri", "Kuyruk", "Audit"].map((layer) => (
                       <div
                         key={layer}
-                        className="rounded-md border border-white/[0.06] bg-[#070a10] px-2 py-1 font-mono text-[10px] text-white/40"
+                        className="rounded-md border border-white/[0.06] bg-navy-850 px-2 py-1 font-mono text-[10px] text-white/40"
                       >
                         {layer}
                       </div>
@@ -300,7 +298,7 @@ export default function ShieldPage() {
           <Reveal className="self-start overflow-hidden rounded-2xl border border-white/[0.08]">
             <div className="flex items-center gap-2 border-b border-white/[0.08] bg-white/[0.03] px-5 py-3.5">
               <Users className="h-4 w-4 text-white/40" />
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-white/45">Örnek rol matrisi</p>
+              <p className="text-xs font-medium uppercase tracking-wide text-white/45">Örnek rol matrisi</p>
             </div>
             <table className="w-full text-left text-sm">
               <tbody className="divide-y divide-white/[0.06]">
@@ -311,7 +309,7 @@ export default function ShieldPage() {
                       <p className="mt-1 text-xs leading-relaxed text-white/45">{r.scope}</p>
                     </td>
                     <td className="px-5 py-4 text-right align-top">
-                      <span className="inline-block whitespace-nowrap rounded-full border border-indigo-400/20 px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.08em] text-indigo-200/80">
+                      <span className="inline-block whitespace-nowrap rounded-full border border-indigo-400/20 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-indigo-200/80">
                         {r.access}
                       </span>
                     </td>
@@ -343,7 +341,7 @@ export default function ShieldPage() {
             ].map((item) => (
               <li
                 key={item}
-                className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-[#070a10]/70 px-4 py-3.5 text-sm text-white/70"
+                className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-navy-850/70 px-4 py-3.5 text-sm text-white/70"
               >
                 <Receipt className="h-4 w-4 shrink-0 text-indigo-300" strokeWidth={1.6} />
                 {item}

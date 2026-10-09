@@ -78,7 +78,9 @@ function save(prefs: OptionalPrefs, decision: ConsentRecord["decision"]) {
 export function useConsent(): ConsentPreferences | null {
   const raw = useSyncExternalStore(subscribe, readRaw, () => null);
   const record = parse(raw);
-  return record ? { necessary: true, analytics: record.analytics, preferences: record.preferences, external: record.external } : null;
+  return record
+    ? { necessary: true, analytics: record.analytics, preferences: record.preferences, external: record.external }
+    : null;
 }
 
 /** Grant one optional category while keeping the others as they are. */
@@ -205,7 +207,7 @@ export default function CookieBanner() {
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           className="fixed inset-x-3 bottom-3 z-[60] sm:inset-x-auto sm:right-5 sm:bottom-5 sm:w-[440px]"
         >
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0a0d14]/85 shadow-2xl shadow-black/50 backdrop-blur-xl">
+          <div className="overflow-hidden rounded-2xl border border-white/10 bg-navy-850/85 shadow-2xl shadow-black/50 backdrop-blur-xl">
             <div className="p-5 sm:p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-2.5">
@@ -292,14 +294,14 @@ export default function CookieBanner() {
               <button
                 type="button"
                 onClick={() => decide(NONE, "rejected")}
-                className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-[#06080d] hover:bg-teal-200"
+                className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-navy-900 hover:bg-teal-200"
               >
                 Reddet
               </button>
               <button
                 type="button"
                 onClick={() => decide(ALL, "accepted")}
-                className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-[#06080d] hover:bg-teal-200"
+                className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-navy-900 hover:bg-teal-200"
               >
                 Kabul Et
               </button>

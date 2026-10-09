@@ -14,8 +14,8 @@ const sections: LegalSection[] = [
     title: "Kabul",
     content: (
       <p>
-        Bu web sitesini ziyaret ederek veya kullanarak aşağıdaki kullanım şartlarını kabul etmiş sayılırsınız.
-        Şartları kabul etmiyorsanız lütfen siteyi kullanmayınız.
+        Bu web sitesini ziyaret ederek veya kullanarak aşağıdaki kullanım şartlarını kabul etmiş sayılırsınız. Şartları
+        kabul etmiyorsanız lütfen siteyi kullanmayınız.
       </p>
     ),
   },
@@ -43,8 +43,8 @@ const sections: LegalSection[] = [
       <p>
         Sitedeki metinler, görseller, logolar, yazılım ve tasarım öğeleri dahil tüm içerik üzerindeki haklar
         LavieuxLabs’e veya lisans verenlerine aittir. İçerik, önceden yazılı izin alınmaksızın çoğaltılamaz,
-        dağıtılamaz, değiştirilemez veya ticari amaçla kullanılamaz. Kaynak gösterilerek yapılan kısa alıntılar
-        bu kapsamın dışındadır.
+        dağıtılamaz, değiştirilemez veya ticari amaçla kullanılamaz. Kaynak gösterilerek yapılan kısa alıntılar bu
+        kapsamın dışındadır.
       </p>
     ),
   },
@@ -68,9 +68,9 @@ const sections: LegalSection[] = [
     title: "Talepler ve Niyet Mektupları",
     content: (
       <p>
-        İletişim formu aracılığıyla iletilen talepler ve bunları takip eden Niyet Mektupları (LOI), aksi açıkça
-        yazılı olarak kararlaştırılmadıkça taraflar için bağlayıcı bir yükümlülük doğurmaz. Pilot ve iş birliği
-        çalışmalarının koşulları, taraflar arasında ayrıca imzalanacak sözleşmelerle belirlenir.
+        İletişim formu aracılığıyla iletilen talepler ve bunları takip eden Niyet Mektupları (LOI), aksi açıkça yazılı
+        olarak kararlaştırılmadıkça taraflar için bağlayıcı bir yükümlülük doğurmaz. Pilot ve iş birliği çalışmalarının
+        koşulları, taraflar arasında ayrıca imzalanacak sözleşmelerle belirlenir.
       </p>
     ),
   },
@@ -79,10 +79,10 @@ const sections: LegalSection[] = [
     title: "Sorumluluğun sınırlandırılması",
     content: (
       <p>
-        Sitedeki bilgilerin doğru ve güncel olması için özen gösterilir; ancak içeriğin eksiksizliği, doğruluğu
-        veya belirli bir amaca uygunluğu konusunda açık ya da örtülü bir garanti verilmez. Yürürlükteki mevzuatın
-        izin verdiği ölçüde, sitenin kullanımından veya kullanılamamasından doğan doğrudan ya da dolaylı
-        zararlardan LavieuxLabs sorumlu tutulamaz.
+        Sitedeki bilgilerin doğru ve güncel olması için özen gösterilir; ancak içeriğin eksiksizliği, doğruluğu veya
+        belirli bir amaca uygunluğu konusunda açık ya da örtülü bir garanti verilmez. Yürürlükteki mevzuatın izin
+        verdiği ölçüde, sitenin kullanımından veya kullanılamamasından doğan doğrudan ya da dolaylı zararlardan
+        LavieuxLabs sorumlu tutulamaz.
       </p>
     ),
   },
@@ -91,8 +91,8 @@ const sections: LegalSection[] = [
     title: "Üçüncü taraf bağlantıları",
     content: (
       <p>
-        Site, üçüncü taraflara ait web sitelerine bağlantılar içerebilir. Bu sitelerin içeriği ve gizlilik
-        uygulamaları üzerinde kontrolümüz bulunmamaktadır ve bunlardan sorumlu değiliz.
+        Site, üçüncü taraflara ait web sitelerine bağlantılar içerebilir. Bu sitelerin içeriği ve gizlilik uygulamaları
+        üzerinde kontrolümüz bulunmamaktadır ve bunlardan sorumlu değiliz.
       </p>
     ),
   },
@@ -101,8 +101,9 @@ const sections: LegalSection[] = [
     title: "Kişisel veriler",
     content: (
       <p>
-        Kişisel verilerinizin işlenmesine ilişkin ayrıntılar <Link href="/legal/privacy">Gizlilik ve KVKK
-        Politikası</Link> ile <Link href="/legal/cookies">Çerez Politikası</Link>’nda yer almaktadır.
+        Kişisel verilerinizin işlenmesine ilişkin ayrıntılar{" "}
+        <Link href="/legal/privacy">Gizlilik ve KVKK Politikası</Link> ile{" "}
+        <Link href="/legal/cookies">Çerez Politikası</Link>’nda yer almaktadır.
       </p>
     ),
   },

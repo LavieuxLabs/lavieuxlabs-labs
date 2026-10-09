@@ -9,7 +9,11 @@ export const metadata: Metadata = {
 };
 
 const frameworks = [
-  ["EU MDR 2017/745", "Tıbbi cihaz yönetmeliği; Ek VIII Kural 11 kapsamında yazılım sınıflandırması", "PharmaDeux için Sınıf IIa hedefi"],
+  [
+    "EU MDR 2017/745",
+    "Tıbbi cihaz yönetmeliği; Ek VIII Kural 11 kapsamında yazılım sınıflandırması",
+    "PharmaDeux için Sınıf IIa hedefi",
+  ],
   ["Tıbbi Cihaz Yönetmeliği (TİTCK)", "MDR ile uyumlaştırılmış ulusal düzenleme", "Referans çerçeve"],
   ["IEC 62304", "Tıbbi cihaz yazılımı yaşam döngüsü süreçleri", "Mimari uyum"],
   ["ISO 14971", "Tıbbi cihazlar için risk yönetimi", "Mimari uyum"],
@@ -26,10 +30,10 @@ const sections: LegalSection[] = [
     content: (
       <>
         <p className="note">
-          <strong>PharmaDeux CDSS ve Shield geliştirme aşamasındadır.</strong> Ürünlerimiz henüz CE işareti
-          taşımamakta ve piyasaya arz edilmemiş olup, klinik ortamda yalnızca etik kurul onaylı araştırma
-          protokolleri kapsamında kullanılabilir. Bu sayfada yer alan standartlar, geliştirme süreçlerimizde referans
-          alınan çerçeveyi ifade eder; ayrıca belirtilmedikçe bir sertifikasyon beyanı değildir.
+          <strong>PharmaDeux CDSS ve Shield geliştirme aşamasındadır.</strong> Ürünlerimiz henüz CE işareti taşımamakta
+          ve piyasaya arz edilmemiş olup, klinik ortamda yalnızca etik kurul onaylı araştırma protokolleri kapsamında
+          kullanılabilir. Bu sayfada yer alan standartlar, geliştirme süreçlerimizde referans alınan çerçeveyi ifade
+          eder; ayrıca belirtilmedikçe bir sertifikasyon beyanı değildir.
         </p>
       </>
     ),
@@ -61,8 +65,7 @@ const sections: LegalSection[] = [
         </div>
         <p>
           <strong>Mimari uyum:</strong> Süreç ve dokümantasyon, standardın gerekliliklerine göre kurgulanmaktadır.{" "}
-          <strong>Yol haritasında:</strong> Uygulama ve belgelendirme, ürünün düzenleyici yol haritasında
-          planlanmıştır.
+          <strong>Yol haritasında:</strong> Uygulama ve belgelendirme, ürünün düzenleyici yol haritasında planlanmıştır.
         </p>
       </>
     ),
@@ -73,20 +76,20 @@ const sections: LegalSection[] = [
     content: (
       <>
         <p>
-          PharmaDeux, ilaç tedavisine ilişkin kararları bilgilendirmek amacıyla bilgi sağlayan bir yazılım olarak,
-          MDR Ek VIII Kural 11 kapsamında Sınıf IIa tıbbi cihaz yazılımı (SaMD) hedefiyle tasarlanmaktadır. Bu
-          kapsamda:
+          PharmaDeux, ilaç tedavisine ilişkin kararları bilgilendirmek amacıyla bilgi sağlayan bir yazılım olarak, MDR
+          Ek VIII Kural 11 kapsamında Sınıf IIa tıbbi cihaz yazılımı (SaMD) hedefiyle tasarlanmaktadır. Bu kapsamda:
         </p>
         <ul>
           <li>Kullanım amacı, hedef kullanıcı ve hedef hasta popülasyonu yazılı olarak tanımlanır,</li>
-          <li>Klinik değerlendirme; literatür, retrospektif doğrulama ve gerektiğinde prospektif çalışmalarla desteklenir,</li>
+          <li>
+            Klinik değerlendirme; literatür, retrospektif doğrulama ve gerektiğinde prospektif çalışmalarla desteklenir,
+          </li>
           <li>Risk yönetimi, tasarımın tüm aşamalarında ISO 14971 yaklaşımıyla yürütülür,</li>
           <li>Piyasaya arz sonrası gözetim (PMS) ve olay bildirim süreçleri ürünle birlikte planlanır.</li>
         </ul>
         <p>
-          Shield, klinik tanı veya tedavi kararı üretmeyen; geri ödeme ve provizyon süreçlerini destekleyen
-          operasyonel bir platform olarak tasarlanmıştır. Düzenleyici sınıflandırması, nihai kullanım amacına göre
-          değerlendirilir.
+          Shield, klinik tanı veya tedavi kararı üretmeyen; geri ödeme ve provizyon süreçlerini destekleyen operasyonel
+          bir platform olarak tasarlanmıştır. Düzenleyici sınıflandırması, nihai kullanım amacına göre değerlendirilir.
         </p>
       </>
     ),
@@ -97,20 +100,19 @@ const sections: LegalSection[] = [
     content: (
       <ul>
         <li>
-          <strong>İzlenebilirlik:</strong> Her gereksinim; tasarım öğesine, uygulamaya ve doğrulama testine
-          bağlanır.
+          <strong>İzlenebilirlik:</strong> Her gereksinim; tasarım öğesine, uygulamaya ve doğrulama testine bağlanır.
         </li>
         <li>
-          <strong>Doğrulama:</strong> Yazılım değişiklikleri otomatik birim ve entegrasyon testlerinden geçmeden
-          yayına alınmaz. PharmaDeux test kümesi 2.480’den fazla otomatik testten oluşur.
+          <strong>Doğrulama:</strong> Yazılım değişiklikleri otomatik birim ve entegrasyon testlerinden geçmeden yayına
+          alınmaz. PharmaDeux test kümesi 2.480’den fazla otomatik testten oluşur.
         </li>
         <li>
           <strong>Değişiklik kontrolü:</strong> Kural setleri ve bilgi tabanı sürümlenir; her değişiklik gözden
           geçirilir ve kayıt altına alınır.
         </li>
         <li>
-          <strong>Deterministik davranış:</strong> Klinik ve operasyonel karar yolunda üretken veya olasılıksal
-          modeller kullanılmaz; aynı girdi aynı kural sürümüyle her zaman aynı çıktıyı üretir.
+          <strong>Deterministik davranış:</strong> Klinik ve operasyonel karar yolunda üretken veya olasılıksal modeller
+          kullanılmaz; aynı girdi aynı kural sürümüyle her zaman aynı çıktıyı üretir.
         </li>
         <li>
           <strong>İnsan denetimi:</strong> Sistemler öneri ve risk sinyali üretir; nihai karar yetkili kullanıcıya
@@ -128,7 +130,9 @@ const sections: LegalSection[] = [
         <ul>
           <li>Rol tabanlı erişim kontrolü (RBAC) ve en az yetki ilkesi,</li>
           <li>Multi-tenant mimaride kurum verilerinin mantıksal olarak izolasyonu,</li>
-          <li>Kararların ve kullanıcı işlemlerinin yalnızca eklenebilir (append-only) denetim kayıtlarında tutulması,</li>
+          <li>
+            Kararların ve kullanıcı işlemlerinin yalnızca eklenebilir (append-only) denetim kayıtlarında tutulması,
+          </li>
           <li>Veri minimizasyonu ve pilot çalışmalarda anonimleştirme / takma adlandırma,</li>
           <li>İletim sırasında şifreleme ve güvenli yazılım geliştirme yaşam döngüsü uygulamaları.</li>
         </ul>
@@ -140,10 +144,11 @@ const sections: LegalSection[] = [
     title: "Güvenlik ve kalite bildirimleri",
     content: (
       <p>
-        Ürünlerimizle ilgili bir güvenlik açığı, kalite sorunu veya klinik güvenlik endişesi tespit ettiyseniz,
-        lütfen <a href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Güvenlik / Kalite Bildirimi")}`}>{CONTACT_EMAIL}</a>{" "}
-        adresine “Güvenlik / Kalite Bildirimi” konu başlığıyla bildiriniz. Bildirimler öncelikli olarak
-        değerlendirilir.
+        Ürünlerimizle ilgili bir güvenlik açığı, kalite sorunu veya klinik güvenlik endişesi tespit ettiyseniz, lütfen{" "}
+        <a href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Güvenlik / Kalite Bildirimi")}`}>
+          {CONTACT_EMAIL}
+        </a>{" "}
+        adresine “Güvenlik / Kalite Bildirimi” konu başlığıyla bildiriniz. Bildirimler öncelikli olarak değerlendirilir.
       </p>
     ),
   },

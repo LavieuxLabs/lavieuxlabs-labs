@@ -21,18 +21,13 @@ export function LogoMark({ className = "" }: { className?: string }) {
       <circle cx="16" cy="8" r="2.4" fill="currentColor" />
       <circle cx="8" cy="22" r="2.4" fill="currentColor" />
       <circle cx="24" cy="22" r="2.4" fill="currentColor" />
-      <circle cx="16" cy="16.5" r="1.6" fill="#06080d" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="16" cy="16.5" r="1.6" fill="#0F1B2D" stroke="currentColor" strokeWidth="1.2" />
     </svg>
   );
 }
 
 function StatusPulse() {
-  return (
-    <span className="relative flex h-2 w-2">
-      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60 motion-reduce:animate-none" />
-      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-    </span>
-  );
+  return <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" aria-hidden="true" />;
 }
 
 function ProductsMenu({ active }: { active: boolean }) {
@@ -96,7 +91,7 @@ function ProductsMenu({ active }: { active: boolean }) {
             transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
             className="absolute top-full left-1/2 w-[400px] -translate-x-1/2 pt-3"
           >
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0a0d14]/80 shadow-2xl shadow-black/50 backdrop-blur-2xl">
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-navy-850/80 shadow-2xl shadow-black/50 backdrop-blur-2xl">
               <ul className="p-2">
                 {products.map((p) => {
                   const Icon = productIcons[p.icon];
@@ -127,7 +122,7 @@ function ProductsMenu({ active }: { active: boolean }) {
               <Link
                 href="/#platformlar"
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-between border-t border-white/[0.07] bg-white/[0.02] px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-white/45 transition-colors hover:text-white"
+                className="flex items-center justify-between border-t border-white/[0.07] bg-white/[0.02] px-5 py-3 text-xs font-medium uppercase tracking-wide text-white/45 transition-colors hover:text-white"
               >
                 Tüm platformlar
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -160,12 +155,7 @@ function LanguageToggle({ className = "" }: { className?: string }) {
         aria-label="Dil seçimi"
         className="flex items-center rounded-full border border-white/10 bg-white/[0.03] p-0.5 font-mono text-[11px] tracking-[0.08em]"
       >
-        <button
-          type="button"
-          aria-pressed="true"
-          lang="tr"
-          className="rounded-full bg-white/10 px-2.5 py-1 text-white"
-        >
+        <button type="button" aria-pressed="true" lang="tr" className="rounded-full bg-white/10 px-2.5 py-1 text-white">
           TR
         </button>
         <button
@@ -186,7 +176,7 @@ function LanguageToggle({ className = "" }: { className?: string }) {
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            className="absolute top-full right-0 mt-2 w-max rounded-lg border border-white/10 bg-[#0a0d14]/90 px-3 py-2 text-xs text-white/70 shadow-xl backdrop-blur-xl"
+            className="absolute top-full right-0 mt-2 w-max rounded-lg border border-white/10 bg-navy-850/90 px-3 py-2 text-xs text-white/70 shadow-xl backdrop-blur-xl"
           >
             English version is in preparation.
           </motion.p>
@@ -222,10 +212,8 @@ export default function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div
-        className={`border-b transition-[background-color,border-color,backdrop-filter] duration-300 ${
-          solid
-            ? "border-white/[0.08] bg-[#06080d]/70 backdrop-blur-xl"
-            : "border-transparent bg-transparent"
+        className={`border-b transition-[background-color,border-color,backdrop-filter] duration-150 ease-out ${
+          solid ? "border-white/[0.08] bg-navy-900/70 backdrop-blur-xl" : "border-transparent bg-transparent"
         }`}
       >
         <nav
@@ -233,7 +221,7 @@ export default function Navbar() {
           className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
         >
           <Link href="/" className="group flex items-center gap-2.5" aria-label="LavieuxLabs ana sayfa">
-            <LogoMark className="h-7 w-7 text-teal-300 transition-transform duration-500 group-hover:rotate-[60deg]" />
+            <LogoMark className="h-7 w-7 text-teal-300 transition-transform duration-150 ease-out group-hover:rotate-[60deg]" />
             <span className="text-[15px] font-semibold tracking-tight text-white">
               Lavieux<span className="text-white/50">Labs</span>
             </span>
@@ -263,14 +251,12 @@ export default function Navbar() {
 
             <div className="hidden items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-3 py-1.5 xl:flex">
               <StatusPulse />
-              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-emerald-300/90">
-                Pilot başvuruları açık
-              </span>
+              <span className="text-xs font-medium uppercase tracking-wide text-white/60">Pilot başvuruları açık</span>
             </div>
 
             <Link
               href="/contact"
-              className="hidden items-center gap-1.5 rounded-lg bg-white px-3.5 py-2 text-sm font-medium text-[#06080d] transition-colors hover:bg-teal-200 md:inline-flex"
+              className="hidden items-center gap-1.5 rounded-lg bg-white px-3.5 py-2 text-sm font-medium text-navy-900 transition-colors hover:bg-teal-200 md:inline-flex"
             >
               Pilot Başvurusu (LOI)
               <ArrowUpRight className="h-4 w-4" />
@@ -298,10 +284,10 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="border-b border-white/[0.08] bg-[#06080d]/90 backdrop-blur-xl md:hidden"
+            className="border-b border-white/[0.08] bg-navy-900/90 backdrop-blur-xl md:hidden"
           >
             <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
-              <p className="px-2 pt-2 pb-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-white/35">
+              <p className="px-2 pt-2 pb-1 text-[11px] font-medium uppercase tracking-wide text-white/35">
                 Platformlar
               </p>
               <ul>
@@ -344,7 +330,7 @@ export default function Navbar() {
               <Link
                 href="/contact"
                 onClick={() => setOpen(false)}
-                className="mx-2 mt-3 flex items-center justify-center gap-1.5 rounded-lg bg-white px-3.5 py-2.5 text-sm font-medium text-[#06080d]"
+                className="mx-2 mt-3 flex items-center justify-center gap-1.5 rounded-lg bg-white px-3.5 py-2.5 text-sm font-medium text-navy-900"
               >
                 Pilot Başvurusu (LOI)
                 <ArrowUpRight className="h-4 w-4" />
@@ -352,7 +338,7 @@ export default function Navbar() {
               <div className="mt-4 flex items-center justify-between px-2 pb-2">
                 <span className="flex items-center gap-2">
                   <StatusPulse />
-                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-emerald-300/90">
+                  <span className="text-xs font-medium uppercase tracking-wide text-white/60">
                     Pilot başvuruları açık
                   </span>
                 </span>

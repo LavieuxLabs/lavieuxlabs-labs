@@ -17,7 +17,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import PageHero from "@/components/PageHero";
-import PharmaGlobe from "@/components/PharmaGlobe";
+import PharmaCapsule from "@/components/PharmaCapsule";
 import InPageNav from "@/components/InPageNav";
 import SectionHeader from "@/components/SectionHeader";
 import FlowDiagram, { type FlowStep } from "@/components/FlowDiagram";
@@ -235,11 +235,12 @@ export default function PharmaDeuxPage() {
   return (
     <main className="relative flex-1 overflow-x-clip">
       <PageHero
-        visual={<PharmaGlobe />}
+        visual={<PharmaCapsule />}
+        visualClassName="relative mx-auto aspect-[4/5] w-full max-w-[360px] sm:aspect-square sm:max-w-[420px] lg:max-w-[520px]"
         below={
           <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.08] backdrop-blur-md lg:grid-cols-4">
             {heroStats.map((s) => (
-              <div key={s.label} className="flex flex-col-reverse bg-[#06080d]/80 p-5">
+              <div key={s.label} className="flex flex-col-reverse bg-navy-900/80 p-5">
                 <dt className="mt-1.5 text-xs leading-snug text-white/50">{s.label}</dt>
                 <dd className="font-mono text-xl font-medium tracking-tight text-teal-100 sm:text-2xl">{s.value}</dd>
               </div>
@@ -254,10 +255,7 @@ export default function PharmaDeuxPage() {
         eyebrow="Klinik Karar Destek Sistemi · SaMD"
         title={
           <>
-            PharmaDeux CDSS:{" "}
-            <span className="bg-gradient-to-r from-teal-200 to-emerald-200 bg-clip-text text-transparent">
-              reçete anında deterministik ilaç güvenliği.
-            </span>
+            PharmaDeux CDSS: <span className="text-white/50">reçete anında deterministik ilaç güvenliği.</span>
           </>
         }
         description="İlaç-ilaç etkileşimlerini, organ toksisitesini ve kümülatif organ yükünü 18 temel güvenlik düzleminde denetleyen; her bulgusunu gerekçesiyle sunan ve nihai kararı klinisyene bırakan klinik güvenlik motoru."
@@ -265,7 +263,7 @@ export default function PharmaDeuxPage() {
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link
             href="/contact?solution=pharmadeux"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-[#06080d] transition-colors hover:bg-teal-200"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors hover:bg-teal-200"
           >
             Pilot Başvurusu (LOI)
             <ArrowUpRight className="h-4 w-4" />
@@ -293,7 +291,7 @@ export default function PharmaDeuxPage() {
           <div className="mt-14 grid gap-5 lg:grid-cols-[1.4fr_1fr]">
             <div className="grid gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.08] sm:grid-cols-2">
               {problems.map(({ icon: Icon, title, body }) => (
-                <div key={title} className="bg-[#070a10] p-6 sm:p-7">
+                <div key={title} className="bg-navy-850 p-6 sm:p-7">
                   <Icon className="h-5 w-5 text-teal-300/80" strokeWidth={1.6} />
                   <h3 className="mt-5 text-base font-medium text-white">{title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-white/55">{body}</p>
@@ -302,14 +300,14 @@ export default function PharmaDeuxPage() {
             </div>
 
             <Reveal className="flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 sm:p-7">
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">Kombinatoryal büyüme</p>
+              <p className="text-xs font-medium uppercase tracking-wide text-white/40">Kombinatoryal büyüme</p>
               <p className="mt-3 text-sm leading-relaxed text-white/60">
                 n eşzamanlı ilaç için yalnızca ikili kombinasyon sayısı n(n−1)/2 olarak büyür. Üçlü ve daha üst düzey
                 birikimli etkiler bu sayının dışındadır.
               </p>
               <table className="mt-6 w-full text-left text-sm">
                 <thead>
-                  <tr className="border-b border-white/[0.08] font-mono text-[11px] uppercase tracking-[0.12em] text-white/40">
+                  <tr className="border-b border-white/[0.08] text-xs font-medium uppercase tracking-wide text-white/40">
                     <th className="py-2 font-normal">İlaç sayısı</th>
                     <th className="py-2 text-right font-normal">İkili kombinasyon</th>
                   </tr>
@@ -355,9 +353,7 @@ export default function PharmaDeuxPage() {
           <div className="mt-20">
             <Reveal className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-teal-300/80">
-                  18 güvenlik düzlemi
-                </p>
+                <p className="text-xs font-medium uppercase tracking-wide text-white/60">18 güvenlik düzlemi</p>
                 <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white">
                   Dört klinik alanda yapılandırılmış denetim
                 </h3>
@@ -384,7 +380,7 @@ export default function PharmaDeuxPage() {
                       {group.planes.map((plane, pi) => (
                         <li
                           key={plane}
-                          className="group flex items-center gap-3 rounded-lg border border-white/[0.05] bg-[#070a10] px-3 py-2.5 transition-colors hover:border-teal-400/30"
+                          className="group flex items-center gap-3 rounded-lg border border-white/[0.05] bg-navy-850 px-3 py-2.5 transition-colors hover:border-teal-400/30"
                         >
                           <span className="font-mono text-[10.5px] text-teal-300/60">
                             P{String(offset + pi + 1).padStart(2, "0")}
@@ -419,7 +415,7 @@ export default function PharmaDeuxPage() {
                 }`}
               >
                 <div>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/40">{v.title}</p>
+                  <p className="text-xs font-medium uppercase tracking-wide text-white/40">{v.title}</p>
                   <p
                     className={`mt-3 font-semibold tracking-tight text-teal-100 ${
                       v.wide ? "text-5xl sm:text-6xl" : "text-2xl"
@@ -445,7 +441,7 @@ export default function PharmaDeuxPage() {
               description="PharmaDeux, ilaç tedavisine ilişkin kararları bilgilendiren bir yazılım olarak, AB Tıbbi Cihaz Yönetmeliği (MDR) Kural 11 kapsamında Sınıf IIa hedefiyle tasarlanmaktadır."
             />
             <Reveal className="mt-8 rounded-2xl border border-teal-400/20 bg-teal-400/[0.04] p-6">
-              <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-teal-300/80">
+              <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
                 <ClipboardCheck className="h-4 w-4" />
                 Taslak kullanım amacı
               </p>
@@ -459,7 +455,7 @@ export default function PharmaDeuxPage() {
 
           <Reveal className="overflow-hidden rounded-2xl border border-white/[0.08]">
             <table className="w-full text-left text-sm">
-              <thead className="bg-white/[0.03] font-mono text-[11px] uppercase tracking-[0.12em] text-white/40">
+              <thead className="bg-white/[0.03] text-xs font-medium uppercase tracking-wide text-white/40">
                 <tr>
                   <th className="px-5 py-3.5 font-normal">Çerçeve</th>
                   <th className="hidden px-5 py-3.5 font-normal sm:table-cell">Kapsam</th>
@@ -477,7 +473,7 @@ export default function PharmaDeuxPage() {
                       {f.scope}
                     </td>
                     <td className="px-5 py-4 text-right align-top">
-                      <span className="inline-block whitespace-nowrap rounded-full border border-white/10 px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.08em] text-teal-200/80">
+                      <span className="inline-block whitespace-nowrap rounded-full border border-white/10 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-teal-200/80">
                         {f.status}
                       </span>
                     </td>
@@ -510,22 +506,18 @@ export default function PharmaDeuxPage() {
                 <span
                   aria-hidden="true"
                   className={`absolute top-6 -left-[29px] h-2.5 w-2.5 rounded-full border sm:-left-[37px] ${
-                    i === 0 ? "border-teal-300 bg-teal-300" : "border-white/30 bg-[#06080d]"
+                    i === 0 ? "border-teal-300 bg-teal-300" : "border-white/30 bg-navy-900"
                   }`}
                 />
                 <Reveal delay={i * 0.05}>
                   <div className="grid gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 transition-colors hover:border-white/[0.14] sm:grid-cols-[110px_1fr_auto] sm:items-start sm:gap-6 sm:p-6">
-                    <span className="font-mono text-xs tracking-[0.14em] text-teal-300/80 uppercase">{p.phase}</span>
+                    <span className="text-xs tracking-wide text-white/60 font-medium uppercase">{p.phase}</span>
                     <div>
                       <h3 className="text-base font-medium text-white">{p.title}</h3>
                       <p className="mt-1.5 text-sm leading-relaxed text-white/55">{p.body}</p>
                     </div>
                     <span
-                      className={`justify-self-start rounded-full border px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.08em] sm:justify-self-end ${
-                        i === 0
-                          ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-200"
-                          : "border-white/10 text-white/45"
-                      }`}
+                      className={`justify-self-start rounded-full border px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide sm:justify-self-end ${i === 0 ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-200" : "border-white/10 text-white/45"}`}
                     >
                       {p.status}
                     </span>
@@ -557,7 +549,7 @@ export default function PharmaDeuxPage() {
             ].map((item) => (
               <li
                 key={item}
-                className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-[#070a10]/70 px-4 py-3.5 text-sm text-white/70"
+                className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-navy-850/70 px-4 py-3.5 text-sm text-white/70"
               >
                 <Pill className="h-4 w-4 shrink-0 text-teal-300" strokeWidth={1.6} />
                 {item}

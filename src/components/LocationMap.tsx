@@ -18,7 +18,7 @@ export default function LocationMap() {
     <div className="grid overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
       {/* Address card */}
       <div className="flex flex-col border-b border-white/[0.08] p-6 sm:p-8 lg:border-r lg:border-b-0">
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-teal-300/80">Ar-Ge yerleşkesi</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-white/60">Ar-Ge yerleşkesi</p>
         <div className="mt-6 flex gap-3.5">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-teal-400/25 bg-teal-400/10">
             <Building2 className="h-[18px] w-[18px] text-teal-300" strokeWidth={1.7} />
@@ -48,7 +48,7 @@ export default function LocationMap() {
       </div>
 
       {/* Map */}
-      <div className="relative min-h-[320px] bg-[#070a10] lg:min-h-[380px]">
+      <div className="relative min-h-[320px] bg-navy-850 lg:min-h-[380px]">
         {showMap ? (
           <>
             <iframe
@@ -62,17 +62,16 @@ export default function LocationMap() {
             {/* Edge vignette so the map blends into the card */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 shadow-[inset_0_0_60px_rgba(6,8,13,0.85)]"
+              className="pointer-events-none absolute inset-0 shadow-[inset_0_0_60px_rgba(15,27,45,0.85)]"
             />
           </>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center p-6">
             <div aria-hidden="true" className="bg-grid mask-radial absolute inset-0" />
             <div aria-hidden="true" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              <span className="absolute -inset-10 animate-ping rounded-full border border-teal-300/20 motion-reduce:animate-none" />
               <span className="absolute -inset-5 rounded-full border border-teal-300/25" />
             </div>
-            <div className="relative max-w-sm rounded-xl border border-white/10 bg-[#0a0d14]/85 p-5 text-center backdrop-blur-xl">
+            <div className="relative max-w-sm rounded-xl border border-white/10 bg-navy-850/85 p-5 text-center backdrop-blur-xl">
               <MapPin className="mx-auto h-5 w-5 text-teal-300" />
               <p className="mt-3 text-sm text-white/80">Harita Google tarafından sağlanır.</p>
               <p className="mt-1.5 text-xs leading-relaxed text-white/45">
@@ -86,7 +85,7 @@ export default function LocationMap() {
                 <button
                   type="button"
                   onClick={() => setLoadedOnce(true)}
-                  className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-[#06080d] hover:bg-teal-200"
+                  className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-navy-900 hover:bg-teal-200"
                 >
                   Haritayı yükle
                 </button>

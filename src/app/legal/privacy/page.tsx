@@ -5,7 +5,8 @@ import { CONTACT_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Gizlilik ve KVKK Politikası",
-  description: "6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında LavieuxLabs aydınlatma metni ve gizlilik politikası.",
+  description:
+    "6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında LavieuxLabs aydınlatma metni ve gizlilik politikası.",
 };
 
 const sections: LegalSection[] = [
@@ -29,14 +30,14 @@ const sections: LegalSection[] = [
     content: (
       <>
         <p>
-          Bu metin; web sitemizi ziyaret eden, iletişim ve Niyet Mektubu (LOI) formunu kullanan veya bizimle e-posta yoluyla
-          iletişime geçen gerçek kişilerin kişisel verilerinin işlenmesine ilişkindir.
+          Bu metin; web sitemizi ziyaret eden, iletişim ve Niyet Mektubu (LOI) formunu kullanan veya bizimle e-posta
+          yoluyla iletişime geçen gerçek kişilerin kişisel verilerinin işlenmesine ilişkindir.
         </p>
         <p className="note">
           <strong>Hasta verisi bu sitede işlenmez.</strong> Pilot ve doğrulama çalışmaları kapsamında işlenebilecek
           sağlık verileri; bu metinden bağımsız olarak, ilgili kurumla imzalanan veri işleme sözleşmesi, etik kurul
-          onayı ve ayrı bir aydınlatma çerçevesinde ele alınır. Lütfen iletişim kanallarımız üzerinden hasta verisi
-          veya özel nitelikli kişisel veri paylaşmayınız.
+          onayı ve ayrı bir aydınlatma çerçevesinde ele alınır. Lütfen iletişim kanallarımız üzerinden hasta verisi veya
+          özel nitelikli kişisel veri paylaşmayınız.
         </p>
       </>
     ),
@@ -90,7 +91,9 @@ const sections: LegalSection[] = [
     title: "İşleme amaçları",
     content: (
       <ul>
-        <li>Demo, pilot, Niyet Mektubu (LOI) ve iş birliği taleplerinin alınması, değerlendirilmesi ve yanıtlanması,</li>
+        <li>
+          Demo, pilot, Niyet Mektubu (LOI) ve iş birliği taleplerinin alınması, değerlendirilmesi ve yanıtlanması,
+        </li>
         <li>Kurumsal iletişim faaliyetlerinin ve iş birliği süreçlerinin yürütülmesi,</li>
         <li>Sözleşme öncesi görüşmelerin planlanması ve kayıt altına alınması,</li>
         <li>Web sitesinin güvenliğinin sağlanması ve hizmet sürekliliğinin korunması,</li>
@@ -122,8 +125,8 @@ const sections: LegalSection[] = [
           </li>
         </ul>
         <p>
-          Zorunlu olmayan çerezler gibi açık rızaya dayanan işlemler, yalnızca rızanız alındıktan sonra
-          gerçekleştirilir ve rızanızı dilediğiniz zaman geri alabilirsiniz.
+          Zorunlu olmayan çerezler gibi açık rızaya dayanan işlemler, yalnızca rızanız alındıktan sonra gerçekleştirilir
+          ve rızanızı dilediğiniz zaman geri alabilirsiniz.
         </p>
       </>
     ),
@@ -139,10 +142,10 @@ const sections: LegalSection[] = [
           aktarılabilir.
         </p>
         <p>
-          İletişim sayfasındaki konum haritasını yüklemeniz halinde, IP adresiniz ve tarayıcı bilgileriniz gibi
-          veriler harita hizmetini sağlayan Google’a doğrudan iletilir; harita yalnızca onayınız veya talebiniz
-          üzerine yüklenir. Hizmet sağlayıcılarımızın sunucularının yurt dışında bulunması halinde aktarım, KVKK md. 9’da öngörülen
-          aktarım mekanizmalarına uygun olarak gerçekleştirilir. Kişisel verileriniz pazarlama amacıyla üçüncü
+          İletişim sayfasındaki konum haritasını yüklemeniz halinde, IP adresiniz ve tarayıcı bilgileriniz gibi veriler
+          harita hizmetini sağlayan Google’a doğrudan iletilir; harita yalnızca onayınız veya talebiniz üzerine
+          yüklenir. Hizmet sağlayıcılarımızın sunucularının yurt dışında bulunması halinde aktarım, KVKK md. 9’da
+          öngörülen aktarım mekanizmalarına uygun olarak gerçekleştirilir. Kişisel verileriniz pazarlama amacıyla üçüncü
           kişilere satılmaz veya kiralanmaz.
         </p>
       </>
@@ -179,8 +182,8 @@ const sections: LegalSection[] = [
           <li>KVKK md. 7’de öngörülen şartlar çerçevesinde silinmesini veya yok edilmesini isteme,</li>
           <li>Düzeltme, silme ve yok etme işlemlerinin aktarıldığı üçüncü kişilere bildirilmesini isteme,</li>
           <li>
-            Münhasıran otomatik sistemler vasıtasıyla analiz edilmesi suretiyle aleyhinize bir sonucun ortaya
-            çıkmasına itiraz etme,
+            Münhasıran otomatik sistemler vasıtasıyla analiz edilmesi suretiyle aleyhinize bir sonucun ortaya çıkmasına
+            itiraz etme,
           </li>
           <li>Kanuna aykırı işlenmesi sebebiyle zarara uğramanız halinde zararın giderilmesini talep etme</li>
         </ol>
@@ -194,15 +197,15 @@ const sections: LegalSection[] = [
     content: (
       <>
         <p>
-          Haklarınıza ilişkin taleplerinizi, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ’e uygun
-          olarak; kimliğinizi tespit etmeye yarayan bilgilerle birlikte{" "}
+          Haklarınıza ilişkin taleplerinizi, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ’e uygun olarak;
+          kimliğinizi tespit etmeye yarayan bilgilerle birlikte{" "}
           <a href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("KVKK Başvurusu")}`}>{CONTACT_EMAIL}</a>{" "}
           adresine “KVKK Başvurusu” konu başlığıyla iletebilirsiniz.
         </p>
         <p>
-          Başvurunuz, talebin niteliğine göre en kısa sürede ve en geç otuz gün içinde ücretsiz olarak
-          sonuçlandırılır. İşlemin ayrıca bir maliyet gerektirmesi halinde, Kişisel Verileri Koruma Kurulu
-          tarafından belirlenen tarifedeki ücret alınabilir.
+          Başvurunuz, talebin niteliğine göre en kısa sürede ve en geç otuz gün içinde ücretsiz olarak sonuçlandırılır.
+          İşlemin ayrıca bir maliyet gerektirmesi halinde, Kişisel Verileri Koruma Kurulu tarafından belirlenen
+          tarifedeki ücret alınabilir.
         </p>
       </>
     ),
@@ -212,8 +215,8 @@ const sections: LegalSection[] = [
     title: "Politikadaki değişiklikler",
     content: (
       <p>
-        Bu politika, mevzuat ve faaliyetlerimizdeki değişikliklere bağlı olarak güncellenebilir. Güncel sürüm her
-        zaman bu sayfada yayımlanır; sayfanın başındaki “Son güncelleme” tarihi en son değişikliği gösterir.
+        Bu politika, mevzuat ve faaliyetlerimizdeki değişikliklere bağlı olarak güncellenebilir. Güncel sürüm her zaman
+        bu sayfada yayımlanır; sayfanın başındaki “Son güncelleme” tarihi en son değişikliği gösterir.
       </p>
     ),
   },

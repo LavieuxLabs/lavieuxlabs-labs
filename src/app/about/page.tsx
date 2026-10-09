@@ -119,11 +119,7 @@ export default function AboutPage() {
         eyebrow="LavieuxLabs Ar-Ge Kolektifi"
         title={
           <>
-            Klinik güvenliği bir{" "}
-            <span className="bg-gradient-to-r from-teal-200 via-emerald-200 to-indigo-200 bg-clip-text text-transparent">
-              mühendislik disiplini
-            </span>{" "}
-            olarak ele alıyoruz.
+            Klinik güvenliği bir <span className="text-white/50">mühendislik disiplini</span> olarak ele alıyoruz.
           </>
         }
         description="LavieuxLabs; klinik farmakoloji, sağlık operasyonları ve yazılım mühendisliğini bir araya getiren bir sağlık teknolojileri Ar-Ge kolektifidir. Hata maliyetinin yüksek olduğu alanlarda deterministik, test edilebilir ve insan denetimine açık sistemler geliştiriyoruz."
@@ -136,11 +132,11 @@ export default function AboutPage() {
             <Reveal
               key={label}
               delay={i * 0.08}
-              className="rounded-2xl border border-white/[0.08] bg-[#070a10]/70 p-7 backdrop-blur-sm sm:p-9"
+              className="rounded-2xl border border-white/[0.08] bg-navy-850/70 p-7 backdrop-blur-sm sm:p-9"
             >
               <div className="flex items-center gap-3">
                 <Icon className="h-5 w-5 text-teal-300" strokeWidth={1.6} />
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/45">{label}</p>
+                <p className="text-xs font-medium uppercase tracking-wide text-white/45">{label}</p>
               </div>
               <h2 className="mt-6 text-xl font-semibold leading-snug tracking-tight text-white sm:text-2xl">{title}</h2>
               <p className="mt-4 text-sm leading-relaxed text-white/55">{body}</p>
@@ -158,8 +154,8 @@ export default function AboutPage() {
             description="Olasılıksal ve üretken modeller araştırma ve analiz için değerli araçlardır. Ancak bir ilaç istemini durdurabilecek ya da bir hastanın tedavisini etkileyebilecek bir uyarı, tekrarlanabilir ve kaynağına kadar izlenebilir olmalıdır. Bu nedenle klinik ve operasyonel karar yolunda kural tabanlı determinizmi esas alıyoruz."
           />
 
-          <Reveal className="mt-14 overflow-hidden rounded-2xl border border-white/[0.08] bg-[#070a10]/80 backdrop-blur-sm">
-            <div className="hidden grid-cols-[180px_1fr_1fr] border-b border-white/[0.08] bg-white/[0.03] font-mono text-[11px] uppercase tracking-[0.12em] md:grid">
+          <Reveal className="mt-14 overflow-hidden rounded-2xl border border-white/[0.08] bg-navy-850/80 backdrop-blur-sm">
+            <div className="hidden grid-cols-[180px_1fr_1fr] border-b border-white/[0.08] bg-white/[0.03] text-xs font-medium uppercase tracking-wide md:grid">
               <div className="px-6 py-4 text-white/40">Ölçüt</div>
               <div className="px-6 py-4 text-white/40">Olasılıksal model</div>
               <div className="px-6 py-4 text-teal-300/80">Kural tabanlı determinizm</div>
@@ -172,11 +168,13 @@ export default function AboutPage() {
                 >
                   <dt className="text-sm font-medium text-white md:px-6 md:py-5">{row.criterion}</dt>
                   <dd className="text-sm leading-relaxed text-white/45 md:px-6 md:py-5">
-                    <span className="mr-2 font-mono text-[10px] uppercase text-white/30 md:hidden">Olasılıksal</span>
+                    <span className="mr-2 text-[10px] font-medium uppercase tracking-wide text-white/30 md:hidden">
+                      Olasılıksal
+                    </span>
                     {row.probabilistic}
                   </dd>
                   <dd className="text-sm leading-relaxed text-white/80 md:border-l md:border-white/[0.06] md:bg-teal-400/[0.03] md:px-6 md:py-5">
-                    <span className="mr-2 font-mono text-[10px] uppercase text-teal-300/70 md:hidden">
+                    <span className="mr-2 text-[10px] font-medium uppercase tracking-wide text-white/60 md:hidden">
                       Deterministik
                     </span>
                     {row.deterministic}
@@ -198,7 +196,7 @@ export default function AboutPage() {
           />
           <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.08] sm:grid-cols-2 lg:grid-cols-4">
             {rnd.map(({ icon: Icon, title, body }, i) => (
-              <Reveal key={title} delay={i * 0.05} className="bg-[#070a10]/90 p-6 sm:p-7">
+              <Reveal key={title} delay={i * 0.05} className="bg-navy-850/90 p-6 sm:p-7">
                 <Icon className="h-5 w-5 text-white/45" strokeWidth={1.6} />
                 <h3 className="mt-5 text-base font-medium text-white">{title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/55">{body}</p>
@@ -221,7 +219,7 @@ export default function AboutPage() {
               <li key={title}>
                 <Reveal
                   delay={i * 0.05}
-                  className="h-full rounded-2xl border border-white/[0.08] bg-[#070a10]/70 p-6 backdrop-blur-sm transition-colors hover:border-white/[0.16]"
+                  className="h-full rounded-2xl border border-white/[0.08] bg-navy-850/70 p-6 backdrop-blur-sm transition-colors hover:border-white/[0.16]"
                 >
                   <Icon className="h-5 w-5 text-teal-300/80" strokeWidth={1.6} />
                   <h3 className="mt-4 text-base font-medium text-white">{title}</h3>

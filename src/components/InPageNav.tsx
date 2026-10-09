@@ -10,11 +10,11 @@ type InPageNavProps = {
 
 const tones = {
   teal: {
-    pill: "border-teal-300/40 bg-teal-400/[0.12] shadow-[0_0_18px_-4px_rgba(45,212,191,0.55)]",
+    pill: "border-teal-300/40 bg-teal-400/[0.12]",
     index: "text-teal-300",
   },
   indigo: {
-    pill: "border-indigo-300/40 bg-indigo-400/[0.14] shadow-[0_0_18px_-4px_rgba(129,140,248,0.6)]",
+    pill: "border-indigo-300/40 bg-indigo-400/[0.14]",
     index: "text-indigo-300",
   },
 };
@@ -65,7 +65,7 @@ export default function InPageNav({ items, accent = "teal" }: InPageNavProps) {
   }, [activeId, reduced]);
 
   return (
-    <div className="sticky top-16 z-30 border-y border-white/[0.08] bg-[#06080d]/75 backdrop-blur-xl">
+    <div className="sticky top-16 z-30 border-y border-white/[0.08] bg-navy-900/75 backdrop-blur-xl">
       <nav aria-label="Sayfa bölümleri" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ul ref={listRef} className="-mx-1 flex gap-1 overflow-x-auto py-2 [scrollbar-width:none]">
           {items.map((item, i) => {
@@ -76,7 +76,7 @@ export default function InPageNav({ items, accent = "teal" }: InPageNavProps) {
                   href={`#${item.id}`}
                   data-section={item.id}
                   aria-current={active ? "location" : undefined}
-                  className={`relative flex items-center gap-2 rounded-md px-3 py-2 text-[13px] transition-colors duration-300 ${
+                  className={`relative flex items-center gap-2 rounded-md px-3 py-2 text-[13px] transition-colors duration-150 ease-out ${
                     active ? "text-white" : "text-white/55 hover:bg-white/[0.04] hover:text-white"
                   }`}
                 >
@@ -89,7 +89,7 @@ export default function InPageNav({ items, accent = "teal" }: InPageNavProps) {
                     />
                   )}
                   <span
-                    className={`relative font-mono text-[10px] transition-colors duration-300 ${
+                    className={`relative font-mono text-[10px] transition-colors duration-150 ease-out ${
                       active ? tone.index : "text-white/30"
                     }`}
                   >

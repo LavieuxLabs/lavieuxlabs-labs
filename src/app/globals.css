@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
+/*
+ * Palette A · Klinik Lacivert (Deep Clinical Navy).
+ * Medical-monitor navy instead of near-black, with desaturated clinical accents.
+ * Red / amber / green stay reserved for clinical severity and risk states (rose/amber in components).
+ */
 :root {
-  --background: #06080d;
-  --foreground: #e6e9ef;
-  --muted: #8b93a5;
+  --background: #0f1b2d;
+  --foreground: #e6edf5;
+  --muted: #9aabbf;
   --line: rgba(255, 255, 255, 0.07);
 }
 
@@ -14,6 +19,62 @@
   --color-line: var(--line);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+@theme {
+  /* Navy surfaces: 950 deep (footer, ledgers) · 900 page · 850 surface · 800 card · 700 border */
+  --color-navy-950: #0c1726;
+  --color-navy-900: #0f1b2d;
+  --color-navy-850: #15253b;
+  --color-navy-800: #1a2d47;
+  --color-navy-700: #2a4262;
+
+  /* Product accents (academic: lavender for research collaborations) */
+  --color-pharma: #4fc1b6;
+  --color-shield: #7fa2e6;
+  --color-academic: #b7a6e8;
+  --color-academic-soft: #ece7fa;
+
+  /*
+   * The teal / indigo / emerald scales are remapped to the clinical palette so existing
+   * utilities follow it: teal → PharmaDeux clinical teal (400 = #4FC1B6),
+   * indigo → Shield institutional blue (400 = #7FA2E6), emerald → calm clinical green.
+   */
+  --color-teal-50: #eef9f8;
+  --color-teal-100: #d3f0ec;
+  --color-teal-200: #a9e1da;
+  --color-teal-300: #7dd0c6;
+  --color-teal-400: #4fc1b6;
+  --color-teal-500: #34a79c;
+  --color-teal-600: #2a877f;
+  --color-teal-700: #256c66;
+  --color-teal-800: #215853;
+  --color-teal-900: #1e4945;
+  --color-teal-950: #0d2a28;
+
+  --color-indigo-50: #eef3fc;
+  --color-indigo-100: #dce6f9;
+  --color-indigo-200: #bccdf2;
+  --color-indigo-300: #9db7ec;
+  --color-indigo-400: #7fa2e6;
+  --color-indigo-500: #5f86d6;
+  --color-indigo-600: #4a6cbc;
+  --color-indigo-700: #3d5799;
+  --color-indigo-800: #34497c;
+  --color-indigo-900: #2e3f66;
+  --color-indigo-950: #1d2742;
+
+  --color-emerald-50: #eef9f3;
+  --color-emerald-100: #dcf5e7;
+  --color-emerald-200: #b5e8cb;
+  --color-emerald-300: #86d9ac;
+  --color-emerald-400: #5cc793;
+  --color-emerald-500: #3fae78;
+  --color-emerald-600: #2f8c60;
+  --color-emerald-700: #29704f;
+  --color-emerald-800: #255a42;
+  --color-emerald-900: #1f4a37;
+  --color-emerald-950: #0f2a1e;
 }
 
 @utility bg-grid {
@@ -42,7 +103,7 @@ body {
 }
 
 ::selection {
-  background: rgba(45, 212, 191, 0.3);
+  background: rgba(79, 193, 182, 0.3);
   color: #fff;
 }
 
@@ -76,7 +137,7 @@ body {
     @apply mt-6 w-full overflow-hidden rounded-xl border border-white/[0.08] text-left text-sm;
   }
   .legal-prose th {
-    @apply border-b border-white/[0.08] bg-white/[0.03] px-4 py-3 font-mono text-[11px] font-normal uppercase tracking-[0.1em] text-white/45;
+    @apply border-b border-white/[0.08] bg-white/[0.03] px-4 py-3 text-[11px] font-medium uppercase tracking-wide text-white/45;
   }
   .legal-prose td {
     @apply border-b border-white/[0.05] px-4 py-3 align-top text-white/65;

@@ -6,7 +6,8 @@ import { CONSENT_STORAGE_KEY } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Çerez Politikası",
-  description: "LavieuxLabs web sitesinde kullanılan çerezler ve benzeri teknolojiler ile tercihlerinizi nasıl yönetebileceğiniz.",
+  description:
+    "LavieuxLabs web sitesinde kullanılan çerezler ve benzeri teknolojiler ile tercihlerinizi nasıl yönetebileceğiniz.",
 };
 
 const sections: LegalSection[] = [
@@ -15,9 +16,9 @@ const sections: LegalSection[] = [
     title: "Çerez nedir?",
     content: (
       <p>
-        Çerezler ve tarayıcı yerel depolaması (localStorage) gibi benzeri teknolojiler, bir web sitesini
-        ziyaret ettiğinizde cihazınızda saklanan küçük veri parçalarıdır. Sitenin çalışmasını sağlamak,
-        tercihlerinizi hatırlamak ve kullanım istatistiklerini ölçmek amacıyla kullanılabilirler.
+        Çerezler ve tarayıcı yerel depolaması (localStorage) gibi benzeri teknolojiler, bir web sitesini ziyaret
+        ettiğinizde cihazınızda saklanan küçük veri parçalarıdır. Sitenin çalışmasını sağlamak, tercihlerinizi
+        hatırlamak ve kullanım istatistiklerini ölçmek amacıyla kullanılabilirler.
       </p>
     ),
   },
@@ -28,21 +29,23 @@ const sections: LegalSection[] = [
       <>
         <h3>Zorunlu</h3>
         <p>
-          Sitenin temel işlevleri ve çerez tercihinizin hatırlanması için gereklidir. KVKK md. 5/2(f) kapsamında
-          meşru menfaate dayanır ve devre dışı bırakılamaz.
+          Sitenin temel işlevleri ve çerez tercihinizin hatırlanması için gereklidir. KVKK md. 5/2(f) kapsamında meşru
+          menfaate dayanır ve devre dışı bırakılamaz.
         </p>
         <h3>Tercih</h3>
-        <p>Dil ve görünüm gibi seçimlerinizi sonraki ziyaretlerinizde hatırlamak için kullanılır. Açık rızanıza tabidir.</p>
+        <p>
+          Dil ve görünüm gibi seçimlerinizi sonraki ziyaretlerinizde hatırlamak için kullanılır. Açık rızanıza tabidir.
+        </p>
         <h3>Harici içerik</h3>
         <p>
           İletişim sayfasındaki Google Haritalar gibi üçüncü taraf içeriklerin yüklenmesine izin verir. Bu içerikler
-          yüklendiğinde ilgili sağlayıcı kendi çerezlerini kullanabilir. Açık rızanıza tabidir; rıza vermediğiniz
-          sürece harita yalnızca siz “Haritayı yükle” düğmesine tıkladığınızda, o sayfa görüntülemesi için yüklenir.
+          yüklendiğinde ilgili sağlayıcı kendi çerezlerini kullanabilir. Açık rızanıza tabidir; rıza vermediğiniz sürece
+          harita yalnızca siz “Haritayı yükle” düğmesine tıkladığınızda, o sayfa görüntülemesi için yüklenir.
         </p>
         <h3>Analitik</h3>
         <p>
-          Sitenin nasıl kullanıldığını anonim ve toplu olarak ölçmek için kullanılır. Açık rızanıza tabidir ve
-          rıza vermediğiniz sürece etkinleştirilmez.
+          Sitenin nasıl kullanıldığını anonim ve toplu olarak ölçmek için kullanılır. Açık rızanıza tabidir ve rıza
+          vermediğiniz sürece etkinleştirilmez.
         </p>
       </>
     ),
@@ -75,7 +78,10 @@ const sections: LegalSection[] = [
                 <td>Google Haritalar</td>
                 <td>Üçüncü taraf çerezleri (Google)</td>
                 <td>Harici içerik</td>
-                <td>İletişim sayfasındaki konum haritasının gösterilmesi. Yalnızca onayınız veya talebiniz üzerine yüklenir.</td>
+                <td>
+                  İletişim sayfasındaki konum haritasının gösterilmesi. Yalnızca onayınız veya talebiniz üzerine
+                  yüklenir.
+                </td>
                 <td>
                   Google tarafından belirlenir;{" "}
                   <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer">
@@ -87,9 +93,8 @@ const sections: LegalSection[] = [
           </table>
         </div>
         <p>
-          Bu sitede reklam veya takip amaçlı çerez kullanılmamaktadır. Tercih veya analitik
-          kategorisinde bir araç devreye alınması halinde bu tablo güncellenir ve ilgili araç yalnızca onayınızla
-          etkinleştirilir.
+          Bu sitede reklam veya takip amaçlı çerez kullanılmamaktadır. Tercih veya analitik kategorisinde bir araç
+          devreye alınması halinde bu tablo güncellenir ve ilgili araç yalnızca onayınızla etkinleştirilir.
         </p>
       </>
     ),

@@ -110,7 +110,7 @@ export default function Home() {
       <section className="relative isolate flex min-h-[100svh] flex-col justify-center pt-28 pb-16">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white/60 backdrop-blur">
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium uppercase tracking-wide text-white/60 backdrop-blur">
               <span className="h-1.5 w-1.5 rounded-full bg-teal-300" />
               Sağlık Teknolojileri Ar-Ge Kolektifi
             </p>
@@ -119,9 +119,7 @@ export default function Home() {
           <Reveal delay={0.08}>
             <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[64px]">
               Klinik ve operasyonel kararlar için{" "}
-              <span className="bg-gradient-to-r from-teal-200 via-emerald-200 to-indigo-200 bg-clip-text text-transparent">
-                deterministik güvenlik altyapısı.
-              </span>
+              <span className="text-white/50">deterministik güvenlik altyapısı.</span>
             </h1>
           </Reveal>
 
@@ -135,7 +133,7 @@ export default function Home() {
           <Reveal delay={0.24} className="mt-10 flex flex-col gap-3 sm:flex-row">
             <a
               href="#platformlar"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-[#06080d] transition-colors hover:bg-teal-200"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors hover:bg-teal-200"
             >
               Platformları inceleyin
               <ArrowRight className="h-4 w-4" />
@@ -152,7 +150,7 @@ export default function Home() {
           <Reveal delay={0.32} className="mt-16 sm:mt-20">
             <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.08] backdrop-blur-md lg:grid-cols-4">
               {heroStats.map((s) => (
-                <div key={s.label} className="flex flex-col-reverse bg-[#06080d]/80 p-5">
+                <div key={s.label} className="flex flex-col-reverse bg-navy-900/80 p-5">
                   <dt className="mt-1.5 text-xs leading-snug text-white/50">{s.label}</dt>
                   <dd className="font-mono text-xl font-medium tracking-tight text-white sm:text-2xl">{s.value}</dd>
                 </div>
@@ -210,7 +208,7 @@ export default function Home() {
                 <li key={item.step} className="relative">
                   <Reveal delay={i * 0.08}>
                     <div className="flex items-center gap-3">
-                      <span className="relative flex h-[23px] w-[23px] items-center justify-center rounded-full border border-white/15 bg-[#06080d]">
+                      <span className="relative flex h-[23px] w-[23px] items-center justify-center rounded-full border border-white/15 bg-navy-900">
                         <span className="h-1.5 w-1.5 rounded-full bg-teal-300" />
                       </span>
                       <span className="font-mono text-xs tracking-[0.16em] text-white/35">{item.step}</span>

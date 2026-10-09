@@ -80,10 +80,25 @@ const decisionLabels: Record<Decision, string> = {
 
 const riskTone = (score: number) =>
   score >= 70
-    ? { text: "text-rose-300", bar: "bg-rose-400", chip: "border-rose-400/30 bg-rose-400/10 text-rose-200", label: "Yüksek" }
+    ? {
+        text: "text-rose-300",
+        bar: "bg-rose-400",
+        chip: "border-rose-400/30 bg-rose-400/10 text-rose-200",
+        label: "Yüksek",
+      }
     : score >= 40
-      ? { text: "text-amber-300", bar: "bg-amber-400", chip: "border-amber-400/30 bg-amber-400/10 text-amber-200", label: "Orta" }
-      : { text: "text-emerald-300", bar: "bg-emerald-400", chip: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200", label: "Düşük" };
+      ? {
+          text: "text-amber-300",
+          bar: "bg-amber-400",
+          chip: "border-amber-400/30 bg-amber-400/10 text-amber-200",
+          label: "Orta",
+        }
+      : {
+          text: "text-emerald-300",
+          bar: "bg-emerald-400",
+          chip: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200",
+          label: "Düşük",
+        };
 
 const initialAudit: AuditEntry[] = [
   { seq: 1041, time: "09:12:04", actor: "system", action: "SCORE_COMPUTED · ruleset v3.8.1", ref: "CLM-24817" },
@@ -119,7 +134,7 @@ export default function ShieldConsole() {
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/[0.1] bg-[#080b12]/80 shadow-2xl shadow-black/40 backdrop-blur">
+    <div className="overflow-hidden rounded-2xl border border-white/[0.1] bg-navy-850/80 shadow-2xl shadow-black/40 backdrop-blur">
       <div className="flex items-center justify-between border-b border-white/[0.08] px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
@@ -127,7 +142,7 @@ export default function ShieldConsole() {
           <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
           <span className="ml-3 font-mono text-[11px] text-white/40">shield / inceleme-kuyruğu</span>
         </div>
-        <span className="rounded-full border border-white/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-white/40">
+        <span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-white/40">
           Örnek · kurgusal veri
         </span>
       </div>
@@ -135,7 +150,7 @@ export default function ShieldConsole() {
       <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
         {/* Queue */}
         <div className="border-b border-white/[0.08] lg:border-r lg:border-b-0">
-          <p className="px-4 pt-4 pb-2 font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/35">
+          <p className="px-4 pt-4 pb-2 text-[11px] font-medium uppercase tracking-wide text-white/35">
             İşlem öncesi kuyruk · {claims.length} kayıt
           </p>
           <ul className="px-2 pb-2" role="listbox" aria-label="İnceleme kuyruğu">
@@ -160,11 +175,13 @@ export default function ShieldConsole() {
                       <span className="block truncate text-xs text-white/45">{c.service}</span>
                     </span>
                     {d ? (
-                      <span className="rounded-full border border-white/10 px-2 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.08em] text-white/50">
+                      <span className="rounded-full border border-white/10 px-2 py-0.5 text-[9.5px] font-medium uppercase tracking-wide text-white/50">
                         Karar verildi
                       </span>
                     ) : (
-                      <span className={`rounded-full border px-2 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.08em] ${t.chip}`}>
+                      <span
+                        className={`rounded-full border px-2 py-0.5 text-[9.5px] font-medium uppercase tracking-wide ${t.chip}`}
+                      >
                         {t.label}
                       </span>
                     )}
@@ -186,7 +203,7 @@ export default function ShieldConsole() {
               </p>
             </div>
             <div className="text-right">
-              <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/35">Red riski</p>
+              <p className="text-[11px] font-medium uppercase tracking-wide text-white/35">Red riski</p>
               <p className={`text-4xl font-semibold tracking-tight ${tone.text}`}>
                 {selected.score}
                 <span className="text-base text-white/30">/100</span>
@@ -194,7 +211,7 @@ export default function ShieldConsole() {
             </div>
           </div>
 
-          <p className="mt-6 font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/35">Skor bileşenleri</p>
+          <p className="mt-6 text-[11px] font-medium uppercase tracking-wide text-white/35">Skor bileşenleri</p>
           <ul className="mt-3 space-y-3">
             {selected.factors.map((f) => (
               <li key={f.rule}>
@@ -254,9 +271,9 @@ export default function ShieldConsole() {
       </div>
 
       {/* Audit log */}
-      <div className="border-t border-white/[0.08] bg-[#05070b]">
+      <div className="border-t border-white/[0.08] bg-navy-950">
         <div className="flex items-center justify-between px-4 py-2.5">
-          <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/35">audit_log · append-only</p>
+          <p className="text-[11px] font-medium uppercase tracking-wide text-white/35">audit_log · append-only</p>
           <Lock className="h-3.5 w-3.5 text-white/30" />
         </div>
         <ol className="max-h-44 overflow-y-auto px-4 pb-4 font-mono text-[11.5px] leading-6">
