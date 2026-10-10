@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import Reveal from "@/components/Reveal";
+import type { Locale } from "@/i18n/config";
 
 export type FlowStep = {
   icon: LucideIcon;
@@ -10,6 +11,7 @@ export type FlowStep = {
 };
 
 type FlowDiagramProps = {
+  locale: Locale;
   steps: FlowStep[];
   accent?: "teal" | "indigo";
 };
@@ -32,7 +34,7 @@ const tones = {
  * A data pipeline (e.g. HL7 FHIR ingest → rule engine → clinician → audit) drawn as stages on a
  * single hairline rail instead of boxed cards. Each stage lists what it carries as mono tokens.
  */
-export default function FlowDiagram({ steps, accent = "teal" }: FlowDiagramProps) {
+export default function FlowDiagram({ locale, steps, accent = "teal" }: FlowDiagramProps) {
   const tone = tones[accent];
 
   return (
@@ -50,16 +52,16 @@ export default function FlowDiagram({ steps, accent = "teal" }: FlowDiagramProps
 
             <div className="mt-5 flex items-center gap-2">
               <Icon
-                className={`h-4 w-4 text-white/40 transition-colors duration-150 ease-out ${tone.icon}`}
+                className={`h-4 w-4 text-white/55 transition-colors duration-150 ease-out ${tone.icon}`}
                 strokeWidth={1.6}
                 aria-hidden="true"
               />
-              <span className="font-mono text-[11px] text-white/35 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+              <span className="font-mono text-[11px] text-white/55 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
             </div>
             <h3 className="mt-2 text-[15px] font-medium text-white">{title}</h3>
             <p className="mt-1.5 text-[13.5px] leading-relaxed text-white/55">{body}</p>
             {detail && (
-              <ul className="mt-3 flex flex-wrap gap-1.5" aria-label={`${title} · veri`}>
+              <ul className="mt-3 flex flex-wrap gap-1.5" aria-label={`${title} · ${locale === "tr" ? "veri" : "data"}`}>
                 {detail.split(" · ").map((token) => (
                   <li
                     key={token}

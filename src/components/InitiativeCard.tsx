@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Pill, ShieldCheck } from "lucide-react";
+import { localizedPath, type Locale } from "@/i18n/config";
 
 export type InitiativeSpec = {
   value: string;
@@ -10,6 +11,7 @@ export type InitiativeSpec = {
 };
 
 export type InitiativeCardProps = {
+  locale: Locale;
   name: string;
   /** Plain technical label above the name, e.g. "Klinik karar destek · ilaç güvenliği". */
   category: string;
@@ -34,6 +36,7 @@ const icons = { pill: Pill, shield: ShieldCheck };
 const hasDigit = (value: string) => /\d/.test(value);
 
 export default function InitiativeCard({
+  locale,
   name,
   category,
   summary,
@@ -79,10 +82,10 @@ export default function InitiativeCard({
 
       <div className="mt-auto pt-8">
         <Link
-          href={href}
+          href={localizedPath(locale, href)}
           className={`group/link inline-flex items-center gap-2 text-sm font-medium transition-colors duration-150 ease-out ${tone.link}`}
         >
-          {name} ayrıntıları
+          {locale === "tr" ? `${name} ayrıntıları` : `About ${name}`}
           <ArrowRight
             className="h-4 w-4 transition-transform duration-150 ease-out group-hover/link:translate-x-0.5"
             aria-hidden="true"

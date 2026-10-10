@@ -1,57 +1,100 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { useCanvasLoop, type CanvasFrame } from "@/lib/useCanvasLoop";
+import {
+  CLINICAL_CASES,
+  EGFR_OPTIONS,
+  buildCustomCase,
+  type CustomParams,
+  type Reading,
+  type Tone,
+} from "@/lib/clinicalCases";
+import { defineContent, type Locale } from "@/i18n/config";
 
 // PharmaDeux hero scene: a transparent glass capsule turning slowly in 3D. Its granules drift out,
-// calmly, toward three metabolic telemetry nodes rendered as plain HTML cards (crisp type, readable
-// by assistive tech). The canvas only draws the capsule and the particle paths; it measures where
-// the cards sit so the particles always land on their edges. Values are illustrative.
+// calmly, toward three telemetry cards (liver ALT, QTc, renal eGFR) rendered as plain HTML. Below
+// the stage, three example cases can be selected, or one patient's eGFR and antibiotic can be
+// changed ("customise"); the cards update their readings with a 150ms
+// transition and only the card concerned changes state. The canvas draws the capsule and the
+// particle paths and measures where the cards sit so particles land on their edges.
 
 type V3 = [number, number, number];
 
-type Telemetry = {
+type NodeKey = "liver" | "qtc" | "renal";
+
+type TelemetryNode = {
+  key: NodeKey;
   code: string;
-  label: string;
-  value: string;
-  status: string;
-  /** Fill of the hairline meter, 0–1. */
-  level: number;
-  /** Card placement inside the square stage. */
+  /** Card placement inside the stage. */
   position: string;
   /** Which edge of the card particles arrive at. */
   edge: "bottom" | "left";
 };
 
-const TELEMETRY: Telemetry[] = [
-  {
-    code: "P06",
-    label: "Hepatik klirens",
-    value: "%12",
-    status: "Stabil",
-    level: 0.12,
-    position: "left-0 top-[2%]",
-    edge: "bottom",
-  },
-  {
-    code: "P07",
-    label: "QTc (Fridericia)",
-    value: "410 ms",
-    status: "Tisdale: düşük risk",
-    level: 0.4,
-    position: "right-0 top-[24%] sm:top-[17%]",
-    edge: "left",
-  },
-  {
-    code: "P05",
-    label: "eGFR · nefrotoksik yük",
-    value: "Normal",
-    status: "Kümülatif eşik altında",
-    level: 0.34,
-    position: "right-0 bottom-[9%] sm:bottom-[7%]",
-    edge: "left",
-  },
+const TELEMETRY: TelemetryNode[] = [
+  { key: "liver", code: "P06", position: "left-0 top-[2%]", edge: "bottom" },
+  { key: "qtc", code: "P07", position: "right-0 top-[24%] sm:top-[17%]", edge: "left" },
+  { key: "renal", code: "P05", position: "right-0 bottom-[9%] sm:bottom-[7%]", edge: "left" },
 ];
+
+const copy = defineContent({
+  tr: {
+    nodes: {
+      liver: { label: "Karaciğer · ALT", unit: "U/L" },
+      qtc: { label: "QTc (Fridericia)", unit: "ms" },
+      renal: { label: "Böbrek · eGFR", unit: "mL/dk/1,73 m²" },
+    },
+    telemetry: "Örnek vaka telemetrisi",
+    chooseCase: "Örnek vaka seçin",
+    case: "Vaka",
+    patient: "Hasta",
+    prescription: "Reçete",
+    finding: "Bulgu",
+    caption: "Örnek vakalar · gerçek hasta verisi değildir · klinik karar için kullanılmaz",
+    customize: "Özelleştir",
+    customizeAria: "Vakayı özelleştirin",
+    azithromycin: "Azitromisin",
+    added: "Ekli",
+    removed: "Yok",
+  },
+  en: {
+    nodes: {
+      liver: { label: "Liver · ALT", unit: "U/L" },
+      qtc: { label: "QTc (Fridericia)", unit: "ms" },
+      renal: { label: "Kidney · eGFR", unit: "mL/min/1.73 m²" },
+    },
+    telemetry: "Example case telemetry",
+    chooseCase: "Choose an example case",
+    case: "Case",
+    patient: "Patient",
+    prescription: "Order",
+    finding: "Finding",
+    caption: "Example cases · not real patient data · not for clinical decisions",
+    customize: "Customise",
+    customizeAria: "Customise the case",
+    azithromycin: "Azithromycin",
+    added: "Added",
+    removed: "None",
+  },
+});
+
+// Semantic tone only on the card concerned: neutral, caution (amber) or high risk (rose).
+const toneText: Record<Tone, string> = {
+  normal: "text-white/50",
+  caution: "text-amber-200",
+  high: "text-rose-300",
+};
+const toneBar: Record<Tone, string> = {
+  normal: "bg-pharma/70",
+  caution: "bg-amber-300/80",
+  high: "bg-rose-400/80",
+};
+const toneBorder: Record<Tone, string> = {
+  normal: "border-white/[0.06]",
+  caution: "border-white/[0.14]",
+  high: "border-white/[0.14]",
+};
 
 const PHARMA = "79, 193, 182";
 const GLASS = "220, 235, 248";
@@ -71,10 +114,20 @@ const norm = (a: V3): V3 => {
   return [a[0] / l, a[1] / l, a[2] / l];
 };
 
-export default function PharmaCapsule() {
+export default function PharmaCapsule({ locale }: { locale: Locale }) {
+  const c = copy[locale];
+  const cases = CLINICAL_CASES[locale];
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const nodeRefs = useRef<(HTMLLIElement | null)[]>([]);
+  // null = the customisable case is active.
+  const [caseIndex, setCaseIndex] = useState<number | null>(0);
+  const [params, setParams] = useState<CustomParams>({ egfr: 90, azithromycin: true });
+  const active = caseIndex === null ? buildCustomCase(locale, params) : cases[caseIndex];
+  const customise = (next: Partial<CustomParams>) => {
+    setParams((p) => ({ ...p, ...next }));
+    setCaseIndex(null);
+  };
   const state = useRef({
     granules: Array.from({ length: GRANULES }, (_, i): Granule => ({
       u: hash(i) * 2 - 1,
@@ -276,37 +329,232 @@ export default function PharmaCapsule() {
     ctx.stroke();
   });
 
+  const onCaseKey = (e: KeyboardEvent<HTMLButtonElement>) => {
+    const last = cases.length - 1;
+    const current = caseIndex ?? 0;
+    const next =
+      e.key === "ArrowRight" || e.key === "ArrowDown"
+        ? current === last
+          ? 0
+          : current + 1
+        : e.key === "ArrowLeft" || e.key === "ArrowUp"
+          ? current === 0
+            ? last
+            : current - 1
+          : null;
+    if (next === null) return;
+    e.preventDefault();
+    setCaseIndex(next);
+    document.getElementById(`case-${cases[next].id}`)?.focus();
+  };
+
   return (
-    <div ref={stageRef} className="relative h-full w-full">
-      <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 block h-full w-full" />
-      <ul aria-label="Örnek metabolik telemetri" className="contents">
-        {TELEMETRY.map((node, k) => (
-          <li
-            key={node.code}
-            ref={(el) => {
-              nodeRefs.current[k] = el;
-            }}
-            className={`absolute ${node.position} w-[140px] rounded-2xl border border-white/[0.06] bg-navy-850 px-3.5 py-3 sm:w-[172px]`}
-          >
-            <div className="flex flex-col">
-              <span className="text-[11px] font-semibold tracking-[0.01em] text-pharma">{node.code}</span>
-              <span className="mt-1.5 text-[12px] leading-tight text-white/60">{node.label}</span>
-              <span
-                className={`mt-0.5 text-[19px] font-semibold tracking-[-0.01em] text-white sm:text-[21px] ${/\d/.test(node.value) ? "font-mono tabular-nums" : ""}`}
+    <div className="w-full">
+      <div ref={stageRef} className="relative aspect-[4/5] w-full sm:aspect-square">
+        <canvas
+          ref={canvasRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 block h-full w-full"
+        />
+        <ul aria-label={c.telemetry} className="contents">
+          {TELEMETRY.map((node, k) => {
+            const reading: Reading = active.readings[node.key];
+            return (
+              <li
+                key={node.code}
+                ref={(el) => {
+                  nodeRefs.current[k] = el;
+                }}
+                className={`absolute ${node.position} w-[148px] rounded-2xl border bg-navy-850 px-3.5 py-3 transition-colors duration-150 ease-out sm:w-[176px] ${toneBorder[reading.tone]}`}
               >
-                {node.value}
+                <span className="block text-[11px] font-semibold tracking-[0.01em] text-pharma">{node.code}</span>
+                <span className="mt-1.5 block text-[12px] leading-tight text-white/60">{c.nodes[node.key].label}</span>
+                <span className="mt-0.5 flex flex-wrap items-baseline gap-x-1">
+                  <span className="font-mono text-[19px] font-semibold tracking-[-0.01em] text-white tabular-nums sm:text-[21px]">
+                    {reading.value}
+                  </span>
+                  <span className="text-[11px] text-white/55">{c.nodes[node.key].unit}</span>
+                </span>
+                <span className="mt-2.5 block h-[3px] overflow-hidden rounded-full bg-white/[0.06]" aria-hidden="true">
+                  <span
+                    className={`block h-full rounded-full transition-[width,background-color] duration-150 ease-out ${toneBar[reading.tone]}`}
+                    style={{ width: `${Math.min(1, Math.max(0.02, reading.level)) * 100}%` }}
+                  />
+                </span>
+                <span
+                  className={`mt-2 block text-[11px] leading-tight transition-colors duration-150 ease-out ${toneText[reading.tone]}`}
+                >
+                  {reading.status}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      {/* Case selector: frameless segments on a hairline */}
+      <div
+        role="radiogroup"
+        aria-label={c.chooseCase}
+        className="mt-4 grid grid-cols-3 border-t border-white/[0.06]"
+      >
+        {cases.map((item, i) => {
+          const selected = i === caseIndex;
+          return (
+            <button
+              key={item.id}
+              id={`case-${item.id}`}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              tabIndex={selected || (caseIndex === null && i === 0) ? 0 : -1}
+              onClick={() => setCaseIndex(i)}
+              onKeyDown={onCaseKey}
+              className="group relative flex flex-col px-2 pt-3 pb-2 text-left transition-colors duration-150 ease-out hover:bg-white/[0.02] focus-visible:bg-white/[0.04] focus-visible:outline-none sm:px-3"
+            >
+              <span
+                aria-hidden="true"
+                className={`absolute inset-x-0 -top-px h-px transition-colors duration-150 ease-out ${
+                  selected ? "bg-white/70" : "bg-transparent"
+                }`}
+              />
+              <span className="block text-[11px] font-medium tracking-wider text-white/55 uppercase">
+                {c.case} <span className="font-mono tabular-nums">{i + 1}</span>
               </span>
-              <span className="mt-2.5 h-[3px] overflow-hidden rounded-full bg-white/[0.06]" aria-hidden="true">
-                <span className="block h-full rounded-full bg-pharma/70" style={{ width: `${node.level * 100}%` }} />
+              <span
+                className={`mt-1 block text-[12.5px] leading-snug transition-colors duration-150 ease-out sm:text-[13px] ${
+                  selected ? "text-white" : "text-white/55 group-hover:text-white/80"
+                }`}
+              >
+                {item.title}
               </span>
-              <span className="mt-2 flex items-center gap-1.5 text-[11px] leading-tight text-white/50">
-                {node.status}
+              <span className="mt-0.5 hidden text-[11px] text-white/55 sm:block">{item.meta}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Customisable case: one patient, two parameters */}
+      <div
+        role="group"
+        aria-label={c.customizeAria}
+        className="relative flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/[0.06] px-2 py-2.5 sm:px-3"
+      >
+        <span
+          aria-hidden="true"
+          className={`absolute inset-x-0 -top-px h-px transition-colors duration-150 ease-out ${
+            caseIndex === null ? "bg-white/70" : "bg-transparent"
+          }`}
+        />
+        <span
+          className={`text-[11px] font-medium tracking-wider uppercase transition-colors duration-150 ease-out ${
+            caseIndex === null ? "text-white" : "text-white/55"
+          }`}
+        >
+          {c.customize}
+        </span>
+        <Segmented
+          label="eGFR"
+          active={caseIndex === null}
+          options={EGFR_OPTIONS.map((v) => ({ key: String(v), label: String(v), mono: true }))}
+          value={String(params.egfr)}
+          onSelect={(key) => customise({ egfr: Number(key) as CustomParams["egfr"] })}
+        />
+        <Segmented
+          label={c.azithromycin}
+          active={caseIndex === null}
+          options={[
+            { key: "on", label: c.added },
+            { key: "off", label: c.removed },
+          ]}
+          value={params.azithromycin ? "on" : "off"}
+          onSelect={(key) => customise({ azithromycin: key === "on" })}
+        />
+      </div>
+
+      {/* What the engine reports for the selected case */}
+      <dl aria-live="polite" className="divide-y divide-white/[0.06] border-y border-white/[0.06] text-[12.5px]">
+        <div className="grid grid-cols-[64px_1fr] gap-3 py-2">
+          <dt className="text-white/55">{c.patient}</dt>
+          <dd className="text-white/75">{active.patient}</dd>
+        </div>
+        <div className="grid grid-cols-[64px_1fr] gap-3 py-2">
+          <dt className="text-white/55">{c.prescription}</dt>
+          <dd className="text-white/75">{active.prescription}</dd>
+        </div>
+        <div className="grid grid-cols-[64px_1fr] gap-3 py-2">
+          <dt className="text-white/55">{c.finding}</dt>
+          <dd className="leading-relaxed text-white/75">{active.finding}</dd>
+        </div>
+        {active.tisdale && (
+          <div className="grid grid-cols-[64px_1fr] gap-3 py-2">
+            <dt className="text-white/55">Tisdale</dt>
+            <dd className="flex flex-wrap gap-x-3 gap-y-1 text-white/60">
+              {active.tisdale.map((t) => (
+                <span key={t.factor}>
+                  {t.factor} <span className="font-mono text-white/80 tabular-nums">+{t.points}</span>
+                </span>
+              ))}
+              <span>
+                ={" "}
+                <span className="font-mono text-white tabular-nums">
+                  {active.tisdale.reduce((n, t) => n + t.points, 0)}
+                </span>
               </span>
-            </div>
-          </li>
-        ))}
-      </ul>
-      <p className="absolute bottom-0 left-0 text-[10.5px] text-white/35">Örnek telemetri · hasta verisi değildir</p>
+            </dd>
+          </div>
+        )}
+      </dl>
+      <p className="mt-2 text-[10.5px] text-white/55">
+        {c.caption}
+      </p>
     </div>
+  );
+}
+
+type SegmentedOption = { key: string; label: string; mono?: boolean };
+
+/** Small segmented control. `active` is false while a preset case is shown, so the stored choice reads as muted. */
+function Segmented({
+  label,
+  options,
+  value,
+  active,
+  onSelect,
+}: {
+  label: string;
+  options: SegmentedOption[];
+  value: string;
+  active: boolean;
+  onSelect: (key: string) => void;
+}) {
+  return (
+    <span className="flex items-center gap-2">
+      <span className="text-[11.5px] text-white/55">{label}</span>
+      <span role="group" aria-label={label} className="flex rounded-md border border-white/[0.06] bg-white/[0.03] p-0.5">
+        {options.map((o) => {
+          const selected = o.key === value;
+          return (
+            <button
+              key={o.key}
+              type="button"
+              aria-pressed={active && selected}
+              onClick={() => onSelect(o.key)}
+              className={`rounded-[5px] px-2 py-0.5 text-[11.5px] transition-colors duration-150 ease-out ${
+                o.mono ? "font-mono tabular-nums" : ""
+              } ${
+                selected
+                  ? active
+                    ? "bg-white/[0.1] text-white"
+                    : "bg-white/[0.04] text-white/70"
+                  : "text-white/55 hover:text-white"
+              }`}
+            >
+              {o.label}
+            </button>
+          );
+        })}
+      </span>
+    </span>
   );
 }

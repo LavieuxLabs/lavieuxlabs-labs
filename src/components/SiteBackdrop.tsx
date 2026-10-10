@@ -1,12 +1,15 @@
-// Site-wide ground: surgical clinical navy, a barely-there coordinate grid and a monochrome light
-// falloff from the top of the page. No glows of any kind: depth comes from surface steps
-// (navy-900 → 850 → 800) and hairlines. Sections must not add their own grids (they would sit on
-// a different 64px origin).
+// Site-wide ground as optical depth rather than a bare grid: a surgical-navy focus that falls off
+// to hardware black-navy at the edges (lens vignette), a barely-there coordinate grid as micro
+// texture, and a ~1.8% analog grain over everything so surfaces read as a physical device housing
+// instead of a sterile web page. No glows: the focus is neutral and stays below card luminance.
+// Sections must not add their own grids (they would sit on a different 64px origin).
 export default function SiteBackdrop() {
   return (
-    <div aria-hidden="true" className="pointer-events-none">
+    <div aria-hidden="true" className="pointer-events-none print:hidden">
+      <div className="bg-optic fixed inset-0 -z-20" />
       <div className="bg-grid mask-vignette fixed inset-0 -z-10" />
-      <div className="absolute inset-x-0 top-0 -z-10 h-[720px] bg-gradient-to-b from-white/[0.03] to-transparent" />
+      {/* Grain sits above content at very low opacity; it never intercepts input. */}
+      <div className="bg-grain fixed inset-0 z-[70] opacity-[0.018]" />
     </div>
   );
 }

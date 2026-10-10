@@ -4,10 +4,121 @@ import { useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, Loader2, Mail } from "lucide-react";
-import { CONTACT_EMAIL, solutions, type SolutionValue } from "@/lib/site";
+import { CONTACT_EMAIL, SOLUTION_VALUES, type SolutionValue } from "@/lib/site";
 import { solutionContent } from "@/lib/solutionContent";
+import { defineContent, localizedPath, type Locale } from "@/i18n/config";
+import CopyEmail from "@/components/CopyEmail";
 
-const requestTypes = ["Niyet Mektubu (LOI) / Pilot", "Ürün demosu", "Retrospektif doğrulama iş birliği", "Genel bilgi"];
+const copy = defineContent({
+  tr: {
+    requestTypes: ["Niyet Mektubu (LOI) / Pilot", "Ürün demosu", "Retrospektif doğrulama iş birliği", "Genel bilgi"],
+    errors: {
+      organizationMissing: "Kurum adını giriniz.",
+      organizationLong: (max: number) => `Kurum adı en fazla ${max} karakter olabilir.`,
+      organizationChars: "Kurum adı geçersiz karakterler içeriyor.",
+      nameMissing: "İlgili kişinin adını giriniz.",
+      nameLong: (max: number) => `Ad en fazla ${max} karakter olabilir.`,
+      nameChars: "Ad yalnızca harf, boşluk, nokta, kesme ve tire içerebilir.",
+      titleLong: (max: number) => `Unvan en fazla ${max} karakter olabilir.`,
+      titleChars: "Unvan geçersiz karakterler içeriyor.",
+      email: "Geçerli bir e-posta adresi giriniz.",
+      messageShort: (min: number) => `Lütfen talebinizi en az ${min} karakterle açıklayınız.`,
+      messageLong: (max: number) => `Mesaj en fazla ${max} karakter olabilir.`,
+      messageMarkup: "Mesaj HTML, betik veya bağlantı kodu içeremez.",
+      solution: "Lütfen geçerli bir çözüm ve talep türü seçiniz.",
+      consent: "Devam etmek için aydınlatma metnini onaylamanız gerekir.",
+    },
+    mail: {
+      organization: "Kurum",
+      contact: "İlgili kişi",
+      email: "E-posta",
+      solution: "İlgilenilen çözüm",
+      requestType: "Talep türü",
+    },
+    optional: "opsiyonel",
+    sentTitle: "Talebiniz hazırlandı.",
+    sentBody: (email: string) =>
+      `E-posta istemciniz, bilgilerinizi içeren bir taslakla açıldı. Göndermeniz yeterli; ekibimiz talebinizi inceleyerek ${email} adresinden size dönüş yapacaktır.`,
+    summary: { organization: "Kurum", solution: "Çözüm", requestType: "Talep türü" },
+    reopen: "E-posta istemcisini tekrar aç",
+    edit: "Formu düzenle",
+    fallback: "E-posta istemciniz açılmadıysa talebinizi doğrudan şu adrese iletebilirsiniz:",
+    honeypot: "Web sitesi (boş bırakınız)",
+    solutionLegend: "İlgilenilen çözüm",
+    organization: "Kurum adı",
+    name: "İlgili kişi",
+    namePlaceholder: "Ad Soyad",
+    requestType: "Talep türü",
+    title: "Unvan / görev",
+    email: "Kurumsal e-posta",
+    emailPlaceholder: "ad.soyad@kurum.com.tr",
+    freeMail: "Mümkünse kurumsal alan adınıza ait bir e-posta adresi kullanmanızı öneririz.",
+    message: "Mesaj",
+    messageHint: "Düz metin; lütfen hasta verisi paylaşmayınız.",
+    consentBefore: "Kişisel verilerimin, talebimin yanıtlanması amacıyla",
+    consentLink: "KVKK Aydınlatma Metni",
+    consentAfter: "kapsamında işleneceğini okudum ve anladım.",
+    submitNote: (email: string) =>
+      `Gönder'e tıkladığınızda talebiniz, e-posta istemcinizde ${email} adresine hazır bir taslak olarak açılır.`,
+    preparing: "Hazırlanıyor",
+    submit: "Talebi gönder",
+  },
+  en: {
+    requestTypes: ["Letter of Intent (LOI) / Pilot", "Product demo", "Retrospective validation study", "General enquiry"],
+    errors: {
+      organizationMissing: "Enter your organisation's name.",
+      organizationLong: (max: number) => `Organisation name can be at most ${max} characters.`,
+      organizationChars: "Organisation name contains characters that are not allowed.",
+      nameMissing: "Enter the contact person's name.",
+      nameLong: (max: number) => `Name can be at most ${max} characters.`,
+      nameChars: "Name can only contain letters, spaces, full stops, apostrophes and hyphens.",
+      titleLong: (max: number) => `Job title can be at most ${max} characters.`,
+      titleChars: "Job title contains characters that are not allowed.",
+      email: "Enter a valid email address.",
+      messageShort: (min: number) => `Please describe your request in at least ${min} characters.`,
+      messageLong: (max: number) => `Message can be at most ${max} characters.`,
+      messageMarkup: "The message cannot contain HTML, scripts or link code.",
+      solution: "Select a valid product and request type.",
+      consent: "To continue, confirm that you have read the privacy notice.",
+    },
+    mail: {
+      organization: "Organisation",
+      contact: "Contact person",
+      email: "Email",
+      solution: "Product of interest",
+      requestType: "Request type",
+    },
+    optional: "optional",
+    sentTitle: "Your request is ready.",
+    sentBody: (email: string) =>
+      `Your email client has opened a draft with your details. Send it and our team will review your request and reply to ${email}.`,
+    summary: { organization: "Organisation", solution: "Product", requestType: "Request type" },
+    reopen: "Open the email client again",
+    edit: "Edit the form",
+    fallback: "If your email client did not open, send your request directly to:",
+    honeypot: "Website (leave empty)",
+    solutionLegend: "Product of interest",
+    organization: "Organisation",
+    name: "Contact person",
+    namePlaceholder: "Full name",
+    requestType: "Request type",
+    title: "Job title",
+    email: "Work email",
+    emailPlaceholder: "name.surname@hospital.org",
+    freeMail: "If possible, use an address on your organisation's own domain.",
+    message: "Message",
+    messageHint: "Plain text. Please do not share patient data.",
+    consentBefore: "I have read the",
+    consentLink: "Privacy Notice (KVKK)",
+    consentAfter: "and understand that my personal data will be processed to answer my request.",
+    submitNote: (email: string) =>
+      `When you press Send, your request opens in your email client as a draft addressed to ${email}.`,
+    preparing: "Preparing",
+    submit: "Send request",
+  },
+});
+
+type Copy = (typeof copy)[Locale];
 
 const freeMailDomains = [
   "gmail.com",
@@ -91,48 +202,46 @@ function sanitize(f: Fields): Fields {
 }
 
 function isSolution(value: string | null): value is SolutionValue {
-  return solutions.some((s) => s.value === value);
+  return SOLUTION_VALUES.some((v) => v === value);
 }
 
-function validate(f: Fields, solution: SolutionValue): Errors {
+function validate(f: Fields, solution: SolutionValue, c: Copy): Errors {
   const errors: Errors = {};
+  const m = c.errors;
 
-  if (f.organization.length < 2) errors.organization = "Kurum adını giriniz.";
-  else if (f.organization.length > LIMITS.organization)
-    errors.organization = `Kurum adı en fazla ${LIMITS.organization} karakter olabilir.`;
-  else if (!ORGANIZATION_PATTERN.test(f.organization)) errors.organization = "Kurum adı geçersiz karakterler içeriyor.";
+  if (f.organization.length < 2) errors.organization = m.organizationMissing;
+  else if (f.organization.length > LIMITS.organization) errors.organization = m.organizationLong(LIMITS.organization);
+  else if (!ORGANIZATION_PATTERN.test(f.organization)) errors.organization = m.organizationChars;
 
-  if (f.name.length < 2) errors.name = "İlgili kişinin adını giriniz.";
-  else if (f.name.length > LIMITS.name) errors.name = `Ad en fazla ${LIMITS.name} karakter olabilir.`;
-  else if (!NAME_PATTERN.test(f.name)) errors.name = "Ad yalnızca harf, boşluk, nokta, kesme ve tire içerebilir.";
+  if (f.name.length < 2) errors.name = m.nameMissing;
+  else if (f.name.length > LIMITS.name) errors.name = m.nameLong(LIMITS.name);
+  else if (!NAME_PATTERN.test(f.name)) errors.name = m.nameChars;
 
   if (f.title) {
-    if (f.title.length > LIMITS.title) errors.title = `Unvan en fazla ${LIMITS.title} karakter olabilir.`;
-    else if (!ORGANIZATION_PATTERN.test(f.title)) errors.title = "Unvan geçersiz karakterler içeriyor.";
+    if (f.title.length > LIMITS.title) errors.title = m.titleLong(LIMITS.title);
+    else if (!ORGANIZATION_PATTERN.test(f.title)) errors.title = m.titleChars;
   }
 
-  if (!EMAIL_PATTERN.test(f.email)) errors.email = "Geçerli bir e-posta adresi giriniz.";
+  if (!EMAIL_PATTERN.test(f.email)) errors.email = m.email;
 
-  if (f.message.length < MESSAGE_MIN) errors.message = `Lütfen talebinizi en az ${MESSAGE_MIN} karakterle açıklayınız.`;
-  else if (f.message.length > LIMITS.message) errors.message = `Mesaj en fazla ${LIMITS.message} karakter olabilir.`;
-  else if (MARKUP_PATTERN.test(f.message)) errors.message = "Mesaj HTML, betik veya bağlantı kodu içeremez.";
+  if (f.message.length < MESSAGE_MIN) errors.message = m.messageShort(MESSAGE_MIN);
+  else if (f.message.length > LIMITS.message) errors.message = m.messageLong(LIMITS.message);
+  else if (MARKUP_PATTERN.test(f.message)) errors.message = m.messageMarkup;
 
-  if (!isSolution(solution) || !requestTypes.includes(f.requestType))
-    errors.solution = "Lütfen geçerli bir çözüm ve talep türü seçiniz.";
+  if (!isSolution(solution) || !c.requestTypes.includes(f.requestType)) errors.solution = m.solution;
 
-  if (!f.consent) errors.consent = "Devam etmek için aydınlatma metnini onaylamanız gerekir.";
+  if (!f.consent) errors.consent = m.consent;
   return errors;
 }
 
-function buildMailto(f: Fields, solution: SolutionValue) {
-  const solutionLabel = solutions.find((s) => s.value === solution)?.label ?? solution;
+function buildMailto(f: Fields, solutionLabel: string, c: Copy) {
   const subject = `[${solutionLabel}] ${f.requestType} — ${f.organization}`;
   const body = [
-    `Kurum: ${f.organization}`,
-    `İlgili kişi: ${f.name}${f.title ? ` (${f.title})` : ""}`,
-    `E-posta: ${f.email}`,
-    `İlgilenilen çözüm: ${solutionLabel}`,
-    `Talep türü: ${f.requestType}`,
+    `${c.mail.organization}: ${f.organization}`,
+    `${c.mail.contact}: ${f.name}${f.title ? ` (${f.title})` : ""}`,
+    `${c.mail.email}: ${f.email}`,
+    `${c.mail.solution}: ${solutionLabel}`,
+    `${c.mail.requestType}: ${f.requestType}`,
     "",
     f.message,
   ].join("\n");
@@ -152,7 +261,7 @@ function Field({
   label: string;
   htmlFor: string;
   error?: string;
-  optional?: boolean;
+  optional?: string;
   hint?: ReactNode;
   children: ReactNode;
 }) {
@@ -160,7 +269,7 @@ function Field({
     <div className={className}>
       <label htmlFor={htmlFor} className="flex items-baseline justify-between text-[13px] font-medium text-white/80">
         {label}
-        {optional && <span className="font-mono text-[10.5px] font-normal text-white/30">opsiyonel</span>}
+        {optional && <span className="font-mono text-[10.5px] font-normal text-white/55">{optional}</span>}
       </label>
       <div className="mt-2">{children}</div>
       {error ? (
@@ -168,23 +277,26 @@ function Field({
           {error}
         </p>
       ) : (
-        hint && <div className="mt-1.5 text-xs text-white/40">{hint}</div>
+        hint && <div className="mt-1.5 text-xs text-white/55">{hint}</div>
       )}
     </div>
   );
 }
 
 const inputBase =
-  "w-full rounded-lg border bg-navy-900/70 px-3.5 py-2.5 text-sm text-white placeholder:text-white/30 outline-none transition-colors focus:ring-2";
+  "w-full rounded-lg border bg-navy-900/70 px-3.5 py-2.5 text-sm text-white placeholder:text-white/50 outline-none transition-colors focus:ring-2";
 
 type ContactFormProps = {
+  locale: Locale;
   solution: SolutionValue;
   onSolutionChange: (solution: SolutionValue) => void;
 };
 
-export default function ContactForm({ solution, onSolutionChange }: ContactFormProps) {
+export default function ContactForm({ locale, solution, onSolutionChange }: ContactFormProps) {
   const uid = useId();
-  const content = solutionContent[solution];
+  const c = copy[locale];
+  const contents = solutionContent[locale];
+  const content = contents[solution];
   const accent = content.accent;
   const inputClass = `${inputBase} ${accent.inputFocus}`;
   const [fields, setFields] = useState<Fields>({
@@ -192,7 +304,7 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
     name: "",
     title: "",
     email: "",
-    requestType: requestTypes[0],
+    requestType: c.requestTypes[0],
     message: "",
     consent: false,
   });
@@ -222,14 +334,14 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
 
     const clean = sanitize(fields);
     setFields(clean);
-    const found = validate(clean, solution);
+    const found = validate(clean, solution, c);
     setErrors(found);
     if (Object.keys(found).length > 0) {
       const first = Object.keys(found)[0];
       document.getElementById(`${uid}-${first}`)?.focus();
       return;
     }
-    const link = buildMailto(clean, solution);
+    const link = buildMailto(clean, content.label, c);
     setMailto(link);
     setStatus("submitting");
     window.setTimeout(() => {
@@ -262,19 +374,18 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
             role="status"
           >
             <CheckCircle2 className="h-8 w-8 text-emerald-300" strokeWidth={1.6} />
-            <h2 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-white">Talebiniz hazırlandı.</h2>
+            <h2 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-white">{c.sentTitle}</h2>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60">
-              E-posta istemciniz, bilgilerinizi içeren bir taslakla açıldı. Göndermeniz yeterli; ekibimiz talebinizi
-              inceleyerek {fields.email.trim()} adresinden size dönüş yapacaktır.
+              {c.sentBody(fields.email.trim())}
             </p>
             <dl className="mt-8 w-full divide-y divide-white/[0.06] rounded-xl border border-white/[0.06] text-sm">
               {[
-                ["Kurum", fields.organization],
-                ["Çözüm", solutions.find((s) => s.value === solution)?.label],
-                ["Talep türü", fields.requestType],
+                [c.summary.organization, fields.organization],
+                [c.summary.solution, content.label],
+                [c.summary.requestType, fields.requestType],
               ].map(([k, v]) => (
                 <div key={k} className="flex justify-between gap-4 px-4 py-3">
-                  <dt className="text-white/45">{k}</dt>
+                  <dt className="text-white/55">{k}</dt>
                   <dd className="text-right text-white/85">{v}</dd>
                 </div>
               ))}
@@ -286,7 +397,7 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
                   className={`inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-navy-900 ${accent.buttonHover}`}
                 >
                   <Mail className="h-4 w-4" />
-                  E-posta istemcisini tekrar aç
+                  {c.reopen}
                 </a>
               )}
               <button
@@ -294,15 +405,11 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
                 onClick={() => setStatus("idle")}
                 className="rounded-lg border border-white/15 px-4 py-2.5 text-sm text-white/80 hover:bg-white/5"
               >
-                Formu düzenle
+                {c.edit}
               </button>
             </div>
-            <p className="mt-6 text-xs text-white/40">
-              E-posta istemciniz açılmadıysa talebinizi doğrudan{" "}
-              <a href={`mailto:${CONTACT_EMAIL}`} className={`font-mono hover:underline ${accent.text}`}>
-                {CONTACT_EMAIL}
-              </a>{" "}
-              adresine iletebilirsiniz.
+            <p className="mt-6 text-xs text-white/55">
+              {c.fallback} <CopyEmail locale={locale} className="text-white/80" />
             </p>
           </motion.div>
         ) : (
@@ -320,7 +427,7 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
               aria-hidden="true"
               className="pointer-events-none absolute -left-[10000px] h-px w-px overflow-hidden opacity-0"
             >
-              <label htmlFor={`${uid}-${HONEYPOT_FIELD}`}>Web sitesi (boş bırakınız)</label>
+              <label htmlFor={`${uid}-${HONEYPOT_FIELD}`}>{c.honeypot}</label>
               <input
                 ref={honeypotRef}
                 id={`${uid}-${HONEYPOT_FIELD}`}
@@ -333,14 +440,14 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
             </div>
 
             <fieldset>
-              <legend className="text-[13px] font-medium text-white/80">İlgilenilen çözüm</legend>
+              <legend className="text-[13px] font-medium text-white/80">{c.solutionLegend}</legend>
               <div className="mt-2 grid gap-2 sm:grid-cols-3">
-                {solutions.map((s) => {
-                  const { icon: Icon, hint, accent: cardAccent } = solutionContent[s.value];
-                  const checked = solution === s.value;
+                {SOLUTION_VALUES.map((value) => {
+                  const { icon: Icon, hint, label, accent: cardAccent } = contents[value];
+                  const checked = solution === value;
                   return (
                     <label
-                      key={s.value}
+                      key={value}
                       className={`relative flex cursor-pointer flex-col rounded-xl border p-3.5 transition-colors duration-150 ease-out has-[:focus-visible]:ring-2 ${cardAccent.focusRing} ${
                         checked
                           ? cardAccent.selectedCard
@@ -349,22 +456,22 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
                     >
                       <input
                         type="radio"
-                        id={`${uid}-solution-${s.value}`}
+                        id={`${uid}-solution-${value}`}
                         name="solution"
-                        value={s.value}
+                        value={value}
                         checked={checked}
                         onChange={() => {
-                          onSolutionChange(s.value);
+                          onSolutionChange(value);
                           if (errors.solution) setErrors((e) => ({ ...e, solution: undefined }));
                         }}
                         className="sr-only"
                       />
                       <Icon
-                        className={`h-4 w-4 transition-colors duration-150 ease-out ${checked ? cardAccent.text : "text-white/40"}`}
+                        className={`h-4 w-4 transition-colors duration-150 ease-out ${checked ? cardAccent.text : "text-white/55"}`}
                         strokeWidth={1.8}
                       />
-                      <span className="mt-3 text-[13px] font-medium text-white">{s.label}</span>
-                      <span className="mt-0.5 text-[11.5px] leading-snug text-white/45">{hint}</span>
+                      <span className="mt-3 text-[13px] font-medium text-white">{label}</span>
+                      <span className="mt-0.5 text-[11.5px] leading-snug text-white/55">{hint}</span>
                     </label>
                   );
                 })}
@@ -375,7 +482,7 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
             <div className="grid gap-5 sm:grid-cols-2">
               <Field
                 className="sm:col-span-2"
-                label="Kurum adı"
+                label={c.organization}
                 htmlFor={`${uid}-organization`}
                 error={errors.organization}
               >
@@ -389,35 +496,35 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
                   className={`${inputClass} ${border("organization")}`}
                 />
               </Field>
-              <Field label="İlgili kişi" htmlFor={`${uid}-name`} error={errors.name}>
+              <Field label={c.name} htmlFor={`${uid}-name`} error={errors.name}>
                 <input
                   {...errorProps("name")}
                   autoComplete="name"
                   maxLength={LIMITS.name}
                   value={fields.name}
                   onChange={(e) => set("name", e.target.value)}
-                  placeholder="Ad Soyad"
+                  placeholder={c.namePlaceholder}
                   className={`${inputClass} ${border("name")}`}
                 />
               </Field>
-              <Field label="Talep türü" htmlFor={`${uid}-requestType`}>
+              <Field label={c.requestType} htmlFor={`${uid}-requestType`}>
                 <select
                   id={`${uid}-requestType`}
                   value={fields.requestType}
                   onChange={(e) => set("requestType", e.target.value)}
                   className={`${inputClass} border-white/[0.1] [&>option]:bg-navy-850`}
                 >
-                  {requestTypes.map((t) => (
+                  {c.requestTypes.map((t) => (
                     <option key={t}>{t}</option>
                   ))}
                 </select>
               </Field>
               <Field
                 className="sm:col-span-2"
-                label="Unvan / görev"
+                label={c.title}
                 htmlFor={`${uid}-title`}
                 error={errors.title}
-                optional
+                optional={c.optional}
               >
                 <input
                   {...errorProps("title")}
@@ -432,11 +539,11 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
             </div>
 
             <Field
-              label="Kurumsal e-posta"
+              label={c.email}
               htmlFor={`${uid}-email`}
               error={errors.email}
               hint={
-                freeMail ? "Mümkünse kurumsal alan adınıza ait bir e-posta adresi kullanmanızı öneririz." : undefined
+                freeMail ? c.freeMail : undefined
               }
             >
               <input
@@ -449,18 +556,18 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
                 maxLength={LIMITS.email}
                 value={fields.email}
                 onChange={(e) => set("email", e.target.value)}
-                placeholder="ad.soyad@kurum.com.tr"
+                placeholder={c.emailPlaceholder}
                 className={`${inputClass} ${border("email")}`}
               />
             </Field>
 
             <Field
-              label="Mesaj"
+              label={c.message}
               htmlFor={`${uid}-message`}
               error={errors.message}
               hint={
                 <span className="flex justify-between gap-4">
-                  <span>Düz metin; lütfen hasta verisi paylaşmayınız.</span>
+                  <span>{c.messageHint}</span>
                   <span className="font-mono tabular-nums">
                     {fields.message.length}/{LIMITS.message}
                   </span>
@@ -488,11 +595,14 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
                   className={`mt-0.5 h-4 w-4 shrink-0 cursor-pointer ${accent.checkbox}`}
                 />
                 <span>
-                  Kişisel verilerimin, talebimin yanıtlanması amacıyla{" "}
-                  <Link href="/legal/privacy" className={`underline-offset-2 hover:underline ${accent.text}`}>
-                    KVKK Aydınlatma Metni
+                  {c.consentBefore}{" "}
+                  <Link
+                    href={localizedPath(locale, "/legal/privacy")}
+                    className={`underline-offset-2 hover:underline ${accent.text}`}
+                  >
+                    {c.consentLink}
                   </Link>{" "}
-                  kapsamında işleneceğini okudum ve anladım.
+                  {c.consentAfter}
                 </span>
               </label>
               {errors.consent && (
@@ -503,9 +613,8 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
             </div>
 
             <div className="flex flex-col gap-4 border-t border-white/[0.06] pt-6 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-xs leading-relaxed text-white/40">
-                Gönder&apos;e tıkladığınızda talebiniz, e-posta istemcinizde {CONTACT_EMAIL} adresine hazır bir taslak
-                olarak açılır.
+              <p className="text-xs leading-relaxed text-white/55">
+                {c.submitNote(CONTACT_EMAIL)}
               </p>
               <button
                 type="submit"
@@ -514,11 +623,11 @@ export default function ContactForm({ solution, onSolutionChange }: ContactFormP
               >
                 {status === "submitting" ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" /> Hazırlanıyor
+                    <Loader2 className="h-4 w-4 animate-spin" /> {c.preparing}
                   </>
                 ) : (
                   <>
-                    Talebi gönder <ArrowUpRight className="h-4 w-4" />
+                    {c.submit} <ArrowUpRight className="h-4 w-4" />
                   </>
                 )}
               </button>

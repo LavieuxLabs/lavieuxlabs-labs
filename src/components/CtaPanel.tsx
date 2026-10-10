@@ -1,10 +1,12 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ArrowUpRight, Mail } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
-import { CONTACT_EMAIL } from "@/lib/site";
+import CopyEmail from "@/components/CopyEmail";
+import type { Locale } from "@/i18n/config";
 
 type CtaPanelProps = {
+  locale: Locale;
   eyebrow: string;
   title: string;
   description: string;
@@ -15,6 +17,7 @@ type CtaPanelProps = {
 };
 
 export default function CtaPanel({
+  locale,
   eyebrow,
   title,
   description,
@@ -43,13 +46,7 @@ export default function CtaPanel({
                     {primaryLabel}
                     <ArrowUpRight className="h-4 w-4" />
                   </Link>
-                  <a
-                    href={`mailto:${CONTACT_EMAIL}`}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 px-5 py-3 font-mono text-sm text-white/80 transition-colors hover:border-white/30 hover:text-white"
-                  >
-                    <Mail className="h-4 w-4" />
-                    {CONTACT_EMAIL}
-                  </a>
+                  <CopyEmail locale={locale} variant="button" />
                 </div>
               </div>
               {aside}

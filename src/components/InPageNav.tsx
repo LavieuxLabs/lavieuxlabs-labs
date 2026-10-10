@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import type { Locale } from "@/i18n/config";
 
 type InPageNavProps = {
+  locale: Locale;
   items: { id: string; label: string }[];
   accent?: "teal" | "indigo";
 };
@@ -22,7 +24,7 @@ const tones = {
 // Navbar (64px) + this bar (~52px): a section counts as "current" once it reaches just below them.
 const TOP_OFFSET = 128;
 
-export default function InPageNav({ items, accent = "teal" }: InPageNavProps) {
+export default function InPageNav({ locale, items, accent = "teal" }: InPageNavProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const reduced = useReducedMotion();
@@ -65,8 +67,8 @@ export default function InPageNav({ items, accent = "teal" }: InPageNavProps) {
   }, [activeId, reduced]);
 
   return (
-    <div className="sticky top-16 z-30 border-y border-white/[0.06] bg-navy-900/75 backdrop-blur-xl">
-      <nav aria-label="Sayfa bölümleri" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="sticky top-16 z-30 print:hidden border-y border-white/[0.06] bg-navy-900/75 backdrop-blur-xl">
+      <nav aria-label={locale === "tr" ? "Sayfa bölümleri" : "On this page"} className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ul ref={listRef} className="-mx-1 flex gap-1 overflow-x-auto py-2 [scrollbar-width:none]">
           {items.map((item, i) => {
             const active = item.id === activeId;
@@ -90,7 +92,7 @@ export default function InPageNav({ items, accent = "teal" }: InPageNavProps) {
                   )}
                   <span
                     className={`relative font-mono text-[10px] transition-colors duration-150 ease-out ${
-                      active ? tone.index : "text-white/30"
+                      active ? tone.index : "text-white/55"
                     }`}
                   >
                     {String(i + 1).padStart(2, "0")}

@@ -25,8 +25,8 @@
   /* Surface steps (depth comes from these, never from glow): 950 deep (footer) · 900 base · 850 card/surface · 800 elevated console/modal · 700 border */
   --color-navy-950: #080f19;
   --color-navy-900: #0b131f;
-  --color-navy-850: #111c2b;
-  --color-navy-800: #162335;
+  --color-navy-850: #14233a;
+  --color-navy-800: #1a2b44;
   --color-navy-700: #22344b;
 
   /* Product accents (academic: lavender for research collaborations) */
@@ -79,13 +79,44 @@
 
 @utility bg-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
   background-size: 64px 64px;
+}
+
+/*
+ * Optical ground: a calm surgical-navy focus at the centre that falls off, like a lens vignette,
+ * to hardware black-navy at the edges. Neutral and low-chroma on purpose: no hue shift, no glow.
+ * Luminance order the surfaces rely on: edge #080E18 < base #0B131F < focus #112035 < card
+ * navy-850 < elevated navy-800.
+ */
+@utility bg-optic {
+  background: radial-gradient(
+    120% 90% at 50% 38%,
+    #112035 0%,
+    #0e1a2b 38%,
+    #0b131f 66%,
+    #080e18 100%
+  );
+}
+
+/* Analog hardware grain (monochrome fractal noise, tiled). Used at ~1.8% opacity over the page. */
+@utility bg-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
 }
 
 @utility mask-vignette {
   mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, black 25%, transparent 100%);
+}
+
+/* Telemetry rails: the two vertical guides sit on the edges of the max-w-7xl content box (80rem),
+   and 0.5rem in from the viewport edge when the screen is narrower. Markers use the same x. */
+@utility rail-left {
+  left: max(0.5rem, calc(50% - 40rem));
+}
+@utility rail-right {
+  right: max(0.5rem, calc(50% - 40rem));
 }
 
 @utility mask-radial {
@@ -119,47 +150,116 @@ body {
 }
 
 @layer components {
+  /* Legal documents: neutral datasheet typography. No accent colour; links are underlined white. */
   .legal-prose h2 {
-    @apply text-xl font-semibold tracking-[-0.03em] text-white sm:text-2xl;
+    @apply text-xl font-semibold tracking-[-0.03em] text-white sm:text-[22px];
   }
   .legal-prose h3 {
-    @apply mt-8 text-base font-medium text-white;
+    @apply mt-8 text-[15px] font-semibold text-white;
   }
   .legal-prose p {
-    @apply mt-4 text-[15px] leading-relaxed text-white/65;
+    @apply mt-4 text-[15px] leading-[1.7] text-white/75;
   }
   .legal-prose ul,
   .legal-prose ol {
-    @apply mt-4 space-y-2 pl-5 text-[15px] leading-relaxed text-white/65;
+    @apply mt-4 space-y-2 pl-5 text-[15px] leading-[1.7] text-white/75;
   }
   .legal-prose ul {
-    @apply list-disc marker:text-teal-300/50;
+    @apply list-disc marker:text-white/40;
   }
   .legal-prose ol {
-    @apply list-[lower-alpha] marker:font-mono marker:text-teal-300/60;
+    @apply list-[lower-alpha] marker:font-mono marker:text-white/50;
   }
   .legal-prose strong {
-    @apply font-medium text-white/90;
+    @apply font-medium text-white;
   }
   .legal-prose a {
-    @apply text-teal-300 underline-offset-2 hover:underline;
+    @apply text-white/80 underline decoration-white/25 underline-offset-4 transition-colors duration-150 ease-out hover:text-white hover:decoration-white/60;
   }
   .legal-prose table {
-    @apply mt-6 w-full overflow-hidden rounded-xl border border-white/[0.06] text-left text-sm;
+    @apply mt-6 w-full border-y border-white/[0.06] text-left text-sm;
   }
   .legal-prose th {
-    @apply border-b border-white/[0.06] bg-white/[0.03] px-4 py-3 text-[11px] font-medium uppercase tracking-wide text-white/45;
+    @apply border-b border-white/[0.06] py-2.5 pr-5 text-[11px] font-medium tracking-wider text-white/50 uppercase;
   }
   .legal-prose td {
-    @apply border-b border-white/[0.05] px-4 py-3 align-top text-white/65;
+    @apply border-b border-white/[0.06] py-3 pr-5 align-top leading-relaxed text-white/75;
+  }
+  .legal-prose tr:last-child td {
+    @apply border-b-0;
   }
   .legal-prose .note {
-    @apply mt-6 rounded-xl border border-teal-400/20 bg-teal-400/[0.04] px-5 py-4 text-sm text-white/70;
+    @apply mt-6 rounded-xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 text-sm leading-relaxed text-white/80;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+/* ── Print ───────────────────────────────────────────────────────────────────
+   Paper is white with black type. Site chrome (navbar, footer, cookie banner, backdrop, in-page
+   nav) carries `print:hidden`. When a PrintButton sets <html data-print="…">, everything in <main>
+   except the matching [data-print-sheet] is hidden, so the sheet prints as a one-page A4 document. */
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 14mm 16mm;
+  }
+
+  html,
+  body {
+    color-scheme: light !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Scroll-in animations may not have run for content below the fold. */
+  main * {
+    opacity: 1 !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  main,
+  main * {
+    color: #111 !important;
+    background: transparent !important;
+    border-color: #c8c8c8 !important;
+  }
+
+  main .print-muted {
+    color: #4a4a4a !important;
+  }
+
+  main [data-print-rule] {
+    border-color: #111 !important;
+  }
+
+  html[data-print="protocol"] main > :not([data-print-sheet="protocol"]) {
+    display: none !important;
+  }
+
+  html[data-print] [data-print-sheet] {
+    padding: 0 !important;
+    break-inside: avoid;
+  }
+
+  html[data-print] [data-print-sheet] > div {
+    max-width: none;
+    padding: 0;
+  }
+
+  [data-print-sheet] h2 {
+    margin-top: 0.4rem;
+    font-size: 16pt;
+    line-height: 1.15;
+  }
+
+  [data-print-sheet] h2 + p {
+    margin-top: 0.4rem;
+    font-size: 9pt;
   }
 }

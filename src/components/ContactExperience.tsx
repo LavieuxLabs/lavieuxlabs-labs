@@ -3,20 +3,42 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Mail } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import ContactForm from "@/components/ContactForm";
-import { CONTACT_EMAIL, solutions, type SolutionValue } from "@/lib/site";
+import CopyEmail from "@/components/CopyEmail";
+import { SOLUTION_VALUES, type SolutionValue } from "@/lib/site";
 import { solutionContent } from "@/lib/solutionContent";
+import { defineContent, type Locale } from "@/i18n/config";
+
+const copy = defineContent({
+  tr: {
+    process: "Süreç",
+    step: "ADIM",
+    protocolLink: "Pilot protokolü ve LOI çerçevesi",
+    email: "E-posta",
+    noPatientData: "Lütfen iletişim kanallarımız üzerinden hasta verisi veya özel nitelikli kişisel veri paylaşmayınız.",
+  },
+  en: {
+    process: "Process",
+    step: "STEP",
+    protocolLink: "Pilot protocol and LOI framework",
+    email: "Email",
+    noPatientData: "Please do not send patient data or other special categories of personal data through our contact channels.",
+  },
+});
 
 function isSolution(value: string | null): value is SolutionValue {
-  return solutions.some((s) => s.value === value);
+  return SOLUTION_VALUES.some((v) => v === value);
 }
 
 /** Process steps and the form share one selected solution, so both respond to the tabs. */
-export default function ContactExperience({ initialSolution = "pharmadeux" }: { initialSolution?: SolutionValue }) {
+type ContactExperienceProps = { locale: Locale; initialSolution?: SolutionValue };
+
+export default function ContactExperience({ locale, initialSolution = "pharmadeux" }: ContactExperienceProps) {
   const [solution, setSolution] = useState<SolutionValue>(initialSolution);
   const reduced = useReducedMotion();
-  const content = solutionContent[solution];
+  const c = copy[locale];
+  const content = solutionContent[locale][solution];
 
   const choose = (next: SolutionValue) => {
     setSolution(next);
@@ -29,7 +51,7 @@ export default function ContactExperience({ initialSolution = "pharmadeux" }: { 
       <div className="space-y-10">
         <section aria-labelledby="process-title">
           <p id="process-title" className="text-[11px] font-medium tracking-wider text-white/50 uppercase">
-            Süreç
+            {c.process}
           </p>
           <div aria-live="polite">
             <AnimatePresence mode="wait" initial={false}>
@@ -47,7 +69,9 @@ export default function ContactExperience({ initialSolution = "pharmadeux" }: { 
                       <Icon className="h-4 w-4" strokeWidth={1.7} />
                     </div>
                     <div>
-                      <p className="font-mono text-[10.5px] text-white/35">ADIM {String(i + 1).padStart(2, "0")}</p>
+                      <p className="font-mono text-[10.5px] text-white/55">
+                        {c.step} {String(i + 1).padStart(2, "0")}
+                      </p>
                       <h2 className="mt-0.5 text-[15px] font-medium text-white">{title}</h2>
                       <p className="mt-1 text-sm leading-relaxed text-white/55">{body}</p>
                     </div>
@@ -58,27 +82,32 @@ export default function ContactExperience({ initialSolution = "pharmadeux" }: { 
           </div>
         </section>
 
+        <a
+          href="#pilot-protokolu"
+          className="group flex items-center justify-between gap-4 border-y border-white/[0.06] py-3 text-sm text-white/70 transition-colors duration-150 ease-out hover:text-white"
+        >
+          {c.protocolLink}
+          <ArrowDown
+            className="h-4 w-4 text-white/55 transition-transform duration-150 ease-out group-hover:translate-y-0.5"
+            aria-hidden="true"
+          />
+        </a>
+
         <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
-          <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">E-posta</p>
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="mt-3 inline-flex items-center gap-2 font-mono text-sm text-white transition-colors hover:text-teal-200"
-          >
-            <Mail className="h-4 w-4 text-white/45" aria-hidden="true" />
-            {CONTACT_EMAIL}
-          </a>
-          <p className="mt-4 text-xs leading-relaxed text-white/40">
-            Lütfen iletişim kanallarımız üzerinden hasta verisi veya özel nitelikli kişisel veri paylaşmayınız.
+          <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.email}</p>
+          <CopyEmail locale={locale} className="mt-3 text-sm text-white" />
+          <p className="mt-4 text-xs leading-relaxed text-white/55">
+            {c.noPatientData}
           </p>
         </div>
       </div>
 
-      <ContactForm solution={solution} onSolutionChange={choose} />
+      <ContactForm locale={locale} solution={solution} onSolutionChange={choose} />
     </div>
   );
 }
 
-export function ContactExperienceFromParams() {
+export function ContactExperienceFromParams({ locale }: { locale: Locale }) {
   const solution = useSearchParams().get("solution");
-  return <ContactExperience initialSolution={isSolution(solution) ? solution : undefined} />;
+  return <ContactExperience locale={locale} initialSolution={isSolution(solution) ? solution : undefined} />;
 }

@@ -21,8 +21,8 @@ export default function SpecCard({ id, icon: Icon, title, body, rows, status }: 
     <article className="flex h-full flex-col rounded-2xl border border-white/[0.06] bg-navy-850 p-5 transition-colors duration-150 ease-out hover:bg-navy-800 sm:p-6">
       <header className="flex items-center justify-between gap-3">
         <span className="flex items-center gap-2">
-          {Icon && <Icon className="h-4 w-4 text-white/45" strokeWidth={1.6} aria-hidden="true" />}
-          {id && <span className="font-mono text-[11px] text-white/40 tabular-nums">{id}</span>}
+          {Icon && <Icon className="h-4 w-4 text-white/55" strokeWidth={1.6} aria-hidden="true" />}
+          {id && <span className="font-mono text-[11px] text-white/55 tabular-nums">{id}</span>}
         </span>
         {status && (
           <span className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{status.label}</span>
@@ -35,7 +35,7 @@ export default function SpecCard({ id, icon: Icon, title, body, rows, status }: 
           <dl className="divide-y divide-white/[0.06] border-t border-white/[0.06]">
             {rows.map((row) => (
               <div key={row.label} className="grid grid-cols-[92px_1fr] gap-3 py-2">
-                <dt className="text-[11.5px] text-white/40">{row.label}</dt>
+                <dt className="text-[11.5px] text-white/55">{row.label}</dt>
                 <dd className={`text-[12.5px] leading-snug text-white/75 ${row.mono ? "font-mono tabular-nums" : ""}`}>
                   {row.value}
                 </dd>

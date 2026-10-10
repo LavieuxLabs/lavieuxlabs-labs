@@ -2,10 +2,14 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
+import { RailMarker } from "@/components/TelemetryRails";
+import { localizedPath, type Locale } from "@/i18n/config";
 
-type Crumb = { href?: string; label: string };
+// `lang` marks foreign brand names (e.g. "Shield") so CSS uppercase does not apply Turkish i → İ.
+type Crumb = { href?: string; label: string; lang?: string };
 
 type PageHeroProps = {
+  locale: Locale;
   eyebrow: string;
   title: ReactNode;
   description: ReactNode;
@@ -20,6 +24,7 @@ type PageHeroProps = {
 };
 
 export default function PageHero({
+  locale,
   eyebrow,
   title,
   description,
@@ -31,20 +36,21 @@ export default function PageHero({
 }: PageHeroProps) {
   return (
     <section className="relative isolate overflow-hidden pt-32 pb-16 sm:pt-40 sm:pb-24">
+      <RailMarker className="top-32 sm:top-40" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {breadcrumbs && (
           <Reveal>
-            <nav aria-label="Konum" className="mb-8">
-              <ol className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium tracking-wider text-white/40 uppercase">
+            <nav aria-label={locale === "tr" ? "Konum" : "Breadcrumb"} className="mb-8">
+              <ol className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium tracking-wider text-white/55 uppercase">
                 {breadcrumbs.map((c, i) => (
                   <li key={c.label} className="flex items-center gap-1.5">
                     {i > 0 && <ChevronRight className="h-3 w-3" />}
                     {c.href ? (
-                      <Link href={c.href} className="transition-colors hover:text-white">
+                      <Link href={localizedPath(locale, c.href)} lang={c.lang} className="transition-colors hover:text-white">
                         {c.label}
                       </Link>
                     ) : (
-                      <span aria-current="page" className="text-white/70">
+                      <span aria-current="page" lang={c.lang} className="text-white/70">
                         {c.label}
                       </span>
                     )}

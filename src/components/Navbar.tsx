@@ -5,7 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, ChevronDown, Menu, Pill, ShieldCheck, X } from "lucide-react";
-import { navLinks, products } from "@/lib/site";
+import LanguageSwitch from "@/components/LanguageSwitch";
+import { navigation } from "@/lib/site";
+import { localizedPath, stripLocale, type Locale } from "@/i18n/config";
 
 const productIcons = { pill: Pill, shield: ShieldCheck };
 const productTone = {
@@ -13,23 +15,56 @@ const productTone = {
   shield: "border-indigo-400/25 bg-indigo-400/10 text-indigo-300",
 };
 
+// LavieuxLabs mark, "optical decision core" — one umbrella mark for every product line:
+// an iris ring (1.5px) carrying the eight axes of the Seljuk octagram as hairline notches (cardinal
+// notches longer, diagonal shorter), a 1px focus ring, a 1px telemetry crosshair, and a solid core
+// for the patient and the clinician's decision. The same geometry is used by src/app/icon.svg and
+// the OG card (src/lib/ogImage.tsx). On hover (parent `.group`) only the crosshair turns 45° onto
+// the diagonal notches.
+const RING = 13.25;
+const markPoint = (r: number, deg: number) => {
+  const a = (deg * Math.PI) / 180;
+  return `${(16 + r * Math.sin(a)).toFixed(2)} ${(16 - r * Math.cos(a)).toFixed(2)}`;
+};
+export const MARK_NOTCHES = [0, 45, 90, 135, 180, 225, 270, 315]
+  .map((deg) => `M${markPoint(RING, deg)}L${markPoint(deg % 90 === 0 ? RING - 3.25 : RING - 2.1, deg)}`)
+  .join("");
+export const MARK_CROSSHAIR = [0, 90, 180, 270].map((deg) => `M${markPoint(4.9, deg)}L${markPoint(8.6, deg)}`).join("");
+
 export function LogoMark({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 32" fill="none" aria-hidden="true" className={className}>
-      <path d="M8 22 16 8l8 14H8Z" stroke="currentColor" strokeOpacity="0.35" strokeWidth="1.2" />
-      <path d="M16 8v8.5M8 22l8-5.5 8 5.5" stroke="currentColor" strokeOpacity="0.6" strokeWidth="1.2" />
-      <circle cx="16" cy="8" r="2.4" fill="currentColor" />
-      <circle cx="8" cy="22" r="2.4" fill="currentColor" />
-      <circle cx="24" cy="22" r="2.4" fill="currentColor" />
-      <circle cx="16" cy="16.5" r="1.6" fill="#0F1B2D" stroke="currentColor" strokeWidth="1.2" />
+      <g stroke="currentColor" strokeLinecap="round">
+        <circle cx="16" cy="16" r={RING} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+        <path d={MARK_NOTCHES} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+        <circle cx="16" cy="16" r="3.6" strokeWidth="1" strokeOpacity="0.6" vectorEffect="non-scaling-stroke" />
+        <path
+          d={MARK_CROSSHAIR}
+          strokeWidth="1"
+          strokeOpacity="0.8"
+          vectorEffect="non-scaling-stroke"
+          className="origin-[16px_16px] transition-transform duration-[180ms] ease-out group-hover:rotate-45 motion-reduce:transition-none"
+        />
+      </g>
+      <circle cx="16" cy="16" r="1.75" fill="currentColor" />
     </svg>
   );
 }
 
-function ProductsMenu({ active }: { active: boolean }) {
+function ProductsMenu({ active, locale }: { active: boolean; locale: Locale }) {
+  const nav = navigation[locale];
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<number | undefined>(undefined);
+  // Mouse users get the menu on hover; their click on the trigger arrives right after and must not
+  // toggle it closed again. Clicks well after a hover-open (or from touch/keyboard) still toggle.
+  const hoverOpenedAt = useRef(0);
+  // Mirror of `open` for handlers: pointerenter and click can arrive in the same frame, before React
+  // has re-rendered, so the closure's `open` may still be stale.
+  const openRef = useRef(open);
+  useEffect(() => {
+    openRef.current = open;
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -49,7 +84,17 @@ function ProductsMenu({ active }: { active: boolean }) {
 
   const openNow = () => {
     window.clearTimeout(closeTimer.current);
+    if (!openRef.current) hoverOpenedAt.current = performance.now();
+    openRef.current = true;
     setOpen(true);
+  };
+  const onTriggerClick = () => {
+    if (performance.now() - hoverOpenedAt.current < 600) {
+      setOpen(true);
+      return;
+    }
+    openRef.current = !openRef.current;
+    setOpen(openRef.current);
   };
   const closeSoon = () => {
     window.clearTimeout(closeTimer.current);
@@ -68,12 +113,12 @@ function ProductsMenu({ active }: { active: boolean }) {
         aria-expanded={open}
         aria-haspopup="true"
         aria-controls="products-menu"
-        onClick={() => setOpen((v) => !v)}
+        onClick={onTriggerClick}
         className={`flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-150 ease-out hover:text-white ${
           open || active ? "text-white" : "text-white/60"
         }`}
       >
-        Ürünler
+        {nav.productsLabel}
         <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
 
@@ -89,12 +134,12 @@ function ProductsMenu({ active }: { active: boolean }) {
           >
             <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-navy-800 shadow-xl shadow-black/40">
               <ul className="p-2">
-                {products.map((p) => {
+                {nav.products.map((p) => {
                   const Icon = productIcons[p.icon];
                   return (
                     <li key={p.href}>
                       <Link
-                        href={p.href}
+                        href={localizedPath(locale, p.href)}
                         onClick={() => setOpen(false)}
                         className="group flex items-start gap-3.5 rounded-xl p-3 transition-colors duration-150 ease-out hover:bg-white/[0.05]"
                       >
@@ -116,11 +161,11 @@ function ProductsMenu({ active }: { active: boolean }) {
                 })}
               </ul>
               <Link
-                href="/#platformlar"
+                href={localizedPath(locale, "/#platformlar")}
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-between border-t border-white/[0.06] bg-white/[0.02] px-5 py-3 text-xs font-medium uppercase tracking-wide text-white/45 transition-colors duration-150 ease-out hover:text-white"
+                className="flex items-center justify-between border-t border-white/[0.06] bg-white/[0.02] px-5 py-3 text-xs font-medium uppercase tracking-wide text-white/55 transition-colors duration-150 ease-out hover:text-white"
               >
-                Tüm ürünler
+                {nav.allProducts}
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
@@ -131,64 +176,9 @@ function ProductsMenu({ active }: { active: boolean }) {
   );
 }
 
-// Only Turkish content exists today; EN is shown as "in preparation" instead of silently doing nothing.
-function LanguageToggle({ className = "" }: { className?: string }) {
-  const [notice, setNotice] = useState(false);
-  const timer = useRef<number | undefined>(undefined);
-
-  useEffect(() => () => window.clearTimeout(timer.current), []);
-
-  const onEnglish = () => {
-    setNotice(true);
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setNotice(false), 2600);
-  };
-
-  return (
-    <div className={`relative ${className}`}>
-      <div
-        role="group"
-        aria-label="Dil seçimi"
-        className="flex items-center rounded-md border border-white/[0.06] bg-white/[0.03] p-0.5 text-[11px] font-medium"
-      >
-        <button
-          type="button"
-          aria-pressed="true"
-          lang="tr"
-          className="rounded-[5px] bg-white/[0.08] px-2 py-0.5 text-white"
-        >
-          TR
-        </button>
-        <button
-          type="button"
-          aria-pressed="false"
-          lang="en"
-          onClick={onEnglish}
-          className="rounded-[5px] px-2 py-0.5 text-white/45 transition-colors duration-150 ease-out hover:text-white"
-        >
-          EN
-        </button>
-      </div>
-      <AnimatePresence>
-        {notice && (
-          <motion.p
-            role="status"
-            lang="en"
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            className="absolute top-full right-0 mt-2 w-max rounded-lg border border-white/[0.06] bg-navy-800 px-3 py-2 text-xs text-white/70 shadow-xl shadow-black/40"
-          >
-            English version is in preparation.
-          </motion.p>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-export default function Navbar() {
-  const pathname = usePathname();
+export default function Navbar({ locale }: { locale: Locale }) {
+  const nav = navigation[locale];
+  const pathname = stripLocale(usePathname());
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -202,14 +192,14 @@ export default function Navbar() {
   const productsActive = pathname.startsWith("/initiatives");
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
+    <header className="fixed inset-x-0 top-0 z-50 print:hidden">
       <div className="material-bar border-b border-white/[0.06]">
         <nav
-          aria-label="Ana navigasyon"
+          aria-label={nav.mainNav}
           className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
         >
-          <Link href="/" className="group flex items-center gap-2.5" aria-label="LavieuxLabs ana sayfa">
-            <LogoMark className="h-7 w-7 text-teal-300 transition-transform duration-150 ease-out group-hover:rotate-[60deg]" />
+          <Link href={localizedPath(locale, "/")} className="group flex items-center gap-2.5" aria-label={nav.homeAria}>
+            <LogoMark className="h-7 w-7 text-teal-300" />
             <span className="text-[15px] font-semibold tracking-[-0.02em] text-white">
               Lavieux<span className="text-white/50">Labs</span>
             </span>
@@ -217,12 +207,12 @@ export default function Navbar() {
 
           <ul className="hidden items-center gap-1 md:flex">
             <li>
-              <ProductsMenu active={productsActive} />
+              <ProductsMenu active={productsActive} locale={locale} />
             </li>
-            {navLinks.map((link) => (
+            {nav.links.map((link) => (
               <li key={link.href}>
                 <Link
-                  href={link.href}
+                  href={localizedPath(locale, link.href)}
                   aria-current={isActive(link.href) ? "page" : undefined}
                   className={`rounded-md px-3 py-2 text-sm transition-colors duration-150 ease-out hover:text-white ${
                     isActive(link.href) ? "text-white" : "text-white/60"
@@ -235,13 +225,13 @@ export default function Navbar() {
           </ul>
 
           <div className="flex items-center gap-3">
-            <LanguageToggle className="hidden md:block" />
+            <LanguageSwitch locale={locale} className="hidden md:flex" />
 
             <Link
-              href="/contact"
-              className="hidden items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium md:inline-flex border border-white/15 bg-white/[0.06] text-white hover:bg-white/[0.1] transition-colors duration-150 ease-out"
+              href={localizedPath(locale, "/contact")}
+              className="hidden items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium whitespace-nowrap lg:inline-flex border border-white/15 bg-white/[0.06] text-white hover:bg-white/[0.1] transition-colors duration-150 ease-out"
             >
-              Pilot başvurusu (LOI)
+              {nav.cta}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
 
@@ -250,7 +240,7 @@ export default function Navbar() {
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-controls="mobile-menu"
-              aria-label={open ? "Menüyü kapat" : "Menüyü aç"}
+              aria-label={open ? nav.closeMenu : nav.openMenu}
               className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-white/80 transition-colors duration-150 ease-out hover:bg-white/5 md:hidden"
             >
               {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
@@ -270,14 +260,14 @@ export default function Navbar() {
             className="material-bar border-b border-white/[0.06] md:hidden"
           >
             <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
-              <p className="px-2 pt-2 pb-1 text-[11px] font-medium tracking-wider text-white/50 uppercase">Ürünler</p>
+              <p className="px-2 pt-2 pb-1 text-[11px] font-medium tracking-wider text-white/50 uppercase">{nav.productsLabel}</p>
               <ul>
-                {products.map((p) => {
+                {nav.products.map((p) => {
                   const Icon = productIcons[p.icon];
                   return (
                     <li key={p.href}>
                       <Link
-                        href={p.href}
+                        href={localizedPath(locale, p.href)}
                         onClick={() => setOpen(false)}
                         className="flex items-start gap-3 rounded-lg px-2 py-2.5 hover:bg-white/5"
                       >
@@ -288,7 +278,7 @@ export default function Navbar() {
                         </span>
                         <span>
                           <span className="block text-[15px] text-white">{p.name}</span>
-                          <span className="block text-xs text-white/45">{p.description}</span>
+                          <span className="block text-xs text-white/55">{p.description}</span>
                         </span>
                       </Link>
                     </li>
@@ -296,10 +286,10 @@ export default function Navbar() {
                 })}
               </ul>
               <ul className="mt-2 border-t border-white/[0.06] pt-2">
-                {navLinks.map((link) => (
+                {nav.links.map((link) => (
                   <li key={link.href}>
                     <Link
-                      href={link.href}
+                      href={localizedPath(locale, link.href)}
                       onClick={() => setOpen(false)}
                       className="block rounded-md px-2 py-3 text-[15px] text-white/75 hover:bg-white/5 hover:text-white"
                     >
@@ -309,15 +299,15 @@ export default function Navbar() {
                 ))}
               </ul>
               <Link
-                href="/contact"
+                href={localizedPath(locale, "/contact")}
                 onClick={() => setOpen(false)}
                 className="mx-2 mt-3 flex items-center justify-center gap-1.5 rounded-lg px-3.5 py-2.5 text-sm font-medium border border-white/15 bg-white/[0.06] text-white hover:bg-white/[0.1] transition-colors duration-150 ease-out"
               >
-                Pilot başvurusu (LOI)
+                {nav.cta}
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </Link>
               <div className="mt-4 flex items-center justify-end px-2 pb-2">
-                <LanguageToggle />
+                <LanguageSwitch locale={locale} />
               </div>
             </div>
           </motion.div>

@@ -33,6 +33,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  // Two root layouts (src/app/(tr) and src/app/en) need a standalone 404: src/app/global-not-found.tsx.
+  experimental: {
+    globalNotFound: true,
+  },
   turbopack: {
     rules: {
       "*.css": {
