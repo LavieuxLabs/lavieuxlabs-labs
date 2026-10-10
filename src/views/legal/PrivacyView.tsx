@@ -117,8 +117,9 @@ const sectionsTr: LegalSection[] = [
     content: (
       <>
         <p>
-          Kişisel verileriniz; iletişim formu aracılığıyla oluşturulan e-posta taslağı, doğrudan gönderdiğiniz
-          e-postalar ve web sitesi altyapısı tarafından otomatik yollarla toplanır. Veriler, KVKK md. 5/2 kapsamında
+          Kişisel verileriniz; iletişim formuna girdiğiniz ve form gönderildiğinde e-posta gönderim hizmeti
+          sağlayıcımız aracılığıyla kurumsal e-posta adresimize iletilen bilgiler, doğrudan gönderdiğiniz e-postalar ve
+          web sitesi altyapısı tarafından otomatik yollarla toplanır. Veriler, KVKK md. 5/2 kapsamında
           aşağıdaki hukuki sebeplere dayanılarak işlenir:
         </p>
         <ul>
@@ -147,8 +148,8 @@ const sectionsTr: LegalSection[] = [
     content: (
       <>
         <p>
-          Kişisel verileriniz, yukarıdaki amaçlarla sınırlı olarak; e-posta ve barındırma hizmeti aldığımız
-          tedarikçilere, hukuken yetkili kamu kurum ve kuruluşlarına ve talep edilmesi halinde yetkili mercilere
+          Kişisel verileriniz, yukarıdaki amaçlarla sınırlı olarak; e-posta, form iletimi ve barındırma hizmeti
+          aldığımız tedarikçilere, hukuken yetkili kamu kurum ve kuruluşlarına ve talep edilmesi halinde yetkili mercilere
           aktarılabilir.
         </p>
         <p>
@@ -328,7 +329,8 @@ const sectionsEn: LegalSection[] = [
     content: (
       <>
         <p>
-          Your personal data is collected through the email draft created by the contact form, the emails you send us
+          Your personal data is collected through the information you enter in the contact form, which is delivered
+          to our company email address by our email delivery provider when you submit it, the emails you send us
           directly, and automatically by the website infrastructure. It is processed on the following legal bases under
           Article 5(2) of KVKK:
         </p>
@@ -358,8 +360,8 @@ const sectionsEn: LegalSection[] = [
     content: (
       <>
         <p>
-          Limited to the purposes above, your personal data may be transferred to the providers of our email and hosting
-          services, to public institutions legally authorised to receive it, and to competent authorities on request.
+          Limited to the purposes above, your personal data may be transferred to the providers of our email, form
+          delivery and hosting services, to public institutions legally authorised to receive it, and to competent authorities on request.
         </p>
         <p>
           If you load the location map on the contact page, data such as your IP address and browser information is sent

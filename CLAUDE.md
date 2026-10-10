@@ -41,7 +41,8 @@ Ayrıntılı uygulama rehberi ve inceleme kontrol listesi: `.claude/skills/desig
   * İddiayı ölçülebilir gerçeğe indir (2.480+ test, THS 4, CE işareti yok). Bir şey henüz yoksa "henüz yok" yaz.
   * Mümkünse somut bir klinik veya operasyonel örnek ver ("eGFR'si 90 olan hastada güvenli olan reçete 30'da doz ayarı gerektirebilir").
   * İngilizce jargon yalnızca terim olarak yerleşmişse kalır (FHIR, append-only); ürün açıklamasında Türkçe karşılık kullanılır ("gönderim öncesi", "pre-claim" değil).
-  * Tüm iletişim adresi tek kaynaktan gelir: `CONTACT_EMAIL` (`lavieuxlabs@gmail.com`); e-posta gösterilen kart ve butonlarda `CopyEmail` kullanılır (tıklayınca panoya kopyalar).
+  * Tüm iletişim adresi tek kaynaktan gelir: `CONTACT_EMAIL` (`contact@lavieuxlabs.com`); e-posta gösterilen kart ve butonlarda `CopyEmail` kullanılır (tıklayınca panoya kopyalar).
+  * Pilot / LOI formu `mailto:` kullanmaz: `POST /api/loi` (Resend REST API) ile doğrudan `CONTACT_EMAIL`'e gönderir. Doğrulama `src/lib/loi.ts`'te tek yerdedir ve sunucuda tekrar çalışır. Ortam değişkenleri: `RESEND_API_KEY` (zorunlu), `RESEND_FROM` (Resend'de doğrulanmış alan adı).
 
 - SEO ve paylaşım:
   * Kanonik adres tek kaynaktır: `SITE_URL` (`src/lib/site.ts`, `NEXT_PUBLIC_SITE_URL` ile değiştirilir). `metadataBase`, JSON-LD, sitemap, robots ve OG görselleri buradan beslenir.

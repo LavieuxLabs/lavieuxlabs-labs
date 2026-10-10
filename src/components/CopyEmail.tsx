@@ -31,6 +31,8 @@ async function writeClipboard(text: string) {
 
 type CopyEmailProps = {
   locale: Locale;
+  /** Address to show and copy; defaults to the site contact address. */
+  email?: string;
   /** "inline" sits in text (footer, cards); "button" is a bordered secondary button. */
   variant?: "inline" | "button";
   className?: string;
@@ -40,7 +42,7 @@ type CopyEmailProps = {
  * Shows the contact address and copies it on click, with a 2 s "Copied" confirmation. A plain
  * mailto link does nothing on machines without a configured mail client; copying always works.
  */
-export default function CopyEmail({ locale, variant = "inline", className = "" }: CopyEmailProps) {
+export default function CopyEmail({ locale, email = CONTACT_EMAIL, variant = "inline", className = "" }: CopyEmailProps) {
   const [state, setState] = useState<"idle" | "done" | "failed">("idle");
   const timer = useRef<number | undefined>(undefined);
   const t = copy[locale];
@@ -48,7 +50,7 @@ export default function CopyEmail({ locale, variant = "inline", className = "" }
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
   const onClick = async () => {
-    const ok = await writeClipboard(CONTACT_EMAIL);
+    const ok = await writeClipboard(email);
     setState(ok ? "done" : "failed");
     window.clearTimeout(timer.current);
     timer.current = window.setTimeout(() => setState("idle"), 2000);
@@ -67,7 +69,7 @@ export default function CopyEmail({ locale, variant = "inline", className = "" }
       title={t.action}
       className={`group cursor-pointer transition-colors duration-150 ease-out ${base} ${className}`}
     >
-      <span className="font-mono">{CONTACT_EMAIL}</span>
+      <span className="font-mono">{email}</span>
       <Icon
         aria-hidden="true"
         className={`h-3.5 w-3.5 shrink-0 transition-colors duration-150 ease-out ${

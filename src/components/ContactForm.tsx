@@ -3,15 +3,25 @@
 import { useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, CheckCircle2, Loader2, Mail } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, Loader2 } from "lucide-react";
 import { CONTACT_EMAIL, SOLUTION_VALUES, type SolutionValue } from "@/lib/site";
 import { solutionContent } from "@/lib/solutionContent";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import CopyEmail from "@/components/CopyEmail";
+import {
+  ERROR_LIMIT,
+  HONEYPOT_FIELD,
+  LIMITS,
+  REQUEST_TYPES,
+  sanitizeLoi,
+  validateLoi,
+  type LoiErrorCode,
+  type LoiFields,
+  type LoiPayload,
+} from "@/lib/loi";
 
 const copy = defineContent({
   tr: {
-    requestTypes: ["Niyet Mektubu (LOI) / Pilot", "Ürün demosu", "Retrospektif doğrulama iş birliği", "Genel bilgi"],
     errors: {
       organizationMissing: "Kurum adını giriniz.",
       organizationLong: (max: number) => `Kurum adı en fazla ${max} karakter olabilir.`,
@@ -28,21 +38,14 @@ const copy = defineContent({
       solution: "Lütfen geçerli bir çözüm ve talep türü seçiniz.",
       consent: "Devam etmek için aydınlatma metnini onaylamanız gerekir.",
     },
-    mail: {
-      organization: "Kurum",
-      contact: "İlgili kişi",
-      email: "E-posta",
-      solution: "İlgilenilen çözüm",
-      requestType: "Talep türü",
-    },
     optional: "opsiyonel",
-    sentTitle: "Talebiniz hazırlandı.",
-    sentBody: (email: string) =>
-      `E-posta istemciniz, bilgilerinizi içeren bir taslakla açıldı. Göndermeniz yeterli; ekibimiz talebinizi inceleyerek ${email} adresinden size dönüş yapacaktır.`,
+    sentTitle: "Başvurunuz başarıyla iletildi.",
+    sentBody: (email: string) => `Ekibimiz en kısa sürede ${email} adresinden sizinle iletişime geçecektir.`,
     summary: { organization: "Kurum", solution: "Çözüm", requestType: "Talep türü" },
-    reopen: "E-posta istemcisini tekrar aç",
-    edit: "Formu düzenle",
-    fallback: "E-posta istemciniz açılmadıysa talebinizi doğrudan şu adrese iletebilirsiniz:",
+    newRequest: "Yeni talep oluştur",
+    fallback: "Eklemek istediğiniz bir şey olursa doğrudan şu adrese yazabilirsiniz:",
+    sendFailed: "Talebiniz şu anda iletilemedi. Lütfen birkaç dakika sonra tekrar deneyin ya da doğrudan şu adrese yazın:",
+    rateLimited: "Kısa sürede çok sayıda talep gönderildi. Lütfen birkaç dakika sonra tekrar deneyin ya da doğrudan şu adrese yazın:",
     honeypot: "Web sitesi (boş bırakınız)",
     solutionLegend: "İlgilenilen çözüm",
     organization: "Kurum adı",
@@ -58,13 +61,11 @@ const copy = defineContent({
     consentBefore: "Kişisel verilerimin, talebimin yanıtlanması amacıyla",
     consentLink: "KVKK Aydınlatma Metni",
     consentAfter: "kapsamında işleneceğini okudum ve anladım.",
-    submitNote: (email: string) =>
-      `Gönder'e tıkladığınızda talebiniz, e-posta istemcinizde ${email} adresine hazır bir taslak olarak açılır.`,
-    preparing: "Hazırlanıyor",
+    submitNote: (email: string) => `Gönder'e tıkladığınızda talebiniz doğrudan ${email} adresine iletilir.`,
+    preparing: "Gönderiliyor",
     submit: "Talebi gönder",
   },
   en: {
-    requestTypes: ["Letter of Intent (LOI) / Pilot", "Product demo", "Retrospective validation study", "General enquiry"],
     errors: {
       organizationMissing: "Enter your organisation's name.",
       organizationLong: (max: number) => `Organisation name can be at most ${max} characters.`,
@@ -81,21 +82,14 @@ const copy = defineContent({
       solution: "Select a valid product and request type.",
       consent: "To continue, confirm that you have read the privacy notice.",
     },
-    mail: {
-      organization: "Organisation",
-      contact: "Contact person",
-      email: "Email",
-      solution: "Product of interest",
-      requestType: "Request type",
-    },
     optional: "optional",
-    sentTitle: "Your request is ready.",
-    sentBody: (email: string) =>
-      `Your email client has opened a draft with your details. Send it and our team will review your request and reply to ${email}.`,
+    sentTitle: "Your request has been sent.",
+    sentBody: (email: string) => `Our team will get back to you shortly from ${email}.`,
     summary: { organization: "Organisation", solution: "Product", requestType: "Request type" },
-    reopen: "Open the email client again",
-    edit: "Edit the form",
-    fallback: "If your email client did not open, send your request directly to:",
+    newRequest: "Start a new request",
+    fallback: "If you want to add anything, write to us directly at:",
+    sendFailed: "Your request could not be sent right now. Please try again in a few minutes, or write to us directly at:",
+    rateLimited: "Too many requests were sent in a short time. Please try again in a few minutes, or write to us directly at:",
     honeypot: "Website (leave empty)",
     solutionLegend: "Product of interest",
     organization: "Organisation",
@@ -111,9 +105,8 @@ const copy = defineContent({
     consentBefore: "I have read the",
     consentLink: "Privacy Notice (KVKK)",
     consentAfter: "and understand that my personal data will be processed to answer my request.",
-    submitNote: (email: string) =>
-      `When you press Send, your request opens in your email client as a draft addressed to ${email}.`,
-    preparing: "Preparing",
+    submitNote: (email: string) => `When you press Send, your request goes directly to ${email}.`,
+    preparing: "Sending",
     submit: "Send request",
   },
 });
@@ -130,122 +123,12 @@ const freeMailDomains = [
   "live.com",
 ];
 
-type Fields = {
-  organization: string;
-  name: string;
-  title: string;
-  email: string;
-  requestType: string;
-  message: string;
-  consent: boolean;
-};
-
+type Fields = LoiFields;
 type Errors = Partial<Record<keyof Fields | "solution", string>>;
 
-export const LIMITS = {
-  organization: 120,
-  name: 80,
-  title: 80,
-  email: 254,
-  message: 2000,
-} as const;
-
-const MESSAGE_MIN = 20;
-
-// Name of the honeypot input. Real users never see it; bots that auto-fill every field do.
-const HONEYPOT_FIELD = "website_hp";
-
-// C0/C1 control characters, zero-width / bidi override characters (used to disguise content).
-const CONTROL_CHARS =
-  /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F\u200B-\u200F\u202A-\u202E\u2060-\u2064\uFEFF]/g;
-const LINE_BREAKS = /[\r\n\u2028\u2029]+/g;
-
-const NAME_PATTERN = /^[\p{L}\p{M}][\p{L}\p{M} .'’-]*$/u;
-const ORGANIZATION_PATTERN = /^[\p{L}\p{M}\p{N}][\p{L}\p{M}\p{N} .,&'’()\/+-]*$/u;
-// Practical subset of RFC 5321: ASCII local part without leading/trailing/double dots,
-// hostname labels of 1–63 chars, alphabetic TLD.
-const EMAIL_PATTERN =
-  /^(?=.{6,254}$)(?=.{1,64}@)[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/;
-// Markup or script-URL vectors that have no place in a plain-text enquiry. Bare comparisons
-// such as "eGFR < 30" stay valid; event handlers only matter inside tags, which are already blocked.
-const MARKUP_PATTERN = /<\s*\/?\s*[a-z!][^>]*>|javascript\s*:|vbscript\s*:|data\s*:\s*text\/html/i;
-
-/** Single-line field: drop control chars and line breaks (blocks mail header injection), collapse whitespace. */
-function cleanLine(value: string) {
-  return value
-    .normalize("NFC")
-    .replace(CONTROL_CHARS, "")
-    .replace(LINE_BREAKS, " ")
-    .replace(/\s{2,}/g, " ")
-    .trim();
-}
-
-/** Multi-line field: keep line breaks, drop other control chars, cap blank-line runs. */
-function cleanText(value: string) {
-  return value
-    .normalize("NFC")
-    .replace(/\r\n?/g, "\n")
-    .replace(CONTROL_CHARS, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-}
-
-function sanitize(f: Fields): Fields {
-  return {
-    ...f,
-    organization: cleanLine(f.organization),
-    name: cleanLine(f.name),
-    title: cleanLine(f.title),
-    email: cleanLine(f.email).toLowerCase(),
-    message: cleanText(f.message),
-  };
-}
-
-function isSolution(value: string | null): value is SolutionValue {
-  return SOLUTION_VALUES.some((v) => v === value);
-}
-
-function validate(f: Fields, solution: SolutionValue, c: Copy): Errors {
-  const errors: Errors = {};
-  const m = c.errors;
-
-  if (f.organization.length < 2) errors.organization = m.organizationMissing;
-  else if (f.organization.length > LIMITS.organization) errors.organization = m.organizationLong(LIMITS.organization);
-  else if (!ORGANIZATION_PATTERN.test(f.organization)) errors.organization = m.organizationChars;
-
-  if (f.name.length < 2) errors.name = m.nameMissing;
-  else if (f.name.length > LIMITS.name) errors.name = m.nameLong(LIMITS.name);
-  else if (!NAME_PATTERN.test(f.name)) errors.name = m.nameChars;
-
-  if (f.title) {
-    if (f.title.length > LIMITS.title) errors.title = m.titleLong(LIMITS.title);
-    else if (!ORGANIZATION_PATTERN.test(f.title)) errors.title = m.titleChars;
-  }
-
-  if (!EMAIL_PATTERN.test(f.email)) errors.email = m.email;
-
-  if (f.message.length < MESSAGE_MIN) errors.message = m.messageShort(MESSAGE_MIN);
-  else if (f.message.length > LIMITS.message) errors.message = m.messageLong(LIMITS.message);
-  else if (MARKUP_PATTERN.test(f.message)) errors.message = m.messageMarkup;
-
-  if (!isSolution(solution) || !c.requestTypes.includes(f.requestType)) errors.solution = m.solution;
-
-  if (!f.consent) errors.consent = m.consent;
-  return errors;
-}
-
-function buildMailto(f: Fields, solutionLabel: string, c: Copy) {
-  const subject = `[${solutionLabel}] ${f.requestType} — ${f.organization}`;
-  const body = [
-    `${c.mail.organization}: ${f.organization}`,
-    `${c.mail.contact}: ${f.name}${f.title ? ` (${f.title})` : ""}`,
-    `${c.mail.email}: ${f.email}`,
-    `${c.mail.solution}: ${solutionLabel}`,
-    `${c.mail.requestType}: ${f.requestType}`,
-    "",
-    f.message,
-  ].join("\n");
-  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+function message(c: Copy, code: LoiErrorCode): string {
+  const entry = c.errors[code];
+  return typeof entry === "function" ? entry(ERROR_LIMIT[code] ?? 0) : entry;
 }
 
 function Field({
@@ -304,13 +187,13 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
     name: "",
     title: "",
     email: "",
-    requestType: c.requestTypes[0],
+    requestType: REQUEST_TYPES[locale][0],
     message: "",
     consent: false,
   });
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "sent">("idle");
-  const [mailto, setMailto] = useState("");
+  const [sendError, setSendError] = useState<"failed" | "rate" | null>(null);
   const honeypotRef = useRef<HTMLInputElement>(null);
 
   const set = <K extends keyof Fields>(key: K, value: Fields[K]) => {
@@ -321,33 +204,54 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
   const emailDomain = fields.email.split("@")[1]?.toLowerCase().trim();
   const freeMail = !!emailDomain && freeMailDomains.includes(emailDomain);
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (status === "submitting") return;
+    setSendError(null);
 
     // Honeypot filled → almost certainly a bot. Show the normal success state but send nothing.
     if (honeypotRef.current?.value) {
-      setMailto("");
       setStatus("sent");
       return;
     }
 
-    const clean = sanitize(fields);
+    const clean = sanitizeLoi(fields);
     setFields(clean);
-    const found = validate(clean, solution, c);
+    const codes = validateLoi(clean, solution, locale);
+    const found: Errors = Object.fromEntries(
+      Object.entries(codes).map(([key, code]) => [key, message(c, code as LoiErrorCode)]),
+    );
     setErrors(found);
     if (Object.keys(found).length > 0) {
       const first = Object.keys(found)[0];
       document.getElementById(`${uid}-${first}`)?.focus();
       return;
     }
-    const link = buildMailto(clean, content.label, c);
-    setMailto(link);
+
     setStatus("submitting");
-    window.setTimeout(() => {
-      setStatus("sent");
-      window.location.href = link;
-    }, 700);
+    const payload: LoiPayload = { ...clean, locale, solution, [HONEYPOT_FIELD]: "" };
+    try {
+      const res = await fetch("/api/loi", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        setStatus("sent");
+        return;
+      }
+      setSendError(res.status === 429 ? "rate" : "failed");
+    } catch {
+      setSendError("failed");
+    }
+    setStatus("idle");
+  };
+
+  const startOver = () => {
+    setFields((f) => ({ ...f, message: "", consent: false }));
+    setErrors({});
+    setSendError(null);
+    setStatus("idle");
   };
 
   const errorProps = (key: keyof Fields) => ({
@@ -376,7 +280,7 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
             <CheckCircle2 className="h-8 w-8 text-emerald-300" strokeWidth={1.6} />
             <h2 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-white">{c.sentTitle}</h2>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60">
-              {c.sentBody(fields.email.trim())}
+              {c.sentBody(CONTACT_EMAIL)}
             </p>
             <dl className="mt-8 w-full divide-y divide-white/[0.06] rounded-xl border border-white/[0.06] text-sm">
               {[
@@ -390,24 +294,13 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
                 </div>
               ))}
             </dl>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              {mailto && (
-                <a
-                  href={mailto}
-                  className={`inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-navy-900 ${accent.buttonHover}`}
-                >
-                  <Mail className="h-4 w-4" />
-                  {c.reopen}
-                </a>
-              )}
-              <button
-                type="button"
-                onClick={() => setStatus("idle")}
-                className="rounded-lg border border-white/15 px-4 py-2.5 text-sm text-white/80 hover:bg-white/5"
-              >
-                {c.edit}
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={startOver}
+              className="mt-8 rounded-lg border border-white/15 px-4 py-2.5 text-sm text-white/80 transition-colors duration-150 ease-out hover:bg-white/5"
+            >
+              {c.newRequest}
+            </button>
             <p className="mt-6 text-xs text-white/55">
               {c.fallback} <CopyEmail locale={locale} className="text-white/80" />
             </p>
@@ -514,7 +407,7 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
                   onChange={(e) => set("requestType", e.target.value)}
                   className={`${inputClass} border-white/[0.1] [&>option]:bg-navy-850`}
                 >
-                  {c.requestTypes.map((t) => (
+                  {REQUEST_TYPES[locale].map((t) => (
                     <option key={t}>{t}</option>
                   ))}
                 </select>
@@ -611,6 +504,13 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
                 </p>
               )}
             </div>
+
+            {sendError && (
+              <p role="alert" className="rounded-lg border border-rose-400/30 bg-rose-400/[0.06] px-4 py-3 text-[13px] leading-relaxed text-rose-100">
+                {sendError === "rate" ? c.rateLimited : c.sendFailed}{" "}
+                <CopyEmail locale={locale} className="text-white" />
+              </p>
+            )}
 
             <div className="flex flex-col gap-4 border-t border-white/[0.06] pt-6 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs leading-relaxed text-white/55">

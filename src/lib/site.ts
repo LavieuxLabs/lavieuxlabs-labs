@@ -1,6 +1,7 @@
 import { defineContent, type Locale } from "@/i18n/config";
 
-export const CONTACT_EMAIL = "lavieuxlabs@gmail.com";
+// Single contact address for the whole site, the JSON-LD and the /api/loi recipient.
+export const CONTACT_EMAIL = "contact@lavieuxlabs.com";
 
 // Canonical origin for metadata, JSON-LD, sitemap and OG images. Override per environment with
 // NEXT_PUBLIC_SITE_URL (no trailing slash).
