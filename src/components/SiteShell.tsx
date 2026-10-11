@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import SiteBackdrop from "@/components/SiteBackdrop";
 import TelemetryRails from "@/components/TelemetryRails";
-import { geistMono, geistSans } from "@/lib/fonts";
+import { fontVariables } from "@/lib/fonts";
 import { htmlLang, type Locale } from "@/i18n/config";
 
 /**
@@ -20,7 +20,7 @@ export default function SiteShell({ locale, children }: { locale: Locale; childr
       lang={htmlLang[locale]}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${fontVariables} h-full antialiased`}
     >
       <body className="relative flex min-h-full flex-col bg-background font-sans text-foreground">
         <SiteBackdrop />

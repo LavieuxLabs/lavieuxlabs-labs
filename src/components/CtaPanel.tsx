@@ -34,7 +34,7 @@ export default function CtaPanel({
             <div className={`grid gap-12 ${aside ? "lg:grid-cols-[1.1fr_1fr] lg:gap-16" : ""}`}>
               <div>
                 <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{eyebrow}</p>
-                <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.03em] text-white sm:text-4xl">
+                <h2 className="mt-4 max-w-2xl text-3xl font-serif font-medium tracking-[-0.02em] text-white sm:text-4xl">
                   {title}
                 </h2>
                 <p className="mt-5 max-w-xl text-base leading-relaxed text-white/60">{description}</p>

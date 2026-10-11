@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { geistMono, geistSans } from "@/lib/fonts";
+import { fontVariables } from "@/lib/fonts";
 import SiteBackdrop from "@/components/SiteBackdrop";
 
 // With two root layouts ((tr) and en) there is no single layout to compose a 404 from, so unmatched
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
 
 export default function GlobalNotFound() {
   return (
-    <html lang="tr" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="tr" className={`${fontVariables} h-full antialiased`}>
       <body className="relative flex min-h-full flex-col bg-background font-sans text-foreground">
         <SiteBackdrop />
         <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center px-4 py-24 sm:px-6">
           <p className="font-mono text-[13px] text-white/55 tabular-nums">404</p>
-          <h1 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-white sm:text-4xl">
+          <h1 className="mt-4 text-3xl font-serif font-medium tracking-[-0.02em] text-white sm:text-4xl">
             Sayfa bulunamadı. <span className="text-white/50">Adres değişmiş ya da hiç var olmamış olabilir.</span>
           </h1>
           <p lang="en" className="mt-4 text-base leading-relaxed text-white/55">

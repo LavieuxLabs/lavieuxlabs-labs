@@ -69,7 +69,7 @@ export default function PageHero({
               <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{eyebrow}</p>
             </Reveal>
             <Reveal delay={0.08}>
-              <h1 className="mt-5 max-w-4xl text-4xl leading-[1.05] font-semibold tracking-[-0.03em] text-white sm:text-5xl lg:text-[56px]">
+              <h1 className="mt-5 max-w-4xl text-4xl leading-[1.05] font-serif font-medium tracking-[-0.02em] text-white sm:text-5xl lg:text-[56px]">
                 {title}
               </h1>
             </Reveal>

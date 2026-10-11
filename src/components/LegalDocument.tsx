@@ -140,7 +140,7 @@ export default function LegalDocument({
           </nav>
 
           <p className={`mt-14 ${LABEL}`}>{eyebrow}</p>
-          <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">{title}</h1>
+          <h1 className="mt-4 max-w-3xl text-3xl font-serif font-medium tracking-[-0.02em] text-white sm:text-5xl">{title}</h1>
           <div className="mt-5 max-w-2xl text-base leading-relaxed text-white/65">{summary}</div>
 
           {/* Document plate */}

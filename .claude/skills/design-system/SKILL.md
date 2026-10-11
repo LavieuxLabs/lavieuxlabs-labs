@@ -10,13 +10,14 @@ Bu proje klinik karar destek (PharmaDeux) ve gelir bütünlüğü (Shield) üret
 ## Kurallar
 
 - GEIST DİSİPLİNİ (Bilgi Mimarisi & Tipografi):
+  * Yazı tipi hiyerarşisi tek kaynaktır (`src/lib/fonts.ts`): IBM Plex Sans gövde ve kart metni (`font-sans`, varsayılan) + Newsreader hero ve bölüm başlıkları (`font-serif`) + IBM Plex Mono veri ve metrikler (`font-mono`). Başka yazı tipi eklenmez.
   * Keskin 1px saç çizgisi sınırlar (`border-white/[0.06]` veya `border-navy-700`).
-  * Rakam, metrik ve telemetri verilerinde daima `font-mono tabular-nums`. Bu kural sayısal değerin kendisi içindir (ör. `410 ms`, `₺1.280`, `F-2026-0414`); etiketler, açıklamalar ve bölüm başlıkları `font-sans` kalır.
-  * Süslü italik (italic) ve degrade kelime vurguları yasaktır. Hiyerarşi yalnızca font ağırlığı (400, 500, 600) ve metin opaklığı (`text-white`, `text-white/60`) ile kurulur.
+  * Rakam, metrik ve telemetri verilerinde daima `font-mono tabular-nums`. Bu kural sayısal değerin kendisi içindir (ör. `410 ms`, `₺1.280`, `F-2026-0414`); etiketler ve açıklamalar `font-sans`, hero ve bölüm başlıkları `font-serif` kalır.
+  * Süslü italik (italic) ve degrade kelime vurguları yasaktır. Tek istisna `font-signature` (Newsreader italik, 400; `globals.css`): ekran başına en fazla 1 anahtar klinik ifade için onaylı imza stilidir (ör. ana sayfa hero'sunda "karar destek"). İki tonlu başlığın soluk yarısında bile `text-white` ile yazılır; gövde, kart, etiket ve veri metninde kullanılmaz. Hiyerarşi yalnızca font ağırlığı (400, 500, 600) ve metin opaklığı (`text-white`, `text-white/60`) ile kurulur.
   * Metin kontrastı WCAG 2.1 AA'dır (≥4.5:1). En düşük metin opaklıkları: etiket `text-white/50`, üçüncül metin `text-white/55` (tüm yüzeylerde ≥5.4:1). `text-white/20…45` metinde kullanılmaz; placeholder en az `placeholder:text-white/50`.
   * Büyük harfli bağlamda (etiket, breadcrumb) yabancı marka adları `lang="en"` ile işaretlenir; aksi halde `lang="tr"` altında CSS "Shield"i "SHİELD" yapar. OG görsellerinde büyük harf `upperTr()` ile kodda yapılır (Satori Türkçe kuralını bilmez).
   * Bölüm etiketleri (eyebrow) ve durum etiketleri tek stildedir: `text-[11px] font-medium uppercase tracking-wider text-white/50`, `font-sans`, çerçevesiz. Yanlarında süs çizgisi veya nokta olmaz. Monospace daktilo etiketleri kullanılmaz.
-  * Başlıklar tok ve sıkıdır: `font-semibold` (600) veya `font-bold` (700), `tracking-[-0.03em]`. İkinci cümle/yarı gerekiyorsa aynı başlıkta `text-white/50` ile yazılır (iki tonlu başlık).
+  * Hero, sayfa ve bölüm başlıkları (h1, bölüm h2): `font-serif font-medium` (500), `tracking-[-0.02em]`; Newsreader'ın optik boyut ekseni büyük puntoda display kesimini kullanır. Kart ve küçük başlıklar: `font-sans font-semibold` (600), `tracking-[-0.03em]`. İkinci cümle/yarı gerekiyorsa aynı başlıkta `text-white/50` ile yazılır (iki tonlu başlık).
 
 - LINEAR METHOD (Yüzey & Mikro Etkileşimler):
   * Kartların hover durumunda parlama yerine mikro yüzey tonu değişimi (`bg-white/[0.02]` -> `bg-white/[0.04]`).
@@ -51,7 +52,7 @@ Bu proje klinik karar destek (PharmaDeux) ve gelir bütünlüğü (Shield) üret
   * Kanonik adres tek kaynaktır: `SITE_URL` (`src/lib/site.ts`, `NEXT_PUBLIC_SITE_URL` ile değiştirilir). `metadataBase`, JSON-LD, sitemap, robots ve OG görselleri buradan beslenir.
   * Yeni bir sayfa eklendiğinde yolu `ROUTES` (`src/i18n/config.ts`) listesine eklenir; `src/app/sitemap.ts` iki dil için buradan üretilir.
   * JSON-LD (`src/lib/structuredData.ts`): kurum `ResearchOrganization`'dır, `MedicalOrganization` değil (o tür sağlık hizmeti sunucuları içindir). Ürünler `SoftwareApplication`'dır; `offers` eklenmez ve düzenleyici durum açıkça yazılır (CE işareti yok).
-  * OG görselleri `src/lib/ogImage.tsx` şablonundan üretilir; yazı tipleri `src/app/fonts/` altında (SIL OFL, `OFL.txt` ile birlikte). Metrik şeridinde değerler tek satıra sığmalıdır.
+  * OG görselleri `src/lib/ogImage.tsx` şablonundan üretilir; site ile aynı hiyerarşiyi kullanır (başlık Newsreader 500, metin IBM Plex Sans, sayılar IBM Plex Mono). Yazı tipleri `src/app/fonts/` altında statik dosyalardır, çünkü Satori WOFF2 ve değişken font okumaz: IBM Plex Sans 400/600 ve Plex Mono 500 (WOFF), Newsreader 72pt Medium (TTF); lisanslar `OFL-IBMPlex.txt` ve `OFL-Newsreader.txt` (SIL OFL). Metrik şeridinde değerler tek satıra sığmalıdır.
 
 - Çok dilli yapı (TR / EN):
   * Türkçe varsayılandır ve kökte yaşar (`src/app/(tr)/`, URL'ler değişmez); İngilizce `/en` altındadır (`src/app/en/`). Her dilin kendi kök layout'u vardır, böylece `<html lang>` statik HTML'de doğrudur. Proxy/rewrite kullanılmaz. Eşleşmeyen URL'ler `src/app/global-not-found.tsx`'e düşer (`experimental.globalNotFound`).
@@ -98,7 +99,8 @@ Grid veya flex öğesi içinde yatay kayan bir tablo varsa öğeye `min-w-0` ver
 Bir arayüz değişikliğini bitirmeden önce kodda şunları ara; her eşleşme bir ihlaldir:
 
 ```bash
-grep -rnE "bg-clip-text|italic|<em[ >]" src            # degrade / italik vurgu
+grep -rnE "bg-clip-text|italic|<em[ >]" src | grep -v "font-style: italic"  # degrade / italik vurgu (font-signature tanımı hariç)
+grep -rn "font-signature" src/components src/views    # imza: ekran başına en fazla 1 ifade
 grep -rnE "shadow-\[0_0|blur-3xl|bg-\[radial-gradient" src  # neon ışıma (mask-image hariç)
 grep -rnE "animate-(ping|pulse)" src                   # yanıp sönen nokta
 grep -rnE "font-mono[^\"]*uppercase|uppercase[^\"]*font-mono" src  # daktilo etiket

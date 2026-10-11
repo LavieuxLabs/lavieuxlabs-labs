@@ -32,7 +32,7 @@ const accents = {
 
 const icons = { pill: Pill, shield: ShieldCheck };
 
-// Numbers are data and render in Geist Mono; worded values stay in the sans face.
+// Numbers are data and render in the mono face; worded values stay in the sans face.
 const hasDigit = (value: string) => /\d/.test(value);
 
 export default function InitiativeCard({

@@ -32,6 +32,8 @@ const copy = defineContent<{
   eyebrow: string;
   title: string;
   titleMuted: string;
+  /** Phrase inside the title rendered in the signature face. */
+  titleSignature: string;
   lead: string;
   ctaProducts: string;
   ctaPilot: string;
@@ -47,6 +49,7 @@ const copy = defineContent<{
     eyebrow: "LavieuxLabs · Sağlık teknolojileri Ar-Ge",
     title: "İlaç güvenliği ve hastane faturalaması için",
     titleMuted: "karar destek yazılımı.",
+    titleSignature: "karar destek",
     lead: "PharmaDeux, çoklu ilaç tedavisinde riskli kombinasyonları reçete anında hekime gösterir. Shield, SUT ve SGK red risklerini fatura gönderilmeden önce yakalar. İkisinde de son kararı yetkili kişi verir ve her adım kayda geçer.",
     ctaProducts: "Ürünleri inceleyin",
     ctaPilot: "Pilot başvurusu (LOI)",
@@ -157,6 +160,7 @@ const copy = defineContent<{
     eyebrow: "LavieuxLabs · Health technology R&D",
     title: "Decision support software for",
     titleMuted: "medication safety and hospital billing.",
+    titleSignature: "Decision support",
     lead: "PharmaDeux shows the physician risky drug combinations in polypharmacy at the moment of prescription. Shield catches reimbursement and audit risks before a claim is submitted. In both, a qualified person makes the final decision and every step is recorded.",
     ctaProducts: "See the products",
     ctaPilot: "Apply for a pilot (LOI)",
@@ -265,6 +269,19 @@ const copy = defineContent<{
   },
 });
 
+// Wraps the signature phrase (if present in this part of the title) in the signature face.
+function withSignature(text: string, signature: string) {
+  const i = text.indexOf(signature);
+  if (i === -1) return text;
+  return (
+    <>
+      {text.slice(0, i)}
+      <span className="font-signature text-white">{signature}</span>
+      {text.slice(i + signature.length)}
+    </>
+  );
+}
+
 export default function HomeView({ locale }: { locale: Locale }) {
   const c = copy[locale];
   const href = (path: string) => localizedPath(locale, path);
@@ -281,8 +298,9 @@ export default function HomeView({ locale }: { locale: Locale }) {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <h1 className="mt-5 max-w-4xl text-4xl leading-[1.05] font-semibold tracking-[-0.03em] text-white sm:text-5xl lg:text-[64px]">
-              {c.title} <span className="text-white/50">{c.titleMuted}</span>
+            <h1 className="mt-5 max-w-4xl text-4xl leading-[1.05] font-serif font-medium tracking-[-0.02em] text-white sm:text-5xl lg:text-[64px]">
+              {withSignature(c.title, c.titleSignature)}{" "}
+              <span className="text-white/50">{withSignature(c.titleMuted, c.titleSignature)}</span>
             </h1>
           </Reveal>
 

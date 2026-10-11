@@ -6,8 +6,10 @@ import type { Locale } from "@/i18n/config";
 
 // Shared OpenGraph card (1200×630) in the site's design language: optical surgical-navy ground,
 // a hairline frame, the LavieuxLabs mark, a two-tone headline and a spec strip with numbers in
-// Geist Mono. Fonts are vendored TTFs (SIL OFL, see src/app/fonts/OFL.txt) read once per build,
-// because next/og ships only Geist Regular and the title needs Turkish glyphs in a heavier weight.
+// mono. Same hierarchy as the site: IBM Plex Sans (body), Newsreader (title), IBM Plex Mono (data).
+// Fonts are vendored static files (SIL OFL, see src/app/fonts/OFL-*.txt) read once per build:
+// next/og ships only Geist, and Satori reads TTF/WOFF (not WOFF2) and only the default instance of
+// a variable font, so the title uses Newsreader's static 72pt display cut in Medium.
 
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
@@ -16,10 +18,11 @@ export const ogContentType = "image/png";
 // handler that does async file I/O stops prerendering, so reading fonts inside the handler made the
 // OG routes randomly dynamic depending on whether the read had finished.
 const fontDir = join(process.cwd(), "src/app/fonts");
-const [regular, semibold, mono] = await Promise.all([
-  readFile(join(fontDir, "Geist-Regular.ttf")),
-  readFile(join(fontDir, "Geist-SemiBold.ttf")),
-  readFile(join(fontDir, "GeistMono-Medium.ttf")),
+const [sansRegular, sansSemibold, serifMedium, monoMedium] = await Promise.all([
+  readFile(join(fontDir, "IBMPlexSans-Regular.woff")),
+  readFile(join(fontDir, "IBMPlexSans-SemiBold.woff")),
+  readFile(join(fontDir, "Newsreader72pt-Medium.ttf")),
+  readFile(join(fontDir, "IBMPlexMono-Medium.woff")),
 ]);
 
 type OgSpec = { value: string; label: string };
@@ -71,7 +74,7 @@ export async function renderOgCard({ locale, eyebrow, title, titleMuted, specs }
         backgroundColor: "#0B131F",
         backgroundImage:
           "radial-gradient(ellipse 120% 90% at 50% 38%, #112035 0%, #0E1A2B 38%, #0B131F 66%, #080E18 100%)",
-        fontFamily: "Geist",
+        fontFamily: "IBM Plex Sans",
         color: "#FFFFFF",
       }}
     >
@@ -94,7 +97,7 @@ export async function renderOgCard({ locale, eyebrow, title, titleMuted, specs }
               <span style={{ color: "rgba(255,255,255,0.55)" }}>Labs</span>
             </div>
           </div>
-          <div style={{ display: "flex", fontFamily: "Geist Mono", fontSize: 20, color: "rgba(255,255,255,0.55)" }}>
+          <div style={{ display: "flex", fontFamily: "IBM Plex Mono", fontSize: 20, color: "rgba(255,255,255,0.55)" }}>
             {host}
           </div>
         </div>
@@ -115,10 +118,11 @@ export async function renderOgCard({ locale, eyebrow, title, titleMuted, specs }
             style={{
               display: "flex",
               flexWrap: "wrap",
+              fontFamily: "Newsreader",
               fontSize: 64,
-              fontWeight: 600,
+              fontWeight: 500,
               lineHeight: 1.05,
-              letterSpacing: "-0.03em",
+              letterSpacing: "-0.02em",
               maxWidth: 960,
             }}
           >
@@ -149,7 +153,7 @@ export async function renderOgCard({ locale, eyebrow, title, titleMuted, specs }
               <div
                 style={{
                   display: "flex",
-                  fontFamily: hasDigit(spec.value) ? "Geist Mono" : "Geist",
+                  fontFamily: hasDigit(spec.value) ? "IBM Plex Mono" : "IBM Plex Sans",
                   fontWeight: hasDigit(spec.value) ? 500 : 600,
                   fontSize: 30,
                   letterSpacing: "-0.01em",
@@ -166,9 +170,10 @@ export async function renderOgCard({ locale, eyebrow, title, titleMuted, specs }
     {
       ...ogSize,
       fonts: [
-        { name: "Geist", data: regular, weight: 400, style: "normal" },
-        { name: "Geist", data: semibold, weight: 600, style: "normal" },
-        { name: "Geist Mono", data: mono, weight: 500, style: "normal" },
+        { name: "IBM Plex Sans", data: sansRegular, weight: 400, style: "normal" },
+        { name: "IBM Plex Sans", data: sansSemibold, weight: 600, style: "normal" },
+        { name: "Newsreader", data: serifMedium, weight: 500, style: "normal" },
+        { name: "IBM Plex Mono", data: monoMedium, weight: 500, style: "normal" },
       ],
     },
   );
