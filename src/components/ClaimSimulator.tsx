@@ -1,11 +1,14 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
+import ShareLinkButton from "@/components/ShareLinkButton";
 import { defineContent, type Locale } from "@/i18n/config";
 
 // Shield claim check simulator. The rule set is fictional (rule IDs, weights) and labelled as such; it
 // names no SUT article numbers, because invented legal references would read as real. ICD-10 codes are
 // real and used with their real meaning. Score = Σ triggered rule weights (0–100), threshold 40.
+// The selection is mirrored to the URL (?item=angio&code=I20.9&pre=0&repeat=0&signed=1) and a shared
+// link opens with the same inputs, hence the same score.
 
 type ItemId = "angio" | "vent" | "ct";
 type Rule = { id: string; weight: number };
@@ -24,9 +27,37 @@ const RULES: Record<string, Rule> = {
 };
 const THRESHOLD = 40;
 
+type Checks = { preapproval: boolean; repeat: boolean; signed: boolean };
+const DEFAULT_CHECKS: Checks = { preapproval: false, repeat: false, signed: true };
+
+function claimFromSearch(search: string): { item: ItemId; icd: string; checks: Checks } | null {
+  const q = new URLSearchParams(search);
+  if (!["item", "code", "pre", "repeat", "signed"].some((k) => q.has(k))) return null;
+  const item = ITEMS.find((i) => i.id === q.get("item")) ?? ITEMS[0];
+  const code = q.get("code");
+  const icd = code && item.icd.includes(code) ? code : item.icd[0];
+  const flag = (k: string, fallback: boolean) => (q.has(k) ? q.get(k) === "1" || q.get(k) === "true" : fallback);
+  return {
+    item: item.id,
+    icd,
+    checks: { preapproval: flag("pre", DEFAULT_CHECKS.preapproval), repeat: flag("repeat", DEFAULT_CHECKS.repeat), signed: flag("signed", DEFAULT_CHECKS.signed) },
+  };
+}
+
+function claimToUrl(s: { item: ItemId; icd: string; checks: Checks }, href: string): string {
+  const url = new URL(href);
+  url.searchParams.set("item", s.item);
+  url.searchParams.set("code", s.icd);
+  url.searchParams.set("pre", s.checks.preapproval ? "1" : "0");
+  url.searchParams.set("repeat", s.checks.repeat ? "1" : "0");
+  url.searchParams.set("signed", s.checks.signed ? "1" : "0");
+  return url.toString();
+}
+
 const copy = defineContent({
   tr: {
     panel: "Fatura uygunluk simülatörü",
+    shareAria: "Bu kalemin parametrelerini içeren bağlantıyı kopyala",
     item: "Branş ve fatura kalemi",
     items: {
       angio: "Kardiyoloji · Koroner anjiyografi",
@@ -59,6 +90,7 @@ const copy = defineContent({
   },
   en: {
     panel: "Claim check simulator",
+    shareAria: "Copy a link with this line item's parameters",
     item: "Department and line item",
     items: {
       angio: "Cardiology · Coronary angiography",
@@ -101,10 +133,38 @@ const tier = (s: number) =>
 export default function ClaimSimulator({ locale }: { locale: Locale }) {
   const c = copy[locale];
   const uid = useId();
-  const [itemId, setItem] = useState<ItemId>("angio");
+  const [itemId, setItemState] = useState<ItemId>("angio");
   const item = ITEMS.find((i) => i.id === itemId)!;
-  const [icd, setIcd] = useState(item.icd[0]);
-  const [checks, setChecks] = useState({ preapproval: false, repeat: false, signed: true });
+  const [icd, setIcdState] = useState(item.icd[0]);
+  const [checks, setChecksState] = useState<Checks>(DEFAULT_CHECKS);
+
+  const sync = (next: { item: ItemId; icd: string; checks: Checks }) =>
+    window.history.replaceState(window.history.state, "", claimToUrl(next, window.location.href));
+  const setItem = (id: ItemId, code: string) => {
+    setItemState(id);
+    setIcdState(code);
+    sync({ item: id, icd: code, checks });
+  };
+  const setIcd = (code: string) => {
+    setIcdState(code);
+    sync({ item: itemId, icd: code, checks });
+  };
+  const setChecks = (next: Checks) => {
+    setChecksState(next);
+    sync({ item: itemId, icd, checks: next });
+  };
+
+  // A shared link opens the simulator with the same inputs (applied after hydration).
+  useEffect(() => {
+    const shared = claimFromSearch(window.location.search);
+    if (!shared) return;
+    const frame = requestAnimationFrame(() => {
+      setItemState(shared.item);
+      setIcdState(shared.icd);
+      setChecksState(shared.checks);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   const triggered = [
     !item.compatible.includes(icd) && "mismatch",
@@ -117,7 +177,14 @@ export default function ClaimSimulator({ locale }: { locale: Locale }) {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-hairline bg-navy-850">
-      <p className="border-b border-hairline px-5 py-3 text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.panel}</p>
+      <div className="flex items-center justify-between gap-3 border-b border-hairline px-5 py-2.5">
+        <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.panel}</p>
+        <ShareLinkButton
+          locale={locale}
+          ariaLabel={c.shareAria}
+          getUrl={() => claimToUrl({ item: itemId, icd, checks }, window.location.href)}
+        />
+      </div>
 
       <div className="grid gap-px bg-hairline sm:grid-cols-2">
         <div className="space-y-3 bg-navy-850 px-5 py-4">
@@ -128,8 +195,7 @@ export default function ClaimSimulator({ locale }: { locale: Locale }) {
               value={itemId}
               onChange={(e) => {
                 const next = ITEMS.find((i) => i.id === e.target.value)!;
-                setItem(next.id);
-                setIcd(next.icd[0]);
+                setItem(next.id, next.icd[0]);
               }}
               className={`mt-1.5 ${selectClass}`}
             >
@@ -158,7 +224,7 @@ export default function ClaimSimulator({ locale }: { locale: Locale }) {
               <input
                 type="checkbox"
                 checked={checks[key]}
-                onChange={(e) => setChecks((s) => ({ ...s, [key]: e.target.checked }))}
+                onChange={(e) => setChecks({ ...checks, [key]: e.target.checked })}
                 className="h-3.5 w-3.5 cursor-pointer accent-titanium"
               />
               {c.checks[key]}

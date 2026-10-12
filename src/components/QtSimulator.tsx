@@ -1,12 +1,15 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId } from "react";
 import { BASELINE_QTC, DRUGS, tisdale, type Baseline, type Patient } from "@/lib/qtSimulator";
+import { qtFromSearch, qtToUrl, setQtState, useQtState, type QtState } from "@/lib/qtStore";
+import ShareLinkButton from "@/components/ShareLinkButton";
 import { defineContent, type Locale } from "@/i18n/config";
 
 const copy = defineContent({
   tr: {
     panel: "QT risk simülatörü",
+    shareAria: "Bu vakanın parametrelerini içeren bağlantıyı kopyala",
     drugA: "İlaç 1",
     drugB: "İlaç 2",
     qtTag: "QT uzatıcı",
@@ -40,6 +43,7 @@ const copy = defineContent({
   },
   en: {
     panel: "QT risk simulator",
+    shareAria: "Copy a link with this case's parameters",
     drugA: "Drug 1",
     drugB: "Drug 2",
     qtTag: "QT-prolonging",
@@ -83,9 +87,23 @@ const selectClass =
 export default function QtSimulator({ locale }: { locale: Locale }) {
   const c = copy[locale];
   const uid = useId();
-  const [aId, setA] = useState("amiodarone");
-  const [bId, setB] = useState("azithromycin");
-  const [patient, setPatient] = useState<Patient>({ age68: true, female: true, loopDiuretic: true, lowK: false, qtc: 455 });
+  const qt = useQtState();
+  const { drug1: aId, drug2: bId, patient } = qt;
+  // Every change is written to the shared store (read by the FHIR preview) and mirrored to the URL.
+  const commit = (next: QtState) => {
+    setQtState(next);
+    window.history.replaceState(window.history.state, "", qtToUrl(next, window.location.href));
+  };
+  const setA = (drug1: string) => commit({ ...qt, drug1 });
+  const setB = (drug2: string) => commit({ ...qt, drug2 });
+  const setPatient = (update: (p: Patient) => Patient) => commit({ ...qt, patient: update(qt.patient) });
+
+  // A shared link (?drug1=…&drug2=…&qtc=…&risk=…) opens the simulator with those parameters.
+  useEffect(() => {
+    const shared = qtFromSearch(window.location.search);
+    if (shared) setQtState(shared);
+  }, []);
+
   const a = DRUGS.find((d) => d.id === aId)!;
   const b = DRUGS.find((d) => d.id === bId)!;
   const r = tisdale(patient, a, b);
@@ -107,7 +125,10 @@ export default function QtSimulator({ locale }: { locale: Locale }) {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-hairline bg-navy-850">
-      <p className="border-b border-hairline px-5 py-3 text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.panel}</p>
+      <div className="flex items-center justify-between gap-3 border-b border-hairline px-5 py-2.5">
+        <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.panel}</p>
+        <ShareLinkButton locale={locale} ariaLabel={c.shareAria} getUrl={() => qtToUrl(qt, window.location.href)} />
+      </div>
 
       {/* Inputs */}
       <div className="grid gap-px bg-hairline sm:grid-cols-2">
