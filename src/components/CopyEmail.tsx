@@ -3,31 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { CONTACT_EMAIL } from "@/lib/site";
+import { writeClipboard } from "@/lib/clipboard";
 import type { Locale } from "@/i18n/config";
 
 const copy: Record<Locale, { action: string; done: string; failed: string }> = {
   tr: { action: "E-posta adresini kopyala", done: "Kopyalandı", failed: "Kopyalanamadı" },
   en: { action: "Copy email address", done: "Copied", failed: "Could not copy" },
 };
-
-async function writeClipboard(text: string) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    // Older browsers / insecure context: copy through a temporary selection.
-    const area = document.createElement("textarea");
-    area.value = text;
-    area.setAttribute("readonly", "");
-    area.style.position = "fixed";
-    area.style.opacity = "0";
-    document.body.appendChild(area);
-    area.select();
-    const ok = document.execCommand("copy");
-    area.remove();
-    return ok;
-  }
-}
 
 type CopyEmailProps = {
   locale: Locale;

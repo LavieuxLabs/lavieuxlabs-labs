@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useCanvasLoop, type CanvasFrame } from "@/lib/useCanvasLoop";
 import {
   CLINICAL_CASES,
@@ -11,13 +11,19 @@ import {
   type Tone,
 } from "@/lib/clinicalCases";
 import { defineContent, type Locale } from "@/i18n/config";
+import CopyPayloadButton from "@/components/CopyPayloadButton";
+import { caseToFhirBundle } from "@/lib/fhirPayload";
+import { useClientValue } from "@/lib/useClientValue";
 
-// PharmaDeux hero scene: a transparent glass capsule turning slowly in 3D. Its granules drift out,
+// PharmaDeux hero scene: a Chinese-red-and-porcelain capsule turning slowly in 3D. Its granules drift out,
 // calmly, toward three telemetry cards (liver ALT, QTc, renal eGFR) rendered as plain HTML. Below
 // the stage, three example cases can be selected, or one patient's eGFR and antibiotic can be
 // changed ("customise"); the cards update their readings with a 150ms
 // transition and only the card concerned changes state. The canvas draws the capsule and the
 // particle paths and measures where the cards sit so particles land on their edges.
+// A case can be opened from outside: `?case=polypharmacy|renal|qtc` (or 1–3) and `#vaka-1…3` on load, or the
+// `pharmadeux:case` window event while the page is open. A mono simulation stamp and a
+// "copy as FHIR JSON" button sit under the case details.
 
 type V3 = [number, number, number];
 
@@ -57,6 +63,10 @@ const copy = defineContent({
     azithromycin: "Azitromisin",
     added: "Ekli",
     removed: "Yok",
+    stampCase: "VAKA",
+    stampCustom: "ÖZEL",
+    stampAria: "Simülasyon damgası",
+    copyAria: (label: string) => `${label} verisini FHIR JSON olarak kopyala`,
   },
   en: {
     nodes: {
@@ -76,6 +86,10 @@ const copy = defineContent({
     azithromycin: "Azithromycin",
     added: "Added",
     removed: "None",
+    stampCase: "CASE",
+    stampCustom: "CUSTOM",
+    stampAria: "Simulation stamp",
+    copyAria: (label: string) => `Copy ${label} data as FHIR JSON`,
   },
 });
 
@@ -86,18 +100,24 @@ const toneText: Record<Tone, string> = {
   high: "text-rose-300",
 };
 const toneBar: Record<Tone, string> = {
-  normal: "bg-pharma/70",
+  normal: "bg-white/45",
   caution: "bg-amber-300/80",
   high: "bg-rose-400/80",
 };
 const toneBorder: Record<Tone, string> = {
-  normal: "border-white/[0.06]",
+  normal: "border-hairline",
   caution: "border-white/[0.14]",
   high: "border-white/[0.14]",
 };
 
-const PHARMA = "79, 193, 182";
-const GLASS = "220, 235, 248";
+// Pharmaceutical capsule: glossy translucent Chinese Red cap (lake red), opaque porcelain-white body.
+// The red is the object's own colour and stays inside the shell: granules and the particle flow are
+// white ice crystals, so no hue reaches the telemetry cards, where colour means a clinical state.
+const CAP = "200, 42, 53";
+const BODY = "248, 250, 252";
+const ICE = "236, 242, 250";
+const FROST = "214, 222, 232";
+const GLASS = "222, 228, 236";
 const GRANULES = 140;
 
 type Granule = { u: number; rho: number; phi: number; speed: number; size: number };
@@ -128,6 +148,36 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
     setParams((p) => ({ ...p, ...next }));
     setCaseIndex(null);
   };
+  const today = useClientValue(() => new Date().toISOString().slice(0, 10), "----------");
+
+  useEffect(() => {
+    const open = (n: number) => {
+      if (!Number.isInteger(n) || n < 1 || n > cases.length) return;
+      setCaseIndex(n - 1);
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      stageRef.current?.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
+    };
+    const param = new URLSearchParams(window.location.search).get("case");
+    const fromParam = param ? (/^\d$/.test(param) ? Number(param) : cases.findIndex((k) => k.id === param) + 1) : 0;
+    const fromHash = /^#vaka-(\d)$/.exec(window.location.hash);
+    const target = fromParam || (fromHash ? Number(fromHash[1]) : 0);
+    // Deferred a frame: the stage must be laid out before it can be scrolled to.
+    const frame = target ? requestAnimationFrame(() => open(target)) : 0;
+    const onCase = (e: Event) => open((e as CustomEvent<number>).detail);
+    window.addEventListener("pharmadeux:case", onCase);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("pharmadeux:case", onCase);
+    };
+  }, [cases]);
+
+  const caseRef = caseIndex === null ? "custom" : `case-${caseIndex + 1}`;
+  const stamp = [
+    "RX-SIM",
+    today,
+    caseIndex === null ? c.stampCustom : `${c.stampCase}_${String(caseIndex + 1).padStart(2, "0")}`,
+  ].join(" · ");
+  const caseLabel = caseIndex === null ? c.customize : `${c.case} ${caseIndex + 1}`;
   const state = useRef({
     granules: Array.from({ length: GRANULES }, (_, i): Granule => ({
       u: hash(i) * 2 - 1,
@@ -256,7 +306,8 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
       const y = u * u * rel.from[1] + 2 * u * t * rel.ctrl[1] + t * t * anchor[1];
       // Fade in leaving the capsule, fade out arriving at the card.
       const a = Math.sin(t * Math.PI) * 0.85;
-      ctx.fillStyle = `rgba(${PHARMA}, ${a.toFixed(3)})`;
+      // Speed is random per release, so it doubles as a stable ~50/50 split between two white crystal tones.
+      ctx.fillStyle = `rgba(${rel.speed > 0.245 ? FROST : ICE}, ${(a * 0.9).toFixed(3)})`;
       ctx.beginPath();
       ctx.arc(x, y, 1.6, 0, Math.PI * 2);
       ctx.fill();
@@ -281,18 +332,18 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
       const front = Math.max(0, Math.min(1, (z / r + 1) / 2));
       ctx.fillStyle =
         g.u < 0
-          ? `rgba(${PHARMA}, ${(0.35 + front * 0.5).toFixed(3)})`
-          : `rgba(${GLASS}, ${(0.22 + front * 0.45).toFixed(3)})`;
+          ? `rgba(${ICE}, ${(0.35 + front * 0.5).toFixed(3)})`
+          : `rgba(${FROST}, ${(0.3 + front * 0.4).toFixed(3)})`;
       const size = g.size * p.p;
       ctx.fillRect(p.x - size / 2, p.y - size / 2, size, size);
     }
 
-    // Axial tint: the cap half is clinical teal, the body half is clear glass.
+    // Axial tint: the cap half is glossy translucent Chinese Red, the body half opaque porcelain white.
     const axial = ctx.createLinearGradient(P1.x - dx * r1, P1.y - dy * r1, P2.x + dx * r2, P2.y + dy * r2);
-    axial.addColorStop(0, `rgba(${PHARMA}, 0.26)`);
-    axial.addColorStop(0.5, `rgba(${PHARMA}, 0.18)`);
-    axial.addColorStop(0.5, `rgba(${GLASS}, 0.05)`);
-    axial.addColorStop(1, `rgba(${GLASS}, 0.07)`);
+    axial.addColorStop(0, `rgba(${CAP}, 0.74)`);
+    axial.addColorStop(0.5, `rgba(${CAP}, 0.62)`);
+    axial.addColorStop(0.5, `rgba(${BODY}, 0.88)`);
+    axial.addColorStop(1, `rgba(${BODY}, 0.92)`);
     ctx.fillStyle = axial;
     ctx.fill(stadium);
 
@@ -367,7 +418,7 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
                 }}
                 className={`absolute ${node.position} w-[148px] rounded-2xl border bg-navy-850 px-3.5 py-3 transition-colors duration-150 ease-out sm:w-[176px] ${toneBorder[reading.tone]}`}
               >
-                <span className="block text-[11px] font-semibold tracking-[0.01em] text-pharma">{node.code}</span>
+                <span className="block text-[11px] font-semibold tracking-[0.01em] text-titanium">{node.code}</span>
                 <span className="mt-1.5 block text-[12px] leading-tight text-white/60">{c.nodes[node.key].label}</span>
                 <span className="mt-0.5 flex flex-wrap items-baseline gap-x-1">
                   <span className="font-mono text-[19px] font-semibold tracking-[-0.01em] text-white tabular-nums sm:text-[21px]">
@@ -396,7 +447,7 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
       <div
         role="radiogroup"
         aria-label={c.chooseCase}
-        className="mt-4 grid grid-cols-3 border-t border-white/[0.06]"
+        className="mt-4 grid grid-cols-3 border-t border-hairline"
       >
         {cases.map((item, i) => {
           const selected = i === caseIndex;
@@ -438,7 +489,7 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
       <div
         role="group"
         aria-label={c.customizeAria}
-        className="relative flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/[0.06] px-2 py-2.5 sm:px-3"
+        className="relative flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-hairline px-2 py-2.5 sm:px-3"
       >
         <span
           aria-hidden="true"
@@ -473,7 +524,7 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
       </div>
 
       {/* What the engine reports for the selected case */}
-      <dl aria-live="polite" className="divide-y divide-white/[0.06] border-y border-white/[0.06] text-[12.5px]">
+      <dl aria-live="polite" className="divide-y divide-hairline border-y border-hairline text-[12.5px]">
         <div className="grid grid-cols-[64px_1fr] gap-3 py-2">
           <dt className="text-white/55">{c.patient}</dt>
           <dd className="text-white/75">{active.patient}</dd>
@@ -505,6 +556,16 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
           </div>
         )}
       </dl>
+      <div className="mt-2 flex items-center justify-between gap-3">
+        <p aria-label={c.stampAria} className="min-w-0 truncate font-mono text-[10.5px] text-white/55 tabular-nums">
+          {stamp}
+        </p>
+        <CopyPayloadButton
+          locale={locale}
+          ariaLabel={c.copyAria(caseLabel)}
+          getPayload={() => caseToFhirBundle(active, caseRef, new Date().toISOString())}
+        />
+      </div>
       <p className="mt-2 text-[10.5px] text-white/55">
         {c.caption}
       </p>
@@ -531,7 +592,7 @@ function Segmented({
   return (
     <span className="flex items-center gap-2">
       <span className="text-[11.5px] text-white/55">{label}</span>
-      <span role="group" aria-label={label} className="flex rounded-md border border-white/[0.06] bg-white/[0.03] p-0.5">
+      <span role="group" aria-label={label} className="flex rounded-md border border-hairline bg-white/[0.03] p-0.5">
         {options.map((o) => {
           const selected = o.key === value;
           return (

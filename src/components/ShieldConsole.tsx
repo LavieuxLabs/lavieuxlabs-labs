@@ -2,6 +2,8 @@
 
 import { useMemo, useState, type KeyboardEvent } from "react";
 import { dateLocale, defineContent, groupDigits, type Locale } from "@/i18n/config";
+import CopyPayloadButton from "@/components/CopyPayloadButton";
+import { claimToFhir } from "@/lib/fhirPayload";
 
 // Interactive Shield example in a data-table idiom (Geist data table / macOS Instruments): a
 // pre-claim queue, the rule-engine matches behind the selected claim's risk score, a decision
@@ -114,6 +116,7 @@ const copy = defineContent({
     trailHint: "Yalnızca ekleme · her kayıt önceki hash'i içerir",
     trailColumns: { seq: "Sıra", time: "Zaman", actor: "Aktör", event: "Olay", claim: "Talep" },
     footnote: "Örnek · kurgusal talepler. ICD-10 kodları gerçek; SUT sütunu ilgili eki gösterir.",
+    copyAria: (id: string) => `${id} talebini FHIR Claim JSON olarak kopyala`,
   },
   en: {
     procedures: {
@@ -163,6 +166,7 @@ const copy = defineContent({
     trailColumns: { seq: "Seq", time: "Time", actor: "Actor", event: "Event", claim: "Claim" },
     footnote:
       "Example · fictional claims. ICD-10 codes are real; the SUT column shows the relevant annex of Turkey's Health Implementation Communiqué.",
+    copyAria: (id: string) => `Copy claim ${id} as FHIR Claim JSON`,
   },
 });
 
@@ -207,7 +211,7 @@ const tier = (score: number) =>
 
 const decisionMeta: Record<Decision, { event: string; badge: string }> = {
   approved: { event: "DECISION_APPROVED", badge: "text-emerald-200" },
-  corrected: { event: "DECISION_CORRECTION", badge: "text-indigo-200" },
+  corrected: { event: "DECISION_CORRECTION", badge: "text-white" },
   held: { event: "DECISION_HOLD", badge: "text-white/70" },
 };
 
@@ -266,9 +270,9 @@ export default function ShieldConsole({ locale }: { locale: Locale }) {
   };
 
   return (
-    <div className="w-full min-w-0 overflow-hidden rounded-2xl border border-white/[0.06] bg-navy-800">
+    <div className="w-full min-w-0 overflow-hidden rounded-2xl border border-hairline bg-navy-800">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.06] px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline px-4 py-3">
         <div className="flex items-baseline gap-2">
           <p className="text-[13px] font-semibold text-white">{c.queue}</p>
           <span className="font-mono text-[12px] text-white/55 tabular-nums">{CLAIMS.length}</span>
@@ -294,7 +298,7 @@ export default function ShieldConsole({ locale }: { locale: Locale }) {
       <div className="overflow-x-auto">
         <table className="w-full min-w-[620px] text-[13px]">
           <caption className="sr-only">{c.caption}</caption>
-          <thead className="border-b border-white/[0.06]">
+          <thead className="border-b border-hairline">
             <tr>
               <th scope="col" className={head}>
                 {c.columns.claim}
@@ -316,7 +320,7 @@ export default function ShieldConsole({ locale }: { locale: Locale }) {
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/[0.06]">
+          <tbody className="divide-y divide-hairline">
             {rows.map((claim) => {
               const s = scoreOf(claim);
               const rt = tier(s);
@@ -374,19 +378,40 @@ export default function ShieldConsole({ locale }: { locale: Locale }) {
       </div>
 
       {/* Selected claim: rule-engine matches + decision */}
-      <div className="grid gap-px border-t border-white/[0.06] bg-white/[0.06] lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+      <div className="grid gap-px border-t border-hairline bg-hairline lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <section aria-label={c.matchesAria} className="bg-navy-850 px-4 py-4">
-          <div className="flex items-baseline justify-between gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
             <p className="text-[12px] font-medium text-white/60">
-              {c.matches} · <span className="font-mono text-white/80 tabular-nums">{selected.id}</span>
+              {c.matches} · <span className="font-mono whitespace-nowrap text-white/80 tabular-nums">{selected.id}</span>
             </p>
-            <p className="text-[11px] text-white/55">
-              ruleset <span className="font-mono tabular-nums">v3.8.1</span>
-            </p>
+            <div className="flex items-center gap-3">
+              <p className="text-[11px] whitespace-nowrap text-white/55">
+                ruleset <span className="font-mono tabular-nums">v3.8.1</span>
+              </p>
+              <CopyPayloadButton
+                locale={locale}
+                ariaLabel={c.copyAria(selected.id)}
+                getPayload={() =>
+                  claimToFhir(
+                    {
+                      id: selected.id,
+                      icd: selected.icd,
+                      icdText: c.icd[selected.icd],
+                      procedure: c.procedures[selected.id],
+                      annexText: `${selected.annex} ${c.annex[selected.annex]}`,
+                      amount: selected.amount,
+                      score,
+                      factors: selected.factors.map((f) => ({ ...f, text: c.rules[f.rule] })),
+                    },
+                    new Date().toISOString(),
+                  )
+                }
+              />
+            </div>
           </div>
-          <ul className="mt-3 divide-y divide-white/[0.06]">
+          <ul className="-mx-4 mt-3 divide-y divide-hairline border-t border-hairline">
             {selected.factors.map((f) => (
-              <li key={f.rule} className="grid grid-cols-[52px_1fr_auto] items-center gap-3 py-2">
+              <li key={f.rule} className="grid grid-cols-[52px_1fr_auto] items-center gap-3 px-4 py-2">
                 <span className="font-mono text-[12px] text-white/50">{f.rule}</span>
                 <span className="min-w-0">
                   <span className="block truncate text-[13px] text-white/80">{c.rules[f.rule]}</span>
@@ -398,7 +423,7 @@ export default function ShieldConsole({ locale }: { locale: Locale }) {
               </li>
             ))}
           </ul>
-          <div className="mt-2 flex items-baseline justify-between border-t border-white/[0.06] pt-2.5">
+          <div className="-mx-4 flex items-baseline justify-between border-t border-hairline px-4 pt-2.5">
             <span className="text-[12px] text-white/55">{c.riskTotal}</span>
             <span className={`font-mono text-[15px] font-medium tabular-nums ${t.text}`}>
               {score}
@@ -436,14 +461,14 @@ export default function ShieldConsole({ locale }: { locale: Locale }) {
       </div>
 
       {/* Append-only, hash-chained audit trail */}
-      <section aria-label={c.trail} className="border-t border-white/[0.06] bg-navy-850">
+      <section aria-label={c.trail} className="border-t border-hairline bg-navy-850">
         <div className="flex items-baseline justify-between gap-3 px-4 pt-3 pb-2">
           <p className="text-[12px] font-medium text-white/60">{c.trail}</p>
           <p className="text-[11px] text-white/55">{c.trailHint}</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[620px] text-[12px]">
-            <thead className="border-y border-white/[0.06]">
+            <thead className="border-y border-hairline">
               <tr>
                 <th scope="col" className={head}>
                   {c.trailColumns.seq}
@@ -465,7 +490,7 @@ export default function ShieldConsole({ locale }: { locale: Locale }) {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/[0.06]">
+            <tbody className="divide-y divide-hairline">
               {audit
                 .slice(-5)
                 .reverse()
