@@ -41,6 +41,12 @@ const copy = defineContent({
     optional: "opsiyonel",
     sentTitle: "Başvurunuz başarıyla iletildi.",
     sentBody: (email: string) => `Ekibimiz en kısa sürede ${email} adresinden sizinle iletişime geçecektir.`,
+    nextTitle: "Sonraki adımlar",
+    nextSteps: [
+      { title: "Teknik keşif ve ön görüşme", body: "HBYS mimariniz, veri akışı ve FHIR R4 / HL7 v2 arayüzleri bilgi işlem ekibinizle incelenir." },
+      { title: "Güvenlik ve izolasyon protokolü", body: "Kurulum biçimi (kurum içi, izole VPC ya da internetsiz ağ), veri işleme sözleşmesi ve KVKK md. 12 tedbirleri üzerinde uzlaşılır." },
+      { title: "Pilot entegrasyon ve doğrulama", body: "Sistem test ortamında FHIR R4 ile bağlanır ve bağımsız referansa karşı doğrulanır. Süre ve servisler kurumla birlikte belirlenir ve LOI'de yazılır." },
+    ],
     summary: { organization: "Kurum", solution: "Çözüm", requestType: "Talep türü" },
     newRequest: "Yeni talep oluştur",
     fallback: "Eklemek istediğiniz bir şey olursa doğrudan şu adrese yazabilirsiniz:",
@@ -85,6 +91,12 @@ const copy = defineContent({
     optional: "optional",
     sentTitle: "Your request has been sent.",
     sentBody: (email: string) => `Our team will get back to you shortly from ${email}.`,
+    nextTitle: "Next steps",
+    nextSteps: [
+      { title: "Technical review and first call", body: "Your hospital information system (HIS) architecture, data flow and FHIR R4 / HL7 v2 interfaces are reviewed with your IT team." },
+      { title: "Security and isolation protocol", body: "Deployment model (on-premises, isolated VPC or air-gapped network), the data processing agreement and KVKK (Turkish data protection law) art. 12 measures are agreed." },
+      { title: "Pilot integration and validation", body: "The system connects over FHIR R4 in a test environment and is validated against an independent reference. Duration and wards are agreed with the institution and written into the LOI." },
+    ],
     summary: { organization: "Organisation", solution: "Product", requestType: "Request type" },
     newRequest: "Start a new request",
     fallback: "If you want to add anything, write to us directly at:",
@@ -294,6 +306,20 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
                 </div>
               ))}
             </dl>
+            <div className="mt-8 w-full">
+              <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.nextTitle}</p>
+              <ol className="mt-3 divide-y divide-hairline rounded-xl border border-hairline">
+                {c.nextSteps.map((step, i) => (
+                  <li key={step.title} className="grid grid-cols-[28px_1fr] gap-3 px-4 py-3.5">
+                    <span className="font-mono text-[12px] text-white/55 tabular-nums">{i + 1}</span>
+                    <span>
+                      <span className="block text-[13.5px] font-medium text-white">{step.title}</span>
+                      <span className="mt-1 block text-[12.5px] leading-relaxed text-white/60">{step.body}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
             <button
               type="button"
               onClick={startOver}
