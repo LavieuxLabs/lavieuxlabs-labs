@@ -4,6 +4,7 @@ import { useEffect, useId } from "react";
 import { BASELINE_QTC, DRUGS, tisdale, type Baseline, type Patient } from "@/lib/qtSimulator";
 import { qtFromSearch, qtToUrl, setQtState, useQtState, type QtState } from "@/lib/qtStore";
 import ShareLinkButton from "@/components/ShareLinkButton";
+import Cite from "@/components/Cite";
 import { defineContent, type Locale } from "@/i18n/config";
 
 const copy = defineContent({
@@ -138,7 +139,10 @@ export default function QtSimulator({ locale }: { locale: Locale }) {
         </div>
         <fieldset className="bg-navy-850 px-5 py-4">
           <legend className="sr-only">{c.patient}</legend>
-          <span className="text-[11.5px] text-white/55">{c.baseline}</span>
+          <span className="text-[11.5px] text-white/55">
+            {c.baseline}
+            <Cite id="fridericia" />
+          </span>
           <span role="group" aria-label={c.baseline} className="mt-1.5 flex rounded-md border border-hairline bg-white/[0.03] p-0.5">
             {BASELINE_QTC.map((v) => (
               <button
@@ -175,6 +179,7 @@ export default function QtSimulator({ locale }: { locale: Locale }) {
         <div className="flex flex-wrap items-baseline justify-between gap-3 px-5 py-4">
           <p className="text-[12px] text-white/55">
             QTc <span className="font-mono text-white tabular-nums">{patient.qtc} ms</span> · {c.score}
+            <Cite id="tisdale" />
           </p>
           <p className={`font-mono text-[22px] font-medium tabular-nums ${tierText[r.tier]}`}>
             {r.score}

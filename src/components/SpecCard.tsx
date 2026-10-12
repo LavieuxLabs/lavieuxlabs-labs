@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import Reveal from "@/components/Reveal";
+import Cite from "@/components/Cite";
+import type { CiteKey } from "@/lib/citations";
 
-export type SpecRow = { label: string; value: string; mono?: boolean };
+export type SpecRow = { label: string; value: string; mono?: boolean; cite?: CiteKey };
 
 type Tone = "input" | "prep" | "live";
 type Accent = "pharma" | "shield";
@@ -184,7 +186,10 @@ export default function SpecCard({
   const rowContent = (row: SpecRow) => (
     <>
       <dt className="text-[11.5px] text-white/55">{row.label}</dt>
-      <dd className={`text-[12.5px] leading-snug text-white/75 ${row.mono ? "font-mono tabular-nums" : ""}`}>{row.value}</dd>
+      <dd className={`text-[12.5px] leading-snug text-white/75 ${row.mono ? "font-mono tabular-nums" : ""}`}>
+        {row.value}
+        {row.cite && <Cite id={row.cite} />}
+      </dd>
     </>
   );
 

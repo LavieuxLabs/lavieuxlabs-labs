@@ -145,7 +145,7 @@ const copy = defineContent<{
         body: "Öneri üretken bir modelden değil, sürümlenmiş bir kural motorundan gelir. Aynı girdi ve kural sürümü her zaman aynı sonucu verir. Yaşam döngüsü IEC 62304'e göre kurgulanır.",
         rows: [
           { label: "Motor", value: "Sürümlenmiş kural seti" },
-          { label: "Yaşam döngüsü", value: "IEC 62304", mono: true },
+          { label: "Yaşam döngüsü", value: "IEC 62304", mono: true, cite: "iec62304" },
           { label: "Durum", value: "Mimari uyum · sertifika henüz yok" },
         ],
         outcome: {
@@ -232,7 +232,7 @@ const copy = defineContent<{
         title: "AB Tıbbi Cihaz Yönetmeliği",
         body: "PharmaDeux, ilaç tedavisi kararlarına bilgi sağlayan bir yazılım olduğu için MDR kapsamına giriyor.",
         rows: [
-          { label: "Mevzuat", value: "MDR 2017/745 · Ek VIII Kural 11" },
+          { label: "Mevzuat", value: "MDR 2017/745 · Ek VIII Kural 11", cite: "mdrRule11" },
           { label: "Hedef", value: "SaMD · Sınıf IIa" },
           { label: "CE işareti", value: "Henüz yok" },
         ],
@@ -242,7 +242,7 @@ const copy = defineContent<{
         title: "Yazılım yaşam döngüsü ve risk",
         body: "Geliştirme ve risk yönetimi süreçleri bu standartlara göre kuruluyor.",
         rows: [
-          { label: "Yaşam döngüsü", value: "IEC 62304" },
+          { label: "Yaşam döngüsü", value: "IEC 62304", cite: "iec62304" },
           { label: "Risk", value: "ISO 14971" },
         ],
         status: "Mimari uyum",
@@ -377,7 +377,7 @@ const copy = defineContent<{
         body: "Recommendations come from a versioned rule engine, not from a generative model. The same input and rule version always give the same result. The life cycle is set up according to IEC 62304.",
         rows: [
           { label: "Engine", value: "Versioned rule set" },
-          { label: "Life cycle", value: "IEC 62304", mono: true },
+          { label: "Life cycle", value: "IEC 62304", mono: true, cite: "iec62304" },
           { label: "Status", value: "Architecture aligned · not certified yet" },
         ],
         outcome: {
@@ -464,7 +464,7 @@ const copy = defineContent<{
         title: "EU Medical Device Regulation",
         body: "PharmaDeux provides information used in drug therapy decisions, so it falls under the MDR.",
         rows: [
-          { label: "Regulation", value: "MDR 2017/745 · Annex VIII Rule 11" },
+          { label: "Regulation", value: "MDR 2017/745 · Annex VIII Rule 11", cite: "mdrRule11" },
           { label: "Target", value: "SaMD · Class IIa" },
           { label: "CE mark", value: "Not yet" },
         ],
@@ -474,7 +474,7 @@ const copy = defineContent<{
         title: "Software life cycle and risk",
         body: "Development and risk management processes are being set up to these standards.",
         rows: [
-          { label: "Life cycle", value: "IEC 62304" },
+          { label: "Life cycle", value: "IEC 62304", cite: "iec62304" },
           { label: "Risk", value: "ISO 14971" },
         ],
         status: "Architecture aligned",

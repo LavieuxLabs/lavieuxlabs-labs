@@ -1,0 +1,62 @@
+import type { Locale } from "@/i18n/config";
+
+// Sources behind the formulas, scores and regulations the site names. Bibliographic data only as far as
+// it is certain; no DOIs or page numbers are added from memory. Titles of standards and regulations are
+// their official titles (not translated).
+
+export type CiteKey = "tisdale" | "fridericia" | "ckdepi2021" | "mdrRule11" | "iec62304";
+
+type Citation = { term: Record<Locale, string>; what: Record<Locale, string>; refs: string[] };
+
+export const CITATIONS: Record<CiteKey, Citation> = {
+  tisdale: {
+    term: { tr: "Tisdale skoru", en: "Tisdale score" },
+    what: {
+      tr: "Hastanede yatan hastada QT uzaması riskini öngören skor; 0–21 puan, ≤6 düşük, 7–10 orta, ≥11 yüksek risk.",
+      en: "Score predicting QT prolongation risk in hospitalised patients; 0–21 points, ≤6 low, 7–10 moderate, ≥11 high risk.",
+    },
+    refs: [
+      "Tisdale JE, Jaynes HA, Kingery JR, et al. Development and validation of a risk score to predict QT interval prolongation in hospitalized patients. Circ Cardiovasc Qual Outcomes. 2013;6(4):479–487.",
+    ],
+  },
+  fridericia: {
+    term: { tr: "Fridericia düzeltmesi", en: "Fridericia correction" },
+    what: {
+      tr: "QT aralığının kalp hızına göre düzeltilmesi: QTc = QT / ∛RR (RR saniye cinsinden).",
+      en: "Heart-rate correction of the QT interval: QTc = QT / ∛RR (RR in seconds).",
+    },
+    refs: [
+      "Fridericia LS. Die Systolendauer im Elektrokardiogramm bei normalen Menschen und bei Herzkranken. Acta Med Scand. 1920;53:469–486.",
+    ],
+  },
+  ckdepi2021: {
+    term: { tr: "CKD-EPI 2021", en: "CKD-EPI 2021" },
+    what: {
+      tr: "Serum kreatininden ırk katsayısı kullanmadan eGFR hesaplayan denklem (mL/dk/1,73 m²).",
+      en: "Equation estimating eGFR from serum creatinine without a race coefficient (mL/min/1.73 m²).",
+    },
+    refs: [
+      "Inker LA, Eneanya ND, Coresh J, et al. New creatinine- and cystatin C–based equations to estimate GFR without race. N Engl J Med. 2021;385(19):1737–1749.",
+      "Previous version (2009): Levey AS, Stevens LA, Schmid CH, et al. A new equation to estimate glomerular filtration rate. Ann Intern Med. 2009;150(9):604–612.",
+    ],
+  },
+  mdrRule11: {
+    term: { tr: "MDR Kural 11", en: "MDR Rule 11" },
+    what: {
+      tr: "Teşhis veya tedavi kararları için bilgi sağlayan yazılımın sınıflandırma kuralı; varsayılan sınıf IIa.",
+      en: "Classification rule for software that provides information used for diagnostic or therapeutic decisions; default class IIa.",
+    },
+    refs: [
+      "Regulation (EU) 2017/745 of the European Parliament and of the Council of 5 April 2017 on medical devices — Annex VIII, Chapter III, Rule 11.",
+      "MDCG 2019-11 — Guidance on Qualification and Classification of Software in Regulation (EU) 2017/745 – MDR and Regulation (EU) 2017/746 – IVDR (October 2019).",
+    ],
+  },
+  iec62304: {
+    term: { tr: "IEC 62304", en: "IEC 62304" },
+    what: {
+      tr: "Tıbbi cihaz yazılımı için yaşam döngüsü süreçleri standardı. LavieuxLabs için durum: mimari uyum, sertifika henüz yok.",
+      en: "Life cycle process standard for medical device software. Status for LavieuxLabs: architecture aligned, not certified yet.",
+    },
+    refs: ["IEC 62304:2006+AMD1:2015 — Medical device software — Software life cycle processes."],
+  },
+};
