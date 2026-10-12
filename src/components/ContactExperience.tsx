@@ -84,7 +84,7 @@ export default function ContactExperience({ locale, initialSolution = "pharmadeu
 
         <a
           href="#pilot-protokolu"
-          className="group flex items-center justify-between gap-4 border-y border-white/[0.06] py-3 text-sm text-white/70 transition-colors duration-150 ease-out hover:text-white"
+          className="group flex items-center justify-between gap-4 border-y border-hairline py-3 text-sm text-white/70 transition-colors duration-150 ease-out hover:text-white"
         >
           {c.protocolLink}
           <ArrowDown
@@ -93,7 +93,7 @@ export default function ContactExperience({ locale, initialSolution = "pharmadeu
           />
         </a>
 
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+        <div className="rounded-2xl border border-hairline bg-white/[0.02] p-6">
           <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.email}</p>
           <CopyEmail locale={locale} className="mt-3 text-sm text-white" />
           <p className="mt-4 text-xs leading-relaxed text-white/55">

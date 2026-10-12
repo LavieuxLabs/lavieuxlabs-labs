@@ -26,8 +26,8 @@ export type InitiativeCardProps = {
 
 // Literal class strings so Tailwind can detect them at build time.
 const accents = {
-  teal: { icon: "text-pharma", link: "text-teal-200 hover:text-teal-100" },
-  indigo: { icon: "text-shield", link: "text-indigo-200 hover:text-indigo-100" },
+  teal: { icon: "text-pharma", link: "text-teal-200 hover:text-teal-100", ambient: "ambient-card-pharma" },
+  indigo: { icon: "text-shield", link: "text-indigo-200 hover:text-indigo-100", ambient: "ambient-card-shield" },
 } as const;
 
 const icons = { pill: Pill, shield: ShieldCheck };
@@ -56,8 +56,10 @@ export default function InitiativeCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ type: "spring", bounce: 0, duration: 0.5 }}
-      className={`flex flex-col rounded-2xl border border-white/[0.06] bg-navy-850 p-6 transition-colors duration-150 ease-out hover:bg-navy-800 sm:p-8 ${className}`}
+      className={`relative isolate flex flex-col overflow-hidden rounded-2xl border border-hairline bg-navy-850 p-6 transition-colors duration-150 ease-out hover:bg-navy-800 sm:p-8 ${className}`}
     >
+      {/* The product's own ambient light drifts in from the card's top corner. */}
+      <div aria-hidden="true" className={`pointer-events-none absolute inset-0 -z-10 print:hidden ${tone.ambient}`} />
       <div className="flex items-center gap-2.5">
         <Icon className={`h-4 w-4 ${tone.icon}`} strokeWidth={1.7} aria-hidden="true" />
         <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{category}</p>
@@ -65,7 +67,7 @@ export default function InitiativeCard({
       <h3 className="mt-4 text-2xl font-semibold tracking-[-0.03em] text-white sm:text-[28px]">{name}</h3>
       <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-white/60">{summary}</p>
 
-      <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06]">
+      <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-hairline bg-hairline">
         {specs.map((s) => (
           <div key={s.label} className="flex flex-col-reverse bg-navy-850 p-4 sm:p-5">
             <dt className="mt-1 text-xs leading-snug text-white/50">{s.label}</dt>

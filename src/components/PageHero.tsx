@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, type LucideIcon } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import { RailMarker } from "@/components/TelemetryRails";
 import { localizedPath, type Locale } from "@/i18n/config";
@@ -11,6 +11,10 @@ type Crumb = { href?: string; label: string; lang?: string };
 type PageHeroProps = {
   locale: Locale;
   eyebrow: string;
+  /** Product icon beside the eyebrow, in the product accent: the hero's only colour. The label stays neutral. */
+  eyebrowIcon?: { icon: LucideIcon; className: string };
+  /** Product ambient light behind the hero (a wide radial wash in the product accent). */
+  ambient?: "pharma" | "shield";
   title: ReactNode;
   description: ReactNode;
   breadcrumbs?: Crumb[];
@@ -26,6 +30,8 @@ type PageHeroProps = {
 export default function PageHero({
   locale,
   eyebrow,
+  eyebrowIcon,
+  ambient,
   title,
   description,
   breadcrumbs,
@@ -36,6 +42,12 @@ export default function PageHero({
 }: PageHeroProps) {
   return (
     <section className="relative isolate overflow-hidden pt-32 pb-16 sm:pt-40 sm:pb-24">
+      {ambient && (
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-0 -z-10 print:hidden ${ambient === "pharma" ? "ambient-pharma" : "ambient-shield"}`}
+        />
+      )}
       <RailMarker className="top-32 sm:top-40" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {breadcrumbs && (
@@ -66,7 +78,12 @@ export default function PageHero({
         >
           <div>
             <Reveal>
-              <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{eyebrow}</p>
+              <p className="flex items-center gap-2 text-[11px] font-medium tracking-wider text-white/50 uppercase">
+                {eyebrowIcon && (
+                  <eyebrowIcon.icon className={`h-4 w-4 ${eyebrowIcon.className}`} strokeWidth={1.7} aria-hidden="true" />
+                )}
+                {eyebrow}
+              </p>
             </Reveal>
             <Reveal delay={0.08}>
               <h1 className="mt-5 max-w-4xl text-4xl leading-[1.05] font-serif font-medium tracking-[-0.02em] text-white sm:text-5xl lg:text-[56px]">

@@ -31,7 +31,7 @@ export default function LanguageSwitch({ locale, className = "" }: { locale: Loc
     <div
       role="group"
       aria-label={groupLabel[locale]}
-      className={`flex w-max items-center rounded-md border border-white/[0.06] bg-white/[0.03] p-0.5 text-[11px] font-medium ${className}`}
+      className={`flex w-max items-center rounded-md border border-hairline bg-white/[0.03] p-0.5 text-[11px] font-medium ${className}`}
     >
       {locales.map((target) =>
         target === locale ? (

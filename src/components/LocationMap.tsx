@@ -43,9 +43,9 @@ export default function LocationMap({ locale }: { locale: Locale }) {
   const showMap = loadedOnce || consent?.external === true;
 
   return (
-    <div className="grid overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
+    <div className="grid overflow-hidden rounded-2xl border border-hairline bg-white/[0.02] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
       {/* Address card */}
-      <div className="flex flex-col border-b border-white/[0.06] p-6 sm:p-8 lg:border-r lg:border-b-0">
+      <div className="flex flex-col border-b border-hairline p-6 sm:p-8 lg:border-r lg:border-b-0">
         <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.campus}</p>
         <div className="mt-6 flex gap-3.5">
           <span className="flex h-10 w-6 shrink-0 items-start pt-0.5">
@@ -90,7 +90,7 @@ export default function LocationMap({ locale }: { locale: Locale }) {
             {/* Edge vignette so the map blends into the card */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 shadow-[inset_0_0_60px_rgba(15,27,45,0.85)]"
+              className="pointer-events-none absolute inset-0 shadow-[inset_0_0_60px_rgba(8,10,15,0.85)]"
             />
           </>
         ) : (
@@ -99,7 +99,7 @@ export default function LocationMap({ locale }: { locale: Locale }) {
             <div aria-hidden="true" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <span className="absolute -inset-5 rounded-full border border-white/15" />
             </div>
-            <div className="relative max-w-sm rounded-xl border border-white/[0.06] bg-navy-800 p-5 text-center">
+            <div className="relative max-w-sm rounded-xl border border-hairline bg-navy-800 p-5 text-center">
               <MapPin className="mx-auto h-5 w-5 text-white/60" aria-hidden="true" />
               <p className="mt-3 text-sm text-white/80">{c.provider}</p>
               <p className="mt-1.5 text-xs leading-relaxed text-white/55">

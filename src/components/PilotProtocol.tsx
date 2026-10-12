@@ -230,7 +230,7 @@ export default function PilotProtocol({ locale }: { locale: Locale }) {
         <Reveal className="mt-12 print:mt-5">
           <div
             data-print-rule
-            className="grid gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.06] lg:grid-cols-3 print:grid-cols-3 print:gap-0 print:rounded-none"
+            className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline lg:grid-cols-3 print:grid-cols-3 print:gap-0 print:rounded-none"
           >
             {c.groups.map((group) => (
               <section
@@ -241,7 +241,7 @@ export default function PilotProtocol({ locale }: { locale: Locale }) {
                 <h3 className="text-[11px] font-medium tracking-wider text-white/50 uppercase print:text-[7.5pt]">
                   {group.title}
                 </h3>
-                <dl className="mt-3 divide-y divide-white/[0.06] print:mt-1">
+                <dl className="mt-3 divide-y divide-hairline print:mt-1">
                   {group.rows.map((row) => (
                     <div key={row.term} className="py-3 print:py-1.5">
                       <dt className="text-[13px] font-medium text-white print:text-[8.5pt]">{row.term}</dt>

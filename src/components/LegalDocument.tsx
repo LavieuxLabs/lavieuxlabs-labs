@@ -66,7 +66,7 @@ type LegalDocumentProps = {
 };
 
 const LABEL = "text-[11px] font-medium tracking-wider text-white/50 uppercase";
-const PLATE = "grid gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06]";
+const PLATE = "grid gap-px overflow-hidden rounded-xl border border-hairline bg-hairline";
 
 /**
  * Legal documents as a corporate documentation centre: a strip of all four documents, a datasheet
@@ -179,7 +179,7 @@ export default function LegalDocument({
         <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
           <nav aria-label={c.contents}>
             <p className={LABEL}>{c.contents}</p>
-            <ol className="mt-4 border-l border-white/[0.06]">
+            <ol className="mt-4 border-l border-hairline">
               {sections.map((s) => (
                 <li key={s.id}>
                   <a
@@ -199,7 +199,7 @@ export default function LegalDocument({
             <section
               key={s.id}
               id={s.id}
-              className="scroll-mt-24 border-t border-white/[0.06] py-10 first:border-t-0 first:pt-0"
+              className="scroll-mt-24 border-t border-hairline py-10 first:border-t-0 first:pt-0"
             >
               <h2>{s.title}</h2>
               {s.content}
@@ -221,7 +221,7 @@ export function ControllerDetails({ locale }: { locale: Locale }) {
     { label: c.email, value: <CopyEmail locale={locale} className="text-white/85" /> },
   ];
   return (
-    <dl className="mt-6 divide-y divide-white/[0.06] border-t border-white/[0.06]">
+    <dl className="mt-6 divide-y divide-hairline border-t border-hairline">
       {rows.map((r) => (
         <div key={r.label} className="grid grid-cols-[120px_1fr] gap-4 py-3 text-[14px]">
           <dt className="text-white/55">{r.label}</dt>

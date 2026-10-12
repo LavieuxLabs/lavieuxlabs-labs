@@ -4,8 +4,8 @@ import { ImageResponse } from "next/og";
 import { SITE_URL } from "@/lib/site";
 import type { Locale } from "@/i18n/config";
 
-// Shared OpenGraph card (1200×630) in the site's design language: optical surgical-navy ground,
-// a hairline frame, the LavieuxLabs mark, a two-tone headline and a spec strip with numbers in
+// Shared OpenGraph card (1200×630) in the site's design language: optical obsidian ground,
+// a hairline frame, the LavieuxLabs mark, a white headline and a spec strip with numbers in
 // mono. Same hierarchy as the site: IBM Plex Sans (body), Newsreader (title), IBM Plex Mono (data).
 // Fonts are vendored static files (SIL OFL, see src/app/fonts/OFL-*.txt) read once per build:
 // next/og ships only Geist, and Satori reads TTF/WOFF (not WOFF2) and only the default instance of
@@ -31,7 +31,6 @@ type OgCardProps = {
   locale: Locale;
   eyebrow: string;
   title: string;
-  titleMuted: string;
   specs: OgSpec[];
 };
 
@@ -53,16 +52,16 @@ const upperTr = (text: string) =>
 function Mark() {
   return (
     <svg width="44" height="44" viewBox="0 0 32 32" fill="none">
-      <circle cx="16" cy="16" r="13.25" stroke="#4FC1B6" strokeWidth="1.1" />
-      <path d="M16.00 2.75L16.00 6.00M25.37 6.63L23.88 8.12M29.25 16.00L26.00 16.00M25.37 25.37L23.88 23.88M16.00 29.25L16.00 26.00M6.63 25.37L8.12 23.88M2.75 16.00L6.00 16.00M6.63 6.63L8.12 8.12" stroke="#4FC1B6" strokeWidth="1.1" strokeLinecap="round" />
-      <circle cx="16" cy="16" r="3.6" stroke="#4FC1B6" strokeOpacity="0.6" strokeWidth="0.73" />
-      <path d="M16.00 11.10L16.00 7.40M20.90 16.00L24.60 16.00M16.00 20.90L16.00 24.60M11.10 16.00L7.40 16.00" stroke="#4FC1B6" strokeOpacity="0.8" strokeWidth="0.73" strokeLinecap="round" />
-      <circle cx="16" cy="16" r="1.75" fill="#4FC1B6" />
+      <circle cx="16" cy="16" r="13.25" stroke="#9E9FA5" strokeWidth="1.1" />
+      <path d="M16.00 2.75L16.00 6.00M25.37 6.63L23.88 8.12M29.25 16.00L26.00 16.00M25.37 25.37L23.88 23.88M16.00 29.25L16.00 26.00M6.63 25.37L8.12 23.88M2.75 16.00L6.00 16.00M6.63 6.63L8.12 8.12" stroke="#9E9FA5" strokeWidth="1.1" strokeLinecap="round" />
+      <circle cx="16" cy="16" r="3.6" stroke="#9E9FA5" strokeOpacity="0.6" strokeWidth="0.73" />
+      <path d="M16.00 11.10L16.00 7.40M20.90 16.00L24.60 16.00M16.00 20.90L16.00 24.60M11.10 16.00L7.40 16.00" stroke="#9E9FA5" strokeOpacity="0.8" strokeWidth="0.73" strokeLinecap="round" />
+      <circle cx="16" cy="16" r="1.75" fill="#9E9FA5" />
     </svg>
   );
 }
 
-export async function renderOgCard({ locale, eyebrow, title, titleMuted, specs }: OgCardProps) {
+export async function renderOgCard({ locale, eyebrow, title, specs }: OgCardProps) {
 
   return new ImageResponse(
     <div
@@ -71,9 +70,9 @@ export async function renderOgCard({ locale, eyebrow, title, titleMuted, specs }
         height: "100%",
         display: "flex",
         padding: 48,
-        backgroundColor: "#0B131F",
+        backgroundColor: "#080A0F",
         backgroundImage:
-          "radial-gradient(ellipse 120% 90% at 50% 38%, #112035 0%, #0E1A2B 38%, #0B131F 66%, #080E18 100%)",
+          "radial-gradient(ellipse 120% 90% at 50% 38%, #0E1016 0%, #0B0C12 38%, #080A0F 66%, #050609 100%)",
         fontFamily: "IBM Plex Sans",
         color: "#FFFFFF",
       }}
@@ -126,8 +125,7 @@ export async function renderOgCard({ locale, eyebrow, title, titleMuted, specs }
               maxWidth: 960,
             }}
           >
-            <span>{title}&nbsp;</span>
-            <span style={{ color: "rgba(255,255,255,0.5)" }}>{titleMuted}</span>
+            {title}
           </div>
         </div>
 

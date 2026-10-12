@@ -30,7 +30,7 @@ export default function CtaPanel({
     <section className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-navy-850 px-6 py-12 sm:px-12 sm:py-16">
+          <div className="relative overflow-hidden rounded-3xl border border-hairline bg-navy-850 px-6 py-12 sm:px-12 sm:py-16">
             <div className={`grid gap-12 ${aside ? "lg:grid-cols-[1.1fr_1fr] lg:gap-16" : ""}`}>
               <div>
                 <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{eyebrow}</p>

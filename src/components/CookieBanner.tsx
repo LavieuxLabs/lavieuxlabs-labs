@@ -126,7 +126,7 @@ function Toggle({
       disabled={disabled}
       onClick={() => onChange?.(!checked)}
       className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border transition-colors ${
-        checked ? "border-teal-300/40 bg-teal-400/30" : "border-white/15 bg-white/[0.06]"
+        checked ? "border-titanium/40 bg-titanium/30" : "border-white/15 bg-white/[0.06]"
       } ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
     >
       <span
@@ -265,7 +265,7 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
             <div className="p-5 sm:p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-2.5">
-                  <Cookie className="h-4 w-4 text-teal-300" strokeWidth={1.8} />
+                  <Cookie className="h-4 w-4 text-titanium" strokeWidth={1.8} />
                   <h2 id="cookie-title" className="text-sm font-medium text-white">
                     {c.title}
                   </h2>
@@ -285,14 +285,14 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
                 {c.intro}{" "}
                 <Link
                   href={localizedPath(locale, "/legal/cookies")}
-                  className="text-teal-300 underline-offset-2 hover:underline"
+                  className="text-white underline underline-offset-2 hover:text-titanium"
                 >
                   {c.cookiePolicy}
                 </Link>{" "}
                 {c.and}{" "}
                 <Link
                   href={localizedPath(locale, "/legal/privacy")}
-                  className="text-teal-300 underline-offset-2 hover:underline"
+                  className="text-white underline underline-offset-2 hover:text-titanium"
                 >
                   {c.privacy}
                 </Link>
@@ -308,7 +308,7 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
                     transition={{ duration: 0.25 }}
                     className="overflow-hidden"
                   >
-                    <ul className="mt-4 divide-y divide-white/[0.06] rounded-xl border border-white/[0.06]">
+                    <ul className="mt-4 divide-y divide-hairline rounded-xl border border-hairline">
                       {c.categories.map((cat) => (
                         <li key={cat.key} className="flex items-start justify-between gap-4 p-3.5">
                           <div>
@@ -332,7 +332,7 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
               </AnimatePresence>
             </div>
 
-            <div className="flex flex-col gap-2 border-t border-white/[0.06] bg-white/[0.02] p-4 sm:flex-row sm:items-center sm:justify-end">
+            <div className="flex flex-col gap-2 border-t border-hairline bg-white/[0.02] p-4 sm:flex-row sm:items-center sm:justify-end">
               {customizing ? (
                 <button
                   type="button"
@@ -353,14 +353,14 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
               <button
                 type="button"
                 onClick={() => decide(NONE, "rejected")}
-                className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-navy-900 hover:bg-teal-200"
+                className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-navy-900 hover:bg-titanium"
               >
                 {c.reject}
               </button>
               <button
                 type="button"
                 onClick={() => decide(ALL, "accepted")}
-                className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-navy-900 hover:bg-teal-200"
+                className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-navy-900 hover:bg-titanium"
               >
                 {c.accept}
               </button>

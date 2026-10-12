@@ -167,7 +167,7 @@ function initialState(): State {
 const badge = {
   review: "text-amber-200/90",
   approved: "text-emerald-200",
-  corrected: "text-indigo-200",
+  corrected: "text-white",
 };
 
 export default function ShieldMatrix({ locale }: { locale: Locale }) {
@@ -193,7 +193,7 @@ export default function ShieldMatrix({ locale }: { locale: Locale }) {
       <div className="relative min-w-0 flex-1">
         <section
           aria-label={c.precheckAria}
-          className="relative z-10 rounded-2xl border border-white/[0.06] bg-navy-800"
+          className="relative z-10 rounded-2xl border border-hairline bg-navy-800"
         >
           <header className="flex items-baseline justify-between gap-3 px-4 pt-3.5 pb-2.5">
             <div className="min-w-0">
@@ -209,7 +209,7 @@ export default function ShieldMatrix({ locale }: { locale: Locale }) {
               </span>
             </p>
           </header>
-          <ul className="divide-y divide-white/[0.06] border-t border-white/[0.06]">
+          <ul className="divide-y divide-hairline border-t border-hairline">
             {items.map((item, i) => {
               const done = i < state.scan;
               const active = i === state.scan;
@@ -246,13 +246,13 @@ export default function ShieldMatrix({ locale }: { locale: Locale }) {
         {/* Back layer: the provision record that verified items are committed to */}
         <section
           aria-label={c.ledger}
-          className="relative mx-3 -mt-3 rounded-b-2xl border border-t-0 border-white/[0.06] bg-navy-850 px-4 pt-6 pb-3"
+          className="relative mx-3 -mt-3 rounded-b-2xl border border-t-0 border-hairline bg-navy-850 px-4 pt-6 pb-3"
         >
           <div className="flex items-baseline justify-between">
             <p className="text-[12px] font-semibold text-white/80">{c.ledger}</p>
             <p className="text-[11px] text-white/55">{c.ledgerHint}</p>
           </div>
-          <ul className="mt-2 divide-y divide-white/[0.06]">
+          <ul className="mt-2 divide-y divide-hairline">
             <AnimatePresence initial={false}>
               {state.ledger.map((row) => (
                 <motion.li
@@ -278,12 +278,12 @@ export default function ShieldMatrix({ locale }: { locale: Locale }) {
 
       {/* Review queue and audit trail */}
       <aside aria-label={c.asideAria} className="w-full space-y-3 sm:w-[200px] sm:shrink-0">
-        <section className="rounded-2xl border border-white/[0.06] bg-navy-850">
+        <section className="rounded-2xl border border-hairline bg-navy-850">
           <header className="flex items-center justify-between px-3.5 pt-3 pb-2">
             <p className="text-[12px] font-semibold text-white/85">{c.queue}</p>
             <span className="font-mono text-[12px] text-white/50 tabular-nums">{state.queue.length}</span>
           </header>
-          <ul className="min-h-[104px] divide-y divide-white/[0.06] border-t border-white/[0.06]">
+          <ul className="min-h-[104px] divide-y divide-hairline border-t border-hairline">
             <AnimatePresence initial={false}>
               {state.queue.map((item) => (
                 <motion.li
@@ -309,12 +309,12 @@ export default function ShieldMatrix({ locale }: { locale: Locale }) {
           </ul>
         </section>
 
-        <section className="rounded-2xl border border-white/[0.06] bg-navy-850">
+        <section className="rounded-2xl border border-hairline bg-navy-850">
           <header className="flex items-baseline justify-between px-3.5 pt-3 pb-2">
             <p className="text-[12px] font-semibold text-white/85">{c.trail}</p>
             <p className="text-[10.5px] text-white/55">{c.appendOnly}</p>
           </header>
-          <ol className="divide-y divide-white/[0.06] border-t border-white/[0.06]">
+          <ol className="divide-y divide-hairline border-t border-hairline">
             {state.audit.map((row, i) => (
               <li key={row.seq} className="flex gap-2 px-3.5 py-1.5 text-[11px]">
                 <span className="shrink-0 text-white/55 font-mono tabular-nums">{row.seq}</span>

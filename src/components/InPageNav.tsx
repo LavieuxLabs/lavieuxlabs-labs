@@ -67,7 +67,7 @@ export default function InPageNav({ locale, items, accent = "teal" }: InPageNavP
   }, [activeId, reduced]);
 
   return (
-    <div className="sticky top-16 z-30 print:hidden border-y border-white/[0.06] bg-navy-900/75 backdrop-blur-xl">
+    <div className="sticky top-16 z-30 print:hidden border-y border-hairline bg-navy-900/75 backdrop-blur-xl">
       <nav aria-label={locale === "tr" ? "Sayfa bölümleri" : "On this page"} className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ul ref={listRef} className="-mx-1 flex gap-1 overflow-x-auto py-2 [scrollbar-width:none]">
           {items.map((item, i) => {
