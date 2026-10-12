@@ -21,7 +21,6 @@ type Accent = {
   selectedCard: string;
   focusRing: string;
   inputFocus: string;
-  checkbox: string;
   buttonHover: string;
   topRule: string;
 };
@@ -47,10 +46,9 @@ const style: Record<SolutionValue, { icon: LucideIcon; stepIcons: LucideIcon[]; 
     stepIcons: [Stethoscope, FileText, Network],
     accent: {
       text: "text-pharma",
-      selectedCard: "border-pharma/45 bg-pharma/[0.08]",
+      selectedCard: "border-pharma/35 bg-navy-800",
       focusRing: "has-[:focus-visible]:ring-pharma/40",
       inputFocus: "focus:border-pharma/60 focus:ring-pharma/20",
-      checkbox: "accent-pharma",
       buttonHover: "hover:bg-teal-100",
       topRule: "from-pharma/70",
     },
@@ -60,10 +58,9 @@ const style: Record<SolutionValue, { icon: LucideIcon; stepIcons: LucideIcon[]; 
     stepIcons: [Receipt, FileSearch, Workflow],
     accent: {
       text: "text-shield",
-      selectedCard: "border-shield/45 bg-shield/[0.08]",
+      selectedCard: "border-shield/35 bg-navy-800",
       focusRing: "has-[:focus-visible]:ring-shield/40",
       inputFocus: "focus:border-shield/60 focus:ring-shield/20",
-      checkbox: "accent-shield",
       buttonHover: "hover:bg-indigo-100",
       topRule: "from-shield/70",
     },
@@ -73,10 +70,9 @@ const style: Record<SolutionValue, { icon: LucideIcon; stepIcons: LucideIcon[]; 
     stepIcons: [Target, ClipboardCheck, BookOpen],
     accent: {
       text: "text-academic",
-      selectedCard: "border-academic/45 bg-academic/[0.08]",
+      selectedCard: "border-white/25 bg-navy-800",
       focusRing: "has-[:focus-visible]:ring-academic/40",
       inputFocus: "focus:border-academic/60 focus:ring-academic/20",
-      checkbox: "accent-academic",
       buttonHover: "hover:bg-academic-soft",
       topRule: "from-academic/70",
     },

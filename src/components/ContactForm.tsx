@@ -263,7 +263,7 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
   const border = (key: keyof Fields) => (errors[key] ? "border-rose-400/50" : "border-white/[0.1]");
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-md">
+    <div className="relative overflow-hidden rounded-2xl border border-hairline bg-white/[0.02] backdrop-blur-md">
       <div
         aria-hidden="true"
         className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r via-white/10 to-transparent ${accent.topRule}`}
@@ -282,7 +282,7 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
             <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60">
               {c.sentBody(CONTACT_EMAIL)}
             </p>
-            <dl className="mt-8 w-full divide-y divide-white/[0.06] rounded-xl border border-white/[0.06] text-sm">
+            <dl className="mt-8 w-full divide-y divide-hairline rounded-xl border border-hairline text-sm">
               {[
                 [c.summary.organization, fields.organization],
                 [c.summary.solution, content.label],
@@ -485,13 +485,13 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
                   type="checkbox"
                   checked={fields.consent}
                   onChange={(e) => set("consent", e.target.checked)}
-                  className={`mt-0.5 h-4 w-4 shrink-0 cursor-pointer ${accent.checkbox}`}
+                  className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-titanium"
                 />
                 <span>
                   {c.consentBefore}{" "}
                   <Link
                     href={localizedPath(locale, "/legal/privacy")}
-                    className={`underline-offset-2 hover:underline ${accent.text}`}
+                    className="text-white/80 underline decoration-white/30 underline-offset-2 transition-colors duration-150 ease-out hover:text-white hover:decoration-white/70"
                   >
                     {c.consentLink}
                   </Link>{" "}
@@ -512,7 +512,7 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
               </p>
             )}
 
-            <div className="flex flex-col gap-4 border-t border-white/[0.06] pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-4 border-t border-hairline pt-6 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs leading-relaxed text-white/55">
                 {c.submitNote(CONTACT_EMAIL)}
               </p>
