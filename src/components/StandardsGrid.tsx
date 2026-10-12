@@ -1,6 +1,5 @@
 import { Activity, Binary, FileCheck2, FileText, History, LockKeyhole, Network, UserCheck } from "lucide-react";
-import Reveal from "@/components/Reveal";
-import SpecCard, { type SpecRow } from "@/components/SpecCard";
+import SpecCard, { JoinedGrid, type SpecRow } from "@/components/SpecCard";
 import { defineContent, type Locale } from "@/i18n/config";
 
 type Tone = "live" | "prep" | "input";
@@ -15,15 +14,17 @@ type StandardCopy = {
 // Identifier, icon and status tone are shared; the copy is per locale. Status is stated plainly:
 // live = built and tested, prep = in preparation, input = a reference the architecture is designed
 // against, not a certification claim.
-const standards: { id: string; icon: typeof Binary; tone: Tone }[] = [
+// Accent follows ownership: the 0–100 risk score is Shield's; clinical measurement, FHIR clinical data and the
+// MDR preparation are PharmaDeux's; the other standards cover the whole platform and stay neutral.
+const standards: { id: string; icon: typeof Binary; tone: Tone; accent?: "pharma" | "shield" }[] = [
   { id: "STD-01", icon: Binary, tone: "live" },
   { id: "STD-02", icon: History, tone: "live" },
   { id: "STD-03", icon: UserCheck, tone: "live" },
-  { id: "STD-04", icon: FileText, tone: "live" },
-  { id: "STD-05", icon: Activity, tone: "live" },
-  { id: "STD-06", icon: Network, tone: "live" },
+  { id: "STD-04", icon: FileText, tone: "live", accent: "shield" },
+  { id: "STD-05", icon: Activity, tone: "live", accent: "pharma" },
+  { id: "STD-06", icon: Network, tone: "live", accent: "pharma" },
   { id: "STD-07", icon: LockKeyhole, tone: "input" },
-  { id: "STD-08", icon: FileCheck2, tone: "prep" },
+  { id: "STD-08", icon: FileCheck2, tone: "prep", accent: "pharma" },
 ];
 
 const copy = defineContent<StandardCopy[]>({
@@ -82,9 +83,9 @@ const copy = defineContent<StandardCopy[]>({
       title: "Birlikte çalışabilirlik",
       body: "Klinik veri modeli HL7 FHIR R4 kaynakları üzerine kurulur.",
       rows: [
-        { label: "Standart", value: "HL7 FHIR R4" },
+        { label: "Standart", value: "HL7 FHIR R4", mono: true },
         { label: "Kaynaklar", value: "MedicationRequest · Observation · Condition" },
-        { label: "Terminoloji", value: "ATC · ICD-10 · UCUM" },
+        { label: "Terminoloji", value: "ATC · ICD-10 · UCUM", mono: true },
       ],
       status: "Uygulamada",
     },
@@ -102,9 +103,9 @@ const copy = defineContent<StandardCopy[]>({
       title: "Regülasyon hazırlığı",
       body: "PharmaDeux, MDR Kural 11 kapsamında tıbbi cihaz yazılımı olarak konumlandırılır. CE işareti henüz yoktur.",
       rows: [
-        { label: "Mevzuat", value: "MDR 2017/745 · Kural 11" },
+        { label: "Mevzuat", value: "MDR 2017/745 · Kural 11", mono: true },
         { label: "Hedef sınıf", value: "SaMD · Sınıf IIa" },
-        { label: "Süreçler", value: "IEC 62304 · ISO 14971" },
+        { label: "Süreçler", value: "IEC 62304 · ISO 14971", mono: true },
       ],
       status: "Hazırlık",
     },
@@ -164,7 +165,7 @@ const copy = defineContent<StandardCopy[]>({
       title: "Interoperability",
       body: "The clinical data model is built on HL7 FHIR R4 resources.",
       rows: [
-        { label: "Standard", value: "HL7 FHIR R4" },
+        { label: "Standard", value: "HL7 FHIR R4", mono: true },
         { label: "Resources", value: "MedicationRequest · Observation · Condition" },
         { label: "Terminology", value: "ATC · ICD-10 · UCUM" },
       ],
@@ -194,23 +195,27 @@ const copy = defineContent<StandardCopy[]>({
 });
 
 export default function StandardsGrid({ locale }: { locale: Locale }) {
+  const maxRows = Math.max(...copy[locale].map((item) => item.rows.length));
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <JoinedGrid columns="sm:grid-cols-2 xl:grid-cols-4">
       {standards.map((s, i) => {
         const text = copy[locale][i];
         return (
-          <Reveal key={s.id} delay={(i % 4) * 0.04} className="h-full">
-            <SpecCard
-              id={s.id}
-              icon={s.icon}
-              title={text.title}
-              body={text.body}
-              rows={text.rows}
-              status={{ label: text.status, tone: s.tone }}
-            />
-          </Reveal>
+          <SpecCard
+            key={s.id}
+            variant="cell"
+            align={{ rows: maxRows }}
+            accentLine="hover"
+            id={s.id}
+            accent={s.accent}
+            icon={s.icon}
+            title={text.title}
+            body={text.body}
+            rows={text.rows}
+            status={{ label: text.status, tone: s.tone }}
+          />
         );
       })}
-    </div>
+    </JoinedGrid>
   );
 }
