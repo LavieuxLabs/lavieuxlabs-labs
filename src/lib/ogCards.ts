@@ -4,7 +4,6 @@ type Card = {
   alt: string;
   eyebrow: string;
   title: string;
-  titleMuted: string;
   specs: { value: string; label: string }[];
 };
 
@@ -15,8 +14,7 @@ export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Ca
     home: {
       alt: "LavieuxLabs · İlaç güvenliği ve faturalama için karar destek yazılımı",
       eyebrow: "Sağlık teknolojileri Ar-Ge",
-      title: "İlaç güvenliği ve faturalama için",
-      titleMuted: "karar destek yazılımı.",
+      title: "İlaç güvenliği ve faturalama için karar destek yazılımı.",
       specs: [
         { value: "18", label: "Güvenlik düzlemi" },
         { value: "2.480+", label: "Otomatik test" },
@@ -27,8 +25,7 @@ export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Ca
     pharmadeux: {
       alt: "PharmaDeux CDSS · Reçete yazılırken ilaç güvenliğini kontrol eder",
       eyebrow: "PharmaDeux CDSS · klinik karar destek",
-      title: "Reçete yazılırken",
-      titleMuted: "ilaç güvenliğini kontrol eder.",
+      title: "Reçete yazılırken ilaç güvenliğini kontrol eder.",
       specs: [
         { value: "18", label: "Güvenlik düzlemi" },
         { value: "2.480+", label: "Otomatik test" },
@@ -39,8 +36,7 @@ export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Ca
     shield: {
       alt: "Shield · Red riskini fatura gönderilmeden önce görün",
       eyebrow: "Shield · gelir bütünlüğü",
-      title: "Red riskini fatura",
-      titleMuted: "gönderilmeden önce görün.",
+      title: "Red riskini fatura gönderilmeden önce görün.",
       specs: [
         { value: "0–100", label: "Risk skoru" },
         { value: "ICD-10 · SUT", label: "Kod sistemleri" },
@@ -53,8 +49,7 @@ export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Ca
     home: {
       alt: "LavieuxLabs · Decision support software for medication safety and hospital billing",
       eyebrow: "Health technology R&D",
-      title: "Medication safety and billing",
-      titleMuted: "decision support software.",
+      title: "Medication safety and billing decision support software.",
       specs: [
         { value: "18", label: "Safety planes" },
         { value: "2,480+", label: "Automated tests" },
@@ -65,8 +60,7 @@ export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Ca
     pharmadeux: {
       alt: "PharmaDeux CDSS · Checks medication safety while the prescription is written",
       eyebrow: "PharmaDeux CDSS · clinical decision support",
-      title: "Checks medication safety",
-      titleMuted: "while the prescription is written.",
+      title: "Checks medication safety while the prescription is written.",
       specs: [
         { value: "18", label: "Safety planes" },
         { value: "2,480+", label: "Automated tests" },
@@ -77,8 +71,7 @@ export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Ca
     shield: {
       alt: "Shield · See rejection risk before the claim is submitted",
       eyebrow: "Shield · revenue integrity",
-      title: "See rejection risk before",
-      titleMuted: "the claim is submitted.",
+      title: "See rejection risk before the claim is submitted.",
       specs: [
         { value: "0–100", label: "Risk score" },
         { value: "ICD-10 · SUT", label: "Code systems" },

@@ -8,7 +8,10 @@ import {
   Lock,
   LockKeyhole,
   Microscope,
+  Network,
+  ReceiptText,
   Repeat,
+  Route,
   ShieldAlert,
   Target,
   Users,
@@ -16,9 +19,10 @@ import {
 } from "lucide-react";
 import PageHero from "@/components/PageHero";
 import SectionHeader from "@/components/SectionHeader";
+import { RailMarker } from "@/components/TelemetryRails";
 import CtaPanel from "@/components/CtaPanel";
 import Reveal from "@/components/Reveal";
-import SpecCard, { type SpecRow } from "@/components/SpecCard";
+import SpecCard, { JoinedGrid, type SpecRow } from "@/components/SpecCard";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
 
@@ -36,29 +40,38 @@ export const metadata = defineMetadata("/about", {
 });
 
 const pillarIcons = [Target, FlaskConical];
+const focusIcons = [Route, Network, ReceiptText];
+// Decision path → PharmaDeux (physicians), data layer → both products (neutral), revenue → Shield.
+const focusAccents = ["pharma", undefined, "shield"] as const;
 const rndIcons = [BookOpen, GitCompare, Repeat, Lock];
 const collaborationIcons = [Hospital, Microscope, GraduationCap, Users];
+// Tone drives the card's implementation track (input → prep → live); it must match the status text:
+// Class IIa target and architecture alignment are in preparation, roadmap and control-set target are inputs.
+// Accent follows ownership: MDR, IEC 62304 / ISO 14971 and ISO 13485 concern the PharmaDeux medical-device
+// software; KVKK / ISO 27001 cover both products, so that card stays neutral.
 const regulatoryMeta = [
-  { id: "REG-01", icon: FileCheck2, tone: "prep" as const },
-  { id: "REG-02", icon: Workflow, tone: "input" as const },
-  { id: "REG-03", icon: ShieldAlert, tone: "prep" as const },
-  { id: "REG-04", icon: LockKeyhole, tone: "input" as const },
+  { id: "REG-01", icon: FileCheck2, tone: "prep" as const, accent: "pharma" as const },
+  { id: "REG-02", icon: Workflow, tone: "prep" as const, accent: "pharma" as const },
+  { id: "REG-03", icon: ShieldAlert, tone: "input" as const, accent: "pharma" as const },
+  { id: "REG-04", icon: LockKeyhole, tone: "input" as const, accent: undefined },
 ];
 
 type Heading = { eyebrow: string; title: string; description: string };
 type Card = { title: string; body: string; rows: SpecRow[] };
+type FocusCard = Card & { outcome: { label: string; body: string } };
 
 const copy = defineContent<{
   crumbs: { home: string; here: string };
   eyebrow: string;
   title: string;
-  titleMuted: string;
   description: string;
   pillars: { label: string; title: string; body: string }[];
   rules: Heading;
   columns: { criterion: string; probabilistic: string; deterministic: string };
   shortColumns: { probabilistic: string; deterministic: string };
   comparison: { criterion: string; probabilistic: string; deterministic: string }[];
+  focusHeading: Heading;
+  focus: FocusCard[];
   rndHeading: Heading;
   rnd: Card[];
   regulatoryHeading: Heading;
@@ -70,8 +83,7 @@ const copy = defineContent<{
   tr: {
     crumbs: { home: "Ana sayfa", here: "Hakkımızda" },
     eyebrow: "Hakkımızda",
-    title: "İlaç güvenliği ve faturalama için",
-    titleMuted: "test edilebilir yazılım yapıyoruz.",
+    title: "İlaç güvenliği ve faturalama için test edilebilir yazılım yapıyoruz.",
     description:
       "LavieuxLabs, klinik farmakoloji, sağlık operasyonları ve yazılım mühendisliğini bir araya getiren bir Ar-Ge ekibi. Hatanın hastaya ya da kuruma pahalıya mal olduğu işler için, her sonucu yeniden üretilebilen ve kararı insana bırakan sistemler geliştiriyoruz.",
     pillars: [
@@ -119,6 +131,54 @@ const copy = defineContent<{
         criterion: "Hata modu",
         probabilistic: "Akıcı ama yanlış çıktı (halüsinasyon) ayırt edilmesi güç olabilir.",
         deterministic: "Kapsam dışı durumlar açıkça “değerlendirilemedi” olarak işaretlenir.",
+      },
+    ],
+    focusHeading: {
+      eyebrow: "Ar-Ge odakları",
+      title: "Üç Ar-Ge odağı ve kuruma etkisi.",
+      description:
+        "Her odağın teknik kapsamını ve hastanede kimin işini kolaylaştırdığını yazdık. Henüz tamamlanmamış olanı açıkça belirttik.",
+    },
+    focus: [
+      {
+        title: "Deterministik karar yolu",
+        body: "Öneri üretken bir modelden değil, sürümlenmiş bir kural motorundan gelir. Aynı girdi ve kural sürümü her zaman aynı sonucu verir. Yaşam döngüsü IEC 62304'e göre kurgulanır.",
+        rows: [
+          { label: "Motor", value: "Sürümlenmiş kural seti" },
+          { label: "Yaşam döngüsü", value: "IEC 62304", mono: true },
+          { label: "Durum", value: "Mimari uyum · sertifika henüz yok" },
+        ],
+        outcome: {
+          label: "Hekim için",
+          body: "Uydurma çıktı üretebilecek bir bileşen yok. Her uyarı, onu tetikleyen kural ve eşik değeriyle gelir; aynı hasta için sonuç tekrar üretilebilir.",
+        },
+      },
+      {
+        title: "Sağlık veri katmanı ve birlikte çalışabilirlik",
+        body: "Klinik veri HL7 FHIR R4 kaynakları olarak alınır. FHIR'a geçmemiş HBYS'lerin HL7 v2 mesajları FHIR R4'e dönüştürülür. İlaç, tanı ve birimler ATC, ICD-10 ve UCUM ile eşleştirilir.",
+        rows: [
+          { label: "Standart", value: "HL7 FHIR R4", mono: true },
+          { label: "Köprü", value: "HL7 v2 · MLLP → FHIR R4" },
+          { label: "Kodlama", value: "ATC · ICD-10 · UCUM", mono: true },
+          { label: "Kurulum", value: "Kurum içi (Docker) · izole VPC" },
+        ],
+        outcome: {
+          label: "Bilgi işlem için",
+          body: "Veri kurumun altyapısından çıkmaz. Sistem mevcut HBYS akışını değiştirmeden, yanına eklenen bir katman olarak çalışır.",
+        },
+      },
+      {
+        title: "Gelir bütünlüğü ve regülasyon modellemesi",
+        body: "SUT ve SGK geri ödeme kuralları, fatura gönderilmeden önce çalışan bir kural setine dönüştürülür. Riskli kalem, tetiklenen kural ve gerekçesiyle uzmanın kuyruğuna düşer. PharmaDeux'nün MDR teknik dosyası aynı izlenebilirlikle hazırlanır.",
+        rows: [
+          { label: "Kurallar", value: "SUT · SGK geri ödeme" },
+          { label: "Kategori", value: "EK-2B hizmet başı · EK-2C paket" },
+          { label: "Teknik dosya", value: "MDR Sınıf IIa hedefi · CE henüz yok" },
+        ],
+        outcome: {
+          label: "Hastane yönetimi için",
+          body: "Red riski fatura gönderilmeden önce, gerekçesiyle görülür. Düzeltme, red kararı gelmeden yapılabilir.",
+        },
       },
     ],
     rndHeading: {
@@ -255,8 +315,7 @@ const copy = defineContent<{
   en: {
     crumbs: { home: "Home", here: "About" },
     eyebrow: "About",
-    title: "We build testable software for",
-    titleMuted: "medication safety and billing.",
+    title: "We build testable software for medication safety and billing.",
     description:
       "LavieuxLabs is an R&D team bringing together clinical pharmacology, healthcare operations and software engineering. For work where a mistake is costly to a patient or an institution, we build systems whose every result can be reproduced and that leave the decision to a person.",
     pillars: [
@@ -304,6 +363,54 @@ const copy = defineContent<{
         criterion: "Failure mode",
         probabilistic: "Fluent but wrong output (hallucination) can be hard to spot.",
         deterministic: "Cases outside scope are marked plainly as “not assessed”.",
+      },
+    ],
+    focusHeading: {
+      eyebrow: "R&D focus areas",
+      title: "Three R&D focus areas and what they change for the hospital.",
+      description:
+        "For each area we list the technical scope and whose work it makes easier. Where something is not finished yet, we say so.",
+    },
+    focus: [
+      {
+        title: "Deterministic decision path",
+        body: "Recommendations come from a versioned rule engine, not from a generative model. The same input and rule version always give the same result. The life cycle is set up according to IEC 62304.",
+        rows: [
+          { label: "Engine", value: "Versioned rule set" },
+          { label: "Life cycle", value: "IEC 62304", mono: true },
+          { label: "Status", value: "Architecture aligned · not certified yet" },
+        ],
+        outcome: {
+          label: "For physicians",
+          body: "No component can make up an answer. Every alert comes with the rule and threshold that triggered it, and the result can be reproduced for the same patient.",
+        },
+      },
+      {
+        title: "Health data layer and interoperability",
+        body: "Clinical data arrives as HL7 FHIR R4 resources. HL7 v2 messages from hospital information systems (HIS) that have not moved to FHIR are converted to FHIR R4. Drugs, diagnoses and units are mapped to ATC, ICD-10 and UCUM.",
+        rows: [
+          { label: "Standard", value: "HL7 FHIR R4", mono: true },
+          { label: "Bridge", value: "HL7 v2 · MLLP → FHIR R4" },
+          { label: "Coding", value: "ATC · ICD-10 · UCUM", mono: true },
+          { label: "Deployment", value: "On-premises (Docker) · isolated VPC" },
+        ],
+        outcome: {
+          label: "For hospital IT",
+          body: "Data does not leave the institution's infrastructure. The system runs as a layer next to the existing HIS workflow, without changing it.",
+        },
+      },
+      {
+        title: "Revenue integrity and regulatory modelling",
+        body: "SUT (the national reimbursement rules) and SGK (Social Security Institution) rules become a rule set that runs before a claim is submitted. A risky line item goes to the specialist's queue with the rule and reason that flagged it. PharmaDeux's MDR technical file is kept with the same traceability.",
+        rows: [
+          { label: "Rules", value: "SUT · SGK reimbursement" },
+          { label: "Category", value: "EK-2B fee-for-service · EK-2C package" },
+          { label: "Technical file", value: "MDR Class IIa target · no CE mark yet" },
+        ],
+        outcome: {
+          label: "For hospital management",
+          body: "Rejection risk is visible, with its reason, before the claim is submitted. Corrections can be made before a rejection arrives.",
+        },
       },
     ],
     rndHeading: {
@@ -448,11 +555,7 @@ export default function AboutView({ locale }: { locale: Locale }) {
         locale={locale}
         breadcrumbs={[{ href: "/", label: c.crumbs.home }, { label: c.crumbs.here }]}
         eyebrow={c.eyebrow}
-        title={
-          <>
-            {c.title} <span className="text-white/50">{c.titleMuted}</span>
-          </>
-        }
+        title={c.title}
         description={c.description}
       />
 
@@ -465,7 +568,7 @@ export default function AboutView({ locale }: { locale: Locale }) {
               <Reveal
                 key={label}
                 delay={i * 0.08}
-                className="rounded-2xl border border-white/[0.06] bg-navy-850 p-7 sm:p-9"
+                className="rounded-2xl border border-hairline bg-navy-850 p-7 sm:p-9"
               >
                 <div className="flex items-center gap-3">
                   <Icon className="h-5 w-5 text-white/55" strokeWidth={1.6} aria-hidden="true" />
@@ -482,17 +585,18 @@ export default function AboutView({ locale }: { locale: Locale }) {
       </section>
 
       {/* Rule-based decisions */}
-      <section className="py-24 sm:py-32">
+      <section className="relative py-24 sm:py-32">
+        <RailMarker className="top-24 sm:top-32" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader {...c.rules} />
 
-          <Reveal className="mt-14 overflow-hidden rounded-2xl border border-white/[0.06] bg-navy-850">
-            <div className="hidden grid-cols-[180px_1fr_1fr] border-b border-white/[0.06] text-[11px] font-medium tracking-wider uppercase md:grid">
+          <Reveal className="mt-14 overflow-hidden rounded-2xl border border-hairline bg-navy-850">
+            <div className="hidden grid-cols-[180px_1fr_1fr] border-b border-hairline text-[11px] font-medium tracking-wider uppercase md:grid">
               <div className="px-6 py-4 text-white/55">{c.columns.criterion}</div>
               <div className="px-6 py-4 text-white/55">{c.columns.probabilistic}</div>
               <div className="px-6 py-4 text-white/70">{c.columns.deterministic}</div>
             </div>
-            <dl className="divide-y divide-white/[0.06]">
+            <dl className="divide-y divide-hairline">
               {c.comparison.map((row) => (
                 <div
                   key={row.criterion}
@@ -505,7 +609,7 @@ export default function AboutView({ locale }: { locale: Locale }) {
                     </span>
                     {row.probabilistic}
                   </dd>
-                  <dd className="text-sm leading-relaxed text-white/80 md:border-l md:border-white/[0.06] md:bg-white/[0.02] md:px-6 md:py-5">
+                  <dd className="text-sm leading-relaxed text-white/80 md:border-l md:border-hairline md:bg-white/[0.02] md:px-6 md:py-5">
                     <span className="mr-2 text-[10px] font-medium uppercase tracking-wide text-white/60 md:hidden">
                       {c.shortColumns.deterministic}
                     </span>
@@ -518,57 +622,90 @@ export default function AboutView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
+      {/* R&D focus areas and what they change for the institution */}
+      <section id="odaklar" className="relative scroll-mt-24 py-24 sm:py-32">
+        <RailMarker className="top-24 sm:top-32" />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeader {...c.focusHeading} />
+          <JoinedGrid className="mt-14" columns="lg:grid-cols-3">
+            {c.focus.map(({ title, body, rows, outcome }, i) => (
+              <SpecCard
+                key={title}
+                variant="cell"
+                align={{ rows: Math.max(...c.focus.map((x) => x.rows.length)), outcome: true }}
+                icon={focusIcons[i]}
+                accent={focusAccents[i]}
+                prominent
+                title={title}
+                body={body}
+                rows={rows}
+                outcome={outcome}
+              />
+            ))}
+          </JoinedGrid>
+        </div>
+      </section>
+
       {/* R&D discipline */}
-      <section className="py-24 sm:py-32">
+      <section className="relative py-24 sm:py-32">
+        <RailMarker className="top-24 sm:top-32" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader {...c.rndHeading} />
-          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <JoinedGrid className="mt-14" columns="sm:grid-cols-2 lg:grid-cols-4">
             {c.rnd.map(({ title, body, rows }, i) => (
-              <Reveal key={title} delay={i * 0.04} className="h-full">
-                <SpecCard icon={rndIcons[i]} title={title} body={body} rows={rows} />
-              </Reveal>
+              <SpecCard
+                key={title}
+                variant="cell"
+                align={{ rows: Math.max(...c.rnd.map((x) => x.rows.length)) }}
+                icon={rndIcons[i]}
+                title={title}
+                body={body}
+                rows={rows}
+              />
             ))}
-          </div>
+          </JoinedGrid>
         </div>
       </section>
 
       {/* Regulatory and quality framework */}
-      <section className="py-24 sm:py-32">
+      <section className="relative py-24 sm:py-32">
+        <RailMarker className="top-24 sm:top-32" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader {...c.regulatoryHeading} />
-          <div className="mt-14 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <JoinedGrid className="mt-14" columns="sm:grid-cols-2 xl:grid-cols-4">
             {c.regulatory.map((r, i) => {
               const meta = regulatoryMeta[i];
               return (
-                <Reveal key={meta.id} delay={i * 0.04} className="h-full">
-                  <SpecCard
-                    id={meta.id}
-                    icon={meta.icon}
-                    title={r.title}
-                    body={r.body}
-                    rows={r.rows}
-                    status={{ label: r.status, tone: meta.tone }}
-                  />
-                </Reveal>
+                <SpecCard
+                  key={meta.id}
+                  variant="cell"
+                  align={{ rows: Math.max(...c.regulatory.map((x) => x.rows.length)) }}
+                  id={meta.id}
+                  accent={meta.accent}
+                  icon={meta.icon}
+                  title={r.title}
+                  body={r.body}
+                  rows={r.rows}
+                  status={{ label: r.status, tone: meta.tone }}
+                />
               );
             })}
-          </div>
+          </JoinedGrid>
         </div>
       </section>
 
       {/* Clinical collaboration */}
-      <section className="py-24 sm:py-32">
+      <section className="relative py-24 sm:py-32">
+        <RailMarker className="top-24 sm:top-32" />
         <div className="mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[1fr_1.4fr] lg:px-8">
           <SectionHeader {...c.collaborationHeading} />
-          <ul className="grid gap-4 sm:grid-cols-2">
+          <JoinedGrid as="ul" columns="sm:grid-cols-2">
             {c.collaboration.map(({ title, body, rows }, i) => (
               <li key={title}>
-                <Reveal delay={i * 0.04} className="h-full">
-                  <SpecCard icon={collaborationIcons[i]} title={title} body={body} rows={rows} />
-                </Reveal>
+                <SpecCard variant="cell" icon={collaborationIcons[i]} title={title} body={body} rows={rows} />
               </li>
             ))}
-          </ul>
+          </JoinedGrid>
         </div>
       </section>
 

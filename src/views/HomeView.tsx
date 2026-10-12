@@ -29,9 +29,9 @@ type Step = { stage: string; title: string; body: string; output: string };
 const audienceIcons = [Stethoscope, Receipt, Building2];
 
 const copy = defineContent<{
-  eyebrow: string;
+  /** Clinical stamp above the hero title: verifiable regulatory facts only, typed as shown (no CSS uppercase, keeps "IIa"). */
+  stamp: string;
   title: string;
-  titleMuted: string;
   /** Phrase inside the title rendered in the signature face. */
   titleSignature: string;
   lead: string;
@@ -46,9 +46,8 @@ const copy = defineContent<{
   audiences: { title: string; body: string }[];
 }>({
   tr: {
-    eyebrow: "LavieuxLabs · Sağlık teknolojileri Ar-Ge",
-    title: "İlaç güvenliği ve hastane faturalaması için",
-    titleMuted: "karar destek yazılımı.",
+    stamp: "CDSS · MDR SINIF IIa HEDEFİ · THS 4",
+    title: "İlaç güvenliği ve hastane faturalaması için karar destek yazılımı.",
     titleSignature: "karar destek",
     lead: "PharmaDeux, çoklu ilaç tedavisinde riskli kombinasyonları reçete anında hekime gösterir. Shield, SUT ve SGK red risklerini fatura gönderilmeden önce yakalar. İkisinde de son kararı yetkili kişi verir ve her adım kayda geçer.",
     ctaProducts: "Ürünleri inceleyin",
@@ -157,9 +156,8 @@ const copy = defineContent<{
     ],
   },
   en: {
-    eyebrow: "LavieuxLabs · Health technology R&D",
-    title: "Decision support software for",
-    titleMuted: "medication safety and hospital billing.",
+    stamp: "CDSS · MDR CLASS IIa TARGET · TRL 4",
+    title: "Decision support software for medication safety and hospital billing.",
     titleSignature: "Decision support",
     lead: "PharmaDeux shows the physician risky drug combinations in polypharmacy at the moment of prescription. Shield catches reimbursement and audit risks before a claim is submitted. In both, a qualified person makes the final decision and every step is recorded.",
     ctaProducts: "See the products",
@@ -269,7 +267,7 @@ const copy = defineContent<{
   },
 });
 
-// Wraps the signature phrase (if present in this part of the title) in the signature face.
+// Wraps the signature phrase (if present in the title) in the signature face.
 function withSignature(text: string, signature: string) {
   const i = text.indexOf(signature);
   if (i === -1) return text;
@@ -292,15 +290,16 @@ export default function HomeView({ locale }: { locale: Locale }) {
       {/* Hero */}
       <section className="relative isolate flex min-h-[100svh] flex-col justify-center pt-28 pb-16">
         <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <RailMarker scope="container" className="-top-1" />
+          <RailMarker scope="container" className="top-2" />
           <Reveal>
-            <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.eyebrow}</p>
+            <p className="inline-flex rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] tracking-wide text-white/55">
+              {c.stamp}
+            </p>
           </Reveal>
 
           <Reveal delay={0.08}>
             <h1 className="mt-5 max-w-4xl text-4xl leading-[1.05] font-serif font-medium tracking-[-0.02em] text-white sm:text-5xl lg:text-[64px]">
-              {withSignature(c.title, c.titleSignature)}{" "}
-              <span className="text-white/50">{withSignature(c.titleMuted, c.titleSignature)}</span>
+              {withSignature(c.title, c.titleSignature)}
             </h1>
           </Reveal>
 
@@ -326,7 +325,7 @@ export default function HomeView({ locale }: { locale: Locale }) {
           </Reveal>
 
           <Reveal delay={0.32} className="mt-16 sm:mt-20">
-            <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06] lg:grid-cols-4">
+            <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-hairline bg-hairline lg:grid-cols-4">
               {c.heroStats.map((s) => (
                 <div key={s.label} className="flex flex-col-reverse bg-navy-900 p-5">
                   <dt className="mt-1.5 text-xs leading-snug text-white/50">{s.label}</dt>
@@ -378,13 +377,13 @@ export default function HomeView({ locale }: { locale: Locale }) {
             description={c.pipeline.description}
           />
           <Reveal className="mt-14">
-            <ol className="grid gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-4">
+            <ol className="grid gap-px overflow-hidden rounded-xl border border-hairline bg-hairline sm:grid-cols-2 lg:grid-cols-4">
               {c.pipeline.steps.map((step) => (
                 <li key={step.stage} className="flex flex-col bg-navy-850 p-5 sm:p-6">
                   <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{step.stage}</p>
                   <h3 className="mt-3 text-[15px] font-semibold tracking-[-0.01em] text-white">{step.title}</h3>
                   <p className="mt-2 text-[13.5px] leading-relaxed text-white/55">{step.body}</p>
-                  <p className="mt-auto border-t border-white/[0.06] pt-3 text-[12px] text-white/55">
+                  <p className="mt-auto border-t border-hairline pt-3 text-[12px] text-white/55">
                     <span className="text-white/55">{c.pipeline.output} · </span>
                     <span className="font-mono text-white/70">{step.output}</span>
                   </p>
@@ -404,7 +403,7 @@ export default function HomeView({ locale }: { locale: Locale }) {
           primaryHref={href("/contact")}
           primaryLabel={c.ctaPilot}
           aside={
-            <ul className="divide-y divide-white/[0.06] border-y border-white/[0.06]">
+            <ul className="divide-y divide-hairline border-y border-hairline">
               {c.audiences.map(({ title, body }, i) => {
                 const Icon = audienceIcons[i];
                 return (
