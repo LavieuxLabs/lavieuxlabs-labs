@@ -4,13 +4,15 @@ import { Fragment, useId, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { ArrowUpRight, ChevronDown, Download } from "lucide-react";
 import CopyPayloadButton from "@/components/CopyPayloadButton";
-import { CLINICAL_CASES } from "@/lib/clinicalCases";
-import { caseToFhirBundle, medicationRequest } from "@/lib/fhirPayload";
+import { medicationRequest, qtcObservation, tisdaleObservation } from "@/lib/fhirPayload";
+import { DRUGS, tisdale } from "@/lib/qtSimulator";
+import { useQtState } from "@/lib/qtStore";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 
-// Example FHIR R4 payloads for hospital IT: the order (MedicationRequest, ATC-coded) and the QTc
-// measurement (Observation, LOINC) from example case 3. Fixed timestamp so prerender and hydration
-// match. Highlighting is neutral (weight and opacity), because the data layer carries no product colour.
+// Example FHIR R4 payloads for hospital IT, generated live from the QT simulator above: one
+// MedicationRequest per selected drug (WHO ATC), the selected measured QTc (Observation, LOINC 8636-3)
+// and the Tisdale score as its own Observation. Fixed timestamp so prerender and hydration match.
+// Highlighting is neutral (weight and opacity), because the data layer carries no product colour.
 
 const AUTHORED = "2026-10-12T09:00:00+03:00";
 
@@ -18,30 +20,46 @@ const copy = defineContent({
   tr: {
     toggle: "Örnek FHIR R4 yükünü göster",
     hide: "Örnek yükü gizle",
-    tabs: { request: "MedicationRequest", observation: "Observation · QTc" },
+    tabs: { observation: "Observation · QTc", score: "Observation · Tisdale" },
     tabsAria: "FHIR kaynağı",
     copyAria: (name: string) => `${name} JSON'unu kopyala`,
     download: "Örnek Bundle indir (JSON)",
-    caption: "Örnek vaka 3 · kurgusal veri · her kaynak HTEST (test verisi) etiketi taşır.",
+    caption: "QT simülatöründeki seçimden üretilir · kurgusal veri · her kaynak HTEST (test verisi) etiketi taşır.",
     apiLabel: "OpenAPI / Postman",
     apiBody: "Henüz yayımlanmadı. Arayüz belgesi pilot öncesi teknik keşifte bilgi işlem ekibinizle paylaşılır.",
     apiCta: "Teknik görüşme isteyin",
-    amiodarone: "Amiodaron 200 mg tablet",
-    azithromycin: "Azitromisin 500 mg tablet",
+    tablet: "tablet",
+    factors: {
+      age: "Yaş ≥68",
+      female: "Kadın",
+      loop: "Loop diüretik",
+      lowK: "K⁺ ≤3,5 mmol/L",
+      qtc450: "QTc ≥450 ms",
+      oneDrug: "QT uzatan ilaç",
+      twoDrugs: "≥2 QT uzatan ilaç",
+    } as Record<string, string>,
   },
   en: {
     toggle: "Show example FHIR R4 payload",
     hide: "Hide example payload",
-    tabs: { request: "MedicationRequest", observation: "Observation · QTc" },
+    tabs: { observation: "Observation · QTc", score: "Observation · Tisdale" },
     tabsAria: "FHIR resource",
     copyAria: (name: string) => `Copy the ${name} JSON`,
     download: "Download example Bundle (JSON)",
-    caption: "Example case 3 · fictional data · every resource carries the HTEST (test data) tag.",
+    caption: "Generated from the QT simulator selection · fictional data · every resource carries the HTEST (test data) tag.",
     apiLabel: "OpenAPI / Postman",
     apiBody: "Not published yet. The interface document is shared with your IT team during the pre-pilot technical review.",
     apiCta: "Request a technical call",
-    amiodarone: "Amiodarone 200 mg tablet",
-    azithromycin: "Azithromycin 500 mg tablet",
+    tablet: "tablet",
+    factors: {
+      age: "Age ≥68",
+      female: "Female",
+      loop: "Loop diuretic",
+      lowK: "K⁺ ≤3.5 mmol/L",
+      qtc450: "QTc ≥450 ms",
+      oneDrug: "QT-prolonging drug",
+      twoDrugs: "≥2 QT-prolonging drugs",
+    } as Record<string, string>,
   },
 });
 
@@ -85,23 +103,45 @@ export default function FhirPreview({ locale }: { locale: Locale }) {
   const c = copy[locale];
   const uid = useId();
   const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState<"request" | "observation">("request");
+  const [tab, setTab] = useState<string>("drug1");
+  const qt = useQtState();
 
   const payloads = useMemo(() => {
-    const bundle = caseToFhirBundle(CLINICAL_CASES[locale][2], "case-3", AUTHORED);
-    const observation = bundle.entry.find((e) => e.resource.id === "case-3-qtc")!.resource;
-    const requests = [
-      medicationRequest("case-3-amiodarone", { atc: "C01BD01", display: "amiodarone", text: c.amiodarone, doseMg: 200 }, AUTHORED),
-      medicationRequest("case-3-azithromycin", { atc: "J01FA10", display: "azithromycin", text: c.azithromycin, doseMg: 500 }, AUTHORED),
-    ];
+    const drugs = [qt.drug1, qt.drug2].map((id) => DRUGS.find((d) => d.id === id)!);
+    const requests = drugs.map((d) =>
+      medicationRequest(
+        `sim-${d.id}`,
+        { atc: d.atc, display: d.id, text: `${d.name[locale]} ${d.dose} ${c.tablet}`, doseMg: Number.parseInt(d.dose, 10) },
+        AUTHORED,
+      ),
+    );
+    const observation = qtcObservation("sim-qtc", qt.patient.qtc, AUTHORED);
+    const result = tisdale(qt.patient, drugs[0], drugs[1]);
+    const score = tisdaleObservation(
+      "sim-tisdale",
+      result.factors.map((f) => ({ factor: c.factors[f.key], points: f.points })),
+      AUTHORED,
+    );
+    const resources = [...requests, observation, score];
     const full = {
-      ...bundle,
-      entry: [...requests.map((r) => ({ fullUrl: `urn:uuid:${r.id}`, resource: r })), ...bundle.entry],
+      resourceType: "Bundle",
+      id: "pharmadeux-qt-simulator",
+      meta: { tag: [{ system: "http://terminology.hl7.org/CodeSystem/v3-ActReason", code: "HTEST", display: "test health data" }] },
+      type: "collection",
+      timestamp: AUTHORED,
+      entry: resources.map((r) => ({ fullUrl: `urn:uuid:${r.id}`, resource: r })),
     };
-    return { request: requests[0], observation, full };
-  }, [locale, c.amiodarone, c.azithromycin]);
+    const tabs = [
+      { key: "drug1", label: `MedicationRequest · ${drugs[0].name[locale]}`, payload: requests[0] as object },
+      { key: "drug2", label: `MedicationRequest · ${drugs[1].name[locale]}`, payload: requests[1] as object },
+      { key: "observation", label: c.tabs.observation, payload: observation as object },
+      { key: "score", label: c.tabs.score, payload: score as object },
+    ];
+    return { tabs, full };
+  }, [qt, locale, c]);
 
-  const current = payloads[tab];
+  const active = payloads.tabs.find((t) => t.key === tab) ?? payloads.tabs[0];
+  const current = active.payload;
   const json = JSON.stringify(current, null, 2);
 
   const download = () => {
@@ -130,24 +170,24 @@ export default function FhirPreview({ locale }: { locale: Locale }) {
       {open && (
         <div id={`${uid}-panel`} className="border-t border-hairline">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline px-5 py-2.5">
-            <div role="tablist" aria-label={c.tabsAria} className="flex rounded-md border border-hairline bg-white/[0.03] p-0.5">
-              {(["request", "observation"] as const).map((key) => (
+            <div role="tablist" aria-label={c.tabsAria} className="flex flex-wrap rounded-md border border-hairline bg-white/[0.03] p-0.5">
+              {payloads.tabs.map(({ key, label }) => (
                 <button
                   key={key}
                   type="button"
                   role="tab"
-                  aria-selected={tab === key}
+                  aria-selected={active.key === key}
                   onClick={() => setTab(key)}
                   className={`rounded-[5px] px-2.5 py-1 font-mono text-[11.5px] transition-colors duration-150 ease-out ${
-                    tab === key ? "bg-white/[0.1] text-white" : "text-white/55 hover:text-white"
+                    active.key === key ? "bg-white/[0.1] text-white" : "text-white/55 hover:text-white"
                   }`}
                 >
-                  {c.tabs[key]}
+                  {label}
                 </button>
               ))}
             </div>
             <div className="flex items-center gap-2">
-              <CopyPayloadButton locale={locale} ariaLabel={c.copyAria(c.tabs[tab])} getPayload={() => current} />
+              <CopyPayloadButton locale={locale} ariaLabel={c.copyAria(active.label)} getPayload={() => current} />
               <button
                 type="button"
                 onClick={download}

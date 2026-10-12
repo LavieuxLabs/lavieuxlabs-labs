@@ -191,3 +191,34 @@ export function medicationRequest(
     ],
   };
 }
+
+/** A measured QTc (Fridericia) Observation in ms; no interpretation is attached to a raw measurement. */
+export function qtcObservation(id: string, ms: number, effective: string) {
+  const m = MEASUREMENTS.qtc;
+  return {
+    resourceType: "Observation",
+    id,
+    meta: { tag: TEST_TAG },
+    status: "final",
+    category: [{ coding: [{ system: "http://terminology.hl7.org/CodeSystem/observation-category", code: m.category }] }],
+    code: { coding: [{ system: "http://loinc.org", code: m.loinc, display: m.display }], text: "QTc (Fridericia)" },
+    subject: PATIENT,
+    effectiveDateTime: effective,
+    valueQuantity: { value: ms, unit: m.unit, system: "http://unitsofmeasure.org", code: m.ucum },
+  };
+}
+
+/** The Tisdale QT risk score as a separate Observation: a score is never folded into the QTc measurement. */
+export function tisdaleObservation(id: string, components: { factor: string; points: number }[], effective: string) {
+  return {
+    resourceType: "Observation",
+    id,
+    meta: { tag: TEST_TAG },
+    status: "final",
+    code: { text: "Tisdale QT prolongation risk score" },
+    subject: PATIENT,
+    effectiveDateTime: effective,
+    valueInteger: components.reduce((n, c) => n + c.points, 0),
+    component: components.map((c) => ({ code: { text: c.factor }, valueInteger: c.points })),
+  };
+}
