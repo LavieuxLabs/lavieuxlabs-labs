@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, ChevronDown, Menu, Pill, ShieldCheck, X } from "lucide-react";
 import LanguageSwitch from "@/components/LanguageSwitch";
+import CommandPalette from "@/components/CommandPalette";
 import { navigation } from "@/lib/site";
 import { localizedPath, stripLocale, type Locale } from "@/i18n/config";
 
@@ -132,7 +133,7 @@ function ProductsMenu({ active, locale }: { active: boolean; locale: Locale }) {
             transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
             className="absolute top-full left-1/2 w-[400px] -translate-x-1/2 pt-3"
           >
-            <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-navy-800 shadow-xl shadow-black/40">
+            <div className="overflow-hidden rounded-2xl border border-hairline bg-navy-800 shadow-xl shadow-black/40">
               <ul className="p-2">
                 {nav.products.map((p) => {
                   const Icon = productIcons[p.icon];
@@ -163,7 +164,7 @@ function ProductsMenu({ active, locale }: { active: boolean; locale: Locale }) {
               <Link
                 href={localizedPath(locale, "/#platformlar")}
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-between border-t border-white/[0.06] bg-white/[0.02] px-5 py-3 text-xs font-medium uppercase tracking-wide text-white/55 transition-colors duration-150 ease-out hover:text-white"
+                className="flex items-center justify-between border-t border-hairline bg-white/[0.02] px-5 py-3 text-xs font-medium uppercase tracking-wide text-white/55 transition-colors duration-150 ease-out hover:text-white"
               >
                 {nav.allProducts}
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -193,13 +194,13 @@ export default function Navbar({ locale }: { locale: Locale }) {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 print:hidden">
-      <div className="material-bar border-b border-white/[0.06]">
+      <div className="material-bar border-b border-hairline">
         <nav
           aria-label={nav.mainNav}
           className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
         >
           <Link href={localizedPath(locale, "/")} className="group flex items-center gap-2.5" aria-label={nav.homeAria}>
-            <LogoMark className="h-7 w-7 text-teal-300" />
+            <LogoMark className="h-7 w-7 text-titanium" />
             <span className="text-[15px] font-semibold tracking-[-0.02em] text-white">
               Lavieux<span className="text-white/50">Labs</span>
             </span>
@@ -225,6 +226,7 @@ export default function Navbar({ locale }: { locale: Locale }) {
           </ul>
 
           <div className="flex items-center gap-3">
+            <CommandPalette locale={locale} />
             <LanguageSwitch locale={locale} className="hidden md:flex" />
 
             <Link
@@ -257,7 +259,7 @@ export default function Navbar({ locale }: { locale: Locale }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="material-bar border-b border-white/[0.06] md:hidden"
+            className="material-bar border-b border-hairline md:hidden"
           >
             <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
               <p className="px-2 pt-2 pb-1 text-[11px] font-medium tracking-wider text-white/50 uppercase">{nav.productsLabel}</p>
@@ -285,7 +287,7 @@ export default function Navbar({ locale }: { locale: Locale }) {
                   );
                 })}
               </ul>
-              <ul className="mt-2 border-t border-white/[0.06] pt-2">
+              <ul className="mt-2 border-t border-hairline pt-2">
                 {nav.links.map((link) => (
                   <li key={link.href}>
                     <Link

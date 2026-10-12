@@ -4,6 +4,7 @@ import { LogoMark } from "@/components/Navbar";
 import { CookieSettingsButton } from "@/components/CookieBanner";
 import LanguageSwitch from "@/components/LanguageSwitch";
 import CopyEmail from "@/components/CopyEmail";
+import VerificationImprint from "@/components/VerificationImprint";
 import { LEGAL_LAST_UPDATED, navigation, office } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 import pkg from "../../package.json";
@@ -11,7 +12,7 @@ import pkg from "../../package.json";
 const linkClass = "text-[13px] text-white/60 transition-colors duration-150 ease-out hover:text-white";
 const labelClass = "text-[11px] font-medium tracking-wider text-white/55 uppercase";
 // Both plates share one construction: hairline frame, 1px gaps as rules, deep cells.
-const plateClass = "grid gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06]";
+const plateClass = "grid gap-px overflow-hidden rounded-xl border border-hairline bg-hairline";
 const cellClass = "bg-navy-950 px-4 py-4";
 
 const copy = defineContent({
@@ -78,11 +79,11 @@ export default function Footer({ locale }: { locale: Locale }) {
   const href = (path: string) => localizedPath(locale, path);
 
   return (
-    <footer className="relative border-t border-white/[0.06] bg-navy-950 print:hidden">
+    <footer className="relative border-t border-hairline bg-navy-950 print:hidden">
       <div className="mx-auto max-w-7xl px-4 pt-12 pb-10 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Link href={href("/")} className="group flex items-center gap-2.5 self-start" aria-label={nav.homeAria}>
-            <LogoMark className="h-6 w-6 text-teal-300" />
+            <LogoMark className="h-6 w-6 text-titanium" />
             <span className="text-[15px] font-semibold tracking-[-0.02em] text-white">
               Lavieux<span className="text-white/50">Labs</span>
             </span>
@@ -155,6 +156,7 @@ export default function Footer({ locale }: { locale: Locale }) {
         <div className="mt-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-10">
           <p className="max-w-3xl text-xs leading-relaxed text-white/55">{c.disclaimer}</p>
           <div className="flex shrink-0 items-center gap-4">
+            <VerificationImprint locale={locale} />
             <LanguageSwitch locale={locale} />
             <p className="text-xs text-white/55">
               © <span className="font-mono tabular-nums">2026</span> LavieuxLabs
