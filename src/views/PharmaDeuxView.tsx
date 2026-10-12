@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  Pill,
   Activity,
   ArrowUpRight,
   Binary,
@@ -23,8 +24,11 @@ import SectionHeader from "@/components/SectionHeader";
 import FlowDiagram from "@/components/FlowDiagram";
 import CtaPanel from "@/components/CtaPanel";
 import Reveal from "@/components/Reveal";
-import SpecCard, { type SpecRow } from "@/components/SpecCard";
+import SpecCard, { JoinedGrid, type SpecRow } from "@/components/SpecCard";
 import JsonLd from "@/components/JsonLd";
+import FhirPreview from "@/components/FhirPreview";
+import { RailMarker } from "@/components/TelemetryRails";
+import QtSimulator from "@/components/QtSimulator";
 import { pharmaDeuxJsonLd } from "@/lib/structuredData";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
@@ -57,12 +61,27 @@ const pairCounts = [5, 8, 10, 15].map((n) => ({ n, pairs: (n * (n - 1)) / 2 }));
 
 type Heading = { eyebrow: string; title: string; description: string };
 
+const simCopy = defineContent({
+  tr: {
+    eyebrow: "QT risk simülatörü",
+    title: "İki ilaç seçin, skoru kural motoru hesaplasın.",
+    description:
+      "Örnek hastanın ölçülen QTc'si ve risk faktörleri Tisdale skoruna dönüştürülür. Her puanın hangi faktörden geldiği ve tetiklenen kural yanında görünür.",
+  },
+  en: {
+    eyebrow: "QT risk simulator",
+    title: "Pick two drugs and let the rule engine score them.",
+    description:
+      "The example patient's measured QTc and risk factors are turned into the Tisdale score. Every point shows the factor it comes from, next to the rule that fired.",
+  },
+});
+
 const copy = defineContent<{
   sections: { id: string; label: string }[];
   heroStats: { value: string; label: string }[];
   crumbs: { home: string; products: string };
   eyebrow: string;
-  titleMuted: string;
+  title: string;
   description: string;
   ctaPilot: string;
   ctaHow: string;
@@ -93,6 +112,7 @@ const copy = defineContent<{
     sections: [
       { id: "problem", label: "Sorun" },
       { id: "mimari", label: "Nasıl çalışır" },
+      { id: "simulator", label: "QT simülatörü" },
       { id: "entegrasyon", label: "HBYS entegrasyonu" },
       { id: "dogrulama", label: "Doğrulama" },
       { id: "regulasyon", label: "Regülasyon" },
@@ -106,7 +126,7 @@ const copy = defineContent<{
     ],
     crumbs: { home: "Ana sayfa", products: "Ürünler" },
     eyebrow: "Klinik karar destek · ilaç güvenliği",
-    titleMuted: "Reçete yazılırken ilaç güvenliğini kontrol eder.",
+    title: "PharmaDeux CDSS. Reçete yazılırken ilaç güvenliğini kontrol eder.",
     description:
       "Çoklu ilaç tedavilerinde toksisite ve kümülatif organ yükünü reçete anında hekime bildiren klinik karar destek sistemi. Her uyarı, onu tetikleyen kural ve eşik değeriyle birlikte gösterilir; son karar hekimindir.",
     ctaPilot: "Pilot başvurusu (LOI)",
@@ -371,6 +391,7 @@ const copy = defineContent<{
     sections: [
       { id: "problem", label: "Problem" },
       { id: "mimari", label: "How it works" },
+      { id: "simulator", label: "QT simulator" },
       { id: "entegrasyon", label: "Integration" },
       { id: "dogrulama", label: "Verification" },
       { id: "regulasyon", label: "Regulation" },
@@ -384,7 +405,7 @@ const copy = defineContent<{
     ],
     crumbs: { home: "Home", products: "Products" },
     eyebrow: "Clinical decision support · medication safety",
-    titleMuted: "Checks medication safety while the prescription is written.",
+    title: "PharmaDeux CDSS. Checks medication safety while the prescription is written.",
     description:
       "Clinical decision support software alerting physicians to cumulative organ burden and toxicity at the moment of prescription. Each alert is shown with the rule and threshold that triggered it; the physician makes the final decision.",
     ctaPilot: "Apply for a pilot (LOI)",
@@ -655,12 +676,15 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
       <JsonLd data={pharmaDeuxJsonLd(locale)} />
       <PageHero
         locale={locale}
+        ambient="pharma"
+        eyebrowIcon={{ icon: Pill, className: "text-pharma" }}
         visual={<PharmaCapsule locale={locale} />}
         visualClassName="relative mx-auto w-full max-w-[360px] sm:max-w-[420px] lg:max-w-[520px]"
         below={
-          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06] lg:grid-cols-4">
+          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-hairline bg-hairline lg:grid-cols-4">
             {c.heroStats.map((s) => (
-              <div key={s.label} className="flex flex-col-reverse bg-navy-900 p-5">
+              <div key={s.label} className="relative flex flex-col-reverse bg-navy-900 p-5">
+                <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-pharma/30" />
                 <dt className="mt-1.5 text-xs leading-snug text-white/50">{s.label}</dt>
                 <dd className="font-mono text-xl font-medium tracking-[-0.01em] text-white tabular-nums sm:text-2xl">
                   {s.value}
@@ -675,11 +699,7 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
           { label: "PharmaDeux CDSS" },
         ]}
         eyebrow={c.eyebrow}
-        title={
-          <>
-            PharmaDeux CDSS. <span className="text-white/50">{c.titleMuted}</span>
-          </>
-        }
+        title={c.title}
         description={c.description}
       >
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -704,15 +724,23 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
       {/* Problem */}
       <section id="problem" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.problem} />
+          <SectionHeader accent="pharma" {...c.problem} />
 
           <div className="mt-14 grid gap-5 lg:grid-cols-[1.4fr_1fr]">
-            <div className="grid gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.06] sm:grid-cols-2">
+            <div className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline sm:grid-cols-2">
               {c.problems.map(({ title, body }, i) => {
                 const Icon = problemIcons[i];
                 return (
-                  <div key={title} className="bg-navy-850 p-6 sm:p-7">
-                    <Icon className="h-5 w-5 text-white/55" strokeWidth={1.6} aria-hidden="true" />
+                  <div
+                    key={title}
+                    className="group relative bg-navy-850 p-6 transition-colors duration-150 ease-out hover:bg-navy-800 sm:p-7"
+                  >
+                    <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-transparent transition-colors duration-150 ease-out group-hover:bg-pharma/50" />
+                    <Icon
+                      className="h-5 w-5 text-white/55 transition-colors duration-150 ease-out group-hover:text-pharma"
+                      strokeWidth={1.6}
+                      aria-hidden="true"
+                    />
                     <h3 className="mt-5 text-base font-semibold tracking-[-0.01em] text-white">{title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-white/55">{body}</p>
                   </div>
@@ -720,24 +748,25 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
               })}
             </div>
 
-            <Reveal className="flex flex-col rounded-2xl border border-white/[0.06] bg-navy-850 p-6 sm:p-7">
+            <Reveal className="flex flex-col rounded-2xl border border-hairline bg-navy-850 p-6 sm:p-7">
               <p className={LABEL}>{c.pairs.label}</p>
               <p className="mt-3 text-sm leading-relaxed text-white/60">{c.pairs.body}</p>
-              <table className="mt-6 w-full text-left text-sm">
+              <div className="-mx-6 mt-6 sm:-mx-7">
+              <table className="w-full text-left text-sm">
                 <thead>
-                  <tr className="border-b border-white/[0.06] text-[11px] text-white/55">
-                    <th className="py-2 font-medium">{c.pairs.drugs}</th>
-                    <th className="py-2 text-right font-medium">{c.pairs.combos}</th>
+                  <tr className="border-y border-hairline text-[11px] text-white/55">
+                    <th className="py-2 pl-6 font-medium sm:pl-7">{c.pairs.drugs}</th>
+                    <th className="py-2 pr-6 text-right font-medium sm:pr-7">{c.pairs.combos}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/[0.06]">
+                <tbody className="divide-y divide-hairline border-b border-hairline">
                   {pairCounts.map(({ n, pairs }) => (
                     <tr key={n}>
-                      <td className="py-2.5 font-mono text-white/70 tabular-nums">{n}</td>
-                      <td className="py-2.5 text-right">
+                      <td className="py-2.5 pl-6 font-mono text-white/70 tabular-nums sm:pl-7">{n}</td>
+                      <td className="py-2.5 pr-6 text-right sm:pr-7">
                         <span className="inline-flex items-center gap-3">
                           <span
-                            className="h-1 rounded-sm bg-pharma/60"
+                            className="h-1 rounded-sm bg-titanium/60"
                             style={{ width: `${(pairs / 105) * 120}px` }}
                             aria-hidden="true"
                           />
@@ -748,6 +777,7 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
                   ))}
                 </tbody>
               </table>
+              </div>
               <p className="mt-auto pt-6 text-xs leading-relaxed text-white/55">
                 {c.pairs.source} <span className="text-white/55">{c.pairs.sourceRef}</span>
               </p>
@@ -759,7 +789,7 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
       {/* How it works */}
       <section id="mimari" className="relative scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.how} />
+          <SectionHeader accent="pharma" {...c.how} />
           <div className="mt-14">
             <FlowDiagram locale={locale} steps={c.pipeline.map((step, i) => ({ ...step, icon: pipelineIcons[i] }))} />
           </div>
@@ -773,7 +803,7 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
               <p className="max-w-md text-sm leading-relaxed text-white/50">{c.planes.body}</p>
             </Reveal>
             <Reveal className="mt-8">
-              <div className="grid gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.06] md:grid-cols-2 xl:grid-cols-4">
+              <div className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline md:grid-cols-2 xl:grid-cols-4">
                 {c.planeGroups.map((group, gi) => {
                   const offset = c.planeGroups.slice(0, gi).reduce((sum, g) => sum + g.planes.length, 0);
                   return (
@@ -782,9 +812,9 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
                         <h4 className="text-sm font-semibold text-white">{group.title}</h4>
                         <span className="font-mono text-[11px] text-white/55 tabular-nums">{group.planes.length}</span>
                       </div>
-                      <ul className="mt-3 divide-y divide-white/[0.06]">
+                      <ul className="-mx-5 mt-3 divide-y divide-hairline border-t border-hairline">
                         {group.planes.map((plane, pi) => (
-                          <li key={plane} className="flex items-baseline gap-3 py-2">
+                          <li key={plane} className="flex items-baseline gap-3 px-5 py-2">
                             <span className="font-mono text-[11px] text-white/55 tabular-nums">
                               P{String(offset + pi + 1).padStart(2, "0")}
                             </span>
@@ -801,33 +831,49 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
+      {/* Interactive simulator */}
+      <section id="simulator" className="relative scroll-mt-32 py-24 sm:py-32">
+        <RailMarker className="top-24 sm:top-32" />
+        <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:px-8">
+          <SectionHeader accent="pharma" {...simCopy[locale]} />
+          <Reveal className="min-w-0">
+            <QtSimulator locale={locale} />
+          </Reveal>
+        </div>
+      </section>
+
       {/* Hospital system integration */}
       <section id="entegrasyon" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.integration} />
-          <div className="mt-14 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <SectionHeader accent="pharma" {...c.integration} />
+          <JoinedGrid className="mt-14" columns="sm:grid-cols-2 xl:grid-cols-4">
             {c.integrationCards.map((card, i) => (
-              <Reveal key={integrationMeta[i].id} delay={i * 0.04} className="h-full">
-                <SpecCard
-                  id={integrationMeta[i].id}
-                  icon={integrationMeta[i].icon}
-                  title={card.title}
-                  body={card.body}
-                  rows={card.rows}
-                />
-              </Reveal>
+              <SpecCard
+                key={integrationMeta[i].id}
+                variant="cell"
+                align={{ rows: Math.max(...c.integrationCards.map((x) => x.rows.length)) }}
+                accent="pharma"
+                id={integrationMeta[i].id}
+                icon={integrationMeta[i].icon}
+                title={card.title}
+                body={card.body}
+                rows={card.rows}
+              />
             ))}
-          </div>
+          </JoinedGrid>
           <p className="mt-6 max-w-3xl text-sm leading-relaxed text-white/55">{c.integrationNote}</p>
+          <Reveal className="mt-8">
+            <FhirPreview locale={locale} />
+          </Reveal>
         </div>
       </section>
 
       {/* Validation */}
       <section id="dogrulama" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.validationHeading} />
+          <SectionHeader accent="pharma" {...c.validationHeading} />
           <Reveal className="mt-14">
-            <dl className="grid gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-4">
+            <dl className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline sm:grid-cols-2 lg:grid-cols-4">
               {c.validation.map((v) => (
                 <div key={v.title} className="flex flex-col bg-navy-850 p-6">
                   <dt className={LABEL}>{v.title}</dt>
@@ -850,23 +896,23 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
       <section id="regulasyon" className="relative scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[1fr_1.3fr] lg:px-8">
           <div>
-            <SectionHeader {...c.regulation} />
-            <Reveal className="mt-8 rounded-2xl border border-white/[0.06] bg-navy-850 p-6">
+            <SectionHeader accent="pharma" {...c.regulation} />
+            <Reveal className="mt-8 rounded-2xl border border-hairline bg-navy-850 p-6">
               <p className={LABEL}>{c.intendedUse.label}</p>
               <p className="mt-3 text-sm leading-relaxed text-white/70">{c.intendedUse.body}</p>
             </Reveal>
           </div>
 
-          <Reveal className="min-w-0 overflow-hidden rounded-2xl border border-white/[0.06] bg-navy-850">
+          <Reveal className="min-w-0 overflow-hidden rounded-2xl border border-hairline bg-navy-850">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-white/[0.06] text-[11px] text-white/55">
+              <thead className="border-b border-hairline text-[11px] text-white/55">
                 <tr>
                   <th className="px-5 py-3 font-medium">{c.frameworkColumns.framework}</th>
                   <th className="hidden px-5 py-3 font-medium sm:table-cell">{c.frameworkColumns.scope}</th>
                   <th className="px-5 py-3 text-right font-medium">{c.frameworkColumns.status}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/[0.06]">
+              <tbody className="divide-y divide-hairline">
                 {c.frameworks.map((f) => (
                   <tr key={f.code}>
                     <td className="px-5 py-3.5 align-top">
@@ -883,7 +929,7 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
                 ))}
               </tbody>
             </table>
-            <p className="border-t border-white/[0.06] px-5 py-4 text-xs leading-relaxed text-white/55">
+            <p className="border-t border-hairline px-5 py-4 text-xs leading-relaxed text-white/55">
               {c.regulationNote.before}{" "}
               <Link
                 href={href("/legal/quality")}
@@ -901,9 +947,9 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
       {/* Clinical validation plan */}
       <section id="protokol" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.protocolHeading} />
+          <SectionHeader accent="pharma" {...c.protocolHeading} />
           <Reveal className="mt-14">
-            <ol className="divide-y divide-white/[0.06] overflow-hidden rounded-2xl border border-white/[0.06] bg-navy-850">
+            <ol className="divide-y divide-hairline overflow-hidden rounded-2xl border border-hairline bg-navy-850">
               {c.protocol.map((p, i) => (
                 <li
                   key={p.phase}
@@ -935,7 +981,7 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
         primaryHref={href("/contact?solution=pharmadeux")}
         primaryLabel={c.ctaPilot}
         aside={
-          <ul className="divide-y divide-white/[0.06] self-center border-y border-white/[0.06]">
+          <ul className="divide-y divide-hairline self-center border-y border-hairline">
             {c.pilotAudiences.map((item) => (
               <li key={item} className="py-4 text-sm text-white/70">
                 {item}

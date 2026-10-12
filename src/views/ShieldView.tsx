@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  ShieldCheck,
   ArrowUpRight,
   Eye,
   FileClock,
@@ -20,6 +21,8 @@ import CtaPanel from "@/components/CtaPanel";
 import Reveal from "@/components/Reveal";
 import ShieldConsole from "@/components/ShieldConsole";
 import JsonLd from "@/components/JsonLd";
+import { RailMarker } from "@/components/TelemetryRails";
+import ClaimSimulator from "@/components/ClaimSimulator";
 import { shieldJsonLd } from "@/lib/structuredData";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
@@ -43,12 +46,27 @@ const pipelineIcons = [Receipt, ShieldAlert, Gauge, Inbox, Send, FileClock];
 
 type Heading = { eyebrow: string; title: string; description: string };
 
+const simCopy = defineContent({
+  tr: {
+    eyebrow: "Fatura uygunluk simülatörü",
+    title: "Bir kalem seçin, red riskini gönderimden önce görün.",
+    description:
+      "Branş, fatura kalemi ve tanı kodu değiştikçe kural motoru skoru yeniden hesaplar. Eşik 40'ın üzerindeki kalem uzmanın kuyruğuna düşer.",
+  },
+  en: {
+    eyebrow: "Claim check simulator",
+    title: "Pick a line item and see its rejection risk before submission.",
+    description:
+      "As the department, line item and diagnosis code change, the rule engine recalculates the score. Items above the threshold of 40 go to the specialist's queue.",
+  },
+});
+
 const copy = defineContent<{
   sections: { id: string; label: string }[];
   heroStats: { value: string; label: string }[];
   crumbs: { home: string; products: string };
   eyebrow: string;
-  titleMuted: string;
+  title: string;
   description: string;
   ctaPilot: string;
   ctaTry: string;
@@ -73,6 +91,7 @@ const copy = defineContent<{
       { id: "problem", label: "Sorun" },
       { id: "mimari", label: "Nasıl çalışır" },
       { id: "konsol", label: "Risk skoru ve kuyruk" },
+      { id: "simulator", label: "Fatura simülatörü" },
       { id: "denetim", label: "Denetim kaydı" },
       { id: "izolasyon", label: "Erişim ve izolasyon" },
     ],
@@ -84,7 +103,7 @@ const copy = defineContent<{
     ],
     crumbs: { home: "Ana sayfa", products: "Ürünler" },
     eyebrow: "Gelir bütünlüğü · provizyon denetimi",
-    titleMuted: "Red riskini fatura gönderilmeden önce görün.",
+    title: "Shield. Red riskini fatura gönderilmeden önce görün.",
     description:
       "Hastane fatura ve provizyon süreçlerindeki SUT/SGK red risklerini işlem öncesinde tespit eden kurumsal denetim katmanı. Riskli kalem, nedeniyle birlikte uzmanın kuyruğuna düşer; gönderip göndermemeye uzman karar verir.",
     ctaPilot: "Demo veya pilot başvurusu",
@@ -219,6 +238,7 @@ const copy = defineContent<{
       { id: "problem", label: "Problem" },
       { id: "mimari", label: "How it works" },
       { id: "konsol", label: "Risk score and queue" },
+      { id: "simulator", label: "Claim simulator" },
       { id: "denetim", label: "Audit log" },
       { id: "izolasyon", label: "Access and isolation" },
     ],
@@ -230,7 +250,7 @@ const copy = defineContent<{
     ],
     crumbs: { home: "Home", products: "Products" },
     eyebrow: "Revenue integrity · claim pre-check",
-    titleMuted: "See rejection risk before the claim is submitted.",
+    title: "Shield. See rejection risk before the claim is submitted.",
     description:
       "Pre-claim revenue integrity platform identifying reimbursement and audit risks before submission. A risky line item goes to the specialist's queue with its reason; the specialist decides whether it is submitted.",
     ctaPilot: "Request a demo or pilot",
@@ -371,12 +391,15 @@ export default function ShieldView({ locale }: { locale: Locale }) {
       <JsonLd data={shieldJsonLd(locale)} />
       <PageHero
         locale={locale}
+        ambient="shield"
+        eyebrowIcon={{ icon: ShieldCheck, className: "text-shield" }}
         visual={<ShieldMatrix locale={locale} />}
         visualClassName="relative mx-auto w-full max-w-[340px] sm:max-w-[560px]"
         below={
-          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06] lg:grid-cols-4">
+          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-hairline bg-hairline lg:grid-cols-4">
             {c.heroStats.map((s) => (
-              <div key={s.label} className="flex flex-col-reverse bg-navy-900 p-5">
+              <div key={s.label} className="relative flex flex-col-reverse bg-navy-900 p-5">
+                <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-shield/30" />
                 <dt className="mt-1.5 text-xs leading-snug text-white/50">{s.label}</dt>
                 <dd
                   className={`text-xl font-medium tracking-[-0.01em] text-white sm:text-2xl ${
@@ -395,11 +418,7 @@ export default function ShieldView({ locale }: { locale: Locale }) {
           { label: "Shield", lang: "en" },
         ]}
         eyebrow={c.eyebrow}
-        title={
-          <>
-            Shield. <span className="text-white/50">{c.titleMuted}</span>
-          </>
-        }
+        title={c.title}
         description={c.description}
       >
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -424,13 +443,21 @@ export default function ShieldView({ locale }: { locale: Locale }) {
       {/* Problem */}
       <section id="problem" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.problem} />
-          <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.06] md:grid-cols-3">
+          <SectionHeader accent="shield" {...c.problem} />
+          <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline md:grid-cols-3">
             {c.problems.map(({ title, body }, i) => {
               const Icon = problemIcons[i];
               return (
-                <div key={title} className="bg-navy-850 p-6 sm:p-8">
-                  <Icon className="h-5 w-5 text-white/55" strokeWidth={1.6} aria-hidden="true" />
+                <div
+                  key={title}
+                  className="group relative bg-navy-850 p-6 transition-colors duration-150 ease-out hover:bg-navy-800 sm:p-8"
+                >
+                  <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-transparent transition-colors duration-150 ease-out group-hover:bg-shield/50" />
+                  <Icon
+                    className="h-5 w-5 text-white/55 transition-colors duration-150 ease-out group-hover:text-shield"
+                    strokeWidth={1.6}
+                    aria-hidden="true"
+                  />
                   <h3 className="mt-5 text-base font-semibold tracking-[-0.01em] text-white">{title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-white/55">{body}</p>
                 </div>
@@ -443,12 +470,11 @@ export default function ShieldView({ locale }: { locale: Locale }) {
       {/* How it works */}
       <section id="mimari" className="relative scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.how} />
+          <SectionHeader accent="shield" {...c.how} />
           <div className="mt-14">
             <FlowDiagram
               locale={locale}
               steps={c.pipeline.map((step, i) => ({ ...step, icon: pipelineIcons[i] }))}
-              accent="indigo"
             />
           </div>
         </div>
@@ -459,7 +485,7 @@ export default function ShieldView({ locale }: { locale: Locale }) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-14 lg:grid-cols-[1fr_1.6fr] lg:items-start">
             <div className="lg:sticky lg:top-40">
-              <SectionHeader {...c.console} />
+              <SectionHeader accent="shield" {...c.console} />
               <Reveal className="mt-8 space-y-3 text-sm text-white/55">
                 {c.consoleSteps.map((step) => (
                   <p key={step}>{step}</p>
@@ -473,13 +499,29 @@ export default function ShieldView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
+      {/* Interactive simulator */}
+      <section id="simulator" className="relative scroll-mt-32 py-24 sm:py-32">
+        <RailMarker className="top-24 sm:top-32" />
+        <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:px-8">
+          <SectionHeader accent="shield" {...simCopy[locale]} />
+          <Reveal className="min-w-0">
+            <ClaimSimulator locale={locale} />
+          </Reveal>
+        </div>
+      </section>
+
       {/* Audit */}
       <section id="denetim" className="relative scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.audit} />
-          <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-4">
+          <SectionHeader accent="shield" {...c.audit} />
+          <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline sm:grid-cols-2 lg:grid-cols-4">
             {c.auditProps.map((p, i) => (
-              <Reveal key={p.title} delay={i * 0.04} className="bg-navy-850 p-6 sm:p-7">
+              <Reveal
+                key={p.title}
+                delay={i * 0.04}
+                className="group relative bg-navy-850 p-6 transition-colors duration-150 ease-out hover:bg-navy-800 sm:p-7"
+              >
+                <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-transparent transition-colors duration-150 ease-out group-hover:bg-shield/50" />
                 <h3 className="text-base font-semibold tracking-[-0.01em] text-white">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/55">{p.body}</p>
               </Reveal>
@@ -492,9 +534,9 @@ export default function ShieldView({ locale }: { locale: Locale }) {
       <section id="izolasyon" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
           <div>
-            <SectionHeader {...c.isolationHeading} />
+            <SectionHeader accent="shield" {...c.isolationHeading} />
             <Reveal className="mt-10">
-              <dl className="divide-y divide-white/[0.06] border-y border-white/[0.06]">
+              <dl className="divide-y divide-hairline border-y border-hairline">
                 {c.isolation.map((row) => (
                   <div key={row.label} className="grid grid-cols-[120px_1fr] gap-4 py-3">
                     <dt className="text-[12px] text-white/55">{row.label}</dt>
@@ -505,10 +547,10 @@ export default function ShieldView({ locale }: { locale: Locale }) {
             </Reveal>
           </div>
 
-          <Reveal className="self-start overflow-hidden rounded-2xl border border-white/[0.06] bg-navy-850">
-            <p className={`border-b border-white/[0.06] px-5 py-3 ${LABEL}`}>{c.rolesLabel}</p>
+          <Reveal className="self-start overflow-hidden rounded-2xl border border-hairline bg-navy-850">
+            <p className={`border-b border-hairline px-5 py-3 ${LABEL}`}>{c.rolesLabel}</p>
             <table className="w-full text-left text-sm">
-              <tbody className="divide-y divide-white/[0.06]">
+              <tbody className="divide-y divide-hairline">
                 {c.roles.map((r) => (
                   <tr key={r.role}>
                     <td className="px-5 py-3.5 align-top">
@@ -522,7 +564,7 @@ export default function ShieldView({ locale }: { locale: Locale }) {
                 ))}
               </tbody>
             </table>
-            <p className="border-t border-white/[0.06] px-5 py-4 text-xs leading-relaxed text-white/55">{c.rolesNote}</p>
+            <p className="border-t border-hairline px-5 py-4 text-xs leading-relaxed text-white/55">{c.rolesNote}</p>
           </Reveal>
         </div>
       </section>
@@ -534,7 +576,7 @@ export default function ShieldView({ locale }: { locale: Locale }) {
         primaryHref={href("/contact?solution=shield")}
         primaryLabel={c.ctaPilot}
         aside={
-          <ul className="divide-y divide-white/[0.06] self-center border-y border-white/[0.06]">
+          <ul className="divide-y divide-hairline self-center border-y border-hairline">
             {c.pilotAudiences.map((item) => (
               <li key={item} className="py-4 text-sm text-white/70">
                 {item}

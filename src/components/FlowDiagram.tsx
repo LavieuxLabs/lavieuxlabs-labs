@@ -13,30 +13,20 @@ export type FlowStep = {
 type FlowDiagramProps = {
   locale: Locale;
   steps: FlowStep[];
-  accent?: "teal" | "indigo";
 };
 
-// Literal class strings so Tailwind can detect them at build time.
-const tones = {
-  teal: {
-    rail: "group-hover:bg-pharma/70",
-    node: "group-hover:border-pharma group-hover:bg-pharma",
-    icon: "group-hover:text-pharma",
-  },
-  indigo: {
-    rail: "group-hover:bg-shield/70",
-    node: "group-hover:border-shield group-hover:bg-shield",
-    icon: "group-hover:text-shield",
-  },
+// The pipeline is data, not navigation: its hover stays neutral (white) on every product page.
+const tone = {
+  rail: "group-hover:bg-white/40",
+  node: "group-hover:border-white group-hover:bg-white",
+  icon: "group-hover:text-white",
 };
 
 /**
  * A data pipeline (e.g. HL7 FHIR ingest → rule engine → clinician → audit) drawn as stages on a
  * single hairline rail instead of boxed cards. Each stage lists what it carries as mono tokens.
  */
-export default function FlowDiagram({ locale, steps, accent = "teal" }: FlowDiagramProps) {
-  const tone = tones[accent];
-
+export default function FlowDiagram({ locale, steps }: FlowDiagramProps) {
   return (
     <ol className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       {steps.map(({ icon: Icon, title, body, detail }, i) => (
@@ -65,7 +55,7 @@ export default function FlowDiagram({ locale, steps, accent = "teal" }: FlowDiag
                 {detail.split(" · ").map((token) => (
                   <li
                     key={token}
-                    className="rounded-md border border-white/[0.06] bg-white/[0.02] px-1.5 py-0.5 font-mono text-[11px] text-white/55"
+                    className="rounded-md border border-hairline bg-white/[0.02] px-1.5 py-0.5 font-mono text-[11px] text-white/55"
                   >
                     {token}
                   </li>
