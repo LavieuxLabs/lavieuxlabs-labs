@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { SITE_URL } from "@/lib/site";
 import type { Locale } from "@/i18n/config";
+import { MARK_INNER, MARK_OUTER, MARK_VIEWBOX } from "@/lib/logoMark";
 
 // Shared OpenGraph card (1200×630) in the site's design language: optical obsidian ground,
 // a hairline frame, the LavieuxLabs mark, a white headline and a spec strip with numbers in
@@ -48,15 +49,12 @@ const upperTr = (text: string) =>
     .map((part) => (BRAND.test(part) ? part.toUpperCase() : part.toLocaleUpperCase("tr-TR")))
     .join(" · ");
 
-// Same geometry as LogoMark (src/components/Navbar.tsx): optical decision core. At 44px, 1.1 units ≈ 1.5px.
+// Same geometry as LogoMark (src/components/Navbar.tsx): the "LL" monogram from src/lib/logoMark.ts.
 function Mark() {
   return (
-    <svg width="44" height="44" viewBox="0 0 32 32" fill="none">
-      <circle cx="16" cy="16" r="13.25" stroke="#9E9FA5" strokeWidth="1.1" />
-      <path d="M16.00 2.75L16.00 6.00M25.37 6.63L23.88 8.12M29.25 16.00L26.00 16.00M25.37 25.37L23.88 23.88M16.00 29.25L16.00 26.00M6.63 25.37L8.12 23.88M2.75 16.00L6.00 16.00M6.63 6.63L8.12 8.12" stroke="#9E9FA5" strokeWidth="1.1" strokeLinecap="round" />
-      <circle cx="16" cy="16" r="3.6" stroke="#9E9FA5" strokeOpacity="0.6" strokeWidth="0.73" />
-      <path d="M16.00 11.10L16.00 7.40M20.90 16.00L24.60 16.00M16.00 20.90L16.00 24.60M11.10 16.00L7.40 16.00" stroke="#9E9FA5" strokeOpacity="0.8" strokeWidth="0.73" strokeLinecap="round" />
-      <circle cx="16" cy="16" r="1.75" fill="#9E9FA5" />
+    <svg width="44" height="44" viewBox={MARK_VIEWBOX} fill="#9E9FA5">
+      <path d={MARK_OUTER} />
+      <path d={MARK_INNER} />
     </svg>
   );
 }

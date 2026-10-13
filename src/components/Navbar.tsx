@@ -9,6 +9,7 @@ import LanguageSwitch from "@/components/LanguageSwitch";
 import CommandPalette from "@/components/CommandPalette";
 import { navigation } from "@/lib/site";
 import { localizedPath, stripLocale, type Locale } from "@/i18n/config";
+import { MARK_INNER, MARK_OUTER, MARK_VIEWBOX } from "@/lib/logoMark";
 
 const productIcons = { pill: Pill, shield: ShieldCheck };
 const productTone = {
@@ -16,38 +17,11 @@ const productTone = {
   shield: "border-indigo-400/25 bg-indigo-400/10 text-indigo-300",
 };
 
-// LavieuxLabs mark, "optical decision core" — one umbrella mark for every product line:
-// an iris ring (1.5px) carrying the eight axes of the Seljuk octagram as hairline notches (cardinal
-// notches longer, diagonal shorter), a 1px focus ring, a 1px telemetry crosshair, and a solid core
-// for the patient and the clinician's decision. The same geometry is used by src/app/icon.svg and
-// the OG card (src/lib/ogImage.tsx). On hover (parent `.group`) only the crosshair turns 45° onto
-// the diagonal notches.
-const RING = 13.25;
-const markPoint = (r: number, deg: number) => {
-  const a = (deg * Math.PI) / 180;
-  return `${(16 + r * Math.sin(a)).toFixed(2)} ${(16 - r * Math.cos(a)).toFixed(2)}`;
-};
-export const MARK_NOTCHES = [0, 45, 90, 135, 180, 225, 270, 315]
-  .map((deg) => `M${markPoint(RING, deg)}L${markPoint(deg % 90 === 0 ? RING - 3.25 : RING - 2.1, deg)}`)
-  .join("");
-export const MARK_CROSSHAIR = [0, 90, 180, 270].map((deg) => `M${markPoint(4.9, deg)}L${markPoint(8.6, deg)}`).join("");
-
 export function LogoMark({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true" className={className}>
-      <g stroke="currentColor" strokeLinecap="round">
-        <circle cx="16" cy="16" r={RING} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-        <path d={MARK_NOTCHES} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-        <circle cx="16" cy="16" r="3.6" strokeWidth="1" strokeOpacity="0.6" vectorEffect="non-scaling-stroke" />
-        <path
-          d={MARK_CROSSHAIR}
-          strokeWidth="1"
-          strokeOpacity="0.8"
-          vectorEffect="non-scaling-stroke"
-          className="origin-[16px_16px] transition-transform duration-[180ms] ease-out group-hover:rotate-45 motion-reduce:transition-none"
-        />
-      </g>
-      <circle cx="16" cy="16" r="1.75" fill="currentColor" />
+    <svg viewBox={MARK_VIEWBOX} fill="currentColor" aria-hidden="true" className={className}>
+      <path d={MARK_OUTER} />
+      <path d={MARK_INNER} />
     </svg>
   );
 }
