@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <rect width="32" height="32" rx="7" fill="#080A0F"/>
-  <!-- "LL" monogram, 16px-tuned: 4-unit bars and gaps (2px at 16px), even coordinates only. -->
+  <!-- Stratum LL: the same two paths as MARK_OUTER / MARK_INNER in src/lib/logoMark.ts. -->
   <g fill="#9E9FA5">
-    <path d="M6 5h4v18h16v4H6z"/>
-    <path d="M14 9h4v6h8v4H14z"/>
+    <path d="M7 5H9.5L11 6.5V23H23.5L25 24.5V27H7Z"/>
+    <path d="M14 9H16.5L18 10.5V16H23.5L25 17.5V20H14Z"/>
   </g>
 </svg>
