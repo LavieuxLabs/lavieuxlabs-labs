@@ -151,7 +151,7 @@ export default function QtSimulator({ locale }: { locale: Locale }) {
                 aria-pressed={patient.qtc === v}
                 onClick={() => setPatient((p) => ({ ...p, qtc: v as Baseline }))}
                 className={`flex-1 rounded-[5px] px-2 py-1 font-mono text-[12px] tabular-nums transition-colors duration-150 ease-out ${
-                  patient.qtc === v ? "bg-white/[0.1] text-white" : "text-white/55 hover:text-white"
+                  patient.qtc === v ? "bg-white/[0.1] text-white print:font-semibold print:underline" : "text-white/55 hover:text-white"
                 }`}
               >
                 {v} ms

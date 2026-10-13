@@ -36,13 +36,18 @@ const MEASUREMENTS = {
     ucum: "ms",
   },
   renal: {
-    loinc: "62238-1",
-    display: "Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)",
+    // 98979-8 is the race-free CKD-EPI 2021 creatinine equation the site uses (62238-1 is the 2009 equation).
+    loinc: "98979-8",
+    display: "Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI 2021)",
     category: "laboratory",
     unit: "mL/min/1.73 m2",
     ucum: "mL/min/{1.73_m2}",
   },
 } as const;
+
+// LOINC 8636-3 is "QT interval corrected" without a fixed method, so the correction formula is sent as
+// Observation.method (text only; no method code is invented).
+const QTC_METHOD = { text: "Fridericia formula (QTc = QT / RR^(1/3))" };
 
 const toNumber = (value: string) => Number(value.replace(/\s/g, "").replace(",", "."));
 
@@ -66,6 +71,7 @@ export function caseToFhirBundle(item: ClinicalCase, caseRef: string, effective:
       code: { coding: [{ system: "http://loinc.org", code: m.loinc, display: m.display }] },
       subject: { ...PATIENT, display: item.patient },
       effectiveDateTime: effective,
+      ...(key === "qtc" ? { method: QTC_METHOD } : {}),
       valueQuantity: { value: toNumber(reading.value), unit: m.unit, system: "http://unitsofmeasure.org", code: m.ucum },
       interpretation: [
         {
@@ -204,6 +210,7 @@ export function qtcObservation(id: string, ms: number, effective: string) {
     code: { coding: [{ system: "http://loinc.org", code: m.loinc, display: m.display }], text: "QTc (Fridericia)" },
     subject: PATIENT,
     effectiveDateTime: effective,
+    method: QTC_METHOD,
     valueQuantity: { value: ms, unit: m.unit, system: "http://unitsofmeasure.org", code: m.ucum },
   };
 }
