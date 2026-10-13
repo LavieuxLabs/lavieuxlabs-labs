@@ -1,5 +1,6 @@
 import Link from "next/link";
 import StandardDoc from "@/components/StandardDoc";
+import SutRiskCalculator from "@/components/SutRiskCalculator";
 import { standardPageJsonLd } from "@/lib/structuredData";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
@@ -308,6 +309,8 @@ export default function SutAuditView({ locale }: { locale: Locale }) {
         </tbody>
       </table>
       <p>{c.tiersNote}</p>
+
+      <SutRiskCalculator locale={locale} />
       <p>
         {c.try} <Link href={localizedPath(locale, "/initiatives/shield#simulator")}>{c.trySim}</Link>
         {locale === "tr" ? "nü veya " : " or the "}
