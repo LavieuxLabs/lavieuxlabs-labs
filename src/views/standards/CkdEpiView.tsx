@@ -1,4 +1,6 @@
 import StandardDoc from "@/components/StandardDoc";
+import EgfrCalculator from "@/components/EgfrCalculator";
+import { CKD_EPI_2021 as K, KDIGO_BANDS } from "@/lib/ckdEpi";
 import { CITATIONS } from "@/lib/citations";
 import { standardPageJsonLd } from "@/lib/structuredData";
 import { defineContent, type Locale } from "@/i18n/config";
@@ -19,15 +21,16 @@ export const metadata = defineMetadata(PATH, {
   },
 });
 
-// KDIGO GFR categories (mL/min/1.73 m²).
-const KDIGO: { g: string; range: string; tr: string; en: string }[] = [
-  { g: "G1", range: "≥90", tr: "Normal veya yüksek", en: "Normal or high" },
-  { g: "G2", range: "60–89", tr: "Hafif azalmış", en: "Mildly decreased" },
-  { g: "G3a", range: "45–59", tr: "Hafif–orta azalmış", en: "Mildly to moderately decreased" },
-  { g: "G3b", range: "30–44", tr: "Orta–ağır azalmış", en: "Moderately to severely decreased" },
-  { g: "G4", range: "15–29", tr: "Ağır azalmış", en: "Severely decreased" },
-  { g: "G5", range: "<15", tr: "Böbrek yetmezliği", en: "Kidney failure" },
-];
+// KDIGO GFR categories (mL/min/1.73 m²); ranges from the shared bands in src/lib/ckdEpi.ts.
+const KDIGO_LABELS: Record<string, { tr: string; en: string }> = {
+  G1: { tr: "Normal veya yüksek", en: "Normal or high" },
+  G2: { tr: "Hafif azalmış", en: "Mildly decreased" },
+  G3a: { tr: "Hafif–orta azalmış", en: "Mildly to moderately decreased" },
+  G3b: { tr: "Orta–ağır azalmış", en: "Moderately to severely decreased" },
+  G4: { tr: "Ağır azalmış", en: "Severely decreased" },
+  G5: { tr: "Böbrek yetmezliği", en: "Kidney failure" },
+};
+const KDIGO = KDIGO_BANDS.map((b) => ({ g: b.stage, range: b.range, ...KDIGO_LABELS[b.stage] }));
 
 const KDIGO_REF =
   "Kidney Disease: Improving Global Outcomes (KDIGO) CKD Work Group. KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease. Kidney International Supplements. 2013.";
@@ -157,21 +160,23 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
         <tbody>
           <tr>
             <td className="font-mono">κ</td>
-            <td className="text-right font-mono tabular-nums">0.7</td>
-            <td className="text-right font-mono tabular-nums">0.9</td>
+            <td className="text-right font-mono tabular-nums">{K.kappa.female}</td>
+            <td className="text-right font-mono tabular-nums">{K.kappa.male}</td>
           </tr>
           <tr>
             <td className="font-mono">α</td>
-            <td className="text-right font-mono tabular-nums">−0.241</td>
-            <td className="text-right font-mono tabular-nums">−0.302</td>
+            <td className="text-right font-mono tabular-nums">{String(K.alpha.female).replace("-", "−")}</td>
+            <td className="text-right font-mono tabular-nums">{String(K.alpha.male).replace("-", "−")}</td>
           </tr>
           <tr>
             <td>{c.femaleFactor}</td>
-            <td className="text-right font-mono tabular-nums">1.012</td>
+            <td className="text-right font-mono tabular-nums">{K.femaleFactor}</td>
             <td className="text-right font-mono tabular-nums">—</td>
           </tr>
         </tbody>
       </table>
+
+      <EgfrCalculator locale={locale} />
 
       <h2 className="mt-12">{c.loinc}</h2>
       <p>{c.loincBody}</p>
