@@ -282,7 +282,7 @@ const copy = defineContent<{
       },
       {
         title: "Etik kurul ve veri protokolü",
-        body: "Pilot çalışmalar öncesinde kurumun yetkili etik kurulundan onay alınması, verilerin kurum içi altyapıda önceden anonimleştirilmesi ve taraflar arasında Veri İşleme Sözleşmesi (DPA) imzalanması zorunlu önkoşuldur.",
+        body: "Pilot çalışmalar öncesinde kurumun yetkili etik kurulundan onay alınması, verilerin kurum içi altyapıda anonimleştirilmesi ve taraflar arasında Veri İşleme Sözleşmesi (DPA) imzalanması zorunlu önkoşuldur.",
         rows: [
           { label: "Önkoşul", value: "Kurum etik kurul onayı · DPA" },
           { label: "Kapsam", value: "Yerinde anonimleştirme · KVKK uyumlu" },
@@ -514,7 +514,7 @@ const copy = defineContent<{
       },
       {
         title: "Ethics committee and data protocol",
-        body: "Prior to pilot studies, obtaining institutional ethics committee approval, strictly anonymising data within hospital infrastructure, and executing a Data Processing Agreement (DPA) are mandatory prerequisites.",
+        body: "Prior to pilot studies, obtaining institutional ethics committee approval, anonymising data within hospital infrastructure, and executing a Data Processing Agreement (DPA) are mandatory prerequisites.",
         rows: [
           { label: "Prerequisite", value: "Institutional IRB/ethics approval · DPA" },
           { label: "Scope", value: "On-prem anonymisation · data protection compliant" },
