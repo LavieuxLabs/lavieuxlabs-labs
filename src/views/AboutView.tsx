@@ -274,23 +274,23 @@ const copy = defineContent<{
     collaboration: [
       {
         title: "Klinik danışma",
-        body: "Kural setleri ve ekranlar, klinisyenler ve klinik eczacılarla birlikte yazılır ve gözden geçirilir.",
+        body: "Kural setleri ve arayüzler, bağımsız klinisyenler ve klinik eczacıların doğrudan geri bildirimiyle pilot süreçler boyunca sürekli revize edilir.",
         rows: [
           { label: "Paydaşlar", value: "Klinisyen · klinik eczacı" },
           { label: "Çıktı", value: "Gözden geçirilmiş kural setleri" },
         ],
       },
       {
-        title: "Etik kurul ve veri",
-        body: "Gerçek veriyle yapılan her çalışma etik kurul onayı, anonimleştirme ve kurumla imzalanan veri işleme sözleşmesi gerektirir.",
+        title: "Etik kurul ve veri protokolü",
+        body: "Pilot çalışmalar öncesinde kurumun yetkili etik kurulundan onay alınması, verilerin kurum içi altyapıda önceden anonimleştirilmesi ve taraflar arasında Veri İşleme Sözleşmesi (DPA) imzalanması zorunlu önkoşuldur.",
         rows: [
-          { label: "Önkoşul", value: "Etik kurul onayı · DPA" },
-          { label: "Veri", value: "Anonimleştirilmiş, KVKK uyumlu" },
+          { label: "Önkoşul", value: "Kurum etik kurul onayı · DPA" },
+          { label: "Kapsam", value: "Yerinde anonimleştirme · KVKK uyumlu" },
         ],
       },
       {
         title: "Yayın",
-        body: "Doğrulama çalışmalarını ortak kurumlarla birlikte hakemli dergilerde yayımlamayı hedefliyoruz.",
+        body: "Pilot doğrulama sonuçlarının, ortak kurumların klinisyenleri ve araştırmacılarıyla birlikte hakemli tıp dergilerinde bağımsız duyarlılık raporu olarak yayımlanması hedeflenir.",
         rows: [
           { label: "Hedef", value: "Hakemli yayın" },
           { label: "Raporlama", value: "Duyarlılık · özgüllük · PPV" },
@@ -506,23 +506,23 @@ const copy = defineContent<{
     collaboration: [
       {
         title: "Clinical advice",
-        body: "Rule sets and screens are written and reviewed with clinicians and clinical pharmacists.",
+        body: "Rule sets and interfaces are revised continuously throughout the pilots, based on direct feedback from independent clinicians and clinical pharmacists.",
         rows: [
           { label: "Stakeholders", value: "Clinician · clinical pharmacist" },
           { label: "Output", value: "Reviewed rule sets" },
         ],
       },
       {
-        title: "Ethics committee and data",
-        body: "Every study on real data needs ethics committee approval, anonymisation and a data processing agreement with the institution.",
+        title: "Ethics committee and data protocol",
+        body: "Prior to pilot studies, obtaining institutional ethics committee approval, strictly anonymising data within hospital infrastructure, and executing a Data Processing Agreement (DPA) are mandatory prerequisites.",
         rows: [
-          { label: "Prerequisite", value: "Ethics approval · DPA" },
-          { label: "Data", value: "Anonymised, KVKK-compliant" },
+          { label: "Prerequisite", value: "Institutional IRB/ethics approval · DPA" },
+          { label: "Scope", value: "On-prem anonymisation · data protection compliant" },
         ],
       },
       {
         title: "Publication",
-        body: "We aim to publish validation studies in peer-reviewed journals together with partner institutions.",
+        body: "Pilot validation findings are targeted for joint publication with partner clinicians and researchers in peer-reviewed journals as independent sensitivity reports.",
         rows: [
           { label: "Goal", value: "Peer-reviewed publication" },
           { label: "Reporting", value: "Sensitivity · specificity · PPV" },
