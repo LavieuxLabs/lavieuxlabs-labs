@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <rect width="32" height="32" rx="7" fill="#080A0F"/>
-  <!-- Lambda mark: the same two paths as MARK_OUTER / MARK_INNER in src/lib/logoMark.ts. -->
+  <!-- "LL" monogram, 16px-tuned: 4-unit bars and gaps (2px at 16px), even coordinates only. -->
   <g fill="#9E9FA5">
-    <path d="M5 5L12.48 22.46L27 27V23.33L15.07 19.6L8.81 5Z"/>
-    <path d="M12.62 5L17.65 16.74L27 19.67V16L20.23 13.88L16.42 5Z"/>
+    <path d="M6 5h4v18h16v4H6z"/>
+    <path d="M14 9h4v6h8v4H14z"/>
   </g>
 </svg>
