@@ -1,0 +1,80 @@
+# Updates src/data/projectMetrics.json from outside the repo (e.g. the main PharmaDeux project) and commits
+# the result. Trigger with a repository_dispatch event of type "update-metrics":
+#
+#   curl -X POST https://api.github.com/repos/LavieuxLabs/lavieuxlabs-labs/dispatches \
+#     -H "Authorization: Bearer <token with contents:write on this repo>" \
+#     -H "Accept: application/vnd.github+json" \
+#     -d '{"event_type":"update-metrics","client_payload":{"phase":14,"rules":48}}'
+#
+# Accepted payload keys: phase, total, rules, tests, version. Values are validated by the script.
+# It can also be run by hand from the Actions tab (workflow_dispatch).
+
+name: Update project metrics
+
+on:
+  repository_dispatch:
+    types: [update-metrics]
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: "Development step (currentPhase)"
+        required: false
+      total:
+        description: "Total development steps (totalPhases)"
+        required: false
+      rules:
+        description: "Verified rules"
+        required: false
+      tests:
+        description: "Automated tests"
+        required: false
+      version:
+        description: "Version, e.g. 0.5.0"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-metrics
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Payload values reach the shell only as environment variables, never interpolated into the
+      # script text, so a crafted payload cannot inject commands. The Node script validates each value.
+      - name: Update metrics
+        env:
+          PHASE: ${{ github.event.client_payload.phase || inputs.phase }}
+          TOTAL: ${{ github.event.client_payload.total || inputs.total }}
+          RULES: ${{ github.event.client_payload.rules || inputs.rules }}
+          TESTS: ${{ github.event.client_payload.tests || inputs.tests }}
+          VERSION: ${{ github.event.client_payload.version || inputs.version }}
+        run: |
+          args=()
+          [ -n "$PHASE" ] && args+=(--phase "$PHASE")
+          [ -n "$TOTAL" ] && args+=(--total "$TOTAL")
+          [ -n "$RULES" ] && args+=(--rules "$RULES")
+          [ -n "$TESTS" ] && args+=(--tests "$TESTS")
+          [ -n "$VERSION" ] && args+=(--version "$VERSION")
+          node scripts/update-metrics.mjs "${args[@]}"
+
+      - name: Commit and push
+        run: |
+          if git diff --quiet; then
+            echo "Metrics unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/projectMetrics.json package.json package-lock.json
+          git commit -m "chore(metrics): auto-update project metrics [skip ci]"
+          git push
