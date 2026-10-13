@@ -25,6 +25,7 @@ import Reveal from "@/components/Reveal";
 import SpecCard, { JoinedGrid, type SpecRow } from "@/components/SpecCard";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
+import { testsLabel } from "@/lib/metrics";
 
 export const metadata = defineMetadata("/about", {
   tr: {
@@ -201,7 +202,7 @@ const copy = defineContent<{
         body: "Her klinik gereksinim, onu uygulayan kurala ve onu sınayan teste bağlıdır.",
         rows: [
           { label: "Zincir", value: "Gereksinim → kural → test" },
-          { label: "Otomatik test", value: "2.480+", mono: true },
+          { label: "Otomatik test", value: testsLabel("tr"), mono: true },
         ],
       },
       {
@@ -433,7 +434,7 @@ const copy = defineContent<{
         body: "Each clinical requirement is linked to the rule that implements it and the test that checks it.",
         rows: [
           { label: "Chain", value: "Requirement → rule → test" },
-          { label: "Automated tests", value: "2,480+", mono: true },
+          { label: "Automated tests", value: testsLabel("en"), mono: true },
         ],
       },
       {

@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { ChevronUp } from "lucide-react";
 import { SITE_LAST_MODIFIED } from "@/lib/site";
+import { metrics } from "@/lib/metrics";
 import { defineContent, formatDate, groupDigits, type Locale } from "@/i18n/config";
 
 // Verification imprint: what can be stated today, stated plainly. This is an R&D site, not a product
@@ -65,7 +66,7 @@ export default function VerificationImprint({ locale }: { locale: Locale }) {
   }, [open]);
 
   const rows: [string, string, boolean?][] = [
-    [c.rows.tests, c.rows.testsValue(groupDigits(locale, 2480)), true],
+    [c.rows.tests, c.rows.testsValue(groupDigits(locale, metrics.automatedTests)), true],
     [c.rows.lifecycle, c.rows.lifecycleValue],
     [c.rows.ce, c.rows.ceValue],
     [c.rows.audit, c.rows.auditValue],

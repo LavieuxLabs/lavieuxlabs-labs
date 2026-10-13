@@ -1,6 +1,7 @@
 import { Activity, Binary, FileCheck2, FileText, History, LockKeyhole, Network, UserCheck } from "lucide-react";
 import SpecCard, { JoinedGrid, type SpecRow } from "@/components/SpecCard";
 import { defineContent, type Locale } from "@/i18n/config";
+import { testsLabel } from "@/lib/metrics";
 
 type Tone = "live" | "prep" | "input";
 
@@ -34,7 +35,7 @@ const copy = defineContent<StandardCopy[]>({
       body: "Karar yolunda üretken model yok. Aynı girdi ve kural sürümü her zaman aynı çıktıyı verir.",
       rows: [
         { label: "Mekanizma", value: "Sürümlenmiş kural motoru" },
-        { label: "Otomatik test", value: "2.480+", mono: true },
+        { label: "Otomatik test", value: testsLabel("tr"), mono: true },
         { label: "Referans", value: "IEC 62304 yaşam döngüsü", cite: "iec62304" },
       ],
       status: "Uygulamada",
@@ -116,7 +117,7 @@ const copy = defineContent<StandardCopy[]>({
       body: "No generative model in the decision path. The same input and rule version always give the same output.",
       rows: [
         { label: "Mechanism", value: "Versioned rule engine" },
-        { label: "Automated tests", value: "2,480+", mono: true },
+        { label: "Automated tests", value: testsLabel("en"), mono: true },
         { label: "Reference", value: "IEC 62304 life cycle", cite: "iec62304" },
       ],
       status: "In use",

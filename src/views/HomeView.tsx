@@ -10,6 +10,7 @@ import { RailMarker } from "@/components/TelemetryRails";
 import { homeJsonLd } from "@/lib/structuredData";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
+import { metrics, testsLabel, trlLabel } from "@/lib/metrics";
 
 // The home page keeps the layout's default title; only description and hreflang are set here.
 export const metadata = defineMetadata("/", {
@@ -46,15 +47,15 @@ const copy = defineContent<{
   audiences: { title: string; body: string }[];
 }>({
   tr: {
-    stamp: "CDSS · MDR SINIF IIa HEDEFİ · THS 4",
+    stamp: `CDSS · MDR SINIF IIa HEDEFİ · ${trlLabel("tr")}`,
     title: "İlaç güvenliği ve hastane faturalaması için karar destek yazılımı.",
     titleSignature: "karar destek",
     lead: "PharmaDeux, çoklu ilaç tedavisinde riskli kombinasyonları reçete anında hekime gösterir. Shield, SUT ve SGK red risklerini fatura gönderilmeden önce yakalar. İkisinde de son kararı yetkili kişi verir ve her adım kayda geçer.",
     ctaProducts: "Ürünleri inceleyin",
     ctaPilot: "Pilot başvurusu (LOI)",
     heroStats: [
-      { value: "18", label: "İlaç güvenliği kontrol başlığı" },
-      { value: "2.480+", label: "Otomatik test" },
+      { value: String(metrics.safetyPlanes), label: "İlaç güvenliği kontrol başlığı" },
+      { value: testsLabel("tr"), label: "Otomatik test" },
       { value: "FHIR R4", label: "Veri standardı" },
       { value: "Sınıf IIa", label: "MDR hedef sınıfı" },
     ],
@@ -71,10 +72,10 @@ const copy = defineContent<{
         summary:
           "Çoklu ilaç tedavilerinde toksisite ve kümülatif organ yükünü reçete anında hekime bildiren klinik karar destek sistemi. Her uyarı, onu tetikleyen kural ve eşik değeriyle birlikte gösterilir.",
         specs: [
-          { value: "18", label: "Güvenlik düzlemi" },
-          { value: "2.480+", label: "Otomatik test" },
+          { value: String(metrics.safetyPlanes), label: "Güvenlik düzlemi" },
+          { value: testsLabel("tr"), label: "Otomatik test" },
           { value: "FHIR R4", label: "Veri standardı" },
-          { value: "THS 4", label: "Teknoloji hazırlık seviyesi" },
+          { value: trlLabel("tr"), label: "Teknoloji hazırlık seviyesi" },
         ],
         icon: "pill",
         accent: "teal",
@@ -156,15 +157,15 @@ const copy = defineContent<{
     ],
   },
   en: {
-    stamp: "CDSS · MDR CLASS IIa TARGET · TRL 4",
+    stamp: `CDSS · MDR CLASS IIa TARGET · ${trlLabel("en")}`,
     title: "Decision support software for medication safety and hospital billing.",
     titleSignature: "Decision support",
     lead: "PharmaDeux shows the physician risky drug combinations in polypharmacy at the moment of prescription. Shield catches reimbursement and audit risks before a claim is submitted. In both, a qualified person makes the final decision and every step is recorded.",
     ctaProducts: "See the products",
     ctaPilot: "Apply for a pilot (LOI)",
     heroStats: [
-      { value: "18", label: "Medication safety checks" },
-      { value: "2,480+", label: "Automated tests" },
+      { value: String(metrics.safetyPlanes), label: "Medication safety checks" },
+      { value: testsLabel("en"), label: "Automated tests" },
       { value: "FHIR R4", label: "Data standard" },
       { value: "Class IIa", label: "MDR target class" },
     ],
@@ -181,10 +182,10 @@ const copy = defineContent<{
         summary:
           "Clinical decision support software alerting physicians to cumulative organ burden and toxicity at the moment of prescription. Each alert is shown with the rule and threshold that triggered it.",
         specs: [
-          { value: "18", label: "Safety planes" },
-          { value: "2,480+", label: "Automated tests" },
+          { value: String(metrics.safetyPlanes), label: "Safety planes" },
+          { value: testsLabel("en"), label: "Automated tests" },
           { value: "FHIR R4", label: "Data standard" },
-          { value: "TRL 4", label: "Technology readiness level" },
+          { value: trlLabel("en"), label: "Technology readiness level" },
         ],
         icon: "pill",
         accent: "teal",

@@ -1,4 +1,5 @@
 import { defineContent } from "@/i18n/config";
+import { metrics, testsLabel, trlLabel } from "@/lib/metrics";
 
 type Card = {
   alt: string;
@@ -16,8 +17,8 @@ export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Ca
       eyebrow: "Sağlık teknolojileri Ar-Ge",
       title: "İlaç güvenliği ve faturalama için karar destek yazılımı.",
       specs: [
-        { value: "18", label: "Güvenlik düzlemi" },
-        { value: "2.480+", label: "Otomatik test" },
+        { value: String(metrics.safetyPlanes), label: "Güvenlik düzlemi" },
+        { value: testsLabel("tr"), label: "Otomatik test" },
         { value: "FHIR R4", label: "Veri standardı" },
         { value: "Sınıf IIa", label: "MDR hedef sınıfı" },
       ],
@@ -27,10 +28,10 @@ export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Ca
       eyebrow: "PharmaDeux CDSS · klinik karar destek",
       title: "Reçete yazılırken ilaç güvenliğini kontrol eder.",
       specs: [
-        { value: "18", label: "Güvenlik düzlemi" },
-        { value: "2.480+", label: "Otomatik test" },
+        { value: String(metrics.safetyPlanes), label: "Güvenlik düzlemi" },
+        { value: testsLabel("tr"), label: "Otomatik test" },
         { value: "FHIR R4", label: "Veri standardı" },
-        { value: "THS 4", label: "Teknoloji hazırlık seviyesi" },
+        { value: trlLabel("tr"), label: "Teknoloji hazırlık seviyesi" },
       ],
     },
     shield: {
@@ -51,8 +52,8 @@ export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Ca
       eyebrow: "Health technology R&D",
       title: "Medication safety and billing decision support software.",
       specs: [
-        { value: "18", label: "Safety planes" },
-        { value: "2,480+", label: "Automated tests" },
+        { value: String(metrics.safetyPlanes), label: "Safety planes" },
+        { value: testsLabel("en"), label: "Automated tests" },
         { value: "FHIR R4", label: "Data standard" },
         { value: "Class IIa", label: "MDR target class" },
       ],
@@ -62,10 +63,10 @@ export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Ca
       eyebrow: "PharmaDeux CDSS · clinical decision support",
       title: "Checks medication safety while the prescription is written.",
       specs: [
-        { value: "18", label: "Safety planes" },
-        { value: "2,480+", label: "Automated tests" },
+        { value: String(metrics.safetyPlanes), label: "Safety planes" },
+        { value: testsLabel("en"), label: "Automated tests" },
         { value: "FHIR R4", label: "Data standard" },
-        { value: "TRL 4", label: "Technology readiness" },
+        { value: trlLabel("en"), label: "Technology readiness" },
       ],
     },
     shield: {

@@ -8,6 +8,7 @@ import VerificationImprint from "@/components/VerificationImprint";
 import { LEGAL_LAST_UPDATED, navigation, office } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 import pkg from "../../package.json";
+import { trlLabel } from "@/lib/metrics";
 
 const linkClass = "text-[13px] text-white/60 transition-colors duration-150 ease-out hover:text-white";
 const labelClass = "text-[11px] font-medium tracking-wider text-white/55 uppercase";
@@ -58,7 +59,7 @@ const copy = defineContent({
   },
 });
 
-const trl: Record<Locale, string> = { tr: "THS 4", en: "TRL 4" };
+const trl: Record<Locale, string> = { tr: trlLabel("tr"), en: trlLabel("en") };
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (

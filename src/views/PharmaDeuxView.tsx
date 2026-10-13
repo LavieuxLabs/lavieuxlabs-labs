@@ -30,8 +30,9 @@ import FhirPreview from "@/components/FhirPreview";
 import { RailMarker } from "@/components/TelemetryRails";
 import QtSimulator from "@/components/QtSimulator";
 import { pharmaDeuxJsonLd } from "@/lib/structuredData";
-import { defineContent, localizedPath, type Locale } from "@/i18n/config";
+import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
+import { metrics, testsLabel, trlLabel } from "@/lib/metrics";
 
 export const metadata = defineMetadata("/initiatives/pharmadeux", {
   tr: {
@@ -60,6 +61,11 @@ const integrationMeta = [
 const pairCounts = [5, 8, 10, 15].map((n) => ({ n, pairs: (n * (n - 1)) / 2 }));
 
 type Heading = { eyebrow: string; title: string; description: string };
+
+const devCopy = defineContent({
+  tr: { label: "Geliştirme durumu", step: "Geliştirme adımı", rules: "Doğrulanmış kural", version: "Sürüm", updated: "Güncelleme" },
+  en: { label: "Development status", step: "Development step", rules: "Verified rules", version: "Version", updated: "Updated" },
+});
 
 const simCopy = defineContent({
   tr: {
@@ -119,10 +125,10 @@ const copy = defineContent<{
       { id: "protokol", label: "Klinik doğrulama planı" },
     ],
     heroStats: [
-      { value: "18", label: "Güvenlik düzlemi" },
-      { value: "2.480+", label: "Otomatik test" },
+      { value: String(metrics.safetyPlanes), label: "Güvenlik düzlemi" },
+      { value: testsLabel("tr"), label: "Otomatik test" },
       { value: "FHIR R4", label: "Veri standardı" },
-      { value: "THS 4", label: "Teknoloji hazırlık seviyesi" },
+      { value: trlLabel("tr"), label: "Teknoloji hazırlık seviyesi" },
     ],
     crumbs: { home: "Ana sayfa", products: "Ürünler" },
     eyebrow: "Klinik karar destek · ilaç güvenliği",
@@ -293,7 +299,7 @@ const copy = defineContent<{
     validation: [
       {
         title: "Otomatik test",
-        value: "2.480+",
+        value: testsLabel("tr"),
         body: "Kural motoru, veri dönüşümleri ve entegrasyonlar her değişiklikte otomatik testlerden geçer.",
       },
       {
@@ -303,7 +309,7 @@ const copy = defineContent<{
       },
       {
         title: "Hazırlık seviyesi",
-        value: "THS 4",
+        value: trlLabel("tr"),
         body: "Bileşenler laboratuvar ortamında doğrulandı. Sıradaki adım, anonimleştirilmiş gerçek vakalarla doğrulama.",
       },
       {
@@ -398,10 +404,10 @@ const copy = defineContent<{
       { id: "protokol", label: "Clinical validation plan" },
     ],
     heroStats: [
-      { value: "18", label: "Safety planes" },
-      { value: "2,480+", label: "Automated tests" },
+      { value: String(metrics.safetyPlanes), label: "Safety planes" },
+      { value: testsLabel("en"), label: "Automated tests" },
       { value: "FHIR R4", label: "Data standard" },
-      { value: "TRL 4", label: "Technology readiness level" },
+      { value: trlLabel("en"), label: "Technology readiness level" },
     ],
     crumbs: { home: "Home", products: "Products" },
     eyebrow: "Clinical decision support · medication safety",
@@ -571,7 +577,7 @@ const copy = defineContent<{
     validation: [
       {
         title: "Automated tests",
-        value: "2,480+",
+        value: testsLabel("en"),
         body: "The rule engine, data transformations and integrations run through automated tests on every change.",
       },
       {
@@ -581,7 +587,7 @@ const copy = defineContent<{
       },
       {
         title: "Readiness level",
-        value: "TRL 4",
+        value: trlLabel("en"),
         body: "Components have been validated in a laboratory environment. The next step is validation on anonymised real cases.",
       },
       {
@@ -681,6 +687,7 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
         visual={<PharmaCapsule locale={locale} />}
         visualClassName="relative mx-auto w-full max-w-[360px] sm:max-w-[420px] lg:max-w-[520px]"
         below={
+          <>
           <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-hairline bg-hairline lg:grid-cols-4">
             {c.heroStats.map((s) => (
               <div key={s.label} className="relative flex flex-col-reverse bg-navy-900 p-5">
@@ -692,6 +699,31 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
               </div>
             ))}
           </dl>
+          {/* Development status from src/data/projectMetrics.json; the internal engine status is never shown. */}
+          <dl
+            aria-label={devCopy[locale].label}
+            className="mt-3 flex flex-wrap items-baseline gap-x-6 gap-y-1.5 px-1 text-[12px] text-white/55"
+          >
+            <div className="flex items-baseline gap-1.5">
+              <dt>{devCopy[locale].step}</dt>
+              <dd className="font-mono text-white/80 tabular-nums">
+                {metrics.currentPhase}/{metrics.totalPhases}
+              </dd>
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <dt>{devCopy[locale].rules}</dt>
+              <dd className="font-mono text-white/80 tabular-nums">{metrics.verifiedRules}</dd>
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <dt>{devCopy[locale].version}</dt>
+              <dd className="font-mono text-white/80 tabular-nums">{metrics.version}</dd>
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <dt>{devCopy[locale].updated}</dt>
+              <dd className="tabular-nums text-white/80">{formatDate(locale, metrics.lastUpdated)}</dd>
+            </div>
+          </dl>
+          </>
         }
         breadcrumbs={[
           { href: "/", label: c.crumbs.home },
