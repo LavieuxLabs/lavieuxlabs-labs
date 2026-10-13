@@ -1,6 +1,7 @@
 "use client";
 
-import { Fragment, useId, useMemo, useState, type ReactNode } from "react";
+import { useId, useMemo, useState } from "react";
+import { highlightJson } from "@/lib/jsonHighlight";
 import Link from "next/link";
 import { ArrowUpRight, ChevronDown, Download } from "lucide-react";
 import CopyPayloadButton from "@/components/CopyPayloadButton";
@@ -63,42 +64,6 @@ const copy = defineContent({
     } as Record<string, string>,
   },
 });
-
-const TOKEN = /("(?:\\.|[^"\\])*")(\s*:)?|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|\b(true|false|null)\b/g;
-
-/** JSON with neutral syntax emphasis: keys bright, strings softer, numbers and literals in full white. */
-function highlight(json: string): ReactNode[] {
-  const out: ReactNode[] = [];
-  let last = 0;
-  let i = 0;
-  for (const m of json.matchAll(TOKEN)) {
-    const start = m.index ?? 0;
-    if (start > last) out.push(<Fragment key={i++}>{json.slice(last, start)}</Fragment>);
-    if (m[1] && m[2]) {
-      out.push(
-        <span key={i++} className="text-white/85">
-          {m[1]}
-        </span>,
-        <Fragment key={i++}>{m[2]}</Fragment>,
-      );
-    } else if (m[1]) {
-      out.push(
-        <span key={i++} className="text-white/60">
-          {m[1]}
-        </span>,
-      );
-    } else {
-      out.push(
-        <span key={i++} className="font-medium text-white">
-          {m[0]}
-        </span>,
-      );
-    }
-    last = start + m[0].length;
-  }
-  if (last < json.length) out.push(<Fragment key={i++}>{json.slice(last)}</Fragment>);
-  return out;
-}
 
 export default function FhirPreview({ locale }: { locale: Locale }) {
   const c = copy[locale];
@@ -208,7 +173,7 @@ export default function FhirPreview({ locale }: { locale: Locale }) {
             tabIndex={0}
             className="max-h-[420px] overflow-auto bg-navy-900 px-5 py-4 font-mono text-[12px] leading-relaxed text-white/50"
           >
-            <code>{highlight(json)}</code>
+            <code>{highlightJson(json)}</code>
           </pre>
           <p className="border-t border-hairline px-5 py-2.5 text-[11px] text-white/55">{c.caption}</p>
         </div>

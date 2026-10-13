@@ -76,7 +76,7 @@ export const navigation = defineContent({
     productsLabel: "Ürünler",
     allProducts: "Tüm ürünler",
     links: [
-      { href: "/#standartlar", label: "Standartlar" },
+      { href: "/standartlar", label: "Standartlar" },
       { href: "/about", label: "Hakkımızda" },
       { href: "/contact", label: "İletişim" },
     ] as NavLink[],
@@ -111,6 +111,7 @@ export const navigation = defineContent({
       {
         title: "Standartlar",
         links: [
+          { href: "/standartlar", label: "Standartlar ve referanslar" },
           { href: "/#standartlar", label: "Sekiz kural" },
           { href: "/#yaklasim", label: "Doğrulama ve karar" },
           { href: "/legal/quality", label: "Kalite ve MDR" },
@@ -136,7 +137,7 @@ export const navigation = defineContent({
     productsLabel: "Products",
     allProducts: "All products",
     links: [
-      { href: "/#standartlar", label: "Standards" },
+      { href: "/standartlar", label: "Standards" },
       { href: "/about", label: "About" },
       { href: "/contact", label: "Contact" },
     ],
@@ -171,6 +172,7 @@ export const navigation = defineContent({
       {
         title: "Standards",
         links: [
+          { href: "/standartlar", label: "Standards and references" },
           { href: "/#standartlar", label: "Eight rules" },
           { href: "/#yaklasim", label: "Verification and decision" },
           { href: "/legal/quality", label: "Quality and MDR" },

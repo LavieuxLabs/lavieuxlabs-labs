@@ -27,6 +27,7 @@ const copy = defineContent({
       qtSim: "PharmaDeux QT simülatörü",
       claimSim: "Shield fatura simülatörü",
       focus: "Ar-Ge odakları",
+      standards: "Standartlar ve referanslar",
       contact: "İletişim ve pilot başvurusu",
     },
     case: "Vaka",
@@ -45,6 +46,7 @@ const copy = defineContent({
       qtSim: "PharmaDeux QT simulator",
       claimSim: "Shield claim simulator",
       focus: "R&D focus areas",
+      standards: "Standards and references",
       contact: "Contact and pilot application",
     },
     case: "Case",
@@ -85,6 +87,7 @@ export default function CommandPalette({ locale }: { locale: Locale }) {
       { id: "qt-sim", group: "pages", label: t.pages.qtSim, hint: "/initiatives/pharmadeux#simulator", href: "/initiatives/pharmadeux#simulator" },
       { id: "claim-sim", group: "pages", label: t.pages.claimSim, hint: "/initiatives/shield#simulator", href: "/initiatives/shield#simulator" },
       { id: "focus", group: "pages", label: t.pages.focus, hint: "/about#odaklar", href: "/about#odaklar" },
+      { id: "standards", group: "pages", label: t.pages.standards, hint: "/standartlar", href: "/standartlar" },
       { id: "contact", group: "pages", label: t.pages.contact, hint: "/contact", href: "/contact" },
     ];
     const cases: Item[] = CLINICAL_CASES[locale].map((item, i) => ({

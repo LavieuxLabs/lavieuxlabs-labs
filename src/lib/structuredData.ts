@@ -188,3 +188,72 @@ export function shieldJsonLd(locale: Locale) {
     ],
   };
 }
+
+// ── Standards & reference portal ─────────────────────────────────────────────
+// Reference pages carry no reviewedBy: a named reviewer is only added when one has actually reviewed
+// the page. dateModified comes from the metrics source of truth.
+
+const STANDARDS_PATH = "/standartlar";
+const standardsName: Record<Locale, string> = { tr: "Standartlar ve referanslar", en: "Standards and references" };
+
+function standardsBreadcrumb(locale: Locale, page?: { name: string; path: string }) {
+  const items = [
+    { "@type": "ListItem", position: 1, name: copy[locale].home, item: absoluteUrl(locale, "/") },
+    { "@type": "ListItem", position: 2, name: standardsName[locale], item: absoluteUrl(locale, STANDARDS_PATH) },
+  ];
+  if (page) items.push({ "@type": "ListItem", position: 3, name: page.name, item: absoluteUrl(locale, page.path) });
+  return { "@type": "BreadcrumbList", itemListElement: items };
+}
+
+export function standardsHubJsonLd(locale: Locale, pages: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${absoluteUrl(locale, STANDARDS_PATH)}#page`,
+        name: standardsName[locale],
+        url: absoluteUrl(locale, STANDARDS_PATH),
+        inLanguage: inLanguage[locale],
+        dateModified: metrics.lastUpdated,
+        publisher: { "@id": ORG_ID },
+        mainEntity: {
+          "@type": "ItemList",
+          itemListElement: pages.map((p, i) => ({ "@type": "ListItem", position: i + 1, name: p.name, url: absoluteUrl(locale, p.path) })),
+        },
+      },
+      standardsBreadcrumb(locale),
+    ],
+  };
+}
+
+type StandardPage = {
+  locale: Locale;
+  path: string;
+  name: string;
+  description: string;
+  /** MedicalWebPage for clinical references, TechnicalArticle for integration documentation. */
+  kind: "medical" | "technical";
+  /** Main entity (e.g. a MedicalRiskScore) described by the page. */
+  about?: Record<string, unknown>;
+  citations: string[];
+};
+
+export function standardPageJsonLd({ locale, path, name, description, kind, about, citations }: StandardPage) {
+  const page = {
+    "@type": kind === "medical" ? "MedicalWebPage" : "TechnicalArticle",
+    "@id": `${absoluteUrl(locale, path)}#page`,
+    ...(kind === "medical" ? { name } : { headline: name, proficiencyLevel: "Expert" }),
+    description,
+    url: absoluteUrl(locale, path),
+    inLanguage: inLanguage[locale],
+    dateModified: metrics.lastUpdated,
+    isPartOf: { "@id": `${absoluteUrl(locale, STANDARDS_PATH)}#page` },
+    publisher: { "@id": ORG_ID },
+    author: { "@id": ORG_ID },
+    ...(kind === "medical" ? { audience: { "@type": "MedicalAudience", audienceType: "Clinician" } } : {}),
+    ...(about ? (kind === "medical" ? { mainEntity: about } : { about }) : {}),
+    citation: citations,
+  };
+  return { "@context": "https://schema.org", "@graph": [page, standardsBreadcrumb(locale, { name, path })] };
+}
