@@ -20,6 +20,7 @@ export const ROUTES = [
   "/standartlar/tisdale-score",
   "/standartlar/ckd-epi-2021",
   "/standartlar/fhir-r4-entegrasyonu",
+  "/standartlar/sut-fatura-denetimi",
   "/contact",
   "/legal/quality",
   "/legal/privacy",

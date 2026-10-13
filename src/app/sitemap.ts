@@ -16,6 +16,7 @@ const settings: Record<RoutePath, { changeFrequency: Entry["changeFrequency"]; p
   "/standartlar/tisdale-score": { changeFrequency: "yearly", priority: 0.7 },
   "/standartlar/ckd-epi-2021": { changeFrequency: "yearly", priority: 0.7 },
   "/standartlar/fhir-r4-entegrasyonu": { changeFrequency: "monthly", priority: 0.7 },
+  "/standartlar/sut-fatura-denetimi": { changeFrequency: "monthly", priority: 0.7 },
   "/contact": { changeFrequency: "monthly", priority: 0.7 },
   "/legal/quality": { changeFrequency: "yearly", priority: 0.4 },
   "/legal/privacy": { changeFrequency: "yearly", priority: 0.3 },

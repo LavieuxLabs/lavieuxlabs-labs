@@ -112,6 +112,7 @@ export const navigation = defineContent({
         title: "Standartlar",
         links: [
           { href: "/standartlar", label: "Standartlar ve referanslar" },
+          { href: "/standartlar/sut-fatura-denetimi", label: "SUT fatura denetimi" },
           { href: "/#standartlar", label: "Sekiz kural" },
           { href: "/#yaklasim", label: "Doğrulama ve karar" },
           { href: "/legal/quality", label: "Kalite ve MDR" },
@@ -173,6 +174,7 @@ export const navigation = defineContent({
         title: "Standards",
         links: [
           { href: "/standartlar", label: "Standards and references" },
+          { href: "/standartlar/sut-fatura-denetimi", label: "SUT billing audit" },
           { href: "/#standartlar", label: "Eight rules" },
           { href: "/#yaklasim", label: "Verification and decision" },
           { href: "/legal/quality", label: "Quality and MDR" },

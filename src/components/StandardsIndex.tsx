@@ -7,7 +7,7 @@ import { localizedPath, type Locale } from "@/i18n/config";
 
 export type StandardEntry = {
   href: string;
-  category: "clinical" | "technical";
+  category: "clinical" | "technical" | "administrative";
   title: string;
   summary: string;
   /** Codes and units shown in mono, also matched by the search. */
@@ -15,9 +15,12 @@ export type StandardEntry = {
   source: string;
 };
 
-const copy: Record<Locale, { search: string; all: string; clinical: string; technical: string; filter: string; empty: string; open: string }> = {
-  tr: { search: "Standart, kod veya kaynak arayın", all: "Tümü", clinical: "Klinik", technical: "Teknik", filter: "Kategori", empty: "Sonuç yok.", open: "Sayfayı aç" },
-  en: { search: "Search a standard, code or source", all: "All", clinical: "Clinical", technical: "Technical", filter: "Category", empty: "No results.", open: "Open page" },
+const copy: Record<
+  Locale,
+  { search: string; all: string; clinical: string; technical: string; administrative: string; filter: string; empty: string; open: string }
+> = {
+  tr: { search: "Standart, kod veya kaynak arayın", all: "Tümü", clinical: "Klinik", technical: "Teknik", administrative: "İdari / Denetim", filter: "Kategori", empty: "Sonuç yok.", open: "Sayfayı aç" },
+  en: { search: "Search a standard, code or source", all: "All", clinical: "Clinical", technical: "Technical", administrative: "Administrative / Audit", filter: "Category", empty: "No results.", open: "Open page" },
 };
 
 // Case- and accent-insensitive, so "ckd epi" finds "CKD-EPI" and "dogrulama" finds "doğrulama".
@@ -54,8 +57,8 @@ export default function StandardsIndex({ locale, entries }: { locale: Locale; en
             className="w-full rounded-lg border border-hairline bg-navy-850 py-2.5 pr-3 pl-9 text-[14px] text-white placeholder:text-white/50 focus:border-white/30 focus:outline-none"
           />
         </label>
-        <div role="group" aria-label={t.filter} className="flex rounded-md border border-hairline bg-white/[0.03] p-0.5">
-          {(["all", "clinical", "technical"] as const).map((key) => (
+        <div role="group" aria-label={t.filter} className="flex flex-wrap rounded-md border border-hairline bg-white/[0.03] p-0.5">
+          {(["all", "clinical", "technical", "administrative"] as const).map((key) => (
             <button
               key={key}
               type="button"
@@ -75,7 +78,7 @@ export default function StandardsIndex({ locale, entries }: { locale: Locale; en
         {results.length === 0 ? (
           <p className="rounded-2xl border border-hairline px-5 py-8 text-center text-[13px] text-white/55">{t.empty}</p>
         ) : (
-          <ul className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline md:grid-cols-3">
+          <ul className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline sm:grid-cols-2 xl:grid-cols-4">
             {results.map((e) => (
               <li key={e.href} className="group relative flex flex-col bg-navy-850 transition-colors duration-150 ease-out hover:bg-navy-800">
                 <Link href={localizedPath(locale, e.href)} className="flex h-full flex-col p-5 sm:p-6">

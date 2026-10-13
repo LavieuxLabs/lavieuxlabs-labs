@@ -9,12 +9,12 @@ export const metadata = defineMetadata("/standartlar", {
   tr: {
     title: "Standartlar ve referanslar",
     description:
-      "PharmaDeux'un dayandığı klinik ve teknik standartlar: Tisdale QT risk skoru, CKD-EPI 2021 eGFR ve HL7 FHIR R4 entegrasyonu; formüller, eşikler, kodlar ve kaynaklar.",
+      "PharmaDeux ve Shield'ın dayandığı klinik, teknik ve idari standartlar: Tisdale QT risk skoru, CKD-EPI 2021 eGFR, HL7 FHIR R4 entegrasyonu ve SUT fatura denetimi; formüller, eşikler, kodlar ve kaynaklar.",
   },
   en: {
     title: "Standards and references",
     description:
-      "The clinical and technical standards behind PharmaDeux: the Tisdale QT risk score, CKD-EPI 2021 eGFR and HL7 FHIR R4 integration, with formulas, thresholds, codes and sources.",
+      "The clinical, technical and administrative standards behind PharmaDeux and Shield: the Tisdale QT risk score, CKD-EPI 2021 eGFR, HL7 FHIR R4 integration and SUT billing audit, with formulas, thresholds, codes and sources.",
   },
 });
 
@@ -58,6 +58,14 @@ const copy = defineContent<{
         codes: ["FHIR R4", "ATC", "LOINC", "UCUM"],
         source: "HL7 International · FHIR R4 (v4.0.1)",
       },
+      {
+        href: "/standartlar/sut-fatura-denetimi",
+        category: "administrative",
+        title: "SUT fatura denetimi",
+        summary: "Shield'ın gönderim öncesi kural motoru: dört denetim düzlemi, 0–100 risk skoru ve denetim izi.",
+        codes: ["EK-2B", "EK-2C", "ICD-10", "0–100"],
+        source: "SGK · Sağlık Uygulama Tebliği (SUT)",
+      },
     ],
     more: "Kalite ve regülasyon durumu için",
     moreLinks: [
@@ -95,6 +103,14 @@ const copy = defineContent<{
         summary: "MedicationRequest and Observation resources, code systems, example JSON and integration architecture.",
         codes: ["FHIR R4", "ATC", "LOINC", "UCUM"],
         source: "HL7 International · FHIR R4 (v4.0.1)",
+      },
+      {
+        href: "/standartlar/sut-fatura-denetimi",
+        category: "administrative",
+        title: "SUT billing audit",
+        summary: "Shield's pre-submission rule engine: four audit planes, a 0–100 risk score and the audit trail.",
+        codes: ["EK-2B", "EK-2C", "ICD-10", "0–100"],
+        source: "SGK · Health Implementation Communiqué (SUT)",
       },
     ],
     more: "For quality and regulatory status, see",
