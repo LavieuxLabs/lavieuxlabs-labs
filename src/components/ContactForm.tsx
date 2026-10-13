@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, Loader2 } from "lucide-react";
 import { CONTACT_EMAIL, SOLUTION_VALUES, type SolutionValue } from "@/lib/site";
 import { solutionContent } from "@/lib/solutionContent";
+import { trackEvent } from "@/lib/analytics";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import CopyEmail from "@/components/CopyEmail";
 import {
@@ -249,6 +250,8 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
         body: JSON.stringify(payload),
       });
       if (res.ok) {
+        // Solution only: no organisation, name or message content is ever sent to analytics.
+        trackEvent("loi_submitted", { solution });
         setStatus("sent");
         return;
       }

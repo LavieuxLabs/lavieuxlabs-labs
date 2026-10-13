@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 import ShareLinkButton from "@/components/ShareLinkButton";
+import { trackEvent } from "@/lib/analytics";
 import { defineContent, type Locale } from "@/i18n/config";
 
 // Shield claim check simulator. The rule set is fictional (rule IDs, weights) and labelled as such; it
@@ -138,8 +139,10 @@ export default function ClaimSimulator({ locale }: { locale: Locale }) {
   const [icd, setIcdState] = useState(item.icd[0]);
   const [checks, setChecksState] = useState<Checks>(DEFAULT_CHECKS);
 
-  const sync = (next: { item: ItemId; icd: string; checks: Checks }) =>
+  const sync = (next: { item: ItemId; icd: string; checks: Checks }) => {
     window.history.replaceState(window.history.state, "", claimToUrl(next, window.location.href));
+    trackEvent("simulator_run", { tool: "claim", item: next.item });
+  };
   const setItem = (id: ItemId, code: string) => {
     setItemState(id);
     setIcdState(code);
@@ -183,6 +186,7 @@ export default function ClaimSimulator({ locale }: { locale: Locale }) {
           locale={locale}
           ariaLabel={c.shareAria}
           getUrl={() => claimToUrl({ item: itemId, icd, checks }, window.location.href)}
+          onCopy={() => trackEvent("simulator_share", { tool: "claim" })}
         />
       </div>
 

@@ -1,16 +1,21 @@
 import type { NextConfig } from "next";
+import { analyticsCsp } from "./src/lib/analyticsConfig";
 
 const isDev = process.env.NODE_ENV === "development";
+
+// Optional analytics origins, only when NEXT_PUBLIC_ANALYTICS_DOMAIN or NEXT_PUBLIC_GA_ID is set.
+const analytics = analyticsCsp();
+const extra = (sources: string[]) => (sources.length ? ` ${sources.join(" ")}` : "");
 
 // Static CSP without nonces, so pages stay prerendered. 'unsafe-eval' is only needed by
 // React's dev-mode debugging and is omitted from production builds.
 const contentSecurityPolicy = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${extra(analytics.script)}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self' data:",
-  "connect-src 'self'",
+  `connect-src 'self'${extra(analytics.connect)}`,
   // Google Maps embed on /contact (loaded only after consent).
   "frame-src https://www.google.com https://maps.google.com",
   "object-src 'none'",

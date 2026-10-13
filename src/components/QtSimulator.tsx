@@ -5,6 +5,7 @@ import { BASELINE_QTC, DRUGS, tisdale, type Baseline, type Patient } from "@/lib
 import { qtFromSearch, qtToUrl, setQtState, useQtState, type QtState } from "@/lib/qtStore";
 import ShareLinkButton from "@/components/ShareLinkButton";
 import Cite from "@/components/Cite";
+import { trackEvent } from "@/lib/analytics";
 import { defineContent, type Locale } from "@/i18n/config";
 
 const copy = defineContent({
@@ -94,6 +95,7 @@ export default function QtSimulator({ locale }: { locale: Locale }) {
   const commit = (next: QtState) => {
     setQtState(next);
     window.history.replaceState(window.history.state, "", qtToUrl(next, window.location.href));
+    trackEvent("simulator_run", { tool: "qt", qtc: next.patient.qtc });
   };
   const setA = (drug1: string) => commit({ ...qt, drug1 });
   const setB = (drug2: string) => commit({ ...qt, drug2 });
@@ -128,7 +130,12 @@ export default function QtSimulator({ locale }: { locale: Locale }) {
     <div className="overflow-hidden rounded-2xl border border-hairline bg-navy-850">
       <div className="flex items-center justify-between gap-3 border-b border-hairline px-5 py-2.5">
         <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.panel}</p>
-        <ShareLinkButton locale={locale} ariaLabel={c.shareAria} getUrl={() => qtToUrl(qt, window.location.href)} />
+        <ShareLinkButton
+          locale={locale}
+          ariaLabel={c.shareAria}
+          getUrl={() => qtToUrl(qt, window.location.href)}
+          onCopy={() => trackEvent("simulator_share", { tool: "qt" })}
+        />
       </div>
 
       {/* Inputs */}

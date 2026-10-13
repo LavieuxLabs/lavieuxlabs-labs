@@ -7,6 +7,7 @@ import CopyPayloadButton from "@/components/CopyPayloadButton";
 import { medicationRequest, qtcObservation, tisdaleObservation } from "@/lib/fhirPayload";
 import { DRUGS, tisdale } from "@/lib/qtSimulator";
 import { useQtState } from "@/lib/qtStore";
+import { trackEvent } from "@/lib/analytics";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 
 // Example FHIR R4 payloads for hospital IT, generated live from the QT simulator above: one
@@ -152,6 +153,7 @@ export default function FhirPreview({ locale }: { locale: Locale }) {
     a.download = "lavieuxlabs-fhir-r4-example-bundle.json";
     a.click();
     URL.revokeObjectURL(url);
+    trackEvent("fhir_download", { source: "qt_simulator" });
   };
 
   return (
@@ -187,7 +189,10 @@ export default function FhirPreview({ locale }: { locale: Locale }) {
               ))}
             </div>
             <div className="flex items-center gap-2">
-              <CopyPayloadButton locale={locale} ariaLabel={c.copyAria(active.label)} getPayload={() => current} />
+              <CopyPayloadButton locale={locale} ariaLabel={c.copyAria(active.label)} getPayload={() => {
+                  trackEvent("fhir_copy", { resource: active.key });
+                  return current;
+                }} />
               <button
                 type="button"
                 onClick={download}

@@ -5,6 +5,7 @@ import CookieBanner from "@/components/CookieBanner";
 import SiteBackdrop from "@/components/SiteBackdrop";
 import TelemetryRails from "@/components/TelemetryRails";
 import VisibilityTitle from "@/components/VisibilityTitle";
+import Analytics from "@/components/Analytics";
 import { fontVariables } from "@/lib/fonts";
 import { htmlLang, type Locale } from "@/i18n/config";
 
@@ -31,6 +32,7 @@ export default function SiteShell({ locale, children }: { locale: Locale; childr
         <Footer locale={locale} />
         <CookieBanner locale={locale} />
         <VisibilityTitle locale={locale} />
+        <Analytics />
       </body>
     </html>
   );

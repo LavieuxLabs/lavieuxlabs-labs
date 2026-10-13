@@ -11,7 +11,18 @@ const copy: Record<Locale, { label: string; done: string; failed: string }> = {
 };
 
 /** Copies a shareable URL of the current simulator state; neutral data tooling, never printed. */
-export default function ShareLinkButton({ locale, getUrl, ariaLabel }: { locale: Locale; getUrl: () => string; ariaLabel: string }) {
+export default function ShareLinkButton({
+  locale,
+  getUrl,
+  ariaLabel,
+  onCopy,
+}: {
+  locale: Locale;
+  getUrl: () => string;
+  ariaLabel: string;
+  /** Called after a successful copy (e.g. to record a share event). */
+  onCopy?: () => void;
+}) {
   const [state, setState] = useState<"idle" | "done" | "failed">("idle");
   const timer = useRef<number | undefined>(undefined);
   const t = copy[locale];
@@ -20,6 +31,7 @@ export default function ShareLinkButton({ locale, getUrl, ariaLabel }: { locale:
 
   const onClick = async () => {
     const ok = await writeClipboard(getUrl());
+    if (ok) onCopy?.();
     setState(ok ? "done" : "failed");
     window.clearTimeout(timer.current);
     timer.current = window.setTimeout(() => setState("idle"), 1600);
