@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <rect width="32" height="32" rx="7" fill="#080A0F"/>
-  <!-- Stratum LL: the same two paths as MARK_OUTER / MARK_INNER in src/lib/logoMark.ts. -->
+  <!-- Lambda mark: the same two paths as MARK_OUTER / MARK_INNER in src/lib/logoMark.ts. -->
   <g fill="#9E9FA5">
-    <path d="M7 5H9.5L11 6.5V23H23.5L25 24.5V27H7Z"/>
-    <path d="M14 9H16.5L18 10.5V16H23.5L25 17.5V20H14Z"/>
+    <path d="M5 5L12.48 22.46L27 27V23.33L15.07 19.6L8.81 5Z"/>
+    <path d="M12.62 5L17.65 16.74L27 19.67V16L20.23 13.88L16.42 5Z"/>
   </g>
 </svg>

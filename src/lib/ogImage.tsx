@@ -49,7 +49,7 @@ const upperTr = (text: string) =>
     .map((part) => (BRAND.test(part) ? part.toUpperCase() : part.toLocaleUpperCase("tr-TR")))
     .join(" · ");
 
-// Same geometry as LogoMark (src/components/Navbar.tsx): the "LL" monogram from src/lib/logoMark.ts.
+// Same geometry as LogoMark (src/components/Navbar.tsx): the Lambda mark from src/lib/logoMark.ts.
 function Mark() {
   return (
     <svg width="44" height="44" viewBox={MARK_VIEWBOX} fill="#9E9FA5">

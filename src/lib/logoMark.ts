@@ -1,9 +1,11 @@
-// LavieuxLabs "Stratum LL" monogram, the umbrella mark for every product line: two nested, stepped L
-// layers on a 32-unit grid, like slides or data layers. 4-unit bars, a 3-unit channel on both axes
-// (1.5px at 16px, so the layers stay apart), the inner L starts 4 units lower, both feet end at x=25.
-// Each terminal end has a 1.5-unit 45° chamfer on its top-right corner; the four cuts lie parallel.
+// LavieuxLabs "Lambda" monogram (dual refraction / clearance), the umbrella mark for every product
+// line: two parallel rays on a 32-unit grid, each a 3.5-unit band that falls steeply (incident, 6:14)
+// and bends once into a shallow run (refracted, 16:5), like light through a prism or a drug's
+// concentration curve falling and levelling off. The rays are 7 units apart centre to centre, the
+// same perpendicular distance on both segments (3.5-unit clear channel, 1.75px at 16px). Both enter
+// on one horizontal line (y=5) and leave on one vertical line (x=27); the mark fills 5–27 on both axes.
 // Single geometry for every size: LogoMark (src/components/Navbar.tsx), the OG card
 // (src/lib/ogImage.tsx) and the favicon (src/app/icon.svg, a static file with the same two paths).
 export const MARK_VIEWBOX = "0 0 32 32";
-export const MARK_OUTER = "M7 5H9.5L11 6.5V23H23.5L25 24.5V27H7Z";
-export const MARK_INNER = "M14 9H16.5L18 10.5V16H23.5L25 17.5V20H14Z";
+export const MARK_OUTER = "M5 5L12.48 22.46L27 27V23.33L15.07 19.6L8.81 5Z";
+export const MARK_INNER = "M12.62 5L17.65 16.74L27 19.67V16L20.23 13.88L16.42 5Z";
