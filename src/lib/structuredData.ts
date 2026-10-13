@@ -1,4 +1,5 @@
 import { CONTACT_EMAIL, SITE_URL, office } from "@/lib/site";
+import { metrics } from "@/lib/metrics";
 import { defineContent, type Locale } from "@/i18n/config";
 import { absoluteUrl } from "@/i18n/metadata";
 
@@ -29,7 +30,7 @@ const copy = defineContent({
       description:
         "Çoklu ilaç tedavilerinde toksisite ve kümülatif organ yükünü reçete anında hekime bildiren klinik karar destek sistemi. MDR 2017/745 Kural 11 kapsamında Sınıf IIa hedefli tıbbi cihaz yazılımı (SaMD) olarak geliştirilmektedir; henüz CE işareti yoktur.",
       features: [
-        "18 güvenlik düzleminde ilaç-ilaç etkileşimi, organ toksisitesi ve kümülatif yük kontrolü",
+        `${metrics.safetyPlanes} güvenlik düzleminde ilaç-ilaç etkileşimi, organ toksisitesi ve kümülatif yük kontrolü`,
         "Kural kimliği ve eşik değeriyle gerekçeli uyarı",
         "HL7 FHIR R4 veri modeli",
         "Yalnızca eklenebilir denetim kaydı",
@@ -65,7 +66,7 @@ const copy = defineContent({
       description:
         "Clinical decision support software alerting physicians to cumulative organ burden and toxicity at the moment of prescription. Developed as medical device software (SaMD) targeting Class IIa under MDR 2017/745 Rule 11; it does not have a CE mark yet.",
       features: [
-        "Drug–drug interaction, organ toxicity and cumulative burden checks across 18 safety planes",
+        `Drug–drug interaction, organ toxicity and cumulative burden checks across ${metrics.safetyPlanes} safety planes`,
         "Alerts shown with the rule ID and threshold that triggered them",
         "HL7 FHIR R4 data model",
         "Append-only audit log",

@@ -189,8 +189,8 @@ const copy = defineContent<{
       },
       {
         title: "Kural değerlendirmesi",
-        body: "Reçete 18 güvenlik düzleminde sürümlü kurallarla kontrol edilir. Aynı girdi her zaman aynı sonucu verir.",
-        detail: "18 düzlem · sürümlü kurallar",
+        body: `Reçete ${metrics.safetyPlanes} güvenlik düzleminde sürümlü kurallarla kontrol edilir. Aynı girdi her zaman aynı sonucu verir.`,
+        detail: `${metrics.safetyPlanes} düzlem · sürümlü kurallar`,
       },
       {
         title: "Bulgu ve gerekçe",
@@ -209,8 +209,8 @@ const copy = defineContent<{
       },
     ],
     planes: {
-      label: "18 güvenlik düzlemi",
-      title: "Dört başlık altında 18 kontrol",
+      label: `${metrics.safetyPlanes} güvenlik düzlemi`,
+      title: `Dört başlık altında ${metrics.safetyPlanes} kontrol`,
       body: "Her kontrolün kendi sürümü ve testi var. Eşik değerleri kurumun politikasına göre ayarlanabilir.",
     },
     // Safety planes grouped by clinical domain. Keep in sync with the engine's plane registry.
@@ -468,8 +468,8 @@ const copy = defineContent<{
       },
       {
         title: "Rule assessment",
-        body: "The prescription is checked against versioned rules across 18 safety planes. The same input always gives the same result.",
-        detail: "18 planes · versioned rules",
+        body: `The prescription is checked against versioned rules across ${metrics.safetyPlanes} safety planes. The same input always gives the same result.`,
+        detail: `${metrics.safetyPlanes} planes · versioned rules`,
       },
       {
         title: "Finding and reason",
@@ -488,8 +488,8 @@ const copy = defineContent<{
       },
     ],
     planes: {
-      label: "18 safety planes",
-      title: "18 checks under four headings",
+      label: `${metrics.safetyPlanes} safety planes`,
+      title: `${metrics.safetyPlanes} checks under four headings`,
       body: "Each check has its own version and tests. Thresholds can be set to match the institution's policy.",
     },
     planeGroups: [
@@ -672,6 +672,16 @@ const copy = defineContent<{
     ],
   },
 });
+
+// The "N checks under four headings" grid is drawn from planeGroups; its total must equal the JSON count,
+// otherwise the sentences (templated from metrics.safetyPlanes) and the grid would disagree.
+for (const lang of ["tr", "en"] as const) {
+  const drawn = copy[lang].planeGroups.reduce((n, g) => n + g.planes.length, 0);
+  if (drawn !== metrics.safetyPlanes) {
+    throw new Error(`PharmaDeuxView (${lang}): planeGroups lists ${drawn} planes, projectMetrics.json says ${metrics.safetyPlanes}`);
+  }
+}
+
 
 export default function PharmaDeuxView({ locale }: { locale: Locale }) {
   const c = copy[locale];
