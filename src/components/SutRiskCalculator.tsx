@@ -103,7 +103,7 @@ const copy = defineContent({
     low: "Low risk",
     queue: "Queue",
     queued: "Goes to the specialist review queue",
-    notQueued: "Not queued; stays in the submission flow",
+    notQueued: "Not queued · stays in the submission flow",
     reset: "Reset",
     note: "Shown on the example rule set · fictional data. R- codes are not SUT article numbers. The final decision rests with the institution's specialist.",
   },

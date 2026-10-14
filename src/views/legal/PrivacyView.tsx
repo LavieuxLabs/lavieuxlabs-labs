@@ -365,7 +365,7 @@ const sectionsEn: LegalSection[] = [
         </p>
         <p>
           If you load the location map on the contact page, data such as your IP address and browser information is sent
-          directly to Google, which provides the map; the map loads only with your consent or at your request. Where our
+          directly to Google, which provides the map. The map loads only with your consent or at your request. Where our
           service providers’ servers are located outside Türkiye, transfers follow the mechanisms set out in Article 9 of
           KVKK. Your personal data is not sold or rented to third parties for marketing.
         </p>
@@ -432,8 +432,8 @@ const sectionsEn: LegalSection[] = [
     title: "Changes to this policy",
     content: (
       <p>
-        This policy may be updated as the law or our activities change. The current version is always published on this
-        page; the “Last updated” date at the top shows the most recent change.
+        This policy may be updated as the law or our activities change. The current version is always published on this page, and the
+        “Last updated” date at the top shows the most recent change.
       </p>
     ),
   },

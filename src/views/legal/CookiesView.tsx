@@ -165,7 +165,7 @@ const sectionsEn: LegalSection[] = [
         <h3>External content</h3>
         <p>
           Allows third-party content such as Google Maps on the contact page to load. When it loads, the provider may set
-          its own cookies. Requires your explicit consent; without it, the map loads only when you press “Load map”, and
+          its own cookies. Requires your explicit consent. Without it, the map loads only when you press “Load map” and
           only for that page view.
         </p>
         <h3>Analytics</h3>
@@ -206,7 +206,7 @@ const sectionsEn: LegalSection[] = [
                 <td>External content</td>
                 <td>Shows the location map on the contact page. Loads only with your consent or at your request.</td>
                 <td>
-                  Set by Google; see the{" "}
+                  Set by Google. See the{" "}
                   <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer">
                     Google cookie policy
                   </a>

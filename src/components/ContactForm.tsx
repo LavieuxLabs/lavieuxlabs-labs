@@ -97,9 +97,9 @@ const copy = defineContent({
     optional: "optional",
     sentTitle: "Your request has been received.",
     sentBody: {
-      intro: "A calendar invitation for the intro call will be sent to your email within one business day at the latest.",
-      academic: "We will reply by email within one business day at the latest.",
-      pilot: "We will reply by email within one business day at the latest.",
+      intro: "A calendar invitation for the intro call will be sent to your email within one business day.",
+      academic: "We will reply by email within one business day.",
+      pilot: "We will reply by email within one business day.",
     } as Record<ContactPath, string>,
     nextTitle: "Next steps",
     summary: { path: "Request", organization: "Organisation", product: "Product", role: "Role" },

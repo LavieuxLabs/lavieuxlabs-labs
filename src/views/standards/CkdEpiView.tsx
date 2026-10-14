@@ -90,7 +90,7 @@ const copy = defineContent({
     femaleFactor: "Female factor",
     loinc: "LOINC mapping",
     loincBody:
-      "PharmaDeux carries eGFR in a FHIR Observation with LOINC 98979-8 (CKD-EPI 2021, creatinine-based). LOINC 62238-1 belongs to the 2009 equation; the two codes are not interchangeable.",
+      "PharmaDeux carries eGFR in a FHIR Observation with LOINC 98979-8 (CKD-EPI 2021, creatinine-based). LOINC 62238-1 belongs to the 2009 equation, and the two codes are not interchangeable.",
     code: "Code",
     meaning: "Meaning",
     loinc2021: "eGFR, creatinine-based, CKD-EPI 2021",
@@ -104,9 +104,9 @@ const copy = defineContent({
     dosingBody: "Principles that apply when checking doses against kidney function:",
     dosingItems: [
       "The dose threshold comes from the product information (SmPC) and is applied on the measure the label uses. If the label gives creatinine clearance (Cockcroft–Gault, mL/min), eGFR (mL/min/1.73 m²) is not substituted for it.",
-      "In PharmaDeux a rule reads the latest laboratory value; if a required value is missing it is flagged, never skipped.",
+      "In PharmaDeux, a rule reads the latest laboratory value. If a required value is missing, it is flagged, never skipped.",
       "The same order can give a different result at different kidney function: a dose that is safe at an eGFR of 90 may need adjusting at 30.",
-      "In acute kidney injury creatinine is not at steady state; an equation-based eGFR may then not reflect true filtration.",
+      "In acute kidney injury, creatinine is not at steady state, so an equation-based eGFR may not reflect true filtration.",
     ],
     related: [
       { href: "/initiatives/pharmadeux?case=renal#simulator", label: "Example case: renal dose threshold" },

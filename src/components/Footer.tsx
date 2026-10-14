@@ -55,7 +55,7 @@ const copy = defineContent({
     site: "Site",
     legalTexts: "Legal texts",
     disclaimer:
-      "PharmaDeux CDSS and Shield are in development and not yet on the market. The conformity assessments required for clinical use have not been completed. Nothing on this site is medical advice; example data is fictional.",
+      "PharmaDeux CDSS and Shield are in development and not yet on the market. The conformity assessments required for clinical use have not been completed. Nothing on this site is medical advice. Example data is fictional.",
   },
 });
 

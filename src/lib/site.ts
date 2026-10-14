@@ -37,7 +37,7 @@ export const organizationProfile = defineContent({
     short: "Independent health technology R&D venture",
     positioning:
       "LavieuxLabs is an independent clinical decision support and health technology R&D venture built by students of Konya Technical University.",
-    stage: "We are not incorporated yet; the products are in R&D and pilot preparation.",
+    stage: "We are not incorporated yet. The products are in R&D and pilot preparation.",
     independence: "We are not an official unit, partner or technopark company of the university.",
   },
 });

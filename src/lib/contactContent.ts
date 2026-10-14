@@ -253,29 +253,29 @@ const copy = defineContent<ContactCopy>({
         pharmadeux: [
           { title: "Short form", body: "Tell us your institution and role. The message is optional." },
           { title: "15-minute call", body: "We listen to your prescribing and medication safety workflow and show PharmaDeux on an example case." },
-          { title: "Fit note", body: "We tell you plainly whether the product fits your institution. No commitment is asked for a next step." },
+          { title: "Fit note", body: "We tell you plainly whether the product fits your institution. There is no commitment to a next step." },
         ],
         shield: [
           { title: "Short form", body: "Tell us your institution and role. The message is optional." },
           { title: "15-minute call", body: "We listen to your rejection and deduction reasons and show Shield on an example claim." },
-          { title: "Fit note", body: "We tell you plainly whether the product fits your institution. No commitment is asked for a next step." },
+          { title: "Fit note", body: "We tell you plainly whether the product fits your institution. There is no commitment to a next step." },
         ],
       },
       academic: [
         { title: "Study scope and hypothesis", body: "Together we define the research question, the target population and the primary endpoints." },
-        { title: "Ethics committee and data protocol", body: "The ethics application, anonymisation and data-processing protocol, and each party's role are written down." },
-        { title: "Joint validation and publication", body: "The validation study is run together; findings are reported to peer-review standards." },
+        { title: "Ethics committee and data protocol", body: "We write down each party's role, the ethics application and the anonymisation and data processing protocol." },
+        { title: "Joint validation and publication", body: "We run the validation study together and report the findings to peer-review standards." },
       ],
       pilot: {
         pharmadeux: [
           { title: "Clinical needs review", body: "Together we map the target wards, your current medication safety processes and your clinical pharmacy workflow." },
-          { title: "Retrospective test protocol (LOI)", body: "The validation protocol on anonymised past prescriptions, and its criteria, are set out in a non-binding Letter of Intent (LOI)." },
-          { title: "HIS integration and shadow mode", body: "Under an ethics-approved study, the system connects over HL7 FHIR R4; in shadow mode no alert is shown to clinicians and results are only logged." },
+          { title: "Retrospective test protocol (LOI)", body: "The validation protocol for anonymised past prescriptions and its criteria are set out in a non-binding Letter of Intent (LOI)." },
+          { title: "HIS integration and shadow mode", body: "Under an ethics-approved study, the system connects over HL7 FHIR R4. In shadow mode, clinicians see no alerts and results are only logged." },
         ],
         shield: [
           { title: "Rejection reason review", body: "Together we review your rejection and deduction reasons, your pre-authorisation flow and where revenue is most often lost." },
-          { title: "Retrospective claims test (LOI)", body: "Shield runs on anonymised past claims; rejection catch and false positive rates are measured. The scope is set out in an LOI." },
-          { title: "Pre-submission pilot", body: "If you choose, Shield connects to your billing flow as a pre-submission layer; flagged items are reviewed in the specialist queue." },
+          { title: "Retrospective claims test (LOI)", body: "Shield runs on anonymised past claims, and we measure rejection catch and false positive rates. The scope is set out in an LOI." },
+          { title: "Pre-submission pilot", body: "If you choose, Shield then connects to your billing flow as a pre-submission layer, and flagged items are reviewed in the specialist queue." },
         ],
       },
     },
@@ -307,7 +307,7 @@ const copy = defineContent<ContactCopy>({
     },
     nextSteps: {
       intro: [
-        { title: "Calendar invitation", body: "Within one business day at the latest, a calendar invitation for the intro call is sent to your email." },
+        { title: "Calendar invitation", body: "We send a calendar invitation for the intro call to your email within one business day." },
         { title: "15-minute call", body: "We listen to what you need and show the product in a short demo." },
         { title: "Short note", body: "After the call we share a short note on fit and a possible next step." },
       ],
@@ -318,7 +318,7 @@ const copy = defineContent<ContactCopy>({
       ],
       pilot: [
         { title: "Technical review and first call", body: "Your hospital information system (HIS) architecture, data flow and FHIR R4 / HL7 v2 interfaces are reviewed with your IT team." },
-        { title: "Security and isolation protocol", body: "Deployment model (on-premises, isolated VPC or air-gapped network), the data processing agreement and KVKK (Turkish data protection law) art. 12 measures are agreed." },
+        { title: "Security and isolation protocol", body: "We agree on the deployment model (on-premises, isolated VPC or air-gapped network), the data processing agreement and the safeguards under Article 12 of KVKK (Turkey's data protection law)." },
         { title: "Pilot integration and validation", body: "The system connects in a test environment and is validated against an independent reference. Duration and wards are agreed with the institution and written into the LOI." },
       ],
     },

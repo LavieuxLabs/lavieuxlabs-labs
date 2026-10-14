@@ -416,7 +416,7 @@ const copy = defineContent<{
     crumbs: { home: "Home", here: "About" },
     eyebrow: "About",
     title: "We build testable software for medication safety and billing.",
-    description: `${organizationProfile.en.positioning} ${organizationProfile.en.stage} For work where a mistake is costly to a patient or an institution, we build systems whose every result can be reproduced and that leave the decision to a person.`,
+    description: `${organizationProfile.en.positioning} ${organizationProfile.en.stage} For work where a mistake is costly to a patient or an institution, we build systems that can reproduce every result and leave the decision to a person.`,
     pillars: [
       {
         label: "Vision",
@@ -495,12 +495,12 @@ const copy = defineContent<{
         ],
         outcome: {
           label: "For hospital IT",
-          body: "The pilot architecture is designed to run on-premises and in isolation; during a pilot, data is not taken out of the institution's infrastructure. The system runs as a layer next to the existing HIS workflow, without changing it.",
+          body: "The pilot architecture is designed to run on-premises and in isolation. During a pilot, data is not moved outside the institution's infrastructure. The system runs as a layer next to the existing HIS workflow, without changing it.",
         },
       },
       {
         title: "Revenue integrity and regulatory modelling",
-        body: "SUT (the national reimbursement rules) and SGK (Social Security Institution) rules become a rule set that runs before a claim is submitted. A risky line item goes to the specialist's queue with the rule and reason that flagged it. PharmaDeux's MDR technical file is kept with the same traceability.",
+        body: "SUT (the national reimbursement rules) and SGK (Social Security Institution) rules are turned into a rule set that runs before a claim is submitted. A risky line item goes to the specialist's queue with the rule and reason that flagged it. PharmaDeux's MDR technical file is kept with the same traceability.",
         rows: [
           { label: "Rules", value: "SUT · SGK reimbursement" },
           { label: "Category", value: "EK-2B fee-for-service · EK-2C package" },
@@ -516,7 +516,7 @@ const copy = defineContent<{
       eyebrow: "How we work",
       title: "From source to code, from code to test.",
       description:
-        "We apply the traceability and change control a regulated product needs from the first day.",
+        "From day one, we apply the traceability and change control that a regulated product needs.",
     },
     rnd: [
       {
@@ -545,7 +545,7 @@ const copy = defineContent<{
       },
       {
         title: "Security and privacy from the start",
-        body: "Collecting little data, role-based access and an unchangeable log were not added later; the system started with them.",
+        body: "Data minimisation, role-based access and an immutable log were not added later. The system was built with them from the start.",
         rows: [
           { label: "Controls", value: "Data minimisation · RBAC" },
           { label: "Log", value: "Append-only audit trail" },
@@ -589,7 +589,7 @@ const copy = defineContent<{
       },
       {
         title: "Information security and personal data",
-        body: "Personal data is processed under KVKK (Turkey's data protection law); security controls are being set up to ISO/IEC 27001.",
+        body: "Personal data is processed under KVKK (Turkey's data protection law). Security controls are being set up to ISO/IEC 27001.",
         rows: [
           { label: "Law", value: "KVKK No. 6698 · Art. 12" },
           { label: "Controls", value: "ISO/IEC 27001" },
@@ -601,7 +601,7 @@ const copy = defineContent<{
       eyebrow: "Clinical collaboration",
       title: "We aim to run clinical validation with physicians in the field.",
       description:
-        "Clinical decision support has to be designed around the workflow of the teams who use it. The advisory board has not met yet; what follows is how we will work during the pilots.",
+        "Clinical decision support has to be designed around the workflow of the teams who use it. The advisory board has not met yet. What follows is how we will work during the pilots.",
     },
     collaboration: [
       {
@@ -614,7 +614,7 @@ const copy = defineContent<{
       },
       {
         title: "Ethics committee and data protocol",
-        body: "Prior to pilot studies, obtaining institutional ethics committee approval, anonymising data within hospital infrastructure, and executing a Data Processing Agreement (DPA) are mandatory prerequisites.",
+        body: "Before any pilot study, three prerequisites apply: approval from the institution's ethics committee, anonymisation within the hospital's infrastructure and a signed Data Processing Agreement (DPA).",
         rows: [
           { label: "Prerequisite", value: "Institutional IRB/ethics approval · DPA" },
           { label: "Scope", value: "On-prem anonymisation · data protection compliant" },
@@ -622,7 +622,7 @@ const copy = defineContent<{
       },
       {
         title: "Publication",
-        body: "Pilot validation findings are targeted for joint publication with partner clinicians and researchers in peer-reviewed journals as independent sensitivity reports.",
+        body: "We aim to publish pilot validation findings with partner clinicians and researchers in peer-reviewed journals, as independent sensitivity reports.",
         rows: [
           { label: "Goal", value: "Peer-reviewed publication" },
           { label: "Reporting", value: "Sensitivity · specificity · PPV" },
@@ -641,7 +641,7 @@ const copy = defineContent<{
       eyebrow: "Partnerships",
       title: "Who we need, and for what.",
       description:
-        "We are looking for four partner profiles. For each we list the work and the stage it is needed at; the link below opens the matching form.",
+        "We are looking for four partner profiles. For each, we list the work and the stage at which it is needed. The link below each profile opens the matching form.",
     },
     partners: [
       {
@@ -708,7 +708,7 @@ const copy = defineContent<{
     advisory: {
       label: "Advisory",
       title: "Clinical and Academic Advisory Board",
-      body: "The board is being set up; no formal board exists yet. Clinical validation, organ risk protocols and pharmacology rules will be worked out with medical faculty academics and clinical advisors. We are open to new academic partnerships.",
+      body: "The board is being set up. No formal board exists yet. Clinical validation, organ risk protocols and pharmacology rules will be worked out with medical faculty academics and clinical advisors. We are open to new academic partnerships.",
       rows: [
         { label: "Scope", value: "Clinical validation · organ risk protocols · pharmacology rules" },
         { label: "Advisors", value: "Medical faculty academics · clinical advisors" },

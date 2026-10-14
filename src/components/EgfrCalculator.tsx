@@ -53,7 +53,7 @@ const copy = defineContent({
       G4: "Severely decreased filtration",
       G5: "Kidney failure",
     } as Record<KdigoStage, string>,
-    note: "Example calculator · not for clinical decisions. It assumes stable creatinine; it is not valid in acute kidney injury, pregnancy or under 18. A KDIGO category is assigned from findings lasting at least 3 months, not from a single value.",
+    note: "Example calculator · not for clinical decisions. It assumes stable creatinine and is not valid in acute kidney injury, in pregnancy or for patients under 18. A KDIGO category is assigned from findings lasting at least 3 months, not from a single value.",
   },
 });
 

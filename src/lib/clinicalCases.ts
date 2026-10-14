@@ -121,7 +121,7 @@ const text = defineContent<CaseText[]>({
       patient: "71 years, male · type 2 diabetes",
       prescription: "Metformin 1000 mg twice daily · Ciprofloxacin 500 mg twice daily",
       finding:
-        "eGFR in the 30–45 range. The daily metformin dose (2000 mg) is above the limit defined for this range (1000 mg); the ciprofloxacin renal dose threshold is presented for the physician's assessment. Blood glucose is presented as a clinical monitoring parameter while a fluoroquinolone is given with metformin.",
+        "eGFR in the 30–45 range. The daily metformin dose (2000 mg) is above the limit defined for this range (1000 mg). The ciprofloxacin renal dose threshold is presented for the physician's assessment. Blood glucose is presented as a clinical monitoring parameter while a fluoroquinolone is given with metformin.",
       status: { liver: "Stable", qtc: "Tisdale 4 · low risk", renal: "Renal dose adjustment needed" },
     },
     {
@@ -227,7 +227,7 @@ const customText = defineContent({
     qtModerate:
       "One QT-prolonging drug (amiodarone) and a QTc of 485 ms. Tisdale 8: moderate risk. ECG, potassium and magnesium are presented as clinical monitoring parameters.",
     renal:
-      "eGFR 30: the daily metformin dose (2000 mg prescribed) is above the limit defined for this range (1000 mg). Below an eGFR of 30, metformin is contraindicated; the finding is presented for the physician's assessment.",
+      "eGFR 30: the daily metformin dose (2000 mg prescribed) is above the limit defined for this range (1000 mg). Below an eGFR of 30, metformin is contraindicated. The finding is presented for the physician's assessment.",
     status: {
       liver: "Stable",
       qtHigh: "Tisdale 11 · high risk",

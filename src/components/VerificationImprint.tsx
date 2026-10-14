@@ -41,7 +41,7 @@ const copy = defineContent({
       audit: "Audit trail (example console)",
       auditValue: "FNV-1a 64-bit digest chain · computed in the browser",
       env: "Environment",
-      envValue: "This site is not a product environment; there is no live clinical service.",
+      envValue: "This site is not a product environment. No live clinical service runs here.",
       updated: "Last content update",
     },
   },

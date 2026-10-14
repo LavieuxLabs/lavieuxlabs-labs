@@ -228,7 +228,7 @@ const copy = defineContent<{
       eyebrow: "Who it is for",
       title: "Who it is for, and which problem it solves.",
       description:
-        "The two products serve two different teams. The goals below are design goals; their clinical and financial effect has not been measured at an institution yet.",
+        "The two products serve two different teams. The goals below are design goals. Their clinical and financial impact has not yet been measured at any institution.",
     },
     forWhomCells: [
       {
@@ -266,7 +266,7 @@ const copy = defineContent<{
       eyebrow: "Products",
       title: "Two products, one way of working.",
       description:
-        "One works on prescriptions, the other on claims. In both, you can see which rule raised an alert, the same input gives the same result, and a qualified person decides.",
+        "One works on prescriptions, the other on claims. Both show which rule raised an alert, give the same result for the same input and leave the decision to a qualified person.",
     },
     initiatives: [
       {

@@ -83,7 +83,7 @@ const copy = defineContent({
       "A ten-factor scoring system that predicts QTc prolongation risk in hospitalised patients from information available at the bedside.",
     what: "What it measures",
     whatBody:
-      "The score is not a measurement; it is a risk classification. The measured QTc (Fridericia-corrected, ms) is one of its inputs. The two are therefore written separately: \"QTc 485 ms · Tisdale 11: high risk\".",
+      "The score is a risk classification, not a measurement. The measured QTc (Fridericia-corrected, ms) is one of its inputs. The two are therefore written separately: \"QTc 485 ms · Tisdale 11: high risk\".",
     factors: "Risk factors and points",
     factor: "Factor",
     points: "Points",
@@ -97,15 +97,15 @@ const copy = defineContent({
     high: "High risk",
     engine: "What PharmaDeux does with these thresholds",
     engineBody:
-      "The rule engine recalculates the score on every order and shows which factor each point comes from. The outputs below are example rule behaviour; they are set to the institution's clinical policy, and the physician makes the final decision.",
+      "The rule engine recalculates the score on every order and shows which factor each point comes from. The outputs below show example rule behaviour. They are configured to the institution's clinical policy, and the physician makes the final decision.",
     engineRows: [
       ["≥11", "ECG monitoring and a non-QT-prolonging alternative are presented for the physician's assessment."],
       ["7–10", "ECG monitoring and an electrolyte check are presented as clinical monitoring parameters."],
-      ["≤6", "No additional QT monitoring parameter is triggered; routine monitoring is at the physician's discretion."],
+      ["≤6", "No additional QT monitoring parameter is triggered. Routine monitoring is at the physician's discretion."],
     ],
     limits: "Limits",
     limitsBody:
-      "The score was developed and validated in hospitalised adults; the same thresholds have not been shown to hold for outpatients or children. A \"QTc-prolonging drug\" is one whose product information lists QT prolongation.",
+      "The score was developed and validated in hospitalised adults. The same thresholds have not been shown to hold for outpatients or children. A \"QTc-prolonging drug\" is one whose product information lists QT prolongation.",
     try: "To try the score on an example patient, open the",
     trySim: "QT risk simulator",
     related: [

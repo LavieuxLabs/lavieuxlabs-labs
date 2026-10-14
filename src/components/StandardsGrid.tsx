@@ -124,7 +124,7 @@ const copy = defineContent<StandardCopy[]>({
     },
     {
       title: "Tamper-evident audit trail",
-      body: "Every assessment and decision is written to an append-only log; each entry carries the digest of the one before.",
+      body: "Every assessment and decision is written to an append-only log. Each entry carries the digest of the previous one.",
       rows: [
         { label: "Mechanism", value: "Append-only · digest chain" },
         { label: "Scope", value: "Input · rule version · actor · time" },
@@ -134,7 +134,7 @@ const copy = defineContent<StandardCopy[]>({
     },
     {
       title: "Human oversight",
-      body: "The system produces findings and risk signals; a qualified clinician or specialist makes the final decision.",
+      body: "The system produces findings and risk signals. A qualified clinician or specialist makes the final decision.",
       rows: [
         { label: "Mechanism", value: "Human-in-the-loop queue" },
         { label: "Record", value: "Approval · correction · reason" },
@@ -154,7 +154,7 @@ const copy = defineContent<StandardCopy[]>({
     },
     {
       title: "Clinical measurement protocols",
-      body: "Clinical parameters are calculated with the correct method and unit; a score is never presented as a measurement.",
+      body: "Clinical parameters are calculated with the correct method and unit. A score is never presented as a measurement.",
       rows: [
         { label: "QTc", value: "Fridericia · QT / ∛RR · ms", cite: "fridericia" },
         { label: "QT risk", value: "Tisdale score · 0–21 points", cite: "tisdale" },

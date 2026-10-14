@@ -67,15 +67,15 @@ const copy = defineContent({
     rule: "Rule triggered",
     rules: {
       two: "Both drugs list QT prolongation in their product information; the effects can add up (pharmacodynamic interaction).",
-      one: "The order contains one QT-prolonging drug; it adds 3 points to the Tisdale score.",
+      one: "The order contains one QT-prolonging drug, which adds 3 points to the Tisdale score.",
       none: "Neither drug lists QT prolongation in its product information; no drug points are added.",
     },
     advice: {
       high: "ECG monitoring and a non-QT-prolonging alternative are presented for the physician's assessment.",
       moderate: "ECG monitoring and an electrolyte check are presented as clinical monitoring parameters.",
-      low: "No additional QT monitoring parameter is triggered; routine monitoring is at the physician's discretion.",
+      low: "No additional QT monitoring parameter is triggered. Routine monitoring is at the physician's discretion.",
     },
-    note: "Example patient · fictional data · not for clinical decisions. The model does not predict a QTc change in ms; it turns the measured QTc and the risk factors into the Tisdale score (0–21). This patient has no acute MI, sepsis or heart failure.",
+    note: "Example patient · fictional data · not for clinical decisions. The model does not predict a QTc change in ms. It converts the measured QTc and risk factors into the Tisdale score (0–21). This patient has no acute MI, sepsis or heart failure.",
   },
 });
 

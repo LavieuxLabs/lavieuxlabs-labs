@@ -113,7 +113,7 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
           {
             term: "Deployment",
             detail:
-              "On the institution's own servers (on-prem) or in an isolated VPC dedicated to it. The pilot architecture is designed to run on-premises and in isolation; during a pilot, data is not taken out of the institution's infrastructure.",
+              "On the institution's own servers (on-prem) or in an isolated VPC dedicated to it. The pilot architecture is designed to run on-premises and in isolation. During a pilot, data is not moved outside the institution's infrastructure.",
           },
           {
             term: "Anonymisation",
@@ -143,12 +143,12 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
           },
           {
             term: "Report",
-            detail: "Performance report shared with the institution; input to the MDR clinical evaluation file.",
+            detail: "Performance report shared with the institution. It also feeds the MDR clinical evaluation file.",
           },
         ],
       },
     ],
-    note: "In Shield pilots, the measures are the rejection rate, the rejection reasons caught at pre-check and specialist review time, not adverse drug events. In no phase does the system make a decision in place of the user.",
+    note: "Shield pilots measure the rejection rate, the rejection reasons caught at pre-check and specialist review time instead of adverse drug events. In no phase does the system make a decision in place of the user.",
   },
 });
 

@@ -87,7 +87,7 @@ const copy = defineContent({
       "For hospital IT teams: which FHIR resources PharmaDeux reads and writes, which code systems it uses, and how it connects to your institution.",
     status: "Status",
     statusBody:
-      "This page documents the interface design. Formal FHIR profiles (StructureDefinition) and an OpenAPI document are not published yet; they are shared with your IT team during the pre-pilot technical review.",
+      "This page documents the interface design. Formal FHIR profiles (StructureDefinition) and an OpenAPI document are not published yet. They are shared with your IT team during the pre-pilot technical review.",
     resources: "Resources and fields",
     resource: "Resource",
     fields: "Fields used",
@@ -101,8 +101,8 @@ const copy = defineContent({
     ],
     rules: "Rules",
     rulesItems: [
-      "Score and measurement are separate resources: the Tisdale score is never folded into the QTc Observation; it is its own Observation.",
-      "LOINC 8636-3 \"QT interval corrected\" does not fix the correction method; Fridericia is carried as text in method.",
+      "Score and measurement are separate resources. The Tisdale score is never folded into the QTc Observation and has its own Observation.",
+      "LOINC 8636-3 \"QT interval corrected\" does not specify the correction method, so Fridericia is carried as text in method.",
       "Example and test data carry meta.tag HTEST (v3 ActReason \"test health data\") and cannot pass as a real record.",
     ],
     examples: "Example JSON",

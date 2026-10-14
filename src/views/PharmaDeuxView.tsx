@@ -488,7 +488,7 @@ const copy = defineContent<{
     eyebrow: "Clinical decision support · medication safety",
     title: "PharmaDeux CDSS. Checks medication safety while the prescription is written.",
     description:
-      "Clinical decision support software alerting physicians to cumulative organ burden and toxicity at the moment of prescription. Each alert is shown with the rule and threshold that triggered it; the physician makes the final decision.",
+      "Clinical decision support software alerting physicians to cumulative organ burden and toxicity at the moment of prescription. Each alert is shown with the rule and threshold that triggered it. The physician makes the final decision.",
     ctaIntro: "15-minute intro call",
     ctaPilot: "Apply for a pilot (LOI)",
     ctaHow: "See how it works",
@@ -529,7 +529,7 @@ const copy = defineContent<{
       eyebrow: "How it works",
       title: "Six steps from prescription to record.",
       description:
-        "Data comes in from standard resources, is assessed by rules, and the result is shown to the physician with its reason. No step uses probabilistic prediction.",
+        "Data comes in as standard resources and is assessed by rules. The result is shown to the physician with its reason. No step uses probabilistic prediction.",
     },
     pipeline: [
       {
@@ -554,7 +554,7 @@ const copy = defineContent<{
       },
       {
         title: "Physician decision",
-        body: "The physician decides. Accepting the alert, changing the order or overriding it with a reason is recorded.",
+        body: "The physician decides. Whether they accept the alert, change the order or override it with a reason, the choice is recorded.",
         detail: "accept · change · override with reason",
       },
       {
@@ -625,7 +625,7 @@ const copy = defineContent<{
       },
       {
         title: "Deployment models",
-        body: "The pilot architecture is designed to run on-premises and in isolation; during a pilot, data is not taken out of the institution's infrastructure.",
+        body: "The pilot architecture is designed to run on-premises and in isolation. During a pilot, data is not moved outside the institution's infrastructure.",
         rows: [
           { label: "On-premises", value: "Docker container · isolated virtual machine" },
           { label: "Network", value: "Air-gapped network support" },
@@ -634,7 +634,7 @@ const copy = defineContent<{
       },
       {
         title: "Logging and traceability",
-        body: "Application logs go to the institution's central log system; clinical decisions are also kept in a log that cannot be changed.",
+        body: "Application logs go to the institution's central log system. Clinical decisions are also kept in an immutable log.",
         rows: [
           { label: "System log", value: "Syslog · RFC 5424" },
           { label: "Audit trail", value: "Append-only · digest chain" },
@@ -643,7 +643,7 @@ const copy = defineContent<{
       },
     ],
     integrationNote:
-      "The matrix describes the integration architecture. Which interface is set up at your institution, and how, is agreed with your IT team during technical discovery before the pilot.",
+      "The matrix describes the integration architecture. Which interface is set up at your institution, and how, is agreed with your IT team during pre-pilot technical discovery.",
     validationHeading: {
       eyebrow: "Verification",
       title: "Verification and evidence matrix.",
@@ -654,7 +654,7 @@ const copy = defineContent<{
       {
         title: "Software and code level",
         status: "Implemented and tested",
-        body: "The code is implemented and runs through automated tests on every change. This level shows the software works as specified, not that it is clinically correct.",
+        body: "The code is implemented and runs through automated tests on every change. This level shows that the software works as specified, not that it is clinically correct.",
         rows: [
           { label: "Automated tests", value: testsLabel("en"), mono: true },
           { label: "Test types", value: "Unit · integration" },
@@ -734,11 +734,11 @@ const copy = defineContent<{
       eyebrow: "Regulation",
       title: "MDR target class: IIa.",
       description:
-        "PharmaDeux provides information used in drug therapy decisions, so it falls under Annex VIII Rule 11 of the EU Medical Device Regulation (MDR). Class IIa is the target classification route we follow under this rule; it is not a confirmed class or a certificate. The class is confirmed through the technical file and a notified body assessment. It does not have a CE mark yet.",
+        "PharmaDeux provides information used in drug therapy decisions, so it falls under Annex VIII Rule 11 of the EU Medical Device Regulation (MDR). Class IIa is the target classification route we follow under this rule. It is not a confirmed class or a certificate. The class is confirmed through the technical file and a notified body assessment. It does not have a CE mark yet.",
     },
     intendedUse: {
       label: "Intended use (draft)",
-      body: "PharmaDeux does not make treatment decisions or intervene in a prescription; it presents pharmacological risk indicators and guideline parameters for the physician's clinical assessment. It does not diagnose and does not replace the physician's decision.",
+      body: "PharmaDeux does not make treatment decisions or intervene in a prescription. It presents pharmacological risk indicators and guideline parameters for the physician's clinical assessment. It does not diagnose or replace the physician's decision.",
     },
     frameworkColumns: { framework: "Framework", scope: "Scope", status: "Status" },
     frameworks: [
@@ -797,7 +797,7 @@ const copy = defineContent<{
       eyebrow: "Pilot programme",
       title: "Write to us about a PharmaDeux pilot.",
       description:
-        "To join a validation study on past cases, or to set up a pilot at your own institution, we can start with a non-binding Letter of Intent (LOI).",
+        "Whether you want to join a validation study on past cases or set up a pilot at your own institution, we can start with a non-binding Letter of Intent (LOI).",
     },
     pilotAudiences: [
       "Clinical pharmacy and medication safety teams",

@@ -1,5 +1,6 @@
 import LegalDocument, { type LegalFact, type LegalSection } from "@/components/LegalDocument";
 import { CONTACT_EMAIL } from "@/lib/site";
+import { testsLabel } from "@/lib/metrics";
 import type { Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
 
@@ -114,7 +115,7 @@ const sectionsTr: LegalSection[] = [
         </li>
         <li>
           <strong>Doğrulama:</strong> Yazılım değişiklikleri otomatik birim ve entegrasyon testlerinden geçmeden yayına
-          alınmaz. PharmaDeux test kümesi 2.480’den fazla otomatik testten oluşur.
+          alınmaz. PharmaDeux test kümesinde {testsLabel("tr")} otomatik test bulunur.
         </li>
         <li>
           <strong>Değişiklik kontrolü:</strong> Kural setleri ve bilgi tabanı sürümlenir; her değişiklik gözden
@@ -167,7 +168,7 @@ const sectionsTr: LegalSection[] = [
 const frameworksEn = [
   [
     "EU MDR 2017/745",
-    "Medical Device Regulation; software classification under Annex VIII Rule 11",
+    "Medical Device Regulation · software classification under Annex VIII Rule 11",
     "Class IIa target for PharmaDeux",
   ],
   ["Medical Device Regulation (TİTCK)", "Turkish national regulation harmonised with the MDR", "Reference framework"],
@@ -186,9 +187,9 @@ const sectionsEn: LegalSection[] = [
     content: (
       <p className="note">
         <strong>PharmaDeux CDSS and Shield are in development.</strong> Our products do not yet carry a CE mark and have
-        not been placed on the market; in a clinical setting they may only be used within research protocols approved by
-        an ethics committee. The standards on this page describe the framework we use as a reference during development;
-        unless stated otherwise, they are not a statement of certification.
+        not been placed on the market. In a clinical setting, they may only be used within research protocols approved by
+        an ethics committee. The standards on this page describe the framework we use as a reference during development.
+        Unless stated otherwise, they are not a statement of certification.
       </p>
     ),
   },
@@ -259,18 +260,18 @@ const sectionsEn: LegalSection[] = [
         </li>
         <li>
           <strong>Verification:</strong> software changes are not released until they pass automated unit and
-          integration tests. The PharmaDeux test suite has more than 2,480 automated tests.
+          integration tests. The PharmaDeux test suite has {testsLabel("en")} automated tests.
         </li>
         <li>
-          <strong>Change control:</strong> rule sets and the knowledge base are versioned; every change is reviewed and
-          recorded.
+          <strong>Change control:</strong> rule sets and the knowledge base are
+          versioned, and every change is reviewed and recorded.
         </li>
         <li>
           <strong>Deterministic behaviour:</strong> no generative or probabilistic models are used in the clinical or
-          operational decision path; the same input with the same rule version always gives the same output.
+          operational decision path. The same input with the same rule version always gives the same output.
         </li>
         <li>
-          <strong>Human oversight:</strong> the systems produce suggestions and risk signals; the final decision belongs
+          <strong>Human oversight:</strong> the systems produce findings and risk signals. The final decision belongs
           to the authorised user.
         </li>
       </ul>

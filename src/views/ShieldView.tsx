@@ -374,7 +374,7 @@ const copy = defineContent<{
     eyebrow: "Revenue integrity · claim pre-check",
     title: "Shield. See rejection risk before the claim is submitted.",
     description:
-      "Pre-claim revenue integrity platform identifying reimbursement and audit risks before submission. A risky line item goes to the specialist's queue with its reason; the specialist decides whether it is submitted.",
+      "Pre-claim revenue integrity platform identifying reimbursement and audit risks before submission. A risky line item goes to the specialist's queue with its reason, and the specialist decides whether to submit it.",
     ctaIntro: "15-minute intro and demo",
     ctaPilot: "Apply for a retrospective pilot (LOI)",
     ctaTry: "Try the example",
@@ -382,7 +382,7 @@ const copy = defineContent<{
       eyebrow: "Problem",
       title: "A rejection found after submission doubles the work.",
       description:
-        "A large share of rejected claims come from preventable errors: missing documents, code mismatches, exceeded limits. These can be caught before submission, by a rule, with a reason.",
+        "Many rejected claims stem from preventable errors: missing documents, code mismatches and exceeded limits. A rule can catch them before submission and state the reason.",
     },
     problems: [
       {
@@ -391,11 +391,11 @@ const copy = defineContent<{
       },
       {
         title: "The rules change often",
-        body: "SUT (Turkey's Health Implementation Communiqué), package definitions and payer contracts are updated often. Tracking them from personal experience means the same item is handled differently by different people.",
+        body: "SUT (Turkey's Health Implementation Communiqué), package definitions and payer contracts are updated often. Tracking them from memory leads different people to handle the same item differently.",
       },
       {
         title: "A score without a reason is not useful",
-        body: "A score that does not say why an item is risky does not tell the team what to do, and cannot be defended in an audit.",
+        body: "A score that does not say why an item is risky does not tell the team what to do and cannot be defended in an audit.",
       },
     ],
     how: {
@@ -447,7 +447,7 @@ const copy = defineContent<{
       { label: "Base text", value: "Health Implementation Communiqué (SUT)" },
       { label: "Amendment", value: "Not pinned yet · pinned with the institution before a pilot" },
       { label: "Sources", value: "SUT annexes (EK-2B, EK-2C) · package definitions · institution contract" },
-      { label: "Updates", value: "Each SUT amendment is a new rule set version; a past decision is reproduced with its own version" },
+      { label: "Updates", value: "Each SUT amendment becomes a new rule set version · past decisions are reproduced with their own version" },
     ],
     planes: [
       {
@@ -503,7 +503,7 @@ const copy = defineContent<{
         "The risk score is the sum of the contributions of the rules that fired. The specialist sees how much each rule moved the score and decides on that basis.",
     },
     consoleSteps: [
-      "Select a claim in the queue; the rules behind its score are listed.",
+      "Select a claim in the queue to list the rules behind its score.",
       "Approve it, send it for correction or hold the submission.",
       "Your decision is added to the audit log as a new row and cannot be undone.",
     ],
@@ -511,7 +511,7 @@ const copy = defineContent<{
       eyebrow: "Audit log",
       title: "Who decided what, under which rule.",
       description:
-        "To defend a decision, you have to show in full which data, which rule version and which person it was made with.",
+        "To defend a decision, you need to show exactly what data it used, which rule version applied and who made it.",
     },
     auditProps: [
       {
@@ -524,7 +524,7 @@ const copy = defineContent<{
       },
       {
         title: "Reproducible",
-        body: "A past decision can be reproduced exactly, with that day's rule version and data, and shown in an audit.",
+        body: "A past decision can be reproduced exactly with that day's rule version and data and then shown in an audit.",
       },
       {
         title: "Exportable",
@@ -550,12 +550,12 @@ const copy = defineContent<{
       { role: "Auditor", scope: "Reviews logs and decision history", access: "Read-only" },
     ],
     rolesNote:
-      "Roles are configured to fit the institution. Shield does not diagnose or make treatment decisions; it works only in billing and pre-authorisation.",
+      "Roles are configured to fit the institution. Shield does not diagnose or make treatment decisions. It works only in billing and pre-authorisation.",
     retro: {
       eyebrow: "Retrospective claims pilot",
-      title: "Measure rejection catch on your past claims, with us.",
+      title: "Measure rejection catch on your past claims together.",
       description:
-        "Let us measure retrospective rejection catch and false positive rates together, on your institution's anonymised historical claims.",
+        "Let us measure retrospective rejection catch and false positive rates together on your institution's anonymised historical claims.",
     },
     retroSteps: [
       {
@@ -568,11 +568,11 @@ const copy = defineContent<{
       },
       {
         title: "Comparison",
-        body: "The items Shield flagged are compared, line by line, with SGK's actual decisions.",
+        body: "Each item Shield flagged is compared line by line with SGK's actual decisions.",
       },
       {
         title: "Joint report",
-        body: "The rates, the rejection reasons that were missed and the rule set version are reported together with the institution.",
+        body: "We report the rates, the missed rejection reasons and the rule set version jointly with the institution.",
       },
     ],
     retroMetricsLabel: "Rates we measure",
@@ -582,7 +582,7 @@ const copy = defineContent<{
       { name: "Positive predictive value", definition: "Of the flagged items, the share that was actually rejected or cut." },
       { name: "Review load", definition: "Items sent to the specialist queue as a share of all items." },
     ],
-    retroNote: "There are no measured values for these rates yet. The first values will be published, with the institution's consent, once they are measured on an institution's historical claims.",
+    retroNote: "There are no measured values for these rates yet. The first values will be published with the institution's consent once they have been measured on its historical claims.",
     cta: {
       eyebrow: "Demo and pilot",
       title: "See Shield on your own claims.",

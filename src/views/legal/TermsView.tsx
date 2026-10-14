@@ -157,7 +157,7 @@ const sectionsEn: LegalSection[] = [
         </p>
         <p>
           PharmaDeux CDSS and Shield are in development and have not been placed on the market. Product descriptions,
-          screenshots and interactive examples on the site are for illustration; the data in the examples is fictional.
+          screenshots and interactive examples on the site are for illustration. The data in the examples is fictional.
         </p>
       </>
     ),
@@ -237,7 +237,7 @@ const sectionsEn: LegalSection[] = [
       <>
         <p>
           These terms are governed by the laws of the Republic of Türkiye. LavieuxLabs may update them without prior
-          notice; the current version takes effect on the date it is published on this page.
+          notice. The current version takes effect on the date it is published on this page.
         </p>
         <p>
           For questions, write to us at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.

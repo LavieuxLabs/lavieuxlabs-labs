@@ -121,7 +121,7 @@ const copy = defineContent({
     none: "No rule triggered.",
     status: { review: "In review · goes to a specialist", below: "Below threshold · can be submitted" },
     threshold: (t: number) => `Threshold ${t}`,
-    note: "Fictional rule set · fictional data. Real rules are derived from SUT (Turkey's reimbursement rules), package definitions and the institution's contract; this example shows no legal article numbers. ICD-10 codes are real.",
+    note: "Fictional rule set · fictional data. Real rules are derived from SUT (Turkey's reimbursement rules), package definitions and the institution's contract. This example shows no legal article numbers. ICD-10 codes are real.",
     savings: "No savings metric validated on historical claims has been published yet.",
   },
 });

@@ -17,7 +17,7 @@ export const metadata = defineMetadata("/contact", {
   en: {
     title: "Contact: intro call, academic partnership and pilot",
     description:
-      "Request a 15-minute intro call about PharmaDeux CDSS or Shield, propose an academic validation partnership, or apply for a pilot (LOI).",
+      "Request a 15-minute intro call about PharmaDeux CDSS or Shield, propose an academic validation partnership or apply for a pilot (LOI).",
   },
 });
 
@@ -27,7 +27,7 @@ const copy = defineContent({
     eyebrow: "İletişim",
     title: "Üç yoldan biriyle başlayın.",
     description:
-      "Çoğu kurum 15 dakikalık bir tanışma görüşmesiyle başlar; bunun için bir taahhüt gerekmez. Akademik ortaklık ve pilot başvurusu ayrı yollardır.",
+      "İlk adım genellikle 15 dakikalık bir tanışma görüşmesidir; bunun için bir taahhüt gerekmez. Akademik ortaklık ve pilot başvurusu ayrı yollardır.",
     location: {
       eyebrow: "Konum",
       title: "Ekip Konya'da çalışıyor.",
@@ -40,12 +40,12 @@ const copy = defineContent({
     eyebrow: "Contact",
     title: "Start in one of three ways.",
     description:
-      "Most institutions start with a 15-minute intro call, which needs no commitment. An academic partnership and a pilot application are separate paths.",
+      "The first step is usually a 15-minute intro call, which needs no commitment. An academic partnership and a pilot application are separate paths.",
     location: {
       eyebrow: "Location",
       title: "The team works in Konya.",
       description:
-        "The team are students at Konya Technical University; the address below is the faculty where we study. LavieuxLabs is not an official unit or partner of the university. If you would like to meet, please book an appointment by email first.",
+        "The team members are students at Konya Technical University. The address below is the faculty where we study. LavieuxLabs is not an official unit or partner of the university. If you would like to meet, please book an appointment by email first.",
     },
   },
 });

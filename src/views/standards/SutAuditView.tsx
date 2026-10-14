@@ -126,7 +126,7 @@ const copy = defineContent({
       "How a hospital claim is checked against the Health Implementation Communiqué (SUT) before it goes to SGK, Turkey's Social Security Institution: Shield's rule engine, audit planes and risk score.",
     status: "Status",
     statusBody:
-      "Shield is in development. This page documents the rule engine design. The R- rules below come from the example rule set; they are not SUT article numbers or official procedure codes.",
+      "Shield is in development. This page documents the rule engine design. The R- rules below come from the example rule set. They are not SUT article numbers or official procedure codes.",
     engine: "Rule engine: pre-submission",
     engineBody:
       "The SUT is the communiqué that sets which health services SGK pays for, and under which conditions. An item that misses a condition comes back as a deduction or a rejection. Shield runs the claim through versioned rules before submission. The same claim and the same rule version always give the same result.",
@@ -157,7 +157,7 @@ const copy = defineContent({
       ],
       [
         "3. Diagnosis–procedure consistency",
-        "The procedure must be justified by the ICD-10 diagnosis on the claim. Example: I20.9 (angina pectoris) justifies coronary angiography; M54.5 (low back pain) does not.",
+        "The procedure must be justified by the ICD-10 diagnosis on the claim. Example: I20.9 (angina pectoris) justifies coronary angiography, but M54.5 (low back pain) does not.",
         "R-112 · Diagnosis–procedure mismatch",
       ],
       [
@@ -168,7 +168,7 @@ const copy = defineContent({
     ],
     score: "Risk score (0–100)",
     scoreBody:
-      "The score is not a predictive model. Each rule has a fixed contribution; the score is the sum of the triggered rules' contributions, capped at 100. Every point is shown with its rule ID, so the specialist sees where the score comes from.",
+      "The score is not a predictive model. Each rule has a fixed contribution, and the score is the sum of the triggered rules' contributions, capped at 100. Every point is shown with its rule ID, so the specialist sees where the score comes from.",
     scoreExample: "Example claim · fictional data",
     rule: "Rule",
     contribution: "Contribution",
@@ -186,16 +186,16 @@ const copy = defineContent({
       [`${THRESHOLD}–69`, "Caution · specialist review", "text-amber-300"],
       [`<${THRESHOLD}`, "Low risk · not queued", "text-emerald-300"],
     ],
-    tiersNote: "Shield does not make the submission decision on its own. The threshold is set to the institution's policy; the review specialist makes the final decision.",
+    tiersNote: "Shield does not make the submission decision on its own. The threshold follows the institution's policy, and the review specialist makes the final decision.",
     security: "Data security and audit trail",
     securityBody:
-      "Claim data is personal health data and falls under KVKK, Turkey's personal data protection law. The deployment and logging options below are design targets of the platform architecture; they have not yet been validated in the field for Shield.",
+      "Claim data is personal health data and falls under KVKK, Turkey's personal data protection law. The deployment and logging options below are design targets of the platform architecture. They have not yet been validated in the field for Shield.",
     securityRows: [
       ["Deployment", "On-premises or an isolated VPC dedicated to the institution"],
-      ["Isolation", "Each institution's data, queue and record are kept separate; the institution ID is required on every query"],
+      ["Isolation", "Each institution's data, queue and record are kept separate · the institution ID is required on every query"],
       ["Access", "Role-based, least privilege (institution admin, revenue analyst, review specialist, auditor)"],
       ["Record", "Append-only audit trail · forwarding to the institution's log system over Syslog (RFC 5424)"],
-      ["Reproduction", "The record carries the rule version behind each decision; the same input reproduces the same result"],
+      ["Reproduction", "The record carries the rule version behind each decision · the same input reproduces the same result"],
     ],
     try: "To try the rules on an example claim, open the",
     trySim: "claim simulator",
