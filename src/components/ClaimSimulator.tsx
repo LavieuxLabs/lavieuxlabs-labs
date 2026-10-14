@@ -88,6 +88,7 @@ const copy = defineContent({
     status: { review: "İncelemede · uzmana gider", below: "Eşik altı · gönderilebilir" },
     threshold: (t: number) => `Eşik ${t}`,
     note: "Kurgusal kural seti · kurgusal veri. Gerçek kurallar SUT, paket tanımları ve kurum sözleşmesinden türetilir; bu örnekte mevzuat madde numarası gösterilmez. ICD-10 kodları gerçektir.",
+    savings: "Geçmiş faturalar üzerinde doğrulanmış tasarruf metriği henüz yayımlanmamıştır.",
   },
   en: {
     panel: "Claim check simulator",
@@ -121,6 +122,7 @@ const copy = defineContent({
     status: { review: "In review · goes to a specialist", below: "Below threshold · can be submitted" },
     threshold: (t: number) => `Threshold ${t}`,
     note: "Fictional rule set · fictional data. Real rules are derived from SUT (Turkey's reimbursement rules), package definitions and the institution's contract; this example shows no legal article numbers. ICD-10 codes are real.",
+    savings: "No savings metric validated on historical claims has been published yet.",
   },
 });
 
@@ -267,7 +269,10 @@ export default function ClaimSimulator({ locale }: { locale: Locale }) {
           {score >= THRESHOLD ? c.status.review : c.status.below}
         </p>
       </div>
-      <p className="border-t border-hairline px-5 py-3 text-[11px] leading-relaxed text-white/55">{c.note}</p>
+      <div className="border-t border-hairline px-5 py-3 text-[11px] leading-relaxed text-white/55">
+        <p>{c.note}</p>
+        <p className="mt-1.5 text-white/70">{c.savings}</p>
+      </div>
     </div>
   );
 }

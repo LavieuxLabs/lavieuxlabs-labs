@@ -2,6 +2,10 @@ import Link from "next/link";
 import {
   ShieldCheck,
   ArrowUpRight,
+  Copy,
+  FileWarning,
+  Stethoscope,
+  UserCog,
   Eye,
   FileClock,
   Gauge,
@@ -23,6 +27,7 @@ import ShieldConsole from "@/components/ShieldConsole";
 import JsonLd from "@/components/JsonLd";
 import { RailMarker } from "@/components/TelemetryRails";
 import ClaimSimulator from "@/components/ClaimSimulator";
+import SpecCard, { JoinedGrid, type SpecRow } from "@/components/SpecCard";
 import { shieldJsonLd } from "@/lib/structuredData";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
@@ -43,6 +48,14 @@ const LABEL = "text-[11px] font-medium tracking-wider text-white/50 uppercase";
 
 const problemIcons = [Hourglass, ListChecks, Eye];
 const pipelineIcons = [Receipt, ShieldAlert, Gauge, Inbox, Send, FileClock];
+// Audit planes as documented on /standartlar/sut-fatura-denetimi. Tone is the implementation track and must
+// match the status text: three planes are implemented and covered by automated tests, the fourth is not built yet.
+const planeMeta = [
+  { id: "SUT-01", icon: UserCog, tone: "live" as const },
+  { id: "SUT-02", icon: Copy, tone: "live" as const },
+  { id: "SUT-03", icon: Stethoscope, tone: "live" as const },
+  { id: "SUT-04", icon: FileWarning, tone: "input" as const },
+];
 
 type Heading = { eyebrow: string; title: string; description: string };
 
@@ -74,6 +87,11 @@ const copy = defineContent<{
   problems: { title: string; body: string }[];
   how: Heading;
   pipeline: { title: string; body: string; detail: string }[];
+  scope: Heading;
+  rulebookLabel: string;
+  rulebook: SpecRow[];
+  planes: { title: string; body: string; rows: SpecRow[]; status: string }[];
+  scopeNote: { before: string; link: string; after: string };
   console: Heading;
   consoleSteps: string[];
   audit: Heading;
@@ -83,6 +101,11 @@ const copy = defineContent<{
   rolesLabel: string;
   roles: { role: string; scope: string; access: string }[];
   rolesNote: string;
+  retro: Heading;
+  retroSteps: { title: string; body: string }[];
+  retroMetricsLabel: string;
+  retroMetrics: { name: string; definition: string }[];
+  retroNote: string;
   cta: Heading;
   pilotAudiences: string[];
 }>({
@@ -90,10 +113,12 @@ const copy = defineContent<{
     sections: [
       { id: "problem", label: "Sorun" },
       { id: "mimari", label: "Nasıl çalışır" },
+      { id: "kapsam", label: "Kural kapsamı" },
       { id: "konsol", label: "Risk skoru ve kuyruk" },
       { id: "simulator", label: "Fatura simülatörü" },
       { id: "denetim", label: "Denetim kaydı" },
       { id: "izolasyon", label: "Erişim ve izolasyon" },
+      { id: "retrospektif", label: "Retrospektif pilot" },
     ],
     heroStats: [
       { value: "Gönderim öncesi", label: "Kontrol anı" },
@@ -166,6 +191,66 @@ const copy = defineContent<{
         detail: "append-only · kayıt özeti zinciri",
       },
     ],
+    scope: {
+      eyebrow: "Mevzuat ve kural kapsamı",
+      title: "Hangi kurallar uygulandı, hangisi henüz yok.",
+      description:
+        "Dört denetim düzleminden üçü kural motorunda uygulandı ve otomatik testlerden geçiyor. Hiçbiri henüz gerçek bir kurumun faturalarında doğrulanmadı.",
+    },
+    rulebookLabel: "Mevzuat sürümü",
+    rulebook: [
+      { label: "Esas metin", value: "Sağlık Uygulama Tebliği (SUT)" },
+      { label: "Değişiklik sürümü", value: "Henüz sabitlenmedi · pilot öncesi kurumla birlikte sabitlenir" },
+      { label: "Kaynaklar", value: "SUT ekleri (EK-2B, EK-2C) · paket tanımları · kurum sözleşmesi" },
+      { label: "Güncelleme", value: "Her SUT değişikliği yeni bir kural seti sürümüdür; geçmiş karar kendi sürümüyle yeniden üretilir" },
+    ],
+    planes: [
+      {
+        title: "Branş ve hekim yetkisi",
+        body: "Belirli bir uzmanlık dalına bağlı işlem ve ilaçlarda faturadaki hekimin branşı kontrol edilir.",
+        rows: [
+          { label: "Kontrol", value: "Hekim branş kodu · uzmanlık koşulu" },
+          { label: "Test", value: "Otomatik testler · sentetik faturalar" },
+          { label: "Gerçek fatura", value: "Henüz doğrulanmadı" },
+        ],
+        status: "Uygulandı · test edildi",
+      },
+      {
+        title: "Mükerrer işlem ve paket aşımı",
+        body: "Aynı gün tekrar eden tetkik, pakete dahil kalemin ayrıca faturalanması ve yatış süresinin paket limitini aşması.",
+        rows: [
+          { label: "Kontrol", value: "Mükerrer kalem · paket dışı kalem · yatış süresi" },
+          { label: "Test", value: "Otomatik testler · sentetik faturalar" },
+          { label: "Gerçek fatura", value: "Henüz doğrulanmadı" },
+        ],
+        status: "Uygulandı · test edildi",
+      },
+      {
+        title: "Tanı–işlem tutarlılığı",
+        body: "İşlem ya da tetkik, faturadaki ICD-10 tanısıyla gerekçelenmelidir.",
+        rows: [
+          { label: "Kontrol", value: "ICD-10 tanısı ↔ işlem" },
+          { label: "Test", value: "Otomatik testler · sentetik faturalar" },
+          { label: "Gerçek fatura", value: "Henüz doğrulanmadı" },
+        ],
+        status: "Uygulandı · test edildi",
+      },
+      {
+        title: "Tıbbi malzeme ve ilaç koşulları",
+        body: "Rapor şartı, ön onay belgesi, kullanım sınırı ve tekrar aralığı. Bu düzlem henüz kural motorunda yok.",
+        rows: [
+          { label: "Kontrol", value: "Rapor · ön onay · kullanım sınırı" },
+          { label: "Test", value: "Henüz yok" },
+          { label: "Gerçek fatura", value: "Henüz doğrulanmadı" },
+        ],
+        status: "Henüz uygulanmadı",
+      },
+    ],
+    scopeNote: {
+      before: "Düzlemlerin ayrıntısı ve risk skorunun nasıl toplandığı",
+      link: "SUT fatura denetimi",
+      after: "sayfasında.",
+    },
     console: {
       eyebrow: "Risk skoru ve inceleme kuyruğu",
       title: "Her skorun arkasında okunabilir bir gerekçe.",
@@ -221,11 +306,43 @@ const copy = defineContent<{
     ],
     rolesNote:
       "Roller kurumun ihtiyacına göre ayarlanır. Shield tanı koymaz ve tedavi kararı vermez; yalnızca faturalama ve provizyon süreçlerinde çalışır.",
+    retro: {
+      eyebrow: "Retrospektif fatura pilotu",
+      title: "Geçmiş faturalarınızda red yakalamayı birlikte ölçelim.",
+      description:
+        "Kurumunuzun anonimleştirilmiş geçmiş faturaları üzerinde retrospektif red yakalama ve yanlış pozitif oranlarını birlikte ölçelim.",
+    },
+    retroSteps: [
+      {
+        title: "Veri kurumda kalır",
+        body: "Anonimleştirilmiş geçmiş faturalar ve SGK sonuçları kurumun altyapısında kalır. Kapsam bir veri işleme sözleşmesiyle yazılır.",
+      },
+      {
+        title: "Kör çalıştırma",
+        body: "Shield faturaları gönderim öncesindeki hâliyle kontrol eder. SGK'nın verdiği ret ve kesinti kararlarını görmez.",
+      },
+      {
+        title: "Karşılaştırma",
+        body: "Shield'ın işaretlediği kalemler SGK'nın gerçek kararlarıyla kalem kalem karşılaştırılır.",
+      },
+      {
+        title: "Ortak rapor",
+        body: "Oranlar, kaçırılan red nedenleri ve kural seti sürümü kurumla birlikte raporlanır.",
+      },
+    ],
+    retroMetricsLabel: "Ölçülecek oranlar",
+    retroMetrics: [
+      { name: "Red yakalama oranı", definition: "SGK'nın reddettiği veya kestiği kalemlerden Shield'ın gönderim öncesi işaretlediklerinin oranı." },
+      { name: "Yanlış pozitif oranı", definition: "Sorunsuz ödenen kalemlerden Shield'ın yine de işaretlediklerinin oranı." },
+      { name: "Pozitif prediktif değer", definition: "İşaretlenen kalemlerden gerçekten reddedilen veya kesilenlerin oranı." },
+      { name: "İnceleme yükü", definition: "Uzman kuyruğuna düşen kalemlerin toplam kalemlere oranı." },
+    ],
+    retroNote: "Bu oranlar için henüz ölçülmüş bir değer yok. İlk değerler bir kurumun geçmiş faturalarında ölçüldüğünde, kurumun onayıyla yayımlanır.",
     cta: {
       eyebrow: "Demo ve pilot",
       title: "Shield'ı kendi faturalarınızla görün.",
       description:
-        "Kurumunuzda en sık görülen red nedenleri üzerinde bir demo yapabiliriz. Pilot için kapsamı bağlayıcı olmayan bir Niyet Mektubu (LOI) ile birlikte yazıyoruz.",
+        "Retrospektif pilotun kapsamını ve veri koşullarını bağlayıcı olmayan bir Niyet Mektubu (LOI) ile birlikte yazıyoruz.",
     },
     pilotAudiences: [
       "Hastane faturalama ve gelir döngüsü birimleri",
@@ -237,10 +354,12 @@ const copy = defineContent<{
     sections: [
       { id: "problem", label: "Problem" },
       { id: "mimari", label: "How it works" },
+      { id: "kapsam", label: "Rule coverage" },
       { id: "konsol", label: "Risk score and queue" },
       { id: "simulator", label: "Claim simulator" },
       { id: "denetim", label: "Audit log" },
       { id: "izolasyon", label: "Access and isolation" },
+      { id: "retrospektif", label: "Retrospective pilot" },
     ],
     heroStats: [
       { value: "Pre-claim", label: "When the check runs" },
@@ -313,6 +432,66 @@ const copy = defineContent<{
         detail: "append-only · digest chain",
       },
     ],
+    scope: {
+      eyebrow: "Regulation and rule coverage",
+      title: "Which rules are built, and which are not yet.",
+      description:
+        "Three of the four audit planes are implemented in the rule engine and covered by automated tests. None has been validated on a real institution's claims yet.",
+    },
+    rulebookLabel: "Regulation version",
+    rulebook: [
+      { label: "Base text", value: "Health Implementation Communiqué (SUT)" },
+      { label: "Amendment", value: "Not pinned yet · pinned with the institution before a pilot" },
+      { label: "Sources", value: "SUT annexes (EK-2B, EK-2C) · package definitions · institution contract" },
+      { label: "Updates", value: "Each SUT amendment is a new rule set version; a past decision is reproduced with its own version" },
+    ],
+    planes: [
+      {
+        title: "Department and physician authority",
+        body: "For procedures and drugs tied to a specialty, the physician's department on the claim is checked.",
+        rows: [
+          { label: "Check", value: "Physician department code · specialty condition" },
+          { label: "Tests", value: "Automated tests · synthetic claims" },
+          { label: "Real claims", value: "Not validated yet" },
+        ],
+        status: "Implemented · tested",
+      },
+      {
+        title: "Duplicate procedures and package limits",
+        body: "The same test repeated on the same day, an item already in a package billed separately, and a stay longer than the package limit.",
+        rows: [
+          { label: "Check", value: "Duplicate item · item outside package · length of stay" },
+          { label: "Tests", value: "Automated tests · synthetic claims" },
+          { label: "Real claims", value: "Not validated yet" },
+        ],
+        status: "Implemented · tested",
+      },
+      {
+        title: "Diagnosis–procedure consistency",
+        body: "A procedure or test must be justified by the ICD-10 diagnosis on the claim.",
+        rows: [
+          { label: "Check", value: "ICD-10 diagnosis ↔ procedure" },
+          { label: "Tests", value: "Automated tests · synthetic claims" },
+          { label: "Real claims", value: "Not validated yet" },
+        ],
+        status: "Implemented · tested",
+      },
+      {
+        title: "Medical supply and drug conditions",
+        body: "Report requirement, prior approval, usage limit and repeat interval. This plane is not in the rule engine yet.",
+        rows: [
+          { label: "Check", value: "Report · prior approval · usage limit" },
+          { label: "Tests", value: "Not yet" },
+          { label: "Real claims", value: "Not validated yet" },
+        ],
+        status: "Not implemented yet",
+      },
+    ],
+    scopeNote: {
+      before: "The planes and how the risk score adds up are described on the",
+      link: "SUT billing audit",
+      after: "page.",
+    },
     console: {
       eyebrow: "Risk score and review queue",
       title: "A readable reason behind every score.",
@@ -368,11 +547,43 @@ const copy = defineContent<{
     ],
     rolesNote:
       "Roles are configured to fit the institution. Shield does not diagnose or make treatment decisions; it works only in billing and pre-authorisation.",
+    retro: {
+      eyebrow: "Retrospective claims pilot",
+      title: "Measure rejection catch on your past claims, with us.",
+      description:
+        "Let us measure retrospective rejection catch and false positive rates together, on your institution's anonymised historical claims.",
+    },
+    retroSteps: [
+      {
+        title: "Data stays on site",
+        body: "Anonymised historical claims and SGK outcomes stay in the institution's infrastructure. The scope is set out in a data processing agreement.",
+      },
+      {
+        title: "Blind run",
+        body: "Shield checks the claims as they were before submission. It does not see SGK's rejection and deduction decisions.",
+      },
+      {
+        title: "Comparison",
+        body: "The items Shield flagged are compared, line by line, with SGK's actual decisions.",
+      },
+      {
+        title: "Joint report",
+        body: "The rates, the rejection reasons that were missed and the rule set version are reported together with the institution.",
+      },
+    ],
+    retroMetricsLabel: "Rates we measure",
+    retroMetrics: [
+      { name: "Rejection catch rate", definition: "Of the items SGK rejected or cut, the share Shield flagged before submission." },
+      { name: "False positive rate", definition: "Of the items paid without issue, the share Shield still flagged." },
+      { name: "Positive predictive value", definition: "Of the flagged items, the share that was actually rejected or cut." },
+      { name: "Review load", definition: "Items sent to the specialist queue as a share of all items." },
+    ],
+    retroNote: "There are no measured values for these rates yet. The first values will be published, with the institution's consent, once they are measured on an institution's historical claims.",
     cta: {
       eyebrow: "Demo and pilot",
       title: "See Shield on your own claims.",
       description:
-        "We can run a demo on the rejection reasons you see most often. For a pilot, we write the scope together in a non-binding Letter of Intent (LOI).",
+        "We write the scope and data conditions of the retrospective pilot together in a non-binding Letter of Intent (LOI).",
     },
     pilotAudiences: [
       "Hospital billing and revenue cycle units",
@@ -480,6 +691,51 @@ export default function ShieldView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
+      {/* Regulation version and rule coverage */}
+      <section id="kapsam" className="relative scroll-mt-32 py-24 sm:py-32">
+        <RailMarker className="top-24 sm:top-32" />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeader accent="shield" {...c.scope} />
+          <Reveal className="mt-14 overflow-hidden rounded-2xl border border-hairline bg-navy-850">
+            <p className={`border-b border-hairline px-5 py-3 sm:px-6 ${LABEL}`}>{c.rulebookLabel}</p>
+            <dl className="divide-y divide-hairline">
+              {c.rulebook.map((row) => (
+                <div key={row.label} className="grid gap-1 px-5 py-3 sm:grid-cols-[180px_1fr] sm:gap-4 sm:px-6">
+                  <dt className="text-[12px] text-white/55">{row.label}</dt>
+                  <dd className="text-[13.5px] leading-relaxed text-white/80">{row.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+          <JoinedGrid className="mt-5" columns="sm:grid-cols-2 xl:grid-cols-4">
+            {c.planes.map((plane, i) => (
+              <SpecCard
+                key={planeMeta[i].id}
+                variant="cell"
+                align={{ rows: Math.max(...c.planes.map((x) => x.rows.length)) }}
+                accent="shield"
+                id={planeMeta[i].id}
+                icon={planeMeta[i].icon}
+                title={plane.title}
+                body={plane.body}
+                rows={plane.rows}
+                status={{ label: plane.status, tone: planeMeta[i].tone }}
+              />
+            ))}
+          </JoinedGrid>
+          <p className="mt-6 max-w-3xl text-sm leading-relaxed text-white/55">
+            {c.scopeNote.before}{" "}
+            <Link
+              href={href("/standartlar/sut-fatura-denetimi")}
+              className="text-white/75 underline-offset-2 hover:text-white hover:underline"
+            >
+              {c.scopeNote.link}
+            </Link>{" "}
+            {c.scopeNote.after}
+          </p>
+        </div>
+      </section>
+
       {/* Console */}
       <section id="konsol" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -565,6 +821,42 @@ export default function ShieldView({ locale }: { locale: Locale }) {
               </tbody>
             </table>
             <p className="border-t border-hairline px-5 py-4 text-xs leading-relaxed text-white/55">{c.rolesNote}</p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Retrospective claims pilot: what will be measured, with no promised result */}
+      <section id="retrospektif" className="relative scroll-mt-32 py-24 sm:py-32">
+        <RailMarker className="top-24 sm:top-32" />
+        <div className="mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[1fr_1.2fr] lg:px-8">
+          <div>
+            <SectionHeader accent="shield" {...c.retro} />
+            <Reveal className="mt-10">
+              <ol className="divide-y divide-hairline border-y border-hairline">
+                {c.retroSteps.map((step, i) => (
+                  <li key={step.title} className="grid grid-cols-[32px_1fr] gap-3 py-4">
+                    <span className="font-mono text-[12px] text-white/50 tabular-nums">{i + 1}</span>
+                    <div>
+                      <h3 className="text-[14.5px] font-semibold tracking-[-0.01em] text-white">{step.title}</h3>
+                      <p className="mt-1 text-sm leading-relaxed text-white/55">{step.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </Reveal>
+          </div>
+
+          <Reveal className="self-start overflow-hidden rounded-2xl border border-hairline bg-navy-850">
+            <p className={`border-b border-hairline px-5 py-3 sm:px-6 ${LABEL}`}>{c.retroMetricsLabel}</p>
+            <dl className="divide-y divide-hairline">
+              {c.retroMetrics.map((m) => (
+                <div key={m.name} className="grid gap-1 px-5 py-4 sm:grid-cols-[180px_1fr] sm:gap-4 sm:px-6">
+                  <dt className="text-[13.5px] font-medium text-white">{m.name}</dt>
+                  <dd className="text-[13.5px] leading-relaxed text-white/60">{m.definition}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="border-t border-hairline px-5 py-4 text-xs leading-relaxed text-white/55 sm:px-6">{c.retroNote}</p>
           </Reveal>
         </div>
       </section>
