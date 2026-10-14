@@ -1,10 +1,12 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Building2, Receipt, Stethoscope } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Building2, Pill, Receipt, ShieldCheck, Stethoscope } from "lucide-react";
 import InitiativeCard, { type InitiativeCardProps } from "@/components/InitiativeCard";
 import StandardsGrid from "@/components/StandardsGrid";
 import Reveal from "@/components/Reveal";
 import HeroReveal from "@/components/HeroReveal";
 import SectionHeader from "@/components/SectionHeader";
+import DetailCell, { InternalCell } from "@/components/DetailCell";
+import { JoinedGrid, type SpecRow } from "@/components/SpecCard";
 import CtaPanel from "@/components/CtaPanel";
 import JsonLd from "@/components/JsonLd";
 import { RailMarker } from "@/components/TelemetryRails";
@@ -30,6 +32,8 @@ type Initiative = Omit<InitiativeCardProps, "locale">;
 type Step = { stage: string; title: string; body: string; output: string };
 
 const audienceIcons = [Stethoscope, Receipt, Building2];
+// Who-it-is-for cells stay neutral: on the home page only the two product cards carry an accent.
+const forWhomIcons = [Pill, ShieldCheck];
 
 const copy = defineContent<{
   /** Clinical stamp above the hero title: verifiable regulatory facts only, typed as shown (no CSS uppercase, keeps "IIa"). */
@@ -42,6 +46,8 @@ const copy = defineContent<{
   ctaIntro: string;
   ctaPilot: string;
   heroStats: { value: string; label: string }[];
+  forWhom: { eyebrow: string; title: string; description: string };
+  forWhomCells: { label: string; title: string; body: string; rows: SpecRow[]; links: { href: string; label: string }[] }[];
   products: { eyebrow: string; title: string; description: string };
   initiatives: Initiative[];
   standards: { eyebrow: string; title: string; description: string };
@@ -62,6 +68,44 @@ const copy = defineContent<{
       { value: testsLabel("tr"), label: "Otomatik test" },
       { value: "FHIR R4", label: "Veri standardı" },
       { value: "Sınıf IIa", label: "MDR hedef sınıfı" },
+    ],
+    forWhom: {
+      eyebrow: "Kimin için",
+      title: "Kimin için, hangi sorunu çözüyoruz.",
+      description:
+        "İki ürün iki ayrı ekibe hizmet eder. Aşağıdaki hedefler tasarım hedefidir; klinik ve finansal etkisi henüz bir kurumda ölçülmedi.",
+    },
+    forWhomCells: [
+      {
+        label: "Klinik ekipler ve hekimler",
+        title: "Çoklu ilaç kullanan hastada reçete anındaki risk.",
+        body: "Beş ya da daha fazla ilaç kullanan, böbrek veya karaciğer fonksiyonu değişen hastada risk tek bir etkileşimden gelmez. PharmaDeux reçete yazılırken kümülatif organ yükünü ve etkileşimi, tetikleyen kural ve eşikle gösterir.",
+        rows: [
+          { label: "Kim için", value: "Klinik eczacı · servis hekimi · ilaç güvenliği komitesi" },
+          { label: "Ne zaman", value: "Reçete yazılırken" },
+          { label: "Ne gösterir", value: "Kümülatif organ yükü · etkileşim · renal ve hepatik doz" },
+          { label: "Hedef", value: "Bağlama bakan uyarı; uyarı yorgunluğunu azaltmak" },
+        ],
+        links: [
+          { href: "/initiatives/pharmadeux", label: "PharmaDeux'yü inceleyin" },
+          { href: "/initiatives/pharmadeux#simulator", label: "QT simülatörünü deneyin" },
+        ],
+      },
+      {
+        label: "Gelir döngüsü ve fatura ekipleri",
+        title: "Fatura MEDULA'ya gitmeden red riski.",
+        body: "Red kararı çoğu zaman fatura gönderildikten sonra gelir. Shield faturayı MEDULA'ya (SGK'nın provizyon ve fatura sistemi) gönderilmeden önce kontrol eder ve riskli kalemi gerekçesiyle uzmana gösterir.",
+        rows: [
+          { label: "Kim için", value: "Gelir döngüsü · fatura ve provizyon birimleri" },
+          { label: "Ne zaman", value: "Fatura gönderilmeden önce" },
+          { label: "Ne yakalar", value: "Tanı–işlem uyumsuzluğu · mükerrer işlem · paket aşımı" },
+          { label: "Hedef", value: "Red ve kesintiyi gönderimden önce düzeltmek" },
+        ],
+        links: [
+          { href: "/initiatives/shield", label: "Shield'ı inceleyin" },
+          { href: "/initiatives/shield#simulator", label: "Fatura simülatörünü deneyin" },
+        ],
+      },
     ],
     products: {
       eyebrow: "Ürünler",
@@ -173,6 +217,44 @@ const copy = defineContent<{
       { value: testsLabel("en"), label: "Automated tests" },
       { value: "FHIR R4", label: "Data standard" },
       { value: "Class IIa", label: "MDR target class" },
+    ],
+    forWhom: {
+      eyebrow: "Who it is for",
+      title: "Who it is for, and which problem it solves.",
+      description:
+        "The two products serve two different teams. The goals below are design goals; their clinical and financial effect has not been measured at an institution yet.",
+    },
+    forWhomCells: [
+      {
+        label: "Clinical teams and physicians",
+        title: "Risk at the moment of prescribing, for patients on many drugs.",
+        body: "For a patient on five or more drugs, or with changing kidney or liver function, risk does not come from one interaction. PharmaDeux shows cumulative organ burden and interactions while the prescription is written, with the rule and threshold that triggered them.",
+        rows: [
+          { label: "For", value: "Clinical pharmacist · ward physician · medication safety committee" },
+          { label: "When", value: "While the prescription is written" },
+          { label: "Shows", value: "Cumulative organ burden · interactions · renal and hepatic dosing" },
+          { label: "Goal", value: "Alerts that look at context; less alert fatigue" },
+        ],
+        links: [
+          { href: "/initiatives/pharmadeux", label: "See PharmaDeux" },
+          { href: "/initiatives/pharmadeux#simulator", label: "Try the QT simulator" },
+        ],
+      },
+      {
+        label: "Revenue cycle and billing teams",
+        title: "Rejection risk before the claim reaches MEDULA.",
+        body: "A rejection usually arrives after the claim is submitted. Shield checks the claim before it goes to MEDULA (SGK's pre-authorisation and billing system) and shows the risky item, with its reason, to a specialist.",
+        rows: [
+          { label: "For", value: "Revenue cycle · billing and pre-authorisation units" },
+          { label: "When", value: "Before the claim is submitted" },
+          { label: "Catches", value: "Diagnosis–procedure mismatch · duplicate procedure · package overrun" },
+          { label: "Goal", value: "Fix rejections and deductions before submission" },
+        ],
+        links: [
+          { href: "/initiatives/shield", label: "See Shield" },
+          { href: "/initiatives/shield#simulator", label: "Try the claim simulator" },
+        ],
+      },
     ],
     products: {
       eyebrow: "Products",
@@ -346,6 +428,23 @@ export default function HomeView({ locale }: { locale: Locale }) {
               ))}
             </dl>
           </HeroReveal>
+        </div>
+      </section>
+
+      {/* Who it is for: the two teams and their problem, before the technical numbers */}
+      <section id="kimin-icin" className="relative scroll-mt-20 py-24 sm:py-32">
+        <RailMarker className="top-24 sm:top-32" />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeader {...c.forWhom} />
+          <JoinedGrid className="mt-14" columns="lg:grid-cols-2">
+            {c.forWhomCells.map((cell, i) => (
+              <DetailCell key={cell.label} icon={forWhomIcons[i]} label={cell.label} title={cell.title} body={cell.body} rows={cell.rows}>
+                {cell.links.map((l) => (
+                  <InternalCell key={l.href} href={href(l.href)} label={l.label} />
+                ))}
+              </DetailCell>
+            ))}
+          </JoinedGrid>
         </div>
       </section>
 

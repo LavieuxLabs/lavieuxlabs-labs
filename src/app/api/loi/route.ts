@@ -101,11 +101,11 @@ export async function POST(request: Request) {
     return json(503, { error: "not_configured" });
   }
 
-  const subject = `[${PATH_LABELS[path]}${product ? ` · ${product}` : ""}] ${fields.organization}`;
+  const subject = `[${PATH_LABELS[path]}${product ? ` · ${product}` : ""}] ${fields.organization || fields.name}`;
   const text = [
     `Talep: ${PATH_LABELS[path]}`,
     ...(product ? [`Ürün: ${product}`] : []),
-    `Kurum: ${fields.organization}`,
+    `Kurum: ${fields.organization || "(belirtilmedi)"}`,
     `İlgili kişi: ${fields.name} (${fields.role})`,
     `E-posta: ${fields.email}`,
     ...(fields.detail ? [`${path === "pilot" ? "Pilot türü" : "Çalışma alanı"}: ${fields.detail}`] : []),

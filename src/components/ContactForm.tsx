@@ -15,6 +15,7 @@ import {
   LIMITS,
   MESSAGE_MIN,
   detailOptions,
+  isOrganizationRequired,
   roleOptions,
   sanitizeLoi,
   validateLoi,
@@ -53,12 +54,14 @@ const copy = defineContent({
     honeypot: "Web sitesi (boş bırakınız)",
     productLegend: "Hangi ürün?",
     organization: "Kurum adı",
+    organizationLoose: "Kurum / üniversite",
     name: "Ad soyad",
     namePlaceholder: "Ad Soyad",
     role: "Rolünüz",
     choose: "Seçiniz",
     detail: { intro: "", academic: "Çalışma alanı", pilot: "Pilot türü" } as Record<ContactPath, string>,
     email: "Kurumsal e-posta",
+    emailPlain: "E-posta",
     emailPlaceholder: "ad.soyad@kurum.com.tr",
     freeMail: "Mümkünse kurumsal alan adınıza ait bir e-posta adresi kullanmanızı öneririz.",
     message: "Mesaj",
@@ -98,12 +101,14 @@ const copy = defineContent({
     honeypot: "Website (leave empty)",
     productLegend: "Which product?",
     organization: "Organisation",
+    organizationLoose: "Organisation / university",
     name: "Full name",
     namePlaceholder: "Full name",
     role: "Your role",
     choose: "Select",
     detail: { intro: "", academic: "Area of work", pilot: "Pilot type" } as Record<ContactPath, string>,
     email: "Work email",
+    emailPlain: "Email",
     emailPlaceholder: "name.surname@hospital.org",
     freeMail: "If possible, use an address on your organisation's own domain.",
     message: "Message",
@@ -193,6 +198,8 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
   const hasProduct = path !== "academic";
   const roles = roleOptions(locale, path, product);
   const details = detailOptions(locale, path, product);
+  // Only a pilot needs a named institution and a work address; an individual researcher can write too.
+  const formal = isOrganizationRequired(path);
   const [fields, setFields] = useState<Fields>({
     organization: "",
     name: "",
@@ -304,7 +311,7 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
             <dl className="mt-8 w-full divide-y divide-hairline rounded-xl border border-hairline text-sm">
               {[
                 [c.summary.path, view.path.label],
-                [c.summary.organization, fields.organization],
+                ...(fields.organization ? [[c.summary.organization, fields.organization]] : []),
                 ...(hasProduct ? [[c.summary.product, productLabel]] : []),
                 [c.summary.role, fields.role],
               ].map(([k, v]) => (
@@ -443,9 +450,10 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
               </Field>
               <Field
                 className="sm:col-span-2"
-                label={c.organization}
+                label={formal ? c.organization : c.organizationLoose}
                 htmlFor={`${uid}-organization`}
                 error={errors.organization}
+                optional={formal ? undefined : c.optional}
               >
                 <input
                   {...errorProps("organization")}
@@ -483,7 +491,12 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
               )}
             </div>
 
-            <Field label={c.email} htmlFor={`${uid}-email`} error={errors.email} hint={freeMail ? c.freeMail : undefined}>
+            <Field
+              label={formal ? c.email : c.emailPlain}
+              htmlFor={`${uid}-email`}
+              error={errors.email}
+              hint={formal && freeMail ? c.freeMail : undefined}
+            >
               <input
                 {...errorProps("email")}
                 type="email"

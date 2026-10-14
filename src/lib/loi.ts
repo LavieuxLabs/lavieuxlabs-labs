@@ -214,12 +214,18 @@ export function isLocale(value: unknown): value is Locale {
   return locales.some((l) => l === value);
 }
 
+/**
+ * The organisation names the institution in a pilot LOI, so it is required there. On the intro and
+ * academic paths a clinician or researcher may write as an individual and leave it empty.
+ */
+export const isOrganizationRequired = (path: unknown) => !isContactPath(path) || path === "pilot";
+
 export function validateLoi(f: LoiFields, path: unknown, product: unknown, locale: Locale): LoiErrors {
   const errors: LoiErrors = {};
 
-  if (f.organization.length < 2) errors.organization = "organizationMissing";
+  if (isOrganizationRequired(path) && f.organization.length < 2) errors.organization = "organizationMissing";
   else if (f.organization.length > LIMITS.organization) errors.organization = "organizationLong";
-  else if (!ORGANIZATION_PATTERN.test(f.organization)) errors.organization = "organizationChars";
+  else if (f.organization && !ORGANIZATION_PATTERN.test(f.organization)) errors.organization = "organizationChars";
 
   if (f.name.length < 2) errors.name = "nameMissing";
   else if (f.name.length > LIMITS.name) errors.name = "nameLong";

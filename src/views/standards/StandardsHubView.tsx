@@ -41,6 +41,8 @@ const copy = defineContent<{
         summary: "On risk faktörüyle hastanede yatan hastada QT uzaması riski; 0–21 puan, ≥11 yüksek risk.",
         codes: ["0–21 puan", "QTc ≥450 ms", "Fridericia"],
         source: "Tisdale JE et al. Circ Cardiovasc Qual Outcomes 2013",
+        product: "PharmaDeux · QT risk motoru",
+        status: "Algoritmik olarak uygulandı · sentetik testten geçiyor",
       },
       {
         href: "/standartlar/ckd-epi-2021",
@@ -49,6 +51,8 @@ const copy = defineContent<{
         summary: "Irk katsayısı olmadan kreatininden eGFR; KDIGO kategorileri ve renal doz kontrol ilkeleri.",
         codes: ["LOINC 98979-8", "mL/dk/1,73 m²", "G1–G5"],
         source: "Inker LA et al. N Engl J Med 2021",
+        product: "PharmaDeux · renal doz kontrolü",
+        status: "Algoritmik olarak uygulandı · sentetik testten geçiyor",
       },
       {
         href: "/standartlar/fhir-r4-entegrasyonu",
@@ -57,6 +61,8 @@ const copy = defineContent<{
         summary: "MedicationRequest ve Observation kaynakları, kod sistemleri, örnek JSON ve entegrasyon mimarisi.",
         codes: ["FHIR R4", "ATC", "LOINC", "UCUM"],
         source: "HL7 International · FHIR R4 (v4.0.1)",
+        product: "PharmaDeux ve Shield · veri katmanı",
+        status: "Veri modeli entegre · canlı HBYS bağlantısı yok",
       },
       {
         href: "/standartlar/sut-fatura-denetimi",
@@ -65,6 +71,8 @@ const copy = defineContent<{
         summary: "Shield'ın gönderim öncesi kural motoru: dört denetim düzlemi, 0–100 risk skoru ve denetim izi.",
         codes: ["EK-2B", "EK-2C", "ICD-10", "0–100"],
         source: "SGK · Sağlık Uygulama Tebliği (SUT)",
+        product: "Shield · fatura denetimi",
+        status: "4 düzlemden 3'ü uygulandı · sentetik faturalarla test ediliyor",
       },
     ],
     more: "Kalite ve regülasyon durumu için",
@@ -87,6 +95,8 @@ const copy = defineContent<{
         summary: "QT prolongation risk in hospitalised patients from ten risk factors; 0–21 points, ≥11 high risk.",
         codes: ["0–21 points", "QTc ≥450 ms", "Fridericia"],
         source: "Tisdale JE et al. Circ Cardiovasc Qual Outcomes 2013",
+        product: "PharmaDeux · QT risk engine",
+        status: "Implemented algorithmically · passes synthetic tests",
       },
       {
         href: "/standartlar/ckd-epi-2021",
@@ -95,6 +105,8 @@ const copy = defineContent<{
         summary: "eGFR from creatinine without a race coefficient; KDIGO categories and renal dose check principles.",
         codes: ["LOINC 98979-8", "mL/min/1.73 m²", "G1–G5"],
         source: "Inker LA et al. N Engl J Med 2021",
+        product: "PharmaDeux · renal dose check",
+        status: "Implemented algorithmically · passes synthetic tests",
       },
       {
         href: "/standartlar/fhir-r4-entegrasyonu",
@@ -103,6 +115,8 @@ const copy = defineContent<{
         summary: "MedicationRequest and Observation resources, code systems, example JSON and integration architecture.",
         codes: ["FHIR R4", "ATC", "LOINC", "UCUM"],
         source: "HL7 International · FHIR R4 (v4.0.1)",
+        product: "PharmaDeux and Shield · data layer",
+        status: "Data model integrated · no live HIS connection",
       },
       {
         href: "/standartlar/sut-fatura-denetimi",
@@ -111,6 +125,8 @@ const copy = defineContent<{
         summary: "Shield's pre-submission rule engine: four audit planes, a 0–100 risk score and the audit trail.",
         codes: ["EK-2B", "EK-2C", "ICD-10", "0–100"],
         source: "SGK · Health Implementation Communiqué (SUT)",
+        product: "Shield · billing audit",
+        status: "3 of 4 planes implemented · tested on synthetic claims",
       },
     ],
     more: "For quality and regulatory status, see",

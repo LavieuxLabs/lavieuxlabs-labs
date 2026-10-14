@@ -13,15 +13,23 @@ export type StandardEntry = {
   /** Codes and units shown in mono, also matched by the search. */
   codes: string[];
   source: string;
+  /** Which product runs it. */
+  product: string;
+  /** Implementation and verification state, in plain words; never a certification claim. */
+  status: string;
 };
 
 const copy: Record<
   Locale,
-  { search: string; all: string; clinical: string; technical: string; administrative: string; filter: string; empty: string; open: string }
+  { search: string; all: string; clinical: string; technical: string; administrative: string; filter: string; empty: string; open: string; product: string; status: string }
 > = {
-  tr: { search: "Standart, kod veya kaynak arayın", all: "Tümü", clinical: "Klinik", technical: "Teknik", administrative: "İdari / Denetim", filter: "Kategori", empty: "Sonuç yok.", open: "Sayfayı aç" },
-  en: { search: "Search a standard, code or source", all: "All", clinical: "Clinical", technical: "Technical", administrative: "Administrative / Audit", filter: "Category", empty: "No results.", open: "Open page" },
+  tr: { search: "Standart, kod veya kaynak arayın", all: "Tümü", clinical: "Klinik", technical: "Teknik", administrative: "İdari / Denetim", filter: "Kategori", empty: "Sonuç yok.", open: "Sayfayı aç", product: "Ürün", status: "Durum" },
+  en: { search: "Search a standard, code or source", all: "All", clinical: "Clinical", technical: "Technical", administrative: "Administrative / Audit", filter: "Category", empty: "No results.", open: "Open page", product: "Product", status: "Status" },
 };
+
+// Category · title · summary · codes · product · status · footer: one subgrid track each, so the
+// product and status lines of neighbouring cards sit at the same height.
+const TRACKS = 7;
 
 // Case- and accent-insensitive, so "ckd epi" finds "CKD-EPI" and "dogrulama" finds "doğrulama".
 const fold = (t: string) => t.toLocaleLowerCase("tr-TR").replace(/ı/g, "i").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, "");
@@ -38,7 +46,7 @@ export default function StandardsIndex({ locale, entries }: { locale: Locale; en
     return entries.filter(
       (e) =>
         (category === "all" || e.category === category) &&
-        (!q || fold(`${e.title} ${e.summary} ${e.codes.join(" ")} ${e.source}`).includes(q)),
+        (!q || fold(`${e.title} ${e.summary} ${e.codes.join(" ")} ${e.source} ${e.product}`).includes(q)),
     );
   }, [entries, query, category]);
 
@@ -80,17 +88,32 @@ export default function StandardsIndex({ locale, entries }: { locale: Locale; en
         ) : (
           <ul className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline sm:grid-cols-2 xl:grid-cols-4">
             {results.map((e) => (
-              <li key={e.href} className="group relative flex flex-col bg-navy-850 transition-colors duration-150 ease-out hover:bg-navy-800">
-                <Link href={localizedPath(locale, e.href)} className="flex h-full flex-col p-5 sm:p-6">
+              <li
+                key={e.href}
+                className="group relative flex flex-col bg-navy-850 transition-colors duration-150 ease-out hover:bg-navy-800 sm:grid sm:grid-cols-[minmax(0,1fr)] sm:grid-rows-subgrid"
+                style={{ gridRow: `span ${TRACKS} / span ${TRACKS}` }}
+              >
+                <Link
+                  href={localizedPath(locale, e.href)}
+                  className="flex h-full min-w-0 flex-col p-5 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white/60 sm:row-span-7 sm:grid sm:grid-cols-[minmax(0,1fr)] sm:grid-rows-subgrid sm:p-6"
+                >
                   <span className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{t[e.category]}</span>
                   <span className="mt-3 text-[15px] font-semibold tracking-[-0.01em] text-white">{e.title}</span>
                   <span className="mt-1.5 text-[13.5px] leading-relaxed text-white/60">{e.summary}</span>
-                  <span className="mt-4 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11.5px] text-white/70">
+                  <span className="mt-4 flex flex-wrap content-start gap-x-3 gap-y-1 font-mono text-[11.5px] text-white/70">
                     {e.codes.map((code) => (
                       <span key={code}>{code}</span>
                     ))}
                   </span>
-                  <span className="mt-auto flex items-center justify-between gap-3 border-t border-hairline pt-4 text-[12px] text-white/55">
+                  <span className="-mx-5 mt-5 grid grid-cols-[64px_1fr] items-start gap-3 border-t border-hairline px-5 py-2 sm:-mx-6 sm:px-6">
+                    <span className="text-[11.5px] text-white/55">{t.product}</span>
+                    <span className="text-[12.5px] leading-snug text-white/80">{e.product}</span>
+                  </span>
+                  <span className="-mx-5 grid grid-cols-[64px_1fr] items-start gap-3 border-t border-hairline px-5 py-2 sm:-mx-6 sm:px-6">
+                    <span className="text-[11.5px] text-white/55">{t.status}</span>
+                    <span className="text-[12.5px] leading-snug text-white/80">{e.status}</span>
+                  </span>
+                  <span className="-mx-5 mt-auto flex items-center justify-between gap-3 border-t border-hairline px-5 pt-4 text-[12px] text-white/55 sm:-mx-6 sm:mt-0 sm:self-end sm:px-6">
                     <span lang="en" className="min-w-0 truncate">{e.source}</span>
                     <span className="inline-flex shrink-0 items-center gap-1 text-white/75 transition-colors duration-150 ease-out group-hover:text-white">
                       {t.open}

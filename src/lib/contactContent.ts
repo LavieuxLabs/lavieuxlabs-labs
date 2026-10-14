@@ -182,7 +182,7 @@ const copy = defineContent<ContactCopy>({
         },
       },
       academic: {
-        organization: "Örn. Üniversite adı / Tıp / Eczacılık Fakültesi",
+        organization: "Örn. Tıp Fakültesi Farmakoloji AD · bağımsız çalışıyorsanız boş bırakın",
         message: "Araştırma sorusu, ortak doğrulama fikri veya fon başvurusu...",
       },
       pilot: {
@@ -291,7 +291,7 @@ const copy = defineContent<ContactCopy>({
         },
       },
       academic: {
-        organization: "e.g. University name / Faculty of Medicine / Faculty of Pharmacy",
+        organization: "e.g. Department of Pharmacology · leave empty if you work independently",
         message: "Research question, a joint validation idea or a funding application...",
       },
       pilot: {
