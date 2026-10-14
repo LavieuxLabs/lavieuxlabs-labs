@@ -1,7 +1,7 @@
 import Reveal from "@/components/Reveal";
 import SectionHeader from "@/components/SectionHeader";
 import PrintButton from "@/components/PrintButton";
-import { CONTACT_EMAIL, OFFICE_ADDRESS_LINE, SITE_LAST_MODIFIED, SITE_URL, office } from "@/lib/site";
+import { CONTACT_EMAIL, OFFICE_ADDRESS_LINE, SITE_LAST_MODIFIED, SITE_URL, office, organizationProfile } from "@/lib/site";
 import { defineContent, type Locale } from "@/i18n/config";
 
 type Row = { term: string; detail: string };
@@ -161,7 +161,7 @@ const sheet = defineContent({
     document: "Pilot protokolü ve LOI çerçevesi",
     revision: "Revizyon",
     imprint: { organization: "Kuruluş", address: "Adres", contact: "İletişim", web: "Web" },
-    organization: "LavieuxLabs · Sağlık teknolojileri Ar-Ge",
+    organization: `LavieuxLabs · ${organizationProfile.tr.short}`,
     footer:
       "Bu belge bilgilendirme amaçlıdır ve bağlayıcı değildir. Pilotun kapsamı, süresi ve veri koşulları kurumla imzalanan Niyet Mektubu'nda (LOI) yazılır.",
   },
@@ -171,7 +171,7 @@ const sheet = defineContent({
     document: "Pilot protocol and LOI framework",
     revision: "Revision",
     imprint: { organization: "Organisation", address: "Address", contact: "Contact", web: "Web" },
-    organization: "LavieuxLabs · Health technology R&D",
+    organization: `LavieuxLabs · ${organizationProfile.en.short}`,
     footer:
       "This document is for information and is not binding. The pilot's scope, duration and data conditions are set out in the Letter of Intent (LOI) signed with the institution.",
   },
@@ -204,7 +204,7 @@ export default function PilotProtocol({ locale }: { locale: Locale }) {
             <div>
               <dt className="print-muted">{s.imprint.address}</dt>
               <dd>
-                {place.institution}, {place.unit}, {OFFICE_ADDRESS_LINE}, {place.country}
+                {OFFICE_ADDRESS_LINE}, {place.country}
               </dd>
             </div>
             <div>

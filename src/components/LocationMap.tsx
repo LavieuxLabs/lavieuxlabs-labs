@@ -9,7 +9,7 @@ import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 
 const copy = defineContent({
   tr: {
-    campus: "Ar-Ge yerleşkesi",
+    location: "Görüşme adresi",
     directions: "Google Haritalar'da yol tarifi al",
     mapTitle: "konum haritası",
     provider: "Harita Google tarafından sağlanır.",
@@ -20,7 +20,7 @@ const copy = defineContent({
     loadAlways: "Her zaman yükle",
   },
   en: {
-    campus: "R&D campus",
+    location: "Meeting address",
     directions: "Get directions in Google Maps",
     mapTitle: "location map",
     provider: "The map is provided by Google.",
@@ -46,7 +46,7 @@ export default function LocationMap({ locale }: { locale: Locale }) {
     <div className="grid overflow-hidden rounded-2xl border border-hairline bg-white/[0.02] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
       {/* Address card */}
       <div className="flex flex-col border-b border-hairline p-6 sm:p-8 lg:border-r lg:border-b-0">
-        <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.campus}</p>
+        <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.location}</p>
         <div className="mt-6 flex gap-3.5">
           <span className="flex h-10 w-6 shrink-0 items-start pt-0.5">
             <Building2 className="h-[18px] w-[18px] text-white/55" strokeWidth={1.7} aria-hidden="true" />

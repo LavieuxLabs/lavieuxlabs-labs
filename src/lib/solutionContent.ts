@@ -132,7 +132,7 @@ const copy = defineContent<Record<SolutionValue, SolutionCopy>>({
       label: "Akademik İş Birliği",
       hint: "Araştırma ve doğrulama projeleri",
       placeholders: {
-        organization: "Örn. Konya Teknik Üniversitesi / Tıp / Eczacılık Fakültesi",
+        organization: "Örn. Üniversite adı / Tıp / Eczacılık Fakültesi",
         title: "Örn. Öğretim Üyesi, Doktora Araştırmacısı, Proje Yürütücüsü",
         message: "Ortak klinik validasyon, TÜBİTAK / uluslararası fon başvurusu veya Ar-Ge ortaklığı...",
       },
@@ -203,7 +203,7 @@ const copy = defineContent<Record<SolutionValue, SolutionCopy>>({
       label: "Academic collaboration",
       hint: "Research and validation projects",
       placeholders: {
-        organization: "e.g. Konya Technical University / Faculty of Medicine / Faculty of Pharmacy",
+        organization: "e.g. University name / Faculty of Medicine / Faculty of Pharmacy",
         title: "e.g. Faculty Member, PhD Researcher, Principal Investigator",
         message: "Joint clinical validation, a TÜBİTAK or international funding application, or an R&D partnership...",
       },

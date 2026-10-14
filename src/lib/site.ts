@@ -23,6 +23,32 @@ export const LEGAL_ENTITY = {
 // ISO 8601; rendered per locale with formatDate().
 export const LEGAL_LAST_UPDATED = "2026-10-08";
 
+// How the organisation describes itself. LavieuxLabs is an independent student venture, not a unit,
+// partner or technopark company of the university; every imprint, header and JSON-LD reads from here.
+export const organizationProfile = defineContent({
+  tr: {
+    short: "Bağımsız sağlık teknolojileri Ar-Ge girişimi",
+    positioning:
+      "LavieuxLabs, Konya Teknik Üniversitesi öğrencileri tarafından geliştirilen, bağımsız bir klinik karar destek ve sağlık teknolojileri Ar-Ge girişimidir.",
+    stage: "Henüz şirketleşmedik; ürünler Ar-Ge ve pilot hazırlık aşamasında.",
+    independence: "Üniversitenin resmi bir birimi, ortağı veya teknokent firması değiliz.",
+  },
+  en: {
+    short: "Independent health technology R&D venture",
+    positioning:
+      "LavieuxLabs is an independent clinical decision support and health technology R&D venture built by students of Konya Technical University.",
+    stage: "We are not incorporated yet; the products are in R&D and pilot preparation.",
+    independence: "We are not an official unit, partner or technopark company of the university.",
+  },
+});
+
+// Core team. A link left null is not rendered; email always goes through CONTACT_EMAIL.
+export const TEAM_LEAD = {
+  name: "Tarık Ziya Eren",
+  github: "https://github.com/LavieuxLabs" as string | null,
+  linkedin: null as string | null,
+};
+
 export const SOLUTION_VALUES = ["pharmadeux", "shield", "academic"] as const;
 export type SolutionValue = (typeof SOLUTION_VALUES)[number];
 

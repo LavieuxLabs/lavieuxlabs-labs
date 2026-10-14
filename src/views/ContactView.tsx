@@ -30,8 +30,9 @@ const copy = defineContent({
       "Formu doldurun; hangi ürünle ilgilendiğinizi ve kurumunuzun ihtiyacını kısaca yazın. Size e-postayla dönüyoruz.",
     location: {
       eyebrow: "Konum",
-      title: "Konya Teknik Üniversitesi yerleşkesindeyiz.",
-      description: "Ziyaret etmek isterseniz önceden e-postayla randevu alın.",
+      title: "Ekip Konya'da çalışıyor.",
+      description:
+        "Ekip Konya Teknik Üniversitesi'nde öğrenci; aşağıdaki adres öğrenim gördüğümüz fakültedir. LavieuxLabs üniversitenin resmi bir birimi veya ortağı değildir. Görüşmek isterseniz önceden e-postayla randevu alın.",
     },
   },
   en: {
@@ -42,8 +43,9 @@ const copy = defineContent({
       "Fill in the form with the product you are interested in and a short note on your institution's needs. We reply by email.",
     location: {
       eyebrow: "Location",
-      title: "We are on the Konya Technical University campus.",
-      description: "If you would like to visit, please book an appointment by email first.",
+      title: "The team works in Konya.",
+      description:
+        "The team are students at Konya Technical University; the address below is the faculty where we study. LavieuxLabs is not an official unit or partner of the university. If you would like to meet, please book an appointment by email first.",
     },
   },
 });

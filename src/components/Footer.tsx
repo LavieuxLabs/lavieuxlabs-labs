@@ -5,7 +5,7 @@ import { CookieSettingsButton } from "@/components/CookieBanner";
 import LanguageSwitch from "@/components/LanguageSwitch";
 import CopyEmail from "@/components/CopyEmail";
 import VerificationImprint from "@/components/VerificationImprint";
-import { LEGAL_LAST_UPDATED, navigation, office } from "@/lib/site";
+import { LEGAL_LAST_UPDATED, navigation, office, organizationProfile } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 import pkg from "../../package.json";
 import { trlLabel } from "@/lib/metrics";
@@ -22,8 +22,8 @@ const copy = defineContent({
     legal: "Yasal",
     imprint: "Künye",
     organization: "Kuruluş",
-    organizationValue: "LavieuxLabs · Sağlık teknolojileri Ar-Ge",
-    campus: "Ar-Ge yerleşkesi",
+    organizationValue: `LavieuxLabs · ${organizationProfile.tr.short}`,
+    location: "Konum",
     contact: "İletişim",
     status: "Ürün durumu",
     pharmaStatus: "PharmaDeux CDSS · geliştirmede ·",
@@ -42,8 +42,8 @@ const copy = defineContent({
     legal: "Legal",
     imprint: "Imprint",
     organization: "Organisation",
-    organizationValue: "LavieuxLabs · Health technology R&D",
-    campus: "R&D campus",
+    organizationValue: `LavieuxLabs · ${organizationProfile.en.short}`,
+    location: "Location",
     contact: "Contact",
     status: "Product status",
     pharmaStatus: "PharmaDeux CDSS · in development ·",
@@ -128,10 +128,10 @@ export default function Footer({ locale }: { locale: Locale }) {
         {/* Imprint plate */}
         <dl aria-label={c.imprint} className={`mt-4 sm:grid-cols-2 lg:grid-cols-3 ${plateClass}`}>
           <Field label={c.organization}>{c.organizationValue}</Field>
-          <Field label={c.campus}>
+          <Field label={c.location}>
             <Link href={href("/contact#konum")} className="transition-colors duration-150 ease-out hover:text-white">
               <address className="not-italic">
-                {place.institution}, {place.unit} · {place.district} / {place.city}
+                {place.district} / {place.city}, {place.country}
               </address>
             </Link>
           </Field>

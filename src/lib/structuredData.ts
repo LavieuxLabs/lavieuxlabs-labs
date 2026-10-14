@@ -1,4 +1,4 @@
-import { CONTACT_EMAIL, SITE_URL, office } from "@/lib/site";
+import { CONTACT_EMAIL, SITE_URL, TEAM_LEAD, office } from "@/lib/site";
 import { metrics } from "@/lib/metrics";
 import { defineContent, type Locale } from "@/i18n/config";
 import { absoluteUrl } from "@/i18n/metadata";
@@ -16,7 +16,8 @@ const inLanguage: Record<Locale, string> = { tr: "tr-TR", en: "en" };
 const copy = defineContent({
   tr: {
     orgDescription:
-      "İlaç güvenliği ve hastane faturalaması için test edilebilir karar destek yazılımı geliştiren sağlık teknolojileri Ar-Ge ekibi.",
+      "Konya Teknik Üniversitesi öğrencileri tarafından geliştirilen, ilaç güvenliği ve hastane faturalaması için karar destek yazılımı üreten bağımsız sağlık teknolojileri Ar-Ge girişimi. Şirketleşme öncesi, Ar-Ge ve pilot aşamasında.",
+    founderTitle: "Proje lideri ve sistem mimarı",
     knowsAbout: [
       "Klinik karar destek sistemleri",
       "İlaç güvenliği",
@@ -52,7 +53,8 @@ const copy = defineContent({
   },
   en: {
     orgDescription:
-      "Health technology R&D team building testable decision support software for medication safety and hospital billing.",
+      "Independent health technology R&D venture built by students of Konya Technical University, developing decision support software for medication safety and hospital billing. Not yet incorporated; in R&D and pilot stage.",
+    founderTitle: "Project lead and system architect",
     knowsAbout: [
       "Clinical decision support systems",
       "Medication safety",
@@ -100,11 +102,17 @@ function organization(locale: Locale) {
     email: CONTACT_EMAIL,
     address: {
       "@type": "PostalAddress",
-      streetAddress: `${place.street}, ${place.institution} ${place.unit}`,
+      streetAddress: place.street,
       postalCode: place.postalCode,
       addressLocality: place.district,
       addressRegion: place.city,
       addressCountry: "TR",
+    },
+    founder: {
+      "@type": "Person",
+      name: TEAM_LEAD.name,
+      jobTitle: copy[locale].founderTitle,
+      ...(TEAM_LEAD.linkedin ? { sameAs: [TEAM_LEAD.linkedin] } : {}),
     },
     areaServed: "TR",
     knowsAbout: copy[locale].knowsAbout,

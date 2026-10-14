@@ -1,4 +1,8 @@
+import type { ReactNode } from "react";
+import Link from "next/link";
 import {
+  ArrowRight,
+  ArrowUpRight,
   BookOpen,
   FileCheck2,
   FlaskConical,
@@ -13,10 +17,15 @@ import {
   Repeat,
   Route,
   ShieldAlert,
+  Stethoscope,
   Target,
+  UserRound,
   Users,
   Workflow,
+  type LucideIcon,
 } from "lucide-react";
+import CopyEmail from "@/components/CopyEmail";
+import { TEAM_LEAD, organizationProfile } from "@/lib/site";
 import PageHero from "@/components/PageHero";
 import SectionHeader from "@/components/SectionHeader";
 import { RailMarker } from "@/components/TelemetryRails";
@@ -31,12 +40,12 @@ export const metadata = defineMetadata("/about", {
   tr: {
     title: "Hakkımızda",
     description:
-      "LavieuxLabs, ilaç güvenliği ve hastane faturalaması için test edilebilir karar destek yazılımı geliştiren bir Ar-Ge ekibidir.",
+      "LavieuxLabs, Konya Teknik Üniversitesi öğrencileri tarafından geliştirilen, ilaç güvenliği ve hastane faturalaması için karar destek yazılımı üreten bağımsız bir Ar-Ge girişimidir.",
   },
   en: {
     title: "About",
     description:
-      "LavieuxLabs is an R&D team building testable decision support software for medication safety and hospital billing.",
+      "LavieuxLabs is an independent R&D venture built by students of Konya Technical University, developing decision support software for medication safety and hospital billing.",
   },
 });
 
@@ -79,14 +88,16 @@ const copy = defineContent<{
   regulatory: (Card & { status: string })[];
   collaborationHeading: Heading;
   collaboration: Card[];
+  teamHeading: Heading;
+  lead: { label: string; role: string; body: string; rows: SpecRow[]; email: string };
+  advisory: { label: string; title: string; body: string; rows: SpecRow[]; link: string };
   cta: Heading & { label: string };
 }>({
   tr: {
     crumbs: { home: "Ana sayfa", here: "Hakkımızda" },
     eyebrow: "Hakkımızda",
     title: "İlaç güvenliği ve faturalama için test edilebilir yazılım yapıyoruz.",
-    description:
-      "LavieuxLabs, klinik farmakoloji, sağlık operasyonları ve yazılım mühendisliğini bir araya getiren bir Ar-Ge ekibi. Hatanın hastaya ya da kuruma pahalıya mal olduğu işler için, her sonucu yeniden üretilebilen ve kararı insana bırakan sistemler geliştiriyoruz.",
+    description: `${organizationProfile.tr.positioning} ${organizationProfile.tr.stage} Hatanın hastaya ya da kuruma pahalıya mal olduğu işler için, her sonucu yeniden üretilebilen ve kararı insana bırakan sistemler geliştiriyoruz.`,
     pillars: [
       {
         label: "Vizyon",
@@ -306,6 +317,33 @@ const copy = defineContent<{
         ],
       },
     ],
+    teamHeading: {
+      eyebrow: "Ekip",
+      title: "Çekirdek kadro ve girişim.",
+      description: `${organizationProfile.tr.stage} ${organizationProfile.tr.independence}`,
+    },
+    lead: {
+      label: "Çekirdek kadro",
+      role: "Proje lideri ve sistem mimarı",
+      body: "Karar motorunun mimarisini ve PharmaDeux'nün farmakolojik kural motorlarını tasarlıyor. FHIR R4 entegrasyonundan kuruluma kadar sistem tasarımını yürütüyor.",
+      rows: [
+        { label: "Odak", value: "Karar motoru mimarisi · farmakolojik kural motorları" },
+        { label: "Entegrasyon", value: "HL7 FHIR R4 · sistem tasarımı" },
+        { label: "Eğitim", value: "Konya Teknik Üniversitesi · Bilgisayar Mühendisliği" },
+      ],
+      email: "E-posta",
+    },
+    advisory: {
+      label: "Danışma",
+      title: "Klinik ve Akademik Danışma Kurulu",
+      body: "Kurul kurulum aşamasında; henüz resmi olarak oluşmuş bir kurul yok. Klinik doğrulama, organ risk protokolleri ve farmakoloji kuralları tıp fakültesi akademisyenleri ve klinik danışmanlarla birlikte yürütülecek. Yeni akademik ortaklıklara açığız.",
+      rows: [
+        { label: "Kapsam", value: "Klinik doğrulama · organ risk protokolleri · farmakoloji kuralları" },
+        { label: "Danışmanlar", value: "Tıp fakültesi akademisyenleri · klinik danışmanlar" },
+        { label: "Durum", value: "Kurulum aşamasında · üyeler onaylarıyla yayımlanacak" },
+      ],
+      link: "Akademik iş birliği için yazın",
+    },
     cta: {
       eyebrow: "İletişim",
       title: "Pilot, doğrulama ya da akademik iş birliği için yazın.",
@@ -317,8 +355,7 @@ const copy = defineContent<{
     crumbs: { home: "Home", here: "About" },
     eyebrow: "About",
     title: "We build testable software for medication safety and billing.",
-    description:
-      "LavieuxLabs is an R&D team bringing together clinical pharmacology, healthcare operations and software engineering. For work where a mistake is costly to a patient or an institution, we build systems whose every result can be reproduced and that leave the decision to a person.",
+    description: `${organizationProfile.en.positioning} ${organizationProfile.en.stage} For work where a mistake is costly to a patient or an institution, we build systems whose every result can be reproduced and that leave the decision to a person.`,
     pillars: [
       {
         label: "Vision",
@@ -538,6 +575,33 @@ const copy = defineContent<{
         ],
       },
     ],
+    teamHeading: {
+      eyebrow: "Team",
+      title: "Core team and venture.",
+      description: `${organizationProfile.en.stage} ${organizationProfile.en.independence}`,
+    },
+    lead: {
+      label: "Core team",
+      role: "Project lead and system architect",
+      body: "Designs the decision engine architecture and the PharmaDeux pharmacological rule engines. Leads system design, from FHIR R4 integration to deployment.",
+      rows: [
+        { label: "Focus", value: "Decision engine architecture · pharmacological rule engines" },
+        { label: "Integration", value: "HL7 FHIR R4 · system design" },
+        { label: "Education", value: "Konya Technical University · Computer Engineering" },
+      ],
+      email: "Email",
+    },
+    advisory: {
+      label: "Advisory",
+      title: "Clinical and Academic Advisory Board",
+      body: "The board is being set up; no formal board exists yet. Clinical validation, organ risk protocols and pharmacology rules will be worked out with medical faculty academics and clinical advisors. We are open to new academic partnerships.",
+      rows: [
+        { label: "Scope", value: "Clinical validation · organ risk protocols · pharmacology rules" },
+        { label: "Advisors", value: "Medical faculty academics · clinical advisors" },
+        { label: "Status", value: "Being set up · members published with their consent" },
+      ],
+      link: "Write to us about academic work",
+    },
     cta: {
       eyebrow: "Contact",
       title: "Write to us about a pilot, a validation study or academic work.",
@@ -546,6 +610,69 @@ const copy = defineContent<{
     },
   },
 });
+
+const linkCellClass =
+  "flex items-center justify-between gap-3 px-5 py-3.5 text-[13px] font-medium text-white/80 transition-colors duration-150 ease-out hover:bg-white/[0.04] hover:text-white sm:px-6";
+
+function ExternalCell({ href, label }: { href: string; label: string }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={linkCellClass}>
+      <span lang="en">{label}</span>
+      <ArrowUpRight className="h-4 w-4 shrink-0 text-white/55" aria-hidden="true" />
+    </a>
+  );
+}
+
+/**
+ * One cell of the team grid, in the SpecCard idiom: label, title, two sentences, spec rows on hairlines,
+ * then a link strip that bleeds to the cell edges and sits flush on the bottom hairline.
+ */
+function TeamCell({
+  icon: Icon,
+  label,
+  title,
+  subtitle,
+  body,
+  rows,
+  children,
+}: {
+  icon: LucideIcon;
+  label: string;
+  title: string;
+  subtitle?: string;
+  body: string;
+  rows: SpecRow[];
+  children: ReactNode;
+}) {
+  return (
+    // From lg the cell is a subgrid of five tracks (label · name · body · rows · links), so the rule lines
+    // of the two cells sit at the same height.
+    <article className="flex h-full flex-col bg-navy-850 p-5 pb-0 sm:p-6 sm:pb-0 lg:row-span-5 lg:grid lg:grid-rows-subgrid lg:gap-0">
+      <header className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-white/55" strokeWidth={1.6} aria-hidden="true" />
+        <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{label}</p>
+      </header>
+      <div className="mt-5">
+        <h3 className="text-xl font-semibold tracking-[-0.03em] text-white">{title}</h3>
+        {subtitle && <p className="mt-1 text-sm text-white/60">{subtitle}</p>}
+      </div>
+      <p className="mt-3 max-w-xl text-[13.5px] leading-relaxed text-white/55">{body}</p>
+      <div className="mt-auto pt-8">
+        <dl className="-mx-5 divide-y divide-hairline border-t border-hairline sm:-mx-6">
+          {rows.map((row) => (
+            <div key={row.label} className="grid grid-cols-[92px_1fr] gap-3 px-5 py-2 sm:px-6">
+              <dt className="text-[11.5px] text-white/55">{row.label}</dt>
+              <dd className="text-[12.5px] leading-snug text-white/75">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <div className="-mx-5 grid divide-y divide-hairline border-t border-hairline sm:-mx-6 sm:auto-cols-fr sm:grid-flow-col sm:divide-x sm:divide-y-0">
+        {children}
+      </div>
+    </article>
+  );
+}
 
 export default function AboutView({ locale }: { locale: Locale }) {
   const c = copy[locale];
@@ -582,6 +709,33 @@ export default function AboutView({ locale }: { locale: Locale }) {
               </Reveal>
             );
           })}
+        </div>
+      </section>
+
+      {/* Core team and advisory board */}
+      <section id="ekip" className="relative scroll-mt-24 py-24 sm:py-32">
+        <RailMarker className="top-24 sm:top-32" />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeader {...c.teamHeading} />
+          <JoinedGrid className="mt-14" columns="lg:grid-cols-2">
+            <TeamCell icon={UserRound} label={c.lead.label} title={TEAM_LEAD.name} subtitle={c.lead.role} body={c.lead.body} rows={c.lead.rows}>
+              {TEAM_LEAD.github && <ExternalCell href={TEAM_LEAD.github} label="GitHub" />}
+              {TEAM_LEAD.linkedin && <ExternalCell href={TEAM_LEAD.linkedin} label="LinkedIn" />}
+              <div className="flex items-center gap-3 px-5 py-3.5 text-[13px] text-white/70 sm:px-6">
+                <span className="whitespace-nowrap text-white/55">{c.lead.email}</span>
+                <CopyEmail locale={locale} />
+              </div>
+            </TeamCell>
+            <TeamCell icon={Stethoscope} label={c.advisory.label} title={c.advisory.title} body={c.advisory.body} rows={c.advisory.rows}>
+              <Link
+                href={localizedPath(locale, "/contact?solution=academic")}
+                className={linkCellClass}
+              >
+                {c.advisory.link}
+                <ArrowRight className="h-4 w-4 shrink-0 text-white/55" aria-hidden="true" />
+              </Link>
+            </TeamCell>
+          </JoinedGrid>
         </div>
       </section>
 
