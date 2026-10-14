@@ -109,7 +109,7 @@ const copy = defineContent<ContactCopy>({
     paths: {
       intro: {
         label: "15 dk tanışma ve demo",
-        hint: "İhtiyacınızı dinleyip ürünün size uyup uymadığını konuşuruz.",
+        hint: "İhtiyacınızı dinleyip ürünün size uyup uymadığını konuşuruz. Takvim daveti en geç 1 iş günü içinde gelir.",
         rows: [
           { label: "Kim için", value: "Hekim, eczacı, yönetici, gelir ekibi" },
           { label: "Taahhüt", value: "Yok · mesaj isteğe bağlı" },
@@ -198,7 +198,7 @@ const copy = defineContent<ContactCopy>({
     },
     nextSteps: {
       intro: [
-        { title: "Zaman önerisi", body: "Görüşme için birkaç uygun saat öneren bir e-posta gönderiyoruz." },
+        { title: "Takvim daveti", body: "En geç 1 iş günü içinde tanışma görüşmesi için takvim daveti e-postanıza iletilir." },
         { title: "15 dakikalık görüşme", body: "İhtiyacınızı dinliyor, ürünü kısa bir demoyla gösteriyoruz." },
         { title: "Kısa not", body: "Görüşmeden sonra ürünün uygunluğu ve olası sonraki adım hakkında kısa bir not paylaşıyoruz." },
       ],
@@ -218,7 +218,7 @@ const copy = defineContent<ContactCopy>({
     paths: {
       intro: {
         label: "15-minute intro and demo",
-        hint: "We listen to what you need and talk about whether the product fits.",
+        hint: "We listen to what you need and talk about whether the product fits. The calendar invitation arrives within one business day.",
         rows: [
           { label: "For", value: "Physicians, pharmacists, managers, revenue teams" },
           { label: "Commitment", value: "None · message optional" },
@@ -307,7 +307,7 @@ const copy = defineContent<ContactCopy>({
     },
     nextSteps: {
       intro: [
-        { title: "Time options", body: "We send an email with a few times that suit us for the call." },
+        { title: "Calendar invitation", body: "Within one business day at the latest, a calendar invitation for the intro call is sent to your email." },
         { title: "15-minute call", body: "We listen to what you need and show the product in a short demo." },
         { title: "Short note", body: "After the call we share a short note on fit and a possible next step." },
       ],

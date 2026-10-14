@@ -288,7 +288,7 @@ const copy = defineContent<{
       },
       {
         title: "Dağıtım modelleri",
-        body: "Sistem kurumun kendi altyapısında çalışır; hasta verisi kurumdan çıkmaz.",
+        body: "Pilot mimarisi kurum içi (on-prem) ve izole çalışacak şekilde tasarlanmıştır; pilot süreçlerde veri kurum altyapısından çıkarılmaz.",
         rows: [
           { label: "Kurum içi", value: "Docker konteyner · izole sanal makine" },
           { label: "Ağ", value: "Air-gapped (internetsiz) ağ desteği" },
@@ -401,7 +401,7 @@ const copy = defineContent<{
     },
     intendedUse: {
       label: "Kullanım amacı (taslak)",
-      body: "Reçeteyle ilgili olası güvenlik risklerini gerekçeleriyle göstererek yetkili sağlık profesyonelinin kararına destek olmak. Sistem tanı koymaz, tedavi önermez ve hekimin kararının yerini almaz.",
+      body: "PharmaDeux tedavi kararı vermez veya reçete müdahalesinde bulunmaz; farmakolojik risk göstergelerini ve kılavuz parametrelerini hekimin klinik değerlendirmesine sunar. Tanı koymaz ve hekimin kararının yerini almaz.",
     },
     frameworkColumns: { framework: "Çerçeve", scope: "Kapsam", status: "Durum" },
     frameworks: [
@@ -625,7 +625,7 @@ const copy = defineContent<{
       },
       {
         title: "Deployment models",
-        body: "The system runs on the institution's own infrastructure; patient data does not leave the institution.",
+        body: "The pilot architecture is designed to run on-premises and in isolation; during a pilot, data is not taken out of the institution's infrastructure.",
         rows: [
           { label: "On-premises", value: "Docker container · isolated virtual machine" },
           { label: "Network", value: "Air-gapped network support" },
@@ -738,7 +738,7 @@ const copy = defineContent<{
     },
     intendedUse: {
       label: "Intended use (draft)",
-      body: "To support the decision of a qualified healthcare professional by showing possible safety risks of a prescription, with their reasons. The system does not diagnose, does not recommend treatment and does not replace the physician's decision.",
+      body: "PharmaDeux does not make treatment decisions or intervene in a prescription; it presents pharmacological risk indicators and guideline parameters for the physician's clinical assessment. It does not diagnose and does not replace the physician's decision.",
     },
     frameworkColumns: { framework: "Framework", scope: "Scope", status: "Status" },
     frameworks: [

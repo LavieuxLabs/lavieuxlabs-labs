@@ -291,7 +291,7 @@ const copy = defineContent<{
     ],
     isolationHeading: {
       eyebrow: "Erişim ve izolasyon",
-      title: "Kurumun verisi kurumda kalır.",
+      title: "Her kurumun verisi ayrı tutulur.",
       description:
         "Her kurum kendi alanında çalışır. Sorgular, kuyruklar ve kayıtlar başka bir kurumun verisine erişemez; kimin neyi görebileceği role göre belirlenir.",
     },
@@ -317,8 +317,8 @@ const copy = defineContent<{
     },
     retroSteps: [
       {
-        title: "Veri kurumda kalır",
-        body: "Anonimleştirilmiş geçmiş faturalar ve SGK sonuçları kurumun altyapısında kalır. Kapsam bir veri işleme sözleşmesiyle yazılır.",
+        title: "Veri kurum altyapısında işlenir",
+        body: "Anonimleştirilmiş geçmiş faturalar ve SGK sonuçları kurumun altyapısında işlenir; pilot süreçlerde kurum altyapısından çıkarılmaz. Kapsam bir veri işleme sözleşmesiyle yazılır.",
       },
       {
         title: "Kör çalıştırma",
@@ -533,7 +533,7 @@ const copy = defineContent<{
     ],
     isolationHeading: {
       eyebrow: "Access and isolation",
-      title: "The institution's data stays with the institution.",
+      title: "Each institution's data is kept separate.",
       description:
         "Each institution works in its own space. Queries, queues and logs cannot reach another institution's data, and roles decide who can see what.",
     },
@@ -559,8 +559,8 @@ const copy = defineContent<{
     },
     retroSteps: [
       {
-        title: "Data stays on site",
-        body: "Anonymised historical claims and SGK outcomes stay in the institution's infrastructure. The scope is set out in a data processing agreement.",
+        title: "Data is processed on site",
+        body: "Anonymised historical claims and SGK outcomes are processed in the institution's infrastructure and are not taken out of it during the pilot. The scope is set out in a data processing agreement.",
       },
       {
         title: "Blind run",

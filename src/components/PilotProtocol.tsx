@@ -15,7 +15,7 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
     eyebrow: "Pilot protokolü",
     title: "Pilot uygulama protokolü ve LOI çerçevesi.",
     description:
-      "Pilot öncesinde kurumla mutabık kalınacak Niyet Mektubu (LOI) taslağı bu çerçeveyi esas alır. Ayrıntılar kurumla birlikte yazılır; bu sayfa bağlayıcı değildir.",
+      "Hastane yönetimiyle imzalanması planlanan Niyet Mektubu (LOI), pilotun kapsamı, süresi, veri işleme koşulları ve başarı ölçütleri için bu çerçeveyi esas alacaktır. Bu sayfa bağlayıcı değildir.",
     groups: [
       {
         title: "Amaç ve kapsam",
@@ -43,7 +43,7 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
         rows: [
           {
             term: "Çalışma yeri",
-            detail: "Kurum içi sunucu (on-prem) ya da kuruma ayrılmış izole VPC. Veri kurumun altyapısından çıkmaz.",
+            detail: "Kurum içi sunucu (on-prem) ya da kuruma ayrılmış izole VPC. Pilot mimarisi kurum içi (on-prem) ve izole çalışacak şekilde tasarlanmıştır; pilot süreçlerde veri kurum altyapısından çıkarılmaz.",
           },
           {
             term: "Anonimleştirme",
@@ -80,7 +80,7 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
     eyebrow: "Pilot protocol",
     title: "Pilot protocol and LOI framework.",
     description:
-      "The draft Letter of Intent (LOI) to be agreed with the institution before a pilot is based on this framework. The details are written together with the institution; this page is not binding.",
+      "The Letter of Intent (LOI) planned to be signed with hospital management will use this framework for the pilot's scope, duration, data processing conditions and success criteria. This page is not binding.",
     groups: [
       {
         title: "Purpose and scope",
@@ -113,7 +113,7 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
           {
             term: "Deployment",
             detail:
-              "On the institution's own servers (on-prem) or in an isolated VPC dedicated to it. Data does not leave the institution's infrastructure.",
+              "On the institution's own servers (on-prem) or in an isolated VPC dedicated to it. The pilot architecture is designed to run on-premises and in isolation; during a pilot, data is not taken out of the institution's infrastructure.",
           },
           {
             term: "Anonymisation",
@@ -163,7 +163,7 @@ const sheet = defineContent({
     imprint: { organization: "Kuruluş", address: "Adres", contact: "İletişim", web: "Web" },
     organization: `LavieuxLabs · ${organizationProfile.tr.short}`,
     footer:
-      "Bu belge bilgilendirme amaçlıdır ve bağlayıcı değildir. Pilotun kapsamı, süresi ve veri koşulları, pilot öncesinde kurumla mutabık kalınacak Niyet Mektubu'nda (LOI) yazılır.",
+      "Bu belge bilgilendirme amaçlıdır ve bağlayıcı değildir. Pilotun kapsamı, süresi, veri işleme koşulları ve başarı ölçütleri, hastane yönetimiyle imzalanması planlanan Niyet Mektubu'nda (LOI) yazılacaktır.",
   },
   en: {
     button: "Print / save as PDF",
@@ -173,7 +173,7 @@ const sheet = defineContent({
     imprint: { organization: "Organisation", address: "Address", contact: "Contact", web: "Web" },
     organization: `LavieuxLabs · ${organizationProfile.en.short}`,
     footer:
-      "This document is for information and is not binding. The pilot's scope, duration and data conditions will be set out in the Letter of Intent (LOI) agreed with the institution before the pilot.",
+      "This document is for information and is not binding. The pilot's scope, duration, data processing conditions and success criteria will be set out in the Letter of Intent (LOI) planned to be signed with hospital management.",
   },
 });
 

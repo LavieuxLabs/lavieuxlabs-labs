@@ -157,7 +157,7 @@ const copy = defineContent<{
     },
     pipeline: {
       eyebrow: "Doğrulama ve karar",
-      title: "Bir öneri dört adımda karara dönüşür.",
+      title: "Bir bulgu dört adımda karara dönüşür.",
       description: "Hiçbir adım atlanmaz. Her adımın çıktısı bir sonrakinin girdisi olur ve kayda geçer.",
       output: "Çıktı",
       steps: [
@@ -308,7 +308,7 @@ const copy = defineContent<{
     },
     pipeline: {
       eyebrow: "Verification and decision",
-      title: "A suggestion becomes a decision in four steps.",
+      title: "A finding becomes a decision in four steps.",
       description: "No step is skipped. Each step's output is the next step's input, and each is recorded.",
       output: "Output",
       steps: [

@@ -162,7 +162,7 @@ const copy = defineContent<{
     focus: [
       {
         title: "Deterministik karar yolu",
-        body: "Öneri üretken bir modelden değil, sürümlenmiş bir kural motorundan gelir. Aynı girdi ve kural sürümü her zaman aynı sonucu verir. Yaşam döngüsü IEC 62304'e göre kurgulanır.",
+        body: "Bulgu üretken bir modelden değil, sürümlenmiş bir kural motorundan gelir. Aynı girdi ve kural sürümü her zaman aynı sonucu verir. Yaşam döngüsü IEC 62304'e göre kurgulanır.",
         rows: [
           { label: "Motor", value: "Sürümlenmiş kural seti" },
           { label: "Yaşam döngüsü", value: "IEC 62304", mono: true, cite: "iec62304" },
@@ -184,7 +184,7 @@ const copy = defineContent<{
         ],
         outcome: {
           label: "Bilgi işlem için",
-          body: "Veri kurumun altyapısından çıkmaz. Sistem mevcut HBYS akışını değiştirmeden, yanına eklenen bir katman olarak çalışır.",
+          body: "Pilot mimarisi kurum içi (on-prem) ve izole çalışacak şekilde tasarlanmıştır; pilot süreçlerde veri kurum altyapısından çıkarılmaz. Sistem mevcut HBYS akışını değiştirmeden, yanına eklenen bir katman olarak çalışır.",
         },
       },
       {
@@ -473,7 +473,7 @@ const copy = defineContent<{
     focus: [
       {
         title: "Deterministic decision path",
-        body: "Recommendations come from a versioned rule engine, not from a generative model. The same input and rule version always give the same result. The life cycle is set up according to IEC 62304.",
+        body: "Findings come from a versioned rule engine, not from a generative model. The same input and rule version always give the same result. The life cycle is set up according to IEC 62304.",
         rows: [
           { label: "Engine", value: "Versioned rule set" },
           { label: "Life cycle", value: "IEC 62304", mono: true, cite: "iec62304" },
@@ -495,7 +495,7 @@ const copy = defineContent<{
         ],
         outcome: {
           label: "For hospital IT",
-          body: "Data does not leave the institution's infrastructure. The system runs as a layer next to the existing HIS workflow, without changing it.",
+          body: "The pilot architecture is designed to run on-premises and in isolation; during a pilot, data is not taken out of the institution's infrastructure. The system runs as a layer next to the existing HIS workflow, without changing it.",
         },
       },
       {

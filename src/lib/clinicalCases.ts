@@ -91,7 +91,7 @@ const text = defineContent<CaseText[]>({
       patient: "71 yaş, erkek · tip 2 diyabet",
       prescription: "Metformin 1000 mg 2×1 · Siprofloksasin 500 mg 2×1",
       finding:
-        "eGFR 30–45 aralığında: metformin günlük dozu en fazla 1000 mg olmalı; siprofloksasin dozu böbrek fonksiyonuna göre kontrol edilmeli. Florokinolon ile metformin birlikte kullanıldığında kan şekeri izlenmeli.",
+        "eGFR 30–45 aralığında. Metformin günlük dozu (2000 mg) bu aralık için tanımlı üst sınırın (1000 mg) üzerinde; siprofloksasin için renal doz eşiği hekimin değerlendirmesine sunulur. Florokinolon ve metformin birlikteliğinde kan şekeri klinik izlem parametresi olarak sunulur.",
       status: { liver: "Stabil", qtc: "Tisdale 4 · düşük risk", renal: "Renal doz ayarı gerekli" },
     },
     {
@@ -100,7 +100,7 @@ const text = defineContent<CaseText[]>({
       patient: "74 yaş, kadın · furosemid kullanıyor",
       prescription: "Amiodaron 200 mg 1×1 · Azitromisin 500 mg 1×1",
       finding:
-        "İki QT uzatan ilaç ve QTc 485 ms. Tisdale 11: yüksek risk. EKG izlemi ve QT'yi uzatmayan bir antibiyotik seçeneği değerlendirilmeli.",
+        "İki QT uzatan ilaç ve QTc 485 ms. Tisdale 11: yüksek risk. EKG izlemi ve QT'yi uzatmayan antibiyotik seçenekleri hekimin değerlendirmesine sunulur.",
       tisdaleFactors: ["Yaş ≥68", "Kadın", "Loop diüretik", "QTc ≥450 ms", "QT uzatan ilaç", "≥2 QT uzatan ilaç"],
       status: { liver: "Stabil", qtc: "Tisdale 11 · yüksek risk", renal: "Doz ayarı gerekmez" },
     },
@@ -121,7 +121,7 @@ const text = defineContent<CaseText[]>({
       patient: "71 years, male · type 2 diabetes",
       prescription: "Metformin 1000 mg twice daily · Ciprofloxacin 500 mg twice daily",
       finding:
-        "eGFR in the 30–45 range: the daily metformin dose should not exceed 1000 mg, and the ciprofloxacin dose should be checked against renal function. Monitor blood glucose when a fluoroquinolone is given with metformin.",
+        "eGFR in the 30–45 range. The daily metformin dose (2000 mg) is above the limit defined for this range (1000 mg); the ciprofloxacin renal dose threshold is presented for the physician's assessment. Blood glucose is presented as a clinical monitoring parameter while a fluoroquinolone is given with metformin.",
       status: { liver: "Stable", qtc: "Tisdale 4 · low risk", renal: "Renal dose adjustment needed" },
     },
     {
@@ -130,7 +130,7 @@ const text = defineContent<CaseText[]>({
       patient: "74 years, female · on furosemide",
       prescription: "Amiodarone 200 mg once daily · Azithromycin 500 mg once daily",
       finding:
-        "Two QT-prolonging drugs and a QTc of 485 ms. Tisdale 11: high risk. Consider ECG monitoring and an antibiotic that does not prolong the QT interval.",
+        "Two QT-prolonging drugs and a QTc of 485 ms. Tisdale 11: high risk. ECG monitoring and antibiotic options that do not prolong the QT interval are presented for the physician's assessment.",
       tisdaleFactors: [
         "Age ≥68",
         "Female",
@@ -193,11 +193,11 @@ const customText = defineContent({
     },
     tisdaleFactors: ["Yaş ≥68", "Kadın", "Loop diüretik", "QTc ≥450 ms", "QT uzatan ilaç", "≥2 QT uzatan ilaç"],
     qtHigh:
-      "İki QT uzatan ilaç ve QTc 485 ms. Tisdale 11: yüksek risk. EKG izlemi ve QT'yi uzatmayan bir antibiyotik seçeneği değerlendirilmeli.",
+      "İki QT uzatan ilaç ve QTc 485 ms. Tisdale 11: yüksek risk. EKG izlemi ve QT'yi uzatmayan antibiyotik seçenekleri hekimin değerlendirmesine sunulur.",
     qtModerate:
-      "Tek QT uzatan ilaç (amiodaron) ve QTc 485 ms. Tisdale 8: orta risk. EKG ile potasyum ve magnezyum izlemi değerlendirilmeli.",
+      "Tek QT uzatan ilaç (amiodaron) ve QTc 485 ms. Tisdale 8: orta risk. EKG, potasyum ve magnezyum klinik izlem parametresi olarak sunulur.",
     renal:
-      "eGFR 30: metformin günlük dozu en fazla 1000 mg olmalı (reçetede 2000 mg). eGFR 30'un altına düşerse metformin kontrendike.",
+      "eGFR 30: metformin günlük dozu (reçetede 2000 mg) bu aralık için tanımlı üst sınırın (1000 mg) üzerinde. eGFR 30'un altında metformin kontrendikedir; bulgu hekimin değerlendirmesine sunulur.",
     status: {
       liver: "Stabil",
       qtHigh: "Tisdale 11 · yüksek risk",
@@ -223,11 +223,11 @@ const customText = defineContent({
       "≥2 QT-prolonging drugs",
     ],
     qtHigh:
-      "Two QT-prolonging drugs and a QTc of 485 ms. Tisdale 11: high risk. Consider ECG monitoring and an antibiotic that does not prolong the QT interval.",
+      "Two QT-prolonging drugs and a QTc of 485 ms. Tisdale 11: high risk. ECG monitoring and antibiotic options that do not prolong the QT interval are presented for the physician's assessment.",
     qtModerate:
-      "One QT-prolonging drug (amiodarone) and a QTc of 485 ms. Tisdale 8: moderate risk. Consider ECG, potassium and magnesium monitoring.",
+      "One QT-prolonging drug (amiodarone) and a QTc of 485 ms. Tisdale 8: moderate risk. ECG, potassium and magnesium are presented as clinical monitoring parameters.",
     renal:
-      "eGFR 30: the daily metformin dose should not exceed 1000 mg (2000 mg prescribed). Below an eGFR of 30, metformin is contraindicated.",
+      "eGFR 30: the daily metformin dose (2000 mg prescribed) is above the limit defined for this range (1000 mg). Below an eGFR of 30, metformin is contraindicated; the finding is presented for the physician's assessment.",
     status: {
       liver: "Stable",
       qtHigh: "Tisdale 11 · high risk",

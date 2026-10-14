@@ -43,8 +43,13 @@ const copy = defineContent({
       consent: "Devam etmek için aydınlatma metnini onaylamanız gerekir.",
     },
     optional: "isteğe bağlı",
-    sentTitle: "Talebiniz iletildi.",
-    sentBody: (email: string) => `Size ${email} adresinden e-postayla dönüyoruz.`,
+    sentTitle: "Talebiniz alındı.",
+    // The intro call answer is a calendar invite; the other paths get an email reply. Same one-day window.
+    sentBody: {
+      intro: "En geç 1 iş günü içinde tanışma görüşmesi için takvim daveti e-postanıza iletilecektir.",
+      academic: "En geç 1 iş günü içinde e-postayla dönüş yapılacaktır.",
+      pilot: "En geç 1 iş günü içinde e-postayla dönüş yapılacaktır.",
+    } as Record<ContactPath, string>,
     nextTitle: "Sonraki adımlar",
     summary: { path: "Talep", organization: "Kurum", product: "Ürün", role: "Rol" },
     newRequest: "Yeni talep oluştur",
@@ -90,8 +95,12 @@ const copy = defineContent({
       consent: "To continue, confirm that you have read the privacy notice.",
     },
     optional: "optional",
-    sentTitle: "Your request has been sent.",
-    sentBody: (email: string) => `We will reply by email from ${email}.`,
+    sentTitle: "Your request has been received.",
+    sentBody: {
+      intro: "A calendar invitation for the intro call will be sent to your email within one business day at the latest.",
+      academic: "We will reply by email within one business day at the latest.",
+      pilot: "We will reply by email within one business day at the latest.",
+    } as Record<ContactPath, string>,
     nextTitle: "Next steps",
     summary: { path: "Request", organization: "Organisation", product: "Product", role: "Role" },
     newRequest: "Start a new request",
@@ -307,7 +316,7 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
           >
             <CheckCircle2 className="h-8 w-8 text-white/80" strokeWidth={1.6} />
             <h2 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-white">{c.sentTitle}</h2>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60">{c.sentBody(CONTACT_EMAIL)}</p>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60">{c.sentBody[path]}</p>
             <dl className="mt-8 w-full divide-y divide-hairline rounded-xl border border-hairline text-sm">
               {[
                 [c.summary.path, view.path.label],

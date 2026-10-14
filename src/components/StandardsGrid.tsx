@@ -52,7 +52,7 @@ const copy = defineContent<StandardCopy[]>({
     },
     {
       title: "İnsan denetimi",
-      body: "Sistem öneri ve risk sinyali üretir; nihai kararı yetkili klinisyen veya uzman verir.",
+      body: "Sistem bulgu ve risk sinyali üretir; nihai kararı yetkili klinisyen veya uzman verir.",
       rows: [
         { label: "Mekanizma", value: "Human-in-the-loop kuyruğu" },
         { label: "Kayıt", value: "Onay · düzeltme · gerekçe" },
@@ -134,7 +134,7 @@ const copy = defineContent<StandardCopy[]>({
     },
     {
       title: "Human oversight",
-      body: "The system produces suggestions and risk signals; a qualified clinician or specialist makes the final decision.",
+      body: "The system produces findings and risk signals; a qualified clinician or specialist makes the final decision.",
       rows: [
         { label: "Mechanism", value: "Human-in-the-loop queue" },
         { label: "Record", value: "Approval · correction · reason" },
