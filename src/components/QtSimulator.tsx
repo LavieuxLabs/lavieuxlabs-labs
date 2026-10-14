@@ -84,7 +84,7 @@ const tierText = { low: "text-emerald-300", moderate: "text-amber-300", high: "t
 const tierBar = { low: "bg-emerald-400/70", moderate: "bg-amber-400/70", high: "bg-rose-400/70" } as const;
 
 const selectClass =
-  "w-full rounded-md border border-hairline bg-navy-900 px-2.5 py-2 text-[13px] text-white transition-colors duration-150 ease-out focus:border-white/30 focus:outline-none";
+  "w-full rounded-md border border-hairline bg-navy-900 px-2.5 py-2 text-[13px] text-white transition-colors duration-150 ease-out focus:border-white/30 focus:outline-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-1 focus-visible:outline-white/60";
 
 export default function QtSimulator({ locale }: { locale: Locale }) {
   const c = copy[locale];

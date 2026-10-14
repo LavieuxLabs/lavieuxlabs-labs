@@ -54,7 +54,7 @@ export default function StandardsIndex({ locale, entries }: { locale: Locale; en
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t.search}
-            className="w-full rounded-lg border border-hairline bg-navy-850 py-2.5 pr-3 pl-9 text-[14px] text-white placeholder:text-white/50 focus:border-white/30 focus:outline-none"
+            className="w-full rounded-lg border border-hairline bg-navy-850 py-2.5 pr-3 pl-9 text-[14px] text-white placeholder:text-white/50 focus:border-white/30 focus:outline-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-1 focus-visible:outline-white/60"
           />
         </label>
         <div role="group" aria-label={t.filter} className="flex flex-wrap rounded-md border border-hairline bg-white/[0.03] p-0.5">

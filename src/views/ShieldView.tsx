@@ -731,7 +731,7 @@ export default function ShieldView({ locale }: { locale: Locale }) {
             {c.scopeNote.before}{" "}
             <Link
               href={href("/standartlar/sut-fatura-denetimi")}
-              className="text-white/75 underline-offset-2 hover:text-white hover:underline"
+              className="text-white/80 underline decoration-white/30 underline-offset-2 transition-colors duration-150 ease-out hover:text-white hover:decoration-white/70"
             >
               {c.scopeNote.link}
             </Link>{" "}

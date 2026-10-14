@@ -9,6 +9,8 @@ import {
   GitCompare,
   GraduationCap,
   Hospital,
+  Cable,
+  Landmark,
   Lock,
   LockKeyhole,
   Microscope,
@@ -55,6 +57,14 @@ const focusIcons = [Route, Network, ReceiptText];
 const focusAccents = ["pharma", undefined, "shield"] as const;
 const rndIcons = [BookOpen, GitCompare, Repeat, Lock];
 const collaborationIcons = [Hospital, Microscope, GraduationCap, Users];
+// Partner profiles → the contact path that fits them. Integrators start with the intro call: there is
+// no integration programme yet, only the FHIR R4 bridge to talk about.
+const partnerMeta = [
+  { icon: Hospital, href: contactHref("pilot", "pharmadeux") },
+  { icon: GraduationCap, href: contactHref("academic") },
+  { icon: Landmark, href: contactHref("pilot", "shield") },
+  { icon: Cable, href: contactHref("intro") },
+];
 // Tone drives the card's implementation track (input → prep → live); it must match the status text:
 // Class IIa target and architecture alignment are in preparation, roadmap and control-set target are inputs.
 // Accent follows ownership: MDR, IEC 62304 / ISO 14971 and ISO 13485 concern the PharmaDeux medical-device
@@ -88,6 +98,8 @@ const copy = defineContent<{
   regulatory: (Card & { status: string })[];
   collaborationHeading: Heading;
   collaboration: Card[];
+  partnersHeading: Heading;
+  partners: { label: string; title: string; body: string; rows: SpecRow[]; link: string }[];
   teamHeading: Heading;
   lead: { label: string; role: string; body: string; rows: SpecRow[]; email: string };
   advisory: { label: string; title: string; body: string; rows: SpecRow[]; link: string };
@@ -315,6 +327,58 @@ const copy = defineContent<{
           { label: "Toplama", value: "Yapılandırılmış form" },
           { label: "İzlenebilirlik", value: "Geri bildirim → gereksinim" },
         ],
+      },
+    ],
+    partnersHeading: {
+      eyebrow: "Ortaklıklar",
+      title: "Kime, hangi amaçla ihtiyacımız var.",
+      description:
+        "Dört ortak profili arıyoruz. Her birinin hangi işte ve hangi aşamada gerektiğini yazdık; altındaki bağlantı ilgili formu açar.",
+    },
+    partners: [
+      {
+        label: "Klinik doğrulama",
+        title: "Klinik doğrulama ortağı",
+        body: "PharmaDeux'nün geçmiş vakalarda ve gölge modda ölçülmesi için klinik veri ve bağımsız uzman paneli gerekiyor.",
+        rows: [
+          { label: "Kim", value: "Eğitim ve araştırma · üniversite hastaneleri" },
+          { label: "Amaç", value: "Retrospektif vaka testi · gölge mod pilotu" },
+          { label: "Aşama", value: "Şimdi · klinik seviye kanıt" },
+        ],
+        link: "Pilot başvurusu (PharmaDeux)",
+      },
+      {
+        label: "Akademik",
+        title: "Akademik danışman ve araştırmacı",
+        body: "Kural setlerinin ve organ risk protokollerinin kaynağa göre gözden geçirilmesi ve ortak yayın.",
+        rows: [
+          { label: "Kim", value: "Tıp ve farmakoloji akademisyenleri" },
+          { label: "Amaç", value: "Kural setleri · organ risk protokolleri" },
+          { label: "Aşama", value: "Şimdi · danışma kurulu kurulum aşamasında" },
+        ],
+        link: "Akademik iş birliği",
+      },
+      {
+        label: "Gelir döngüsü",
+        title: "Gelir döngüsü ve hastane pilot ortağı",
+        body: "Shield'ın red yakalama ve yanlış pozitif oranlarının gerçek faturalarda ölçülmesi.",
+        rows: [
+          { label: "Kim", value: "Özel ve vakıf hastaneleri" },
+          { label: "Amaç", value: "Retrospektif fatura analizi" },
+          { label: "Aşama", value: "Şimdi · ilk ölçülmüş sonuç" },
+        ],
+        link: "Pilot başvurusu (Shield)",
+      },
+      {
+        label: "Teknoloji",
+        title: "Teknoloji ve HBYS entegratörü",
+        body: "Hastane bilgi sistemleriyle HL7 FHIR R4 köprüsünün gerçek bir sistemde kurulması.",
+        rows: [
+          { label: "Kim", value: "Sağlık bilgi sistemi firmaları" },
+          { label: "Amaç", value: "HL7 FHIR R4 · HL7 v2 köprüsü" },
+          { label: "Aşama", value: "Pilot entegrasyonu sırasında" },
+        ],
+        link: "Tanışma görüşmesi",
       },
     ],
     teamHeading: {
@@ -575,6 +639,58 @@ const copy = defineContent<{
         ],
       },
     ],
+    partnersHeading: {
+      eyebrow: "Partnerships",
+      title: "Who we need, and for what.",
+      description:
+        "We are looking for four partner profiles. For each we list the work and the stage it is needed at; the link below opens the matching form.",
+    },
+    partners: [
+      {
+        label: "Clinical validation",
+        title: "Clinical validation partner",
+        body: "Measuring PharmaDeux on past cases and in shadow mode needs clinical data and an independent expert panel.",
+        rows: [
+          { label: "Who", value: "Training-and-research · university hospitals" },
+          { label: "Purpose", value: "Retrospective case testing · shadow mode pilot" },
+          { label: "Stage", value: "Now · clinical-level evidence" },
+        ],
+        link: "Pilot application (PharmaDeux)",
+      },
+      {
+        label: "Academic",
+        title: "Academic advisor and researcher",
+        body: "Source-based review of the rule sets and organ risk protocols, and joint publication.",
+        rows: [
+          { label: "Who", value: "Medicine and pharmacology academics" },
+          { label: "Purpose", value: "Rule sets · organ risk protocols" },
+          { label: "Stage", value: "Now · advisory board being set up" },
+        ],
+        link: "Academic collaboration",
+      },
+      {
+        label: "Revenue cycle",
+        title: "Revenue cycle and hospital pilot partner",
+        body: "Measuring Shield's rejection catch and false positive rates on real claims.",
+        rows: [
+          { label: "Who", value: "Private and foundation hospitals" },
+          { label: "Purpose", value: "Retrospective claims analysis" },
+          { label: "Stage", value: "Now · first measured result" },
+        ],
+        link: "Pilot application (Shield)",
+      },
+      {
+        label: "Technology",
+        title: "Technology and HIS integrator",
+        body: "Setting up the HL7 FHIR R4 bridge with a real hospital information system.",
+        rows: [
+          { label: "Who", value: "Health information system vendors" },
+          { label: "Purpose", value: "HL7 FHIR R4 · HL7 v2 bridge" },
+          { label: "Stage", value: "During pilot integration" },
+        ],
+        link: "Intro call",
+      },
+    ],
     teamHeading: {
       eyebrow: "Team",
       title: "Core team and venture.",
@@ -644,10 +760,14 @@ function TeamCell({
   rows: SpecRow[];
   children: ReactNode;
 }) {
+  // From lg the cell is a subgrid: label · name · body · one track per spec row · links. Neighbouring
+  // cells then draw every row line at the same height, even when a value wraps in only one of them.
+  const tracks = 4 + rows.length;
   return (
-    // From lg the cell is a subgrid of five tracks (label · name · body · rows · links), so the rule lines
-    // of the two cells sit at the same height.
-    <article className="flex h-full flex-col bg-navy-850 p-5 pb-0 sm:p-6 sm:pb-0 lg:row-span-5 lg:grid lg:grid-rows-subgrid lg:gap-0">
+    <article
+      className="flex h-full flex-col bg-navy-850 p-5 pb-0 sm:p-6 sm:pb-0 lg:grid lg:grid-rows-subgrid lg:gap-0"
+      style={{ gridRow: `span ${tracks} / span ${tracks}` }}
+    >
       <header className="flex items-center gap-2">
         <Icon className="h-4 w-4 text-white/55" strokeWidth={1.6} aria-hidden="true" />
         <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{label}</p>
@@ -657,17 +777,19 @@ function TeamCell({
         {subtitle && <p className="mt-1 text-sm text-white/60">{subtitle}</p>}
       </div>
       <p className="mt-3 max-w-xl text-[13.5px] leading-relaxed text-white/55">{body}</p>
-      <div className="mt-auto pt-8">
-        <dl className="-mx-5 divide-y divide-hairline border-t border-hairline sm:-mx-6">
-          {rows.map((row) => (
-            <div key={row.label} className="grid grid-cols-[92px_1fr] gap-3 px-5 py-2 sm:px-6">
-              <dt className="text-[11.5px] text-white/55">{row.label}</dt>
-              <dd className="text-[12.5px] leading-snug text-white/75">{row.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-      <div className="-mx-5 grid divide-y divide-hairline border-t border-hairline sm:-mx-6 sm:auto-cols-fr sm:grid-flow-col sm:divide-x sm:divide-y-0">
+      {/* `contents`: the list keeps its semantics while each row becomes a track of the subgrid. */}
+      <dl className="contents">
+        {rows.map((row, i) => (
+          <div
+            key={row.label}
+            className={`-mx-5 grid grid-cols-[92px_1fr] items-start gap-3 border-t border-hairline px-5 py-2 sm:-mx-6 sm:px-6 ${i === 0 ? "mt-8" : ""}`}
+          >
+            <dt className="text-[11.5px] text-white/55">{row.label}</dt>
+            <dd className="text-[12.5px] leading-snug text-white/75">{row.value}</dd>
+          </div>
+        ))}
+      </dl>
+      <div className="-mx-5 mt-auto grid divide-y divide-hairline border-t border-hairline sm:-mx-6 sm:auto-cols-fr sm:grid-flow-col sm:divide-x sm:divide-y-0 lg:mt-0 lg:self-end">
         {children}
       </div>
     </article>
@@ -845,6 +967,24 @@ export default function AboutView({ locale }: { locale: Locale }) {
                 />
               );
             })}
+          </JoinedGrid>
+        </div>
+      </section>
+
+      {/* Partnerships: who we need, for what, at which stage; each opens its contact path */}
+      <section id="isbirligi" className="relative scroll-mt-24 py-24 sm:py-32">
+        <RailMarker className="top-24 sm:top-32" />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeader {...c.partnersHeading} />
+          <JoinedGrid className="mt-14" columns="sm:grid-cols-2 xl:grid-cols-4">
+            {c.partners.map((p, i) => (
+              <TeamCell key={p.title} icon={partnerMeta[i].icon} label={p.label} title={p.title} body={p.body} rows={p.rows}>
+                <Link href={localizedPath(locale, partnerMeta[i].href)} className={linkCellClass}>
+                  {p.link}
+                  <ArrowRight className="h-4 w-4 shrink-0 text-white/55" aria-hidden="true" />
+                </Link>
+              </TeamCell>
+            ))}
           </JoinedGrid>
         </div>
       </section>

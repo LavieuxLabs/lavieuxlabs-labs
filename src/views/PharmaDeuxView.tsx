@@ -1159,7 +1159,7 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
               {c.regulationNote.before}{" "}
               <Link
                 href={href("/legal/quality")}
-                className="text-white/70 underline-offset-2 hover:text-white hover:underline"
+                className="text-white/80 underline decoration-white/30 underline-offset-2 transition-colors duration-150 ease-out hover:text-white hover:decoration-white/70"
               >
                 {c.regulationNote.link}
               </Link>

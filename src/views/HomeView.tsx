@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight, Building2, Receipt, Stethoscope } from "lucid
 import InitiativeCard, { type InitiativeCardProps } from "@/components/InitiativeCard";
 import StandardsGrid from "@/components/StandardsGrid";
 import Reveal from "@/components/Reveal";
+import HeroReveal from "@/components/HeroReveal";
 import SectionHeader from "@/components/SectionHeader";
 import CtaPanel from "@/components/CtaPanel";
 import JsonLd from "@/components/JsonLd";
@@ -296,23 +297,23 @@ export default function HomeView({ locale }: { locale: Locale }) {
       <section className="relative isolate flex min-h-[100svh] flex-col justify-center pt-28 pb-16">
         <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <RailMarker scope="container" className="top-2" />
-          <Reveal>
+          <HeroReveal>
             <p className="inline-flex rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] tracking-wide text-white/55">
               {c.stamp}
             </p>
-          </Reveal>
+          </HeroReveal>
 
-          <Reveal delay={0.08}>
+          <HeroReveal delay={0.08}>
             <h1 className="mt-5 max-w-4xl text-4xl leading-[1.05] font-serif font-medium tracking-[-0.02em] text-white sm:text-5xl lg:text-[64px]">
               {withSignature(c.title, c.titleSignature)}
             </h1>
-          </Reveal>
+          </HeroReveal>
 
-          <Reveal delay={0.16}>
+          <HeroReveal delay={0.16}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/60 sm:text-lg">{c.lead}</p>
-          </Reveal>
+          </HeroReveal>
 
-          <Reveal delay={0.24} className="mt-10 flex flex-col gap-3 sm:flex-row">
+          <HeroReveal delay={0.24} className="mt-10 flex flex-col gap-3 sm:flex-row">
             <a
               href="#platformlar"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors duration-150 ease-out hover:bg-white/90"
@@ -327,9 +328,9 @@ export default function HomeView({ locale }: { locale: Locale }) {
               {c.ctaIntro}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
-          </Reveal>
+          </HeroReveal>
 
-          <Reveal delay={0.32} className="mt-16 sm:mt-20">
+          <HeroReveal delay={0.32} className="mt-16 sm:mt-20">
             <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-hairline bg-hairline lg:grid-cols-4">
               {c.heroStats.map((s) => (
                 <div key={s.label} className="flex flex-col-reverse bg-navy-900 p-5">
@@ -344,7 +345,7 @@ export default function HomeView({ locale }: { locale: Locale }) {
                 </div>
               ))}
             </dl>
-          </Reveal>
+          </HeroReveal>
         </div>
       </section>
 

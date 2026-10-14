@@ -461,7 +461,7 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
               tabIndex={selected || (caseIndex === null && i === 0) ? 0 : -1}
               onClick={() => setCaseIndex(i)}
               onKeyDown={onCaseKey}
-              className="group relative flex flex-col px-2 pt-3 pb-2 text-left transition-colors duration-150 ease-out hover:bg-white/[0.02] focus-visible:bg-white/[0.04] focus-visible:outline-none sm:px-3"
+              className="group relative flex flex-col px-2 pt-3 pb-2 text-left transition-colors duration-150 ease-out hover:bg-white/[0.02] focus-visible:bg-white/[0.04] focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-white/60 sm:px-3"
             >
               <span
                 aria-hidden="true"

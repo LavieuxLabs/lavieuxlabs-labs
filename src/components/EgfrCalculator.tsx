@@ -71,7 +71,7 @@ const stageTone: Record<KdigoStage, string> = {
 const parse = (v: string) => Number(v.trim().replace(",", "."));
 
 const inputClass =
-  "w-full min-w-0 rounded-md border border-hairline bg-navy-900 px-2.5 py-2 font-mono text-[13px] text-white tabular-nums transition-colors duration-150 ease-out focus:border-white/30 focus:outline-none";
+  "w-full min-w-0 rounded-md border border-hairline bg-navy-900 px-2.5 py-2 font-mono text-[13px] text-white tabular-nums transition-colors duration-150 ease-out focus:border-white/30 focus:outline-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-1 focus-visible:outline-white/60";
 
 export default function EgfrCalculator({ locale }: { locale: Locale }) {
   const c = copy[locale];

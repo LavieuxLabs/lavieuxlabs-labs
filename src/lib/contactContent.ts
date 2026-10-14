@@ -38,7 +38,7 @@ const neutral: Accent = {
   text: "text-titanium",
   selectedCard: "border-white/25 bg-navy-800",
   focusRing: "has-[:focus-visible]:ring-white/30",
-  inputFocus: "focus:border-white/40 focus:ring-white/10",
+  inputFocus: "focus:border-white/50 focus:ring-white/25",
   topRule: "from-white/30",
 };
 
@@ -49,7 +49,7 @@ export const productStyle: Record<ProductValue, { icon: LucideIcon; accent: Acce
       text: "text-pharma",
       selectedCard: "border-pharma/35 bg-navy-800",
       focusRing: "has-[:focus-visible]:ring-pharma/40",
-      inputFocus: "focus:border-pharma/60 focus:ring-pharma/20",
+      inputFocus: "focus:border-pharma/70 focus:ring-pharma/35",
       topRule: "from-pharma/70",
     },
   },
@@ -59,7 +59,7 @@ export const productStyle: Record<ProductValue, { icon: LucideIcon; accent: Acce
       text: "text-shield",
       selectedCard: "border-shield/35 bg-navy-800",
       focusRing: "has-[:focus-visible]:ring-shield/40",
-      inputFocus: "focus:border-shield/60 focus:ring-shield/20",
+      inputFocus: "focus:border-shield/70 focus:ring-shield/35",
       topRule: "from-shield/70",
     },
   },

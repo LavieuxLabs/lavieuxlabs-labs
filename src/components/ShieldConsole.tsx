@@ -333,7 +333,7 @@ export default function ShieldConsole({ locale }: { locale: Locale }) {
                   aria-selected={active}
                   onClick={() => setSelectedId(claim.id)}
                   onKeyDown={(e) => onRowKey(e, claim.id)}
-                  className={`cursor-pointer outline-none transition-colors duration-150 ease-out focus-visible:bg-white/[0.04] ${
+                  className={`cursor-pointer transition-colors duration-150 ease-out focus:outline-none focus-visible:bg-white/[0.04] focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-white/60 ${
                     active ? "bg-white/[0.05]" : "hover:bg-white/[0.03]"
                   }`}
                 >
@@ -466,7 +466,8 @@ export default function ShieldConsole({ locale }: { locale: Locale }) {
           <p className="text-[12px] font-medium text-white/60">{c.trail}</p>
           <p className="text-[11px] text-white/55">{c.trailHint}</p>
         </div>
-        <div className="overflow-x-auto">
+        {/* Scrollable on narrow screens and holds no focusable element, so keyboard users focus it to scroll. */}
+        <div tabIndex={0} aria-label={c.trail} className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-white/60">
           <table className="w-full min-w-[620px] text-[12px]">
             <thead className="border-y border-hairline">
               <tr>

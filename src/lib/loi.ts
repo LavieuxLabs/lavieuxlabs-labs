@@ -37,6 +37,7 @@ export const CONTACT_OPTIONS = defineContent<Options>({
         "Başhekim / başhekim yardımcısı",
         "Eczacılık hizmetleri sorumlusu",
         "Bilgi işlem / HBYS sorumlusu",
+        "Sağlık bilgi sistemi firması",
         "Diğer",
       ],
       shield: [
@@ -45,6 +46,7 @@ export const CONTACT_OPTIONS = defineContent<Options>({
         "Döner sermaye / mali işler",
         "Hastane yöneticisi",
         "Bilgi işlem / HBYS sorumlusu",
+        "Sağlık bilgi sistemi firması",
         "Diğer",
       ],
       academic: [
@@ -76,6 +78,7 @@ export const CONTACT_OPTIONS = defineContent<Options>({
         "Chief medical officer / deputy",
         "Head of pharmacy services",
         "IT / HIS lead",
+        "Health information system vendor",
         "Other",
       ],
       shield: [
@@ -84,6 +87,7 @@ export const CONTACT_OPTIONS = defineContent<Options>({
         "Finance office",
         "Hospital manager",
         "IT / HIS lead",
+        "Health information system vendor",
         "Other",
       ],
       academic: [

@@ -127,7 +127,7 @@ const copy = defineContent({
 });
 
 const selectClass =
-  "w-full rounded-md border border-hairline bg-navy-900 px-2.5 py-2 text-[13px] text-white transition-colors duration-150 ease-out focus:border-white/30 focus:outline-none";
+  "w-full rounded-md border border-hairline bg-navy-900 px-2.5 py-2 text-[13px] text-white transition-colors duration-150 ease-out focus:border-white/30 focus:outline-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-1 focus-visible:outline-white/60";
 
 // Same tiers as the Shield console: ≥70 rose, ≥40 amber, below emerald.
 const tier = (s: number) =>

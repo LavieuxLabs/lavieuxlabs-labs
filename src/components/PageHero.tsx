@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import Reveal from "@/components/Reveal";
+import HeroReveal from "@/components/HeroReveal";
 import { RailMarker } from "@/components/TelemetryRails";
 import { localizedPath, type Locale } from "@/i18n/config";
 
@@ -51,7 +52,7 @@ export default function PageHero({
       <RailMarker className="top-32 sm:top-40" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {breadcrumbs && (
-          <Reveal>
+          <HeroReveal>
             <nav aria-label={locale === "tr" ? "Konum" : "Breadcrumb"} className="mb-8">
               <ol className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium tracking-wider text-white/55 uppercase">
                 {breadcrumbs.map((c, i) => (
@@ -70,33 +71,33 @@ export default function PageHero({
                 ))}
               </ol>
             </nav>
-          </Reveal>
+          </HeroReveal>
         )}
 
         <div
           className={visual ? "grid items-center gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-6" : ""}
         >
           <div>
-            <Reveal>
+            <HeroReveal>
               <p className="flex items-center gap-2 text-[11px] font-medium tracking-wider text-white/50 uppercase">
                 {eyebrowIcon && (
                   <eyebrowIcon.icon className={`h-4 w-4 ${eyebrowIcon.className}`} strokeWidth={1.7} aria-hidden="true" />
                 )}
                 {eyebrow}
               </p>
-            </Reveal>
-            <Reveal delay={0.08}>
+            </HeroReveal>
+            <HeroReveal delay={0.08}>
               <h1 className="mt-5 max-w-4xl text-4xl leading-[1.05] font-serif font-medium tracking-[-0.02em] text-white sm:text-5xl lg:text-[56px]">
                 {title}
               </h1>
-            </Reveal>
-            <Reveal delay={0.16}>
+            </HeroReveal>
+            <HeroReveal delay={0.16}>
               <div className="mt-6 max-w-2xl text-base leading-relaxed text-white/60 sm:text-lg">{description}</div>
-            </Reveal>
+            </HeroReveal>
             {children && (
-              <Reveal delay={0.24} className="mt-10">
+              <HeroReveal delay={0.24} className="mt-10">
                 {children}
-              </Reveal>
+              </HeroReveal>
             )}
           </div>
           {visual && (
@@ -106,9 +107,9 @@ export default function PageHero({
           )}
         </div>
         {below && (
-          <Reveal delay={0.3} className="mt-14">
+          <HeroReveal delay={0.3} className="mt-14">
             {below}
-          </Reveal>
+          </HeroReveal>
         )}
       </div>
     </section>
