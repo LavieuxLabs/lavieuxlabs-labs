@@ -288,13 +288,14 @@ const copy = defineContent<{
     ],
     collaborationHeading: {
       eyebrow: "Klinik iş birliği",
-      title: "Sahadaki ekiplerle birlikte geliştiriyoruz.",
-      description: "Bir karar destek sistemi, onu kullanacak ekibin iş akışına uymuyorsa güvenli olamaz.",
+      title: "Klinik doğrulamayı sahadaki hekimlerle yürütmeyi hedefliyoruz.",
+      description:
+        "Klinik karar destek sistemleri sahadaki ekiplerin iş akışına göre tasarlanmalıdır. Danışma kurulu henüz toplanmadı; aşağıdakiler pilot döneminde kuracağımız çalışma biçimidir.",
     },
     collaboration: [
       {
         title: "Klinik danışma",
-        body: "Kural setleri ve arayüzler, bağımsız klinisyenler ve klinik eczacıların doğrudan geri bildirimiyle pilot süreçler boyunca sürekli revize edilir.",
+        body: "Pilot döneminde kural setleri ve arayüzler, klinisyenlerin ve klinik eczacıların geri bildirimiyle gözden geçirilecek.",
         rows: [
           { label: "Paydaşlar", value: "Klinisyen · klinik eczacı" },
           { label: "Çıktı", value: "Gözden geçirilmiş kural setleri" },
@@ -318,7 +319,7 @@ const copy = defineContent<{
       },
       {
         title: "Sahadan geri bildirim",
-        body: "Pilot kullanıcıların geri bildirimi düzenli toplanır ve hangi gereksinime dönüştüğü takip edilir.",
+        body: "Pilot kullanıcıların geri bildirimi düzenli toplanacak ve hangi gereksinime dönüştüğü takip edilecek.",
         rows: [
           { label: "Toplama", value: "Yapılandırılmış form" },
           { label: "İzlenebilirlik", value: "Geri bildirim → gereksinim" },
@@ -598,13 +599,14 @@ const copy = defineContent<{
     ],
     collaborationHeading: {
       eyebrow: "Clinical collaboration",
-      title: "We build it with the teams who will use it.",
-      description: "A decision support system cannot be safe if it does not fit the workflow of the team using it.",
+      title: "We aim to run clinical validation with physicians in the field.",
+      description:
+        "Clinical decision support has to be designed around the workflow of the teams who use it. The advisory board has not met yet; what follows is how we will work during the pilots.",
     },
     collaboration: [
       {
         title: "Clinical advice",
-        body: "Rule sets and interfaces are revised continuously throughout the pilots, based on direct feedback from independent clinicians and clinical pharmacists.",
+        body: "During the pilots, rule sets and interfaces will be reviewed with feedback from clinicians and clinical pharmacists.",
         rows: [
           { label: "Stakeholders", value: "Clinician · clinical pharmacist" },
           { label: "Output", value: "Reviewed rule sets" },
@@ -628,7 +630,7 @@ const copy = defineContent<{
       },
       {
         title: "Feedback from the field",
-        body: "Feedback from pilot users is collected regularly, and we track which requirement it turns into.",
+        body: "Feedback from pilot users will be collected regularly, and we will track which requirement it turns into.",
         rows: [
           { label: "Collection", value: "Structured form" },
           { label: "Traceability", value: "Feedback → requirement" },

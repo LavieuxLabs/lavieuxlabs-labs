@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Building2, Pill, Receipt, ShieldCheck, Stethoscope } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CalendarClock, FileSignature, Network, Pill, ShieldCheck } from "lucide-react";
 import InitiativeCard, { type InitiativeCardProps } from "@/components/InitiativeCard";
 import StandardsGrid from "@/components/StandardsGrid";
 import Reveal from "@/components/Reveal";
@@ -14,7 +14,7 @@ import { homeJsonLd } from "@/lib/structuredData";
 import { contactHref } from "@/lib/site";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
-import { metrics, testsLabel, trlLabel } from "@/lib/metrics";
+import { metrics, testsLabel, testsNote, trlLabel } from "@/lib/metrics";
 
 // The home page keeps the layout's default title; only description and hreflang are set here.
 export const metadata = defineMetadata("/", {
@@ -31,7 +31,8 @@ export const metadata = defineMetadata("/", {
 type Initiative = Omit<InitiativeCardProps, "locale">;
 type Step = { stage: string; title: string; body: string; output: string };
 
-const audienceIcons = [Stethoscope, Receipt, Building2];
+// Three contact stages, lowest commitment first; the LOI is the last step, not the first.
+const contactStepIcons = [CalendarClock, Network, FileSignature];
 // Who-it-is-for cells stay neutral: on the home page only the two product cards carry an accent.
 const forWhomIcons = [Pill, ShieldCheck];
 
@@ -44,8 +45,9 @@ const copy = defineContent<{
   lead: string;
   ctaProducts: string;
   ctaIntro: string;
-  ctaPilot: string;
-  heroStats: { value: string; label: string }[];
+  ctaIntroPlan: string;
+  stepLabel: string;
+  heroStats: { value: string; label: string; note?: string }[];
   forWhom: { eyebrow: string; title: string; description: string };
   forWhomCells: { label: string; title: string; body: string; rows: SpecRow[]; links: { href: string; label: string }[] }[];
   products: { eyebrow: string; title: string; description: string };
@@ -53,7 +55,8 @@ const copy = defineContent<{
   standards: { eyebrow: string; title: string; description: string };
   pipeline: { eyebrow: string; title: string; description: string; output: string; steps: Step[] };
   pilot: { eyebrow: string; title: string; description: string };
-  audiences: { title: string; body: string }[];
+  ctaSecondary: string;
+  contactSteps: { title: string; body: string }[];
 }>({
   tr: {
     stamp: `CDSS · MDR SINIF IIa HEDEFİ · ${trlLabel("tr")}`,
@@ -62,10 +65,11 @@ const copy = defineContent<{
     lead: "PharmaDeux, çoklu ilaç tedavisinde riskli kombinasyonları reçete anında hekime gösterir. Shield, SUT ve SGK red risklerini fatura gönderilmeden önce yakalar. İkisinde de son kararı yetkili kişi verir ve her adım kayda geçer.",
     ctaProducts: "Ürünleri inceleyin",
     ctaIntro: "15 dk tanışma görüşmesi",
-    ctaPilot: "Pilot başvurusu (LOI)",
+    ctaIntroPlan: "15 dk tanışma görüşmesi planlayın",
+    stepLabel: "Adım",
     heroStats: [
       { value: String(metrics.safetyPlanes), label: "İlaç güvenliği kontrol başlığı" },
-      { value: testsLabel("tr"), label: "Otomatik test" },
+      { value: testsLabel("tr"), label: "Otomatik test", note: testsNote("tr") },
       { value: "FHIR R4", label: "Veri standardı" },
       { value: "Sınıf IIa", label: "MDR hedef sınıfı" },
     ],
@@ -184,23 +188,24 @@ const copy = defineContent<{
       ],
     },
     pilot: {
-      eyebrow: "Pilot program",
-      title: "Pilot çalışma için bize yazın.",
+      eyebrow: "İletişim",
+      title: "Tanışma, teknik değerlendirme, pilot.",
       description:
-        "Kapsamı, hangi veriye erişileceğini ve neyi başarı sayacağımızı bağlayıcı olmayan bir Niyet Mektubu (LOI) ile birlikte yazıyoruz.",
+        "İlk adım 15 dakikalık bir görüşmedir ve taahhüt gerektirmez. Pilot protokolü, teknik değerlendirmeden sonra kurumla birlikte yazılır.",
     },
-    audiences: [
+    ctaSecondary: "Pilot protokolünü inceleyin",
+    contactSteps: [
       {
-        title: "Klinik ekipler",
-        body: "Klinik eczacılık birimleri, ilaç güvenliği komiteleri ve servis hekimleri.",
+        title: "15 dk tanışma görüşmesi",
+        body: "İhtiyacınızı dinliyor, ürünün kurumunuza uyup uymadığını konuşuyoruz.",
       },
       {
-        title: "Gelir döngüsü ekipleri",
-        body: "Faturalama, provizyon ve SGK geri ödeme işlerini yürüten birimler.",
+        title: "Teknik değerlendirme ve mimari inceleme",
+        body: "HBYS veya faturalama altyapısı, veri akışı ve kurulum modeli bilgi işlem ekibinizle incelenir.",
       },
       {
-        title: "Akademik ortaklar",
-        body: "Üniversite hastaneleri ve ortak doğrulama çalışması yapmak isteyen araştırma grupları.",
+        title: "Pilot protokolü (LOI)",
+        body: "Kapsam, veri koşulları ve başarı ölçütleri bağlayıcı olmayan bir LOI taslağında birlikte yazılır.",
       },
     ],
   },
@@ -211,10 +216,11 @@ const copy = defineContent<{
     lead: "PharmaDeux shows the physician risky drug combinations in polypharmacy at the moment of prescription. Shield catches reimbursement and audit risks before a claim is submitted. In both, a qualified person makes the final decision and every step is recorded.",
     ctaProducts: "See the products",
     ctaIntro: "15-minute intro call",
-    ctaPilot: "Apply for a pilot (LOI)",
+    ctaIntroPlan: "Book a 15-minute intro call",
+    stepLabel: "Step",
     heroStats: [
       { value: String(metrics.safetyPlanes), label: "Medication safety checks" },
-      { value: testsLabel("en"), label: "Automated tests" },
+      { value: testsLabel("en"), label: "Automated tests", note: testsNote("en") },
       { value: "FHIR R4", label: "Data standard" },
       { value: "Class IIa", label: "MDR target class" },
     ],
@@ -333,23 +339,24 @@ const copy = defineContent<{
       ],
     },
     pilot: {
-      eyebrow: "Pilot programme",
-      title: "Write to us about a pilot.",
+      eyebrow: "Contact",
+      title: "Intro call, technical review, pilot.",
       description:
-        "Together we write down the scope, which data is accessed and what counts as success, in a non-binding Letter of Intent (LOI).",
+        "The first step is a 15-minute call with no commitment. The pilot protocol is written with the institution after the technical review.",
     },
-    audiences: [
+    ctaSecondary: "See the pilot protocol",
+    contactSteps: [
       {
-        title: "Clinical teams",
-        body: "Clinical pharmacy units, medication safety committees and ward physicians.",
+        title: "15-minute intro call",
+        body: "We listen to what you need and talk about whether the product fits your institution.",
       },
       {
-        title: "Revenue cycle teams",
-        body: "Units handling billing, pre-authorisation and SGK reimbursement.",
+        title: "Technical review and architecture",
+        body: "Your HIS or billing infrastructure, data flow and deployment model are reviewed with your IT team.",
       },
       {
-        title: "Academic partners",
-        body: "University hospitals and research groups that want to run a joint validation study.",
+        title: "Pilot protocol (LOI)",
+        body: "Scope, data conditions and success criteria are written together in a non-binding draft LOI.",
       },
     ],
   },
@@ -415,15 +422,16 @@ export default function HomeView({ locale }: { locale: Locale }) {
           <HeroReveal delay={0.32} className="mt-16 sm:mt-20">
             <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-hairline bg-hairline lg:grid-cols-4">
               {c.heroStats.map((s) => (
-                <div key={s.label} className="flex flex-col-reverse bg-navy-900 p-5">
-                  <dt className="mt-1.5 text-xs leading-snug text-white/50">{s.label}</dt>
+                <div key={s.label} className="flex flex-col bg-navy-900 p-5">
+                  <dt className="order-2 mt-1.5 text-xs leading-snug text-white/50">{s.label}</dt>
                   <dd
-                    className={`text-xl font-medium tracking-[-0.01em] text-white sm:text-2xl ${
+                    className={`order-1 text-xl font-medium tracking-[-0.01em] text-white sm:text-2xl ${
                       /\d/.test(s.value) ? "font-mono tabular-nums" : ""
                     }`}
                   >
                     {s.value}
                   </dd>
+                  {s.note && <dd className="order-3 mt-1 text-[11px] leading-snug text-white/50">{s.note}</dd>}
                 </div>
               ))}
             </dl>
@@ -499,29 +507,34 @@ export default function HomeView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* Pilot / LOI */}
+      {/* Contact: three stages, the intro call first */}
       <div id="iletisim" className="relative scroll-mt-20">
         <RailMarker className="top-24 sm:top-32" />
         <CtaPanel
           locale={locale}
           {...c.pilot}
-          primaryHref={href(contactHref("pilot"))}
-          primaryLabel={c.ctaPilot}
+          primaryHref={href(contactHref("intro"))}
+          primaryLabel={c.ctaIntroPlan}
+          secondaryHref={href(`${contactHref("pilot")}#pilot-protokolu`)}
+          secondaryLabel={c.ctaSecondary}
           aside={
-            <ul className="divide-y divide-hairline border-y border-hairline">
-              {c.audiences.map(({ title, body }, i) => {
-                const Icon = audienceIcons[i];
+            <ol className="divide-y divide-hairline self-center border-y border-hairline">
+              {c.contactSteps.map(({ title, body }, i) => {
+                const Icon = contactStepIcons[i];
                 return (
-                  <li key={title} className="flex gap-4 py-5">
-                    <Icon className="mt-0.5 h-5 w-5 shrink-0 text-white/55" strokeWidth={1.6} aria-hidden="true" />
+                  <li key={title} className="grid grid-cols-[20px_1fr] gap-4 py-5">
+                    <Icon className="mt-0.5 h-5 w-5 text-white/55" strokeWidth={1.6} aria-hidden="true" />
                     <div>
-                      <h3 className="text-sm font-medium text-white">{title}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-white/50">{body}</p>
+                      <p className="text-[11px] text-white/50">
+                        {c.stepLabel} <span className="font-mono tabular-nums">{i + 1}</span>
+                      </p>
+                      <h3 className="mt-0.5 text-sm font-medium text-white">{title}</h3>
+                      <p className="mt-1 text-sm leading-relaxed text-white/55">{body}</p>
                     </div>
                   </li>
                 );
               })}
-            </ul>
+            </ol>
           }
         />
       </div>

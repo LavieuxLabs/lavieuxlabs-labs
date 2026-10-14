@@ -36,7 +36,7 @@ import { pharmaDeuxJsonLd } from "@/lib/structuredData";
 import { contactHref } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
-import { metrics, testsLabel, trlLabel } from "@/lib/metrics";
+import { metrics, testsLabel, testsNote, trlLabel } from "@/lib/metrics";
 
 export const metadata = defineMetadata("/initiatives/pharmadeux", {
   tr: {
@@ -97,7 +97,7 @@ const simCopy = defineContent({
 
 const copy = defineContent<{
   sections: { id: string; label: string }[];
-  heroStats: { value: string; label: string }[];
+  heroStats: { value: string; label: string; note?: string }[];
   crumbs: { home: string; products: string };
   eyebrow: string;
   title: string;
@@ -142,7 +142,7 @@ const copy = defineContent<{
     ],
     heroStats: [
       { value: String(metrics.safetyPlanes), label: "Güvenlik düzlemi" },
-      { value: testsLabel("tr"), label: "Otomatik test" },
+      { value: testsLabel("tr"), label: "Otomatik test", note: testsNote("tr") },
       { value: "FHIR R4", label: "Veri standardı" },
       { value: trlLabel("tr"), label: "Teknoloji hazırlık seviyesi" },
     ],
@@ -480,7 +480,7 @@ const copy = defineContent<{
     ],
     heroStats: [
       { value: String(metrics.safetyPlanes), label: "Safety planes" },
-      { value: testsLabel("en"), label: "Automated tests" },
+      { value: testsLabel("en"), label: "Automated tests", note: testsNote("en") },
       { value: "FHIR R4", label: "Data standard" },
       { value: trlLabel("en"), label: "Technology readiness level" },
     ],
@@ -834,12 +834,13 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
           <>
           <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-hairline bg-hairline lg:grid-cols-4">
             {c.heroStats.map((s) => (
-              <div key={s.label} className="relative flex flex-col-reverse bg-navy-900 p-5">
+              <div key={s.label} className="relative flex flex-col bg-navy-900 p-5">
                 <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-pharma/30" />
-                <dt className="mt-1.5 text-xs leading-snug text-white/50">{s.label}</dt>
-                <dd className="font-mono text-xl font-medium tracking-[-0.01em] text-white tabular-nums sm:text-2xl">
+                <dt className="order-2 mt-1.5 text-xs leading-snug text-white/50">{s.label}</dt>
+                <dd className="order-1 font-mono text-xl font-medium tracking-[-0.01em] text-white tabular-nums sm:text-2xl">
                   {s.value}
                 </dd>
+                {s.note && <dd className="order-3 mt-1 text-[11px] leading-snug text-white/50">{s.note}</dd>}
               </div>
             ))}
           </dl>

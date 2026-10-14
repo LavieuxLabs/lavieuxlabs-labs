@@ -12,6 +12,9 @@ type CtaPanelProps = {
   description: string;
   primaryHref: string;
   primaryLabel: string;
+  /** Optional bordered second action; the email then moves to a copyable line under the buttons. */
+  secondaryHref?: string;
+  secondaryLabel?: string;
   aside?: ReactNode;
   accent?: "teal" | "indigo";
 };
@@ -23,6 +26,8 @@ export default function CtaPanel({
   description,
   primaryHref,
   primaryLabel,
+  secondaryHref,
+  secondaryLabel,
   aside,
   accent = "teal",
 }: CtaPanelProps) {
@@ -46,8 +51,18 @@ export default function CtaPanel({
                     {primaryLabel}
                     <ArrowUpRight className="h-4 w-4" />
                   </Link>
-                  <CopyEmail locale={locale} variant="button" />
+                  {secondaryHref && secondaryLabel ? (
+                    <Link
+                      href={secondaryHref}
+                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 px-5 py-3 text-sm text-white/80 transition-colors duration-150 ease-out hover:border-white/30 hover:text-white"
+                    >
+                      {secondaryLabel}
+                    </Link>
+                  ) : (
+                    <CopyEmail locale={locale} variant="button" />
+                  )}
                 </div>
+                {secondaryHref && secondaryLabel && <CopyEmail locale={locale} className="mt-5 text-[13px] text-white/60" />}
               </div>
               {aside}
             </div>

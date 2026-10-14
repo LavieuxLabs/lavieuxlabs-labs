@@ -15,7 +15,7 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
     eyebrow: "Pilot protokolü",
     title: "Pilot uygulama protokolü ve LOI çerçevesi.",
     description:
-      "Hastane yönetimiyle imzaladığımız Niyet Mektubu (LOI) bu çerçeveyi esas alır. Ayrıntılar kurumla birlikte yazılır; bu sayfa bağlayıcı değildir.",
+      "Pilot öncesinde kurumla mutabık kalınacak Niyet Mektubu (LOI) taslağı bu çerçeveyi esas alır. Ayrıntılar kurumla birlikte yazılır; bu sayfa bağlayıcı değildir.",
     groups: [
       {
         title: "Amaç ve kapsam",
@@ -80,7 +80,7 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
     eyebrow: "Pilot protocol",
     title: "Pilot protocol and LOI framework.",
     description:
-      "The Letter of Intent (LOI) we sign with hospital management is based on this framework. The details are written together with the institution; this page is not binding.",
+      "The draft Letter of Intent (LOI) to be agreed with the institution before a pilot is based on this framework. The details are written together with the institution; this page is not binding.",
     groups: [
       {
         title: "Purpose and scope",
@@ -163,7 +163,7 @@ const sheet = defineContent({
     imprint: { organization: "Kuruluş", address: "Adres", contact: "İletişim", web: "Web" },
     organization: `LavieuxLabs · ${organizationProfile.tr.short}`,
     footer:
-      "Bu belge bilgilendirme amaçlıdır ve bağlayıcı değildir. Pilotun kapsamı, süresi ve veri koşulları kurumla imzalanan Niyet Mektubu'nda (LOI) yazılır.",
+      "Bu belge bilgilendirme amaçlıdır ve bağlayıcı değildir. Pilotun kapsamı, süresi ve veri koşulları, pilot öncesinde kurumla mutabık kalınacak Niyet Mektubu'nda (LOI) yazılır.",
   },
   en: {
     button: "Print / save as PDF",
@@ -173,7 +173,7 @@ const sheet = defineContent({
     imprint: { organization: "Organisation", address: "Address", contact: "Contact", web: "Web" },
     organization: `LavieuxLabs · ${organizationProfile.en.short}`,
     footer:
-      "This document is for information and is not binding. The pilot's scope, duration and data conditions are set out in the Letter of Intent (LOI) signed with the institution.",
+      "This document is for information and is not binding. The pilot's scope, duration and data conditions will be set out in the Letter of Intent (LOI) agreed with the institution before the pilot.",
   },
 });
 
