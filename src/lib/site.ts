@@ -45,7 +45,7 @@ export const organizationProfile = defineContent({
 // Core team. A link left null is not rendered; email always goes through CONTACT_EMAIL.
 export const TEAM_LEAD = {
   name: "Tarık Ziya Eren",
-  github: "https://github.com/LavieuxLabs" as string | null,
+  github: "https://github.com/TarikZiyaEren" as string | null,
   linkedin: null as string | null,
 };
 

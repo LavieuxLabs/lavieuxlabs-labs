@@ -393,7 +393,7 @@ const copy = defineContent<{
       rows: [
         { label: "Odak", value: "Karar motoru mimarisi · farmakolojik kural motorları" },
         { label: "Entegrasyon", value: "HL7 FHIR R4 · sistem tasarımı" },
-        { label: "Eğitim", value: "Konya Teknik Üniversitesi · Bilgisayar Mühendisliği" },
+        { label: "Eğitim", value: "Konya Teknik Üniversitesi · Yapay Zeka ve Makine Öğrenmesi" },
       ],
       email: "E-posta",
     },
@@ -703,7 +703,7 @@ const copy = defineContent<{
       rows: [
         { label: "Focus", value: "Decision engine architecture · pharmacological rule engines" },
         { label: "Integration", value: "HL7 FHIR R4 · system design" },
-        { label: "Education", value: "Konya Technical University · Computer Engineering" },
+        { label: "Education", value: "Konya Technical University · Artificial Intelligence and Machine Learning" },
       ],
       email: "Email",
     },

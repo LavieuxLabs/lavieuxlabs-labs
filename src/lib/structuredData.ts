@@ -112,7 +112,9 @@ function organization(locale: Locale) {
       "@type": "Person",
       name: TEAM_LEAD.name,
       jobTitle: copy[locale].founderTitle,
-      ...(TEAM_LEAD.linkedin ? { sameAs: [TEAM_LEAD.linkedin] } : {}),
+      ...(TEAM_LEAD.github || TEAM_LEAD.linkedin
+        ? { sameAs: [TEAM_LEAD.github, TEAM_LEAD.linkedin].filter((url): url is string => !!url) }
+        : {}),
     },
     areaServed: "TR",
     knowsAbout: copy[locale].knowsAbout,
