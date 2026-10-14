@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, CalendarClock, FileSignature, Network, Pill, ShieldCheck } from "lucide-react";
 import InitiativeCard, { type InitiativeCardProps } from "@/components/InitiativeCard";
-import StandardsGrid from "@/components/StandardsGrid";
 import Reveal from "@/components/Reveal";
 import HeroReveal from "@/components/HeroReveal";
 import SectionHeader from "@/components/SectionHeader";
@@ -52,7 +51,7 @@ const copy = defineContent<{
   forWhomCells: { label: string; title: string; body: string; rows: SpecRow[]; links: { href: string; label: string }[] }[];
   products: { eyebrow: string; title: string; description: string };
   initiatives: Initiative[];
-  standards: { eyebrow: string; title: string; description: string };
+  standardsLink: { label: string; text: string };
   pipeline: { eyebrow: string; title: string; description: string; output: string; steps: Step[] };
   pilot: { eyebrow: string; title: string; description: string };
   ctaSecondary: string;
@@ -149,12 +148,7 @@ const copy = defineContent<{
         href: "/initiatives/shield",
       },
     ],
-    standards: {
-      eyebrow: "Standartlar",
-      title: "İki üründe de uyduğumuz sekiz kural.",
-      description:
-        "Hangi standardı referans aldığımızı ve her birinde nerede olduğumuzu tek tek yazdık. Henüz tamamlanmamış olanları da öyle belirttik.",
-    },
+    standardsLink: { label: "Standartlar", text: "Regülasyon ve mühendislik standartlarımızı inceleyin" },
     pipeline: {
       eyebrow: "Doğrulama ve karar",
       title: "Bir bulgu dört adımda karara dönüşür.",
@@ -300,12 +294,7 @@ const copy = defineContent<{
         href: "/initiatives/shield",
       },
     ],
-    standards: {
-      eyebrow: "Standards",
-      title: "Eight rules both products follow.",
-      description:
-        "We list each standard we work against and where we stand on it. Where something is not finished yet, we say so.",
-    },
+    standardsLink: { label: "Standards", text: "See our regulatory and engineering standards" },
     pipeline: {
       eyebrow: "Verification and decision",
       title: "A finding becomes a decision in four steps.",
@@ -466,17 +455,24 @@ export default function HomeView({ locale }: { locale: Locale }) {
               <InitiativeCard key={item.name} locale={locale} {...item} />
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Standards */}
-      <section id="standartlar" className="relative scroll-mt-20 py-24 sm:py-32">
-        <RailMarker className="top-24 sm:top-32" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.standards} />
-          <div className="mt-14">
-            <StandardsGrid locale={locale} />
-          </div>
+          {/* One-line bridge: the eight rules and reference pages live on the standards hub. */}
+          <Reveal className="mt-5">
+            <Link
+              href={href("/standartlar")}
+              className="group flex items-center justify-between gap-4 rounded-2xl border border-hairline bg-navy-850 px-5 py-4 transition-colors duration-150 ease-out hover:border-white/15 hover:bg-navy-800 sm:px-8 sm:py-5"
+            >
+              <span className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-4">
+                <span className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.standardsLink.label}</span>
+                <span className="text-[15px] font-medium text-white/85 transition-colors duration-150 ease-out group-hover:text-white">
+                  {c.standardsLink.text}
+                </span>
+              </span>
+              <ArrowRight
+                className="h-4 w-4 shrink-0 text-white/55 transition-transform duration-150 ease-out group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </Link>
+          </Reveal>
         </div>
       </section>
 

@@ -31,6 +31,17 @@ const copy: Record<
 // product and status lines of neighbouring cards sit at the same height.
 const TRACKS = 7;
 
+// The grid narrows to the number of results, so a filtered list never leaves empty hairline cells
+// (the grid's 1px-gap background would show through as a grey block). Literal classes for Tailwind.
+const gridWidth = (n: number) =>
+  n === 1
+    ? "sm:w-1/2 xl:w-1/4"
+    : n === 2
+      ? "sm:grid-cols-2 xl:w-1/2"
+      : n === 3
+        ? "sm:grid-cols-2 xl:grid-cols-3 xl:w-3/4"
+        : "sm:grid-cols-2 xl:grid-cols-4";
+
 // Case- and accent-insensitive, so "ckd epi" finds "CKD-EPI" and "dogrulama" finds "doğrulama".
 const fold = (t: string) => t.toLocaleLowerCase("tr-TR").replace(/ı/g, "i").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, "");
 
@@ -65,20 +76,28 @@ export default function StandardsIndex({ locale, entries }: { locale: Locale; en
             className="w-full rounded-lg border border-hairline bg-navy-850 py-2.5 pr-3 pl-9 text-[14px] text-white placeholder:text-white/50 focus:border-white/30 focus:outline-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-1 focus-visible:outline-white/60"
           />
         </label>
-        <div role="group" aria-label={t.filter} className="flex flex-wrap rounded-md border border-hairline bg-white/[0.03] p-0.5">
-          {(["all", "clinical", "technical", "administrative"] as const).map((key) => (
-            <button
-              key={key}
-              type="button"
-              aria-pressed={category === key}
-              onClick={() => setCategory(key)}
-              className={`rounded-[5px] px-3 py-1 text-[12.5px] transition-colors duration-150 ease-out ${
-                category === key ? "bg-white/[0.1] text-white" : "text-white/55 hover:text-white"
-              }`}
-            >
-              {t[key]}
-            </button>
-          ))}
+        {/* Plain tabs: the active one is white with a 1px underline; no filled block, no tap flash. */}
+        <div role="group" aria-label={t.filter} className="flex flex-wrap gap-x-5 gap-y-2">
+          {(["all", "clinical", "technical", "administrative"] as const).map((key) => {
+            const active = category === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                aria-pressed={active}
+                onClick={() => setCategory(key)}
+                className={`relative rounded-sm py-1.5 text-[13px] transition-colors duration-150 ease-out [-webkit-tap-highlight-color:transparent] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60 ${
+                  active ? "text-white" : "text-white/55 hover:text-white/85"
+                }`}
+              >
+                {t[key]}
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-x-0 -bottom-px h-px transition-colors duration-150 ease-out ${active ? "bg-white" : "bg-transparent"}`}
+                />
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -86,11 +105,11 @@ export default function StandardsIndex({ locale, entries }: { locale: Locale; en
         {results.length === 0 ? (
           <p className="rounded-2xl border border-hairline px-5 py-8 text-center text-[13px] text-white/55">{t.empty}</p>
         ) : (
-          <ul className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline sm:grid-cols-2 xl:grid-cols-4">
-            {results.map((e) => (
+          <ul className={`grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline ${gridWidth(results.length)}`}>
+            {results.map((e, i) => (
               <li
                 key={e.href}
-                className="group relative flex flex-col bg-navy-850 transition-colors duration-150 ease-out hover:bg-navy-800 sm:grid sm:grid-cols-[minmax(0,1fr)] sm:grid-rows-subgrid"
+                className={`group relative flex flex-col bg-navy-850 transition-colors duration-150 ease-out hover:bg-navy-800 sm:grid sm:grid-cols-[minmax(0,1fr)] sm:grid-rows-subgrid ${results.length === 3 && i === 2 ? "sm:col-span-2 xl:col-span-1" : ""}`}
                 style={{ gridRow: `span ${TRACKS} / span ${TRACKS}` }}
               >
                 <Link

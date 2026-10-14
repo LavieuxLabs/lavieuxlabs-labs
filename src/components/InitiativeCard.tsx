@@ -24,10 +24,22 @@ export type InitiativeCardProps = {
   className?: string;
 };
 
-// Literal class strings so Tailwind can detect them at build time.
+// Literal class strings so Tailwind can detect them at build time. On hover the frame turns to the
+// product's own accent (Chinese Red / clinical mustard, never the rose/amber alarm scales) and the surface
+// steps up one level. No coloured shadow: depth comes from the surface steps, not from a glow.
 const accents = {
-  teal: { icon: "text-pharma", link: "text-teal-200 hover:text-teal-100", ambient: "ambient-card-pharma" },
-  indigo: { icon: "text-shield", link: "text-indigo-200 hover:text-indigo-100", ambient: "ambient-card-shield" },
+  teal: {
+    icon: "text-pharma",
+    link: "text-teal-200 hover:text-teal-100",
+    ambient: "ambient-card-pharma",
+    hover: "hover:border-pharma/40",
+  },
+  indigo: {
+    icon: "text-shield",
+    link: "text-indigo-200 hover:text-indigo-100",
+    ambient: "ambient-card-shield",
+    hover: "hover:border-shield/40",
+  },
 } as const;
 
 const icons = { pill: Pill, shield: ShieldCheck };
@@ -56,7 +68,7 @@ export default function InitiativeCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ type: "spring", bounce: 0, duration: 0.5 }}
-      className={`relative isolate flex flex-col overflow-hidden rounded-2xl border border-hairline bg-navy-850 p-6 transition-colors duration-150 ease-out hover:bg-navy-800 sm:p-8 ${className}`}
+      className={`relative isolate flex flex-col overflow-hidden rounded-2xl border border-hairline bg-navy-850 p-6 transition-colors duration-150 ease-out hover:bg-navy-800 sm:p-8 ${tone.hover} ${className}`}
     >
       {/* The product's own ambient light drifts in from the card's top corner. */}
       <div aria-hidden="true" className={`pointer-events-none absolute inset-0 -z-10 print:hidden ${tone.ambient}`} />

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import StandardDoc from "@/components/StandardDoc";
 import StandardsIndex, { type StandardEntry } from "@/components/StandardsIndex";
+import StandardsGrid from "@/components/StandardsGrid";
+import SectionHeader from "@/components/SectionHeader";
 import { standardsHubJsonLd } from "@/lib/structuredData";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
@@ -22,7 +24,8 @@ const copy = defineContent<{
   eyebrow: string;
   title: string;
   description: string;
-  intro: string;
+  rules: { eyebrow: string; title: string; description: string };
+  index: { eyebrow: string; title: string; description: string };
   entries: StandardEntry[];
   more: string;
   moreLinks: { href: string; label: string }[];
@@ -32,7 +35,17 @@ const copy = defineContent<{
     title: "Kural motorunun dayandığı standartlar.",
     description:
       "Her skorun, formülün ve kodun kaynağını tek yerde topladık. Hekim formülün kaynağını, bilgi işlem ekibi veri modelini buradan doğrulayabilir.",
-    intro: "Her sayfa formülü veya veri modelini, eşikleri, kullanılan kodları ve orijinal kaynağı içerir.",
+    rules: {
+      eyebrow: "İlkeler",
+      title: "İki üründe de uyduğumuz sekiz kural.",
+      description:
+        "Hangi standardı referans aldığımızı ve her birinde nerede olduğumuzu tek tek yazdık. Henüz tamamlanmamış olanları da öyle belirttik.",
+    },
+    index: {
+      eyebrow: "Referans sayfaları",
+      title: "Skorlar, formüller ve veri modelleri.",
+      description: "Her sayfa formülü veya veri modelini, eşikleri, kullanılan kodları ve orijinal kaynağı içerir.",
+    },
     entries: [
       {
         href: "/standartlar/tisdale-score",
@@ -78,7 +91,6 @@ const copy = defineContent<{
     more: "Kalite ve regülasyon durumu için",
     moreLinks: [
       { href: "/legal/quality", label: "Kalite, bilgi güvenliği ve MDR" },
-      { href: "/#standartlar", label: "Sekiz kural" },
     ],
   },
   en: {
@@ -86,7 +98,17 @@ const copy = defineContent<{
     title: "The standards the rule engine stands on.",
     description:
       "The source of every score, formula and code in one place. Physicians can check where a formula comes from, and IT teams can check the data model.",
-    intro: "Each page gives the formula or data model, the thresholds, the codes used and the original source.",
+    rules: {
+      eyebrow: "Principles",
+      title: "Eight rules both products follow.",
+      description:
+        "We list each standard we work against and where we stand on it. Where something is not finished yet, we say so.",
+    },
+    index: {
+      eyebrow: "Reference pages",
+      title: "Scores, formulas and data models.",
+      description: "Each page gives the formula or data model, the thresholds, the codes used and the original source.",
+    },
     entries: [
       {
         href: "/standartlar/tisdale-score",
@@ -132,7 +154,6 @@ const copy = defineContent<{
     more: "For quality and regulatory status, see",
     moreLinks: [
       { href: "/legal/quality", label: "Quality, information security and MDR" },
-      { href: "/#standartlar", label: "Eight rules" },
     ],
   },
 });
@@ -149,10 +170,24 @@ export default function StandardsHubView({ locale }: { locale: Locale }) {
         locale,
         c.entries.map((e) => ({ name: e.title, path: e.href })),
       )}
-      wide={<StandardsIndex locale={locale} entries={c.entries} />}
+      wide={
+        <>
+          <section id="ilkeler" className="scroll-mt-24">
+            <SectionHeader {...c.rules} />
+            <div className="mt-10">
+              <StandardsGrid locale={locale} />
+            </div>
+          </section>
+          <section id="referanslar" className="mt-24 scroll-mt-24 sm:mt-32">
+            <SectionHeader {...c.index} />
+            <div className="mt-10">
+              <StandardsIndex locale={locale} entries={c.entries} />
+            </div>
+          </section>
+        </>
+      }
     >
-      <p className="!mt-0">{c.intro}</p>
-      <p>
+      <p className="!mt-0">
         {c.more}{" "}
         {c.moreLinks.map((l, i) => (
           <span key={l.href}>
