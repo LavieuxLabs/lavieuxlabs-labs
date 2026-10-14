@@ -4,8 +4,10 @@ import {
   Activity,
   ArrowUpRight,
   Binary,
+  Code2,
   Database,
   FileSearch,
+  FlaskConical,
   History,
   KeyRound,
   Layers,
@@ -14,6 +16,7 @@ import {
   Scale,
   ScrollText,
   Server,
+  Stethoscope,
   TriangleAlert,
   UserCheck,
 } from "lucide-react";
@@ -24,7 +27,7 @@ import SectionHeader from "@/components/SectionHeader";
 import FlowDiagram from "@/components/FlowDiagram";
 import CtaPanel from "@/components/CtaPanel";
 import Reveal from "@/components/Reveal";
-import SpecCard, { JoinedGrid, type SpecRow } from "@/components/SpecCard";
+import SpecCard, { JoinedGrid, keepClassCase, type SpecRow } from "@/components/SpecCard";
 import JsonLd from "@/components/JsonLd";
 import FhirPreview from "@/components/FhirPreview";
 import { RailMarker } from "@/components/TelemetryRails";
@@ -49,6 +52,15 @@ export const metadata = defineMetadata("/initiatives/pharmadeux", {
 
 const LABEL = "text-[11px] font-medium tracking-wider text-white/50 uppercase";
 const hasDigit = (value: string) => /\d/.test(value);
+// Evidence ladder: code → synthetic rule verification → clinical. Tone drives the SpecCard track, and the
+// claims table reuses the same three steps, so no number reads as stronger evidence than it is.
+const evidenceMeta = [
+  { id: "EVD-01", icon: Code2, tone: "live" as const },
+  { id: "EVD-02", icon: FlaskConical, tone: "prep" as const },
+  { id: "EVD-03", icon: Stethoscope, tone: "input" as const },
+];
+// Evidence level of each claim row (index into evidenceMeta).
+const claimLevels = [0, 0, 0, 1, 1, 2];
 
 const problemIcons = [Layers, Activity, Scale, TriangleAlert];
 const pipelineIcons = [Database, Repeat, Binary, FileSearch, UserCheck, History];
@@ -63,8 +75,8 @@ const pairCounts = [5, 8, 10, 15].map((n) => ({ n, pairs: (n * (n - 1)) / 2 }));
 type Heading = { eyebrow: string; title: string; description: string };
 
 const devCopy = defineContent({
-  tr: { label: "Geliştirme durumu", step: "Geliştirme adımı", rules: "Doğrulanmış kural", version: "Sürüm", updated: "Güncelleme" },
-  en: { label: "Development status", step: "Development step", rules: "Verified rules", version: "Version", updated: "Updated" },
+  tr: { label: "Geliştirme durumu", step: "Geliştirme adımı", rules: "Doğrulanmış kural (sentetik)", version: "Sürüm", updated: "Güncelleme" },
+  en: { label: "Development status", step: "Development step", rules: "Verified rules (synthetic)", version: "Version", updated: "Updated" },
 });
 
 const simCopy = defineContent({
@@ -102,7 +114,9 @@ const copy = defineContent<{
   integrationCards: { title: string; body: string; rows: SpecRow[] }[];
   integrationNote: string;
   validationHeading: Heading;
-  validation: { title: string; value: string; body: string }[];
+  evidence: { title: string; status: string; body: string; rows: SpecRow[] }[];
+  claimColumns: { claim: string; shows: string; notShows: string; level: string };
+  claims: { value: string; label: string; shows: string; notShows: string; level: string }[];
   regulation: Heading;
   intendedUse: { label: string; body: string };
   frameworkColumns: { framework: string; scope: string; status: string };
@@ -120,7 +134,7 @@ const copy = defineContent<{
       { id: "mimari", label: "Nasıl çalışır" },
       { id: "simulator", label: "QT simülatörü" },
       { id: "entegrasyon", label: "HBYS entegrasyonu" },
-      { id: "dogrulama", label: "Doğrulama" },
+      { id: "dogrulama", label: "Kanıt matrisi" },
       { id: "regulasyon", label: "Regülasyon" },
       { id: "protokol", label: "Klinik doğrulama planı" },
     ],
@@ -292,37 +306,95 @@ const copy = defineContent<{
       "Matris entegrasyon mimarisini tarif eder. Hangi arayüzün kurumunuzda nasıl kurulacağı, pilot öncesi teknik keşifte bilgi işlem ekibinizle birlikte belirlenir.",
     validationHeading: {
       eyebrow: "Doğrulama",
-      title: "Neyi, nasıl test ediyoruz.",
+      title: "Doğrulama ve kanıt matrisi.",
       description:
-        "Her kural bir klinik gereksinime ve onu doğrulayan testlere bağlı. Testten geçmeyen değişiklik yayına çıkmaz.",
+        "Sayfadaki her rakam farklı bir kanıt düzeyine ait. Hangisinin kod testi, hangisinin sentetik kural doğrulaması olduğunu ayrı yazdık. Klinik kanıt henüz yok.",
     },
-    validation: [
+    evidence: [
       {
-        title: "Otomatik test",
+        title: "Yazılım ve kod seviyesi",
+        status: "Uygulandı ve test edildi",
+        body: "Kod uygulandı ve her değişiklikte otomatik testten geçiyor. Bu düzey yazılımın tanımlandığı gibi çalıştığını gösterir, klinik doğruluğu göstermez.",
+        rows: [
+          { label: "Otomatik test", value: testsLabel("tr"), mono: true },
+          { label: "Test türü", value: "Birim · entegrasyon" },
+          { label: "Senaryolar", value: "Sentetik test senaryoları" },
+          { label: "Veri modeli", value: "HL7 FHIR R4 kaynakları" },
+        ],
+      },
+      {
+        title: "Kural doğrulama seviyesi",
+        status: "Sentetik doğrulama",
+        body: "Kurallar kaynağından ayrıştırıldı ve sentetik hasta profilleri üzerinde algoritmik olarak doğrulandı. Gerçek hasta verisiyle henüz doğrulanmadı.",
+        rows: [
+          { label: "Doğrulanan kural", value: String(metrics.verifiedRules), mono: true },
+          { label: "Güvenlik düzlemi", value: String(metrics.safetyPlanes), mono: true },
+          { label: "Yöntem", value: "Sentetik hasta profilleri" },
+          { label: "Gerçek veri", value: "Henüz yok" },
+        ],
+      },
+      {
+        title: "Klinik seviye",
+        status: "Pilot bekliyor",
+        body: "Klinik performans henüz ölçülmedi. Bu düzey etik kurul onaylı vaka çalışması ve hastane pilotuyla kurulacak.",
+        rows: [
+          { label: "Vaka testi", value: "Etik kurul onaylı · planlandı" },
+          { label: "Pilot", value: "Prospektif hastane pilotu · bekliyor" },
+          { label: "Teknik dosya", value: "MDR · hazırlıkta" },
+          { label: "CE işareti", value: "Henüz yok" },
+        ],
+      },
+    ],
+    claimColumns: { claim: "İddia", shows: "Neyi gösterir", notShows: "Neyi göstermez", level: "Kanıt düzeyi" },
+    claims: [
+      {
+        value: String(metrics.safetyPlanes),
+        label: "Güvenlik düzlemi",
+        shows: "Kural motorundaki kontrol kategorisi sayısı.",
+        notShows: "Her düzlemin hastada doğru sonuç verdiği.",
+        level: "Yazılım / kod",
+      },
+      {
         value: testsLabel("tr"),
-        body: "Kural motoru, veri dönüşümleri ve entegrasyonlar her değişiklikte otomatik testlerden geçer.",
+        label: "Otomatik test",
+        shows: "Kodun her değişiklikte tanımlandığı gibi çalıştığı.",
+        notShows: "Klinik sonuç ya da hasta güvenliğine etkisi.",
+        level: "Yazılım / kod",
       },
       {
-        title: "Veri standardı",
-        value: "HL7 FHIR R4",
-        body: "Entegrasyon testleri gerçek FHIR R4 kaynak yapılarıyla çalışır.",
+        value: "FHIR R4",
+        label: "Veri standardı",
+        shows: "Veri modelleri ve entegrasyon testleri FHIR R4 kaynak yapılarını kullanıyor.",
+        notShows: "Bir hastane sistemine canlı bağlantı. Pilot entegrasyonu henüz yapılmadı.",
+        level: "Yazılım / kod",
       },
       {
-        title: "Hazırlık seviyesi",
+        value: String(metrics.verifiedRules),
+        label: "Doğrulanmış kural",
+        shows: "Sentetik hasta profillerinde beklenen sonucu veren kural sayısı.",
+        notShows: "Gerçek hastada duyarlılık, özgüllük veya PPV.",
+        level: "Kural (sentetik)",
+      },
+      {
         value: trlLabel("tr"),
-        body: "Bileşenler laboratuvar ortamında doğrulandı. Sıradaki adım, anonimleştirilmiş gerçek vakalarla doğrulama.",
+        label: "Teknoloji hazırlık seviyesi",
+        shows: "Bileşenlerin laboratuvar ortamında doğrulandığı.",
+        notShows: "Gerçek klinik ortamda çalıştığı.",
+        level: "Kural (sentetik)",
       },
       {
-        title: "Tekrarlanabilirlik",
-        value: "Aynı girdi, aynı sonuç",
-        body: "Aynı girdi ve aynı kural sürümü her seferinde aynı sonucu verir. Regresyon testleri bunu her sürümde kontrol eder.",
+        value: "Sınıf IIa",
+        label: "MDR · Kural 11",
+        shows: "Kural 11 kapsamında izlediğimiz hedef sınıflandırma rotası.",
+        notShows: "Sertifika, CE işareti veya onaylanmış kuruluş kararı.",
+        level: "Klinik · bekliyor",
       },
     ],
     regulation: {
       eyebrow: "Regülasyon",
-      title: "MDR kapsamında Sınıf IIa hedefliyoruz.",
+      title: "MDR hedef sınıfı: IIa.",
       description:
-        "PharmaDeux, ilaç tedavisi kararlarına bilgi sağlayan bir yazılım olduğu için AB Tıbbi Cihaz Yönetmeliği'nin (MDR) 11. kuralına giriyor. Henüz CE işareti yok.",
+        "PharmaDeux, ilaç tedavisi kararlarına bilgi sağladığı için AB Tıbbi Cihaz Yönetmeliği'nin (MDR) Ek VIII Kural 11'ine giriyor. Sınıf IIa, bu kurala göre izlediğimiz hedef sınıflandırma rotasıdır; kesinleşmiş bir sınıf ya da sertifika değildir. Sınıf, teknik dosya ve onaylanmış kuruluş değerlendirmesiyle kesinleşir. Henüz CE işareti yok.",
     },
     intendedUse: {
       label: "Kullanım amacı (taslak)",
@@ -330,7 +402,7 @@ const copy = defineContent<{
     },
     frameworkColumns: { framework: "Çerçeve", scope: "Kapsam", status: "Durum" },
     frameworks: [
-      { code: "EU MDR 2017/745", scope: "Tıbbi cihaz yönetmeliği · Ek VIII Kural 11", status: "Sınıf IIa hedefi" },
+      { code: "EU MDR 2017/745", scope: "Tıbbi cihaz yönetmeliği · Ek VIII Kural 11", status: "Hedef rota · Sınıf IIa" },
       { code: "IEC 62304", scope: "Tıbbi cihaz yazılımı yaşam döngüsü", status: "Mimari uyum" },
       { code: "ISO 14971", scope: "Tıbbi cihazlarda risk yönetimi", status: "Mimari uyum" },
       { code: "ISO 13485", scope: "Kalite yönetim sistemi", status: "Yol haritasında" },
@@ -570,37 +642,95 @@ const copy = defineContent<{
       "The matrix describes the integration architecture. Which interface is set up at your institution, and how, is agreed with your IT team during technical discovery before the pilot.",
     validationHeading: {
       eyebrow: "Verification",
-      title: "What we test, and how.",
+      title: "Verification and evidence matrix.",
       description:
-        "Every rule is linked to a clinical requirement and to the tests that verify it. A change that fails its tests is not released.",
+        "Each number on this page belongs to a different level of evidence. We list which ones are code tests and which are synthetic rule verification. There is no clinical evidence yet.",
     },
-    validation: [
+    evidence: [
       {
-        title: "Automated tests",
+        title: "Software and code level",
+        status: "Implemented and tested",
+        body: "The code is implemented and runs through automated tests on every change. This level shows the software works as specified, not that it is clinically correct.",
+        rows: [
+          { label: "Automated tests", value: testsLabel("en"), mono: true },
+          { label: "Test types", value: "Unit · integration" },
+          { label: "Scenarios", value: "Synthetic test scenarios" },
+          { label: "Data model", value: "HL7 FHIR R4 resources" },
+        ],
+      },
+      {
+        title: "Rule verification level",
+        status: "Synthetic verification",
+        body: "Rules were parsed from their sources and verified algorithmically on synthetic patient profiles. They have not been verified on real patient data yet.",
+        rows: [
+          { label: "Verified rules", value: String(metrics.verifiedRules), mono: true },
+          { label: "Safety planes", value: String(metrics.safetyPlanes), mono: true },
+          { label: "Method", value: "Synthetic patient profiles" },
+          { label: "Real data", value: "Not yet" },
+        ],
+      },
+      {
+        title: "Clinical level",
+        status: "Awaiting pilot",
+        body: "Clinical performance has not been measured yet. This level will come from an ethics-approved case study and a hospital pilot.",
+        rows: [
+          { label: "Case testing", value: "Ethics-approved · planned" },
+          { label: "Pilot", value: "Prospective hospital pilot · pending" },
+          { label: "Technical file", value: "MDR · in preparation" },
+          { label: "CE mark", value: "Not yet" },
+        ],
+      },
+    ],
+    claimColumns: { claim: "Claim", shows: "What it shows", notShows: "What it does not show", level: "Evidence level" },
+    claims: [
+      {
+        value: String(metrics.safetyPlanes),
+        label: "Safety planes",
+        shows: "The number of check categories in the rule engine.",
+        notShows: "That each plane gives the right result for a patient.",
+        level: "Software / code",
+      },
+      {
         value: testsLabel("en"),
-        body: "The rule engine, data transformations and integrations run through automated tests on every change.",
+        label: "Automated tests",
+        shows: "That the code works as specified on every change.",
+        notShows: "Clinical outcomes or effect on patient safety.",
+        level: "Software / code",
       },
       {
-        title: "Data standard",
-        value: "HL7 FHIR R4",
-        body: "Integration tests run against real FHIR R4 resource structures.",
+        value: "FHIR R4",
+        label: "Data standard",
+        shows: "Data models and integration tests use FHIR R4 resource structures.",
+        notShows: "A live connection to a hospital system. No pilot integration has been done yet.",
+        level: "Software / code",
       },
       {
-        title: "Readiness level",
+        value: String(metrics.verifiedRules),
+        label: "Verified rules",
+        shows: "The number of rules that give the expected result on synthetic patient profiles.",
+        notShows: "Sensitivity, specificity or PPV on real patients.",
+        level: "Rules (synthetic)",
+      },
+      {
         value: trlLabel("en"),
-        body: "Components have been validated in a laboratory environment. The next step is validation on anonymised real cases.",
+        label: "Technology readiness level",
+        shows: "That components have been validated in a laboratory environment.",
+        notShows: "That it works in a real clinical setting.",
+        level: "Rules (synthetic)",
       },
       {
-        title: "Reproducibility",
-        value: "Same input, same result",
-        body: "The same input and rule version give the same result every time. Regression tests check this on every release.",
+        value: "Class IIa",
+        label: "MDR · Rule 11",
+        shows: "The target classification route we follow under Rule 11.",
+        notShows: "A certificate, a CE mark or a notified body decision.",
+        level: "Clinical · pending",
       },
     ],
     regulation: {
       eyebrow: "Regulation",
-      title: "We are targeting Class IIa under the MDR.",
+      title: "MDR target class: IIa.",
       description:
-        "PharmaDeux provides information used in drug therapy decisions, so it falls under Rule 11 of the EU Medical Device Regulation (MDR). It does not have a CE mark yet.",
+        "PharmaDeux provides information used in drug therapy decisions, so it falls under Annex VIII Rule 11 of the EU Medical Device Regulation (MDR). Class IIa is the target classification route we follow under this rule; it is not a confirmed class or a certificate. The class is confirmed through the technical file and a notified body assessment. It does not have a CE mark yet.",
     },
     intendedUse: {
       label: "Intended use (draft)",
@@ -608,7 +738,7 @@ const copy = defineContent<{
     },
     frameworkColumns: { framework: "Framework", scope: "Scope", status: "Status" },
     frameworks: [
-      { code: "EU MDR 2017/745", scope: "Medical Device Regulation · Annex VIII Rule 11", status: "Class IIa target" },
+      { code: "EU MDR 2017/745", scope: "Medical Device Regulation · Annex VIII Rule 11", status: "Target route · Class IIa" },
       { code: "IEC 62304", scope: "Medical device software life cycle", status: "Architecture aligned" },
       { code: "ISO 14971", scope: "Risk management for medical devices", status: "Architecture aligned" },
       { code: "ISO 13485", scope: "Quality management system", status: "On the roadmap" },
@@ -914,21 +1044,71 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
       <section id="dogrulama" className="scroll-mt-32 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader accent="pharma" {...c.validationHeading} />
-          <Reveal className="mt-14">
-            <dl className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline sm:grid-cols-2 lg:grid-cols-4">
-              {c.validation.map((v) => (
-                <div key={v.title} className="flex flex-col bg-navy-850 p-6">
-                  <dt className={LABEL}>{v.title}</dt>
-                  <dd
-                    className={`mt-3 text-2xl font-semibold tracking-[-0.03em] text-white ${
-                      hasDigit(v.value) ? "font-mono tabular-nums" : ""
-                    }`}
+          <JoinedGrid className="mt-14" columns="lg:grid-cols-3">
+            {c.evidence.map((level, i) => (
+              <SpecCard
+                key={evidenceMeta[i].id}
+                variant="cell"
+                align={{ rows: Math.max(...c.evidence.map((x) => x.rows.length)) }}
+                accent="pharma"
+                id={evidenceMeta[i].id}
+                icon={evidenceMeta[i].icon}
+                title={level.title}
+                body={level.body}
+                rows={level.rows}
+                status={{ label: level.status, tone: evidenceMeta[i].tone }}
+              />
+            ))}
+          </JoinedGrid>
+
+          {/* Claims map: every headline number on the page, with what it does and does not show. Data layer: neutral. */}
+          <Reveal className="mt-8 overflow-hidden rounded-2xl border border-hairline bg-navy-850">
+            <div className="hidden grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.6fr)] border-b border-hairline text-[11px] font-medium tracking-wider text-white/55 uppercase lg:grid">
+              <div className="px-6 py-4">{c.claimColumns.claim}</div>
+              <div className="px-6 py-4">{c.claimColumns.shows}</div>
+              <div className="px-6 py-4">{c.claimColumns.notShows}</div>
+              <div className="px-6 py-4 text-right">{c.claimColumns.level}</div>
+            </div>
+            <dl className="divide-y divide-hairline">
+              {c.claims.map((claim, i) => {
+                const reached = 2 - claimLevels[i];
+                return (
+                  <div
+                    key={claim.label}
+                    className="grid gap-3 px-5 py-5 sm:px-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.6fr)] lg:gap-0 lg:px-0 lg:py-0"
                   >
-                    {v.value}
-                  </dd>
-                  <dd className="mt-3 text-sm leading-relaxed text-white/55">{v.body}</dd>
-                </div>
-              ))}
+                    <dt className="lg:px-6 lg:py-5">
+                      <span className={`block text-[15px] text-white ${hasDigit(claim.value) ? "font-mono tabular-nums" : "font-medium"}`}>
+                        {claim.value}
+                      </span>
+                      <span className="mt-1 block text-[12.5px] text-white/55">{claim.label}</span>
+                    </dt>
+                    <dd className="text-sm leading-relaxed text-white/75 lg:px-6 lg:py-5">
+                      <span className="mr-2 text-[10px] font-medium tracking-wide text-white/55 uppercase lg:hidden">
+                        {c.claimColumns.shows}
+                      </span>
+                      {claim.shows}
+                    </dd>
+                    <dd className="text-sm leading-relaxed text-white/55 lg:px-6 lg:py-5">
+                      <span className="mr-2 text-[10px] font-medium tracking-wide text-white/55 uppercase lg:hidden">
+                        {c.claimColumns.notShows}
+                      </span>
+                      {claim.notShows}
+                    </dd>
+                    <dd className="flex items-center gap-3 lg:flex-col lg:items-end lg:gap-1.5 lg:px-6 lg:py-5">
+                      <span className={`${LABEL} lg:text-right`}>{claim.level}</span>
+                      <span className="flex gap-0.5" aria-hidden="true">
+                        {[0, 1, 2].map((step) => (
+                          <span
+                            key={step}
+                            className={`h-[3px] w-4 rounded-full ${step <= reached ? "bg-white/70" : "bg-white/[0.12]"}`}
+                          />
+                        ))}
+                      </span>
+                    </dd>
+                  </div>
+                );
+              })}
             </dl>
           </Reveal>
         </div>
@@ -965,7 +1145,7 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
                       {f.scope}
                     </td>
                     <td className="px-5 py-3.5 text-right align-top">
-                      <span className={`whitespace-nowrap ${LABEL}`}>{f.status}</span>
+                      <span className={`whitespace-nowrap ${LABEL}`}>{keepClassCase(f.status)}</span>
                     </td>
                   </tr>
                 ))}

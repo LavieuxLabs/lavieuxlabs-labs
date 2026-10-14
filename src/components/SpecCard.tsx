@@ -87,7 +87,7 @@ const accents: Record<Accent | "none", AccentClasses> = {
 };
 
 // Labels are uppercased with CSS; MDR class names (IIa, IIb) must keep their case or they read as "IIA".
-function keepClassCase(label: string) {
+export function keepClassCase(label: string) {
   return label.split(/\b(I{1,3}[ab])\b/).map((part, i) =>
     i % 2 ? (
       <span key={i} className="normal-case">
