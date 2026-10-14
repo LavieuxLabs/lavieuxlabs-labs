@@ -25,7 +25,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import CopyEmail from "@/components/CopyEmail";
-import { TEAM_LEAD, organizationProfile } from "@/lib/site";
+import { TEAM_LEAD, contactHref, organizationProfile } from "@/lib/site";
 import PageHero from "@/components/PageHero";
 import SectionHeader from "@/components/SectionHeader";
 import { RailMarker } from "@/components/TelemetryRails";
@@ -728,7 +728,7 @@ export default function AboutView({ locale }: { locale: Locale }) {
             </TeamCell>
             <TeamCell icon={Stethoscope} label={c.advisory.label} title={c.advisory.title} body={c.advisory.body} rows={c.advisory.rows}>
               <Link
-                href={localizedPath(locale, "/contact?solution=academic")}
+                href={localizedPath(locale, contactHref("academic"))}
                 className={linkCellClass}
               >
                 {c.advisory.link}
@@ -869,7 +869,7 @@ export default function AboutView({ locale }: { locale: Locale }) {
         eyebrow={c.cta.eyebrow}
         title={c.cta.title}
         description={c.cta.description}
-        primaryHref={localizedPath(locale, "/contact?solution=academic")}
+        primaryHref={localizedPath(locale, contactHref("academic"))}
         primaryLabel={c.cta.label}
       />
     </main>

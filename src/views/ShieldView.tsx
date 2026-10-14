@@ -29,6 +29,7 @@ import { RailMarker } from "@/components/TelemetryRails";
 import ClaimSimulator from "@/components/ClaimSimulator";
 import SpecCard, { JoinedGrid, type SpecRow } from "@/components/SpecCard";
 import { shieldJsonLd } from "@/lib/structuredData";
+import { contactHref } from "@/lib/site";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
 
@@ -81,6 +82,7 @@ const copy = defineContent<{
   eyebrow: string;
   title: string;
   description: string;
+  ctaIntro: string;
   ctaPilot: string;
   ctaTry: string;
   problem: Heading;
@@ -131,7 +133,8 @@ const copy = defineContent<{
     title: "Shield. Red riskini fatura gönderilmeden önce görün.",
     description:
       "Hastane fatura ve provizyon süreçlerindeki SUT/SGK red risklerini işlem öncesinde tespit eden kurumsal denetim katmanı. Riskli kalem, nedeniyle birlikte uzmanın kuyruğuna düşer; gönderip göndermemeye uzman karar verir.",
-    ctaPilot: "Demo veya pilot başvurusu",
+    ctaIntro: "15 dk tanışma ve demo",
+    ctaPilot: "Retrospektif pilot başvurusu (LOI)",
     ctaTry: "Örneği deneyin",
     problem: {
       eyebrow: "Sorun",
@@ -372,7 +375,8 @@ const copy = defineContent<{
     title: "Shield. See rejection risk before the claim is submitted.",
     description:
       "Pre-claim revenue integrity platform identifying reimbursement and audit risks before submission. A risky line item goes to the specialist's queue with its reason; the specialist decides whether it is submitted.",
-    ctaPilot: "Request a demo or pilot",
+    ctaIntro: "15-minute intro and demo",
+    ctaPilot: "Apply for a retrospective pilot (LOI)",
     ctaTry: "Try the example",
     problem: {
       eyebrow: "Problem",
@@ -634,10 +638,10 @@ export default function ShieldView({ locale }: { locale: Locale }) {
       >
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link
-            href={href("/contact?solution=shield")}
+            href={href(contactHref("intro", "shield"))}
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors duration-150 ease-out hover:bg-white/90"
           >
-            {c.ctaPilot}
+            {c.ctaIntro}
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </Link>
           <a
@@ -865,7 +869,7 @@ export default function ShieldView({ locale }: { locale: Locale }) {
         locale={locale}
         accent="indigo"
         {...c.cta}
-        primaryHref={href("/contact?solution=shield")}
+        primaryHref={href(contactHref("pilot", "shield"))}
         primaryLabel={c.ctaPilot}
         aside={
           <ul className="divide-y divide-hairline self-center border-y border-hairline">

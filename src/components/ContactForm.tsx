@@ -4,8 +4,8 @@ import { useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, Loader2 } from "lucide-react";
-import { CONTACT_EMAIL, SOLUTION_VALUES, type SolutionValue } from "@/lib/site";
-import { solutionContent } from "@/lib/solutionContent";
+import { CONTACT_EMAIL, type ContactPath, type ProductValue } from "@/lib/site";
+import { contactProducts, contactView } from "@/lib/contactContent";
 import { trackEvent } from "@/lib/analytics";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import CopyEmail from "@/components/CopyEmail";
@@ -13,7 +13,9 @@ import {
   ERROR_LIMIT,
   HONEYPOT_FIELD,
   LIMITS,
-  REQUEST_TYPES,
+  MESSAGE_MIN,
+  detailOptions,
+  roleOptions,
   sanitizeLoi,
   validateLoi,
   type LoiErrorCode,
@@ -27,39 +29,35 @@ const copy = defineContent({
       organizationMissing: "Kurum adını giriniz.",
       organizationLong: (max: number) => `Kurum adı en fazla ${max} karakter olabilir.`,
       organizationChars: "Kurum adı geçersiz karakterler içeriyor.",
-      nameMissing: "İlgili kişinin adını giriniz.",
+      nameMissing: "Adınızı giriniz.",
       nameLong: (max: number) => `Ad en fazla ${max} karakter olabilir.`,
       nameChars: "Ad yalnızca harf, boşluk, nokta, kesme ve tire içerebilir.",
-      titleLong: (max: number) => `Unvan en fazla ${max} karakter olabilir.`,
-      titleChars: "Unvan geçersiz karakterler içeriyor.",
       email: "Geçerli bir e-posta adresi giriniz.",
+      role: "Rolünüzü seçiniz.",
+      detail: "Bir seçenek seçiniz.",
       messageShort: (min: number) => `Lütfen talebinizi en az ${min} karakterle açıklayınız.`,
       messageLong: (max: number) => `Mesaj en fazla ${max} karakter olabilir.`,
       messageMarkup: "Mesaj HTML, betik veya bağlantı kodu içeremez.",
-      solution: "Lütfen geçerli bir çözüm ve talep türü seçiniz.",
+      path: "Lütfen bir temas yolu ve ürün seçiniz.",
       consent: "Devam etmek için aydınlatma metnini onaylamanız gerekir.",
     },
-    optional: "opsiyonel",
-    sentTitle: "Başvurunuz başarıyla iletildi.",
-    sentBody: (email: string) => `Ekibimiz en kısa sürede ${email} adresinden sizinle iletişime geçecektir.`,
+    optional: "isteğe bağlı",
+    sentTitle: "Talebiniz iletildi.",
+    sentBody: (email: string) => `Size ${email} adresinden e-postayla dönüyoruz.`,
     nextTitle: "Sonraki adımlar",
-    nextSteps: [
-      { title: "Teknik keşif ve ön görüşme", body: "HBYS mimariniz, veri akışı ve FHIR R4 / HL7 v2 arayüzleri bilgi işlem ekibinizle incelenir." },
-      { title: "Güvenlik ve izolasyon protokolü", body: "Kurulum biçimi (kurum içi, izole VPC ya da internetsiz ağ), veri işleme sözleşmesi ve KVKK md. 12 tedbirleri üzerinde uzlaşılır." },
-      { title: "Pilot entegrasyon ve doğrulama", body: "Sistem test ortamında FHIR R4 ile bağlanır ve bağımsız referansa karşı doğrulanır. Süre ve servisler kurumla birlikte belirlenir ve LOI'de yazılır." },
-    ],
-    summary: { organization: "Kurum", solution: "Çözüm", requestType: "Talep türü" },
+    summary: { path: "Talep", organization: "Kurum", product: "Ürün", role: "Rol" },
     newRequest: "Yeni talep oluştur",
     fallback: "Eklemek istediğiniz bir şey olursa doğrudan şu adrese yazabilirsiniz:",
     sendFailed: "Talebiniz şu anda iletilemedi. Lütfen birkaç dakika sonra tekrar deneyin ya da doğrudan şu adrese yazın:",
     rateLimited: "Kısa sürede çok sayıda talep gönderildi. Lütfen birkaç dakika sonra tekrar deneyin ya da doğrudan şu adrese yazın:",
     honeypot: "Web sitesi (boş bırakınız)",
-    solutionLegend: "İlgilenilen çözüm",
+    productLegend: "Hangi ürün?",
     organization: "Kurum adı",
-    name: "İlgili kişi",
+    name: "Ad soyad",
     namePlaceholder: "Ad Soyad",
-    requestType: "Talep türü",
-    title: "Unvan / görev",
+    role: "Rolünüz",
+    choose: "Seçiniz",
+    detail: { intro: "", academic: "Çalışma alanı", pilot: "Pilot türü" } as Record<ContactPath, string>,
     email: "Kurumsal e-posta",
     emailPlaceholder: "ad.soyad@kurum.com.tr",
     freeMail: "Mümkünse kurumsal alan adınıza ait bir e-posta adresi kullanmanızı öneririz.",
@@ -70,46 +68,41 @@ const copy = defineContent({
     consentAfter: "kapsamında işleneceğini okudum ve anladım.",
     submitNote: (email: string) => `Gönder'e tıkladığınızda talebiniz doğrudan ${email} adresine iletilir.`,
     preparing: "Gönderiliyor",
-    submit: "Talebi gönder",
   },
   en: {
     errors: {
       organizationMissing: "Enter your organisation's name.",
       organizationLong: (max: number) => `Organisation name can be at most ${max} characters.`,
       organizationChars: "Organisation name contains characters that are not allowed.",
-      nameMissing: "Enter the contact person's name.",
+      nameMissing: "Enter your name.",
       nameLong: (max: number) => `Name can be at most ${max} characters.`,
       nameChars: "Name can only contain letters, spaces, full stops, apostrophes and hyphens.",
-      titleLong: (max: number) => `Job title can be at most ${max} characters.`,
-      titleChars: "Job title contains characters that are not allowed.",
       email: "Enter a valid email address.",
+      role: "Select your role.",
+      detail: "Select an option.",
       messageShort: (min: number) => `Please describe your request in at least ${min} characters.`,
       messageLong: (max: number) => `Message can be at most ${max} characters.`,
       messageMarkup: "The message cannot contain HTML, scripts or link code.",
-      solution: "Select a valid product and request type.",
+      path: "Select a way to start and a product.",
       consent: "To continue, confirm that you have read the privacy notice.",
     },
     optional: "optional",
     sentTitle: "Your request has been sent.",
-    sentBody: (email: string) => `Our team will get back to you shortly from ${email}.`,
+    sentBody: (email: string) => `We will reply by email from ${email}.`,
     nextTitle: "Next steps",
-    nextSteps: [
-      { title: "Technical review and first call", body: "Your hospital information system (HIS) architecture, data flow and FHIR R4 / HL7 v2 interfaces are reviewed with your IT team." },
-      { title: "Security and isolation protocol", body: "Deployment model (on-premises, isolated VPC or air-gapped network), the data processing agreement and KVKK (Turkish data protection law) art. 12 measures are agreed." },
-      { title: "Pilot integration and validation", body: "The system connects over FHIR R4 in a test environment and is validated against an independent reference. Duration and wards are agreed with the institution and written into the LOI." },
-    ],
-    summary: { organization: "Organisation", solution: "Product", requestType: "Request type" },
+    summary: { path: "Request", organization: "Organisation", product: "Product", role: "Role" },
     newRequest: "Start a new request",
     fallback: "If you want to add anything, write to us directly at:",
     sendFailed: "Your request could not be sent right now. Please try again in a few minutes, or write to us directly at:",
     rateLimited: "Too many requests were sent in a short time. Please try again in a few minutes, or write to us directly at:",
     honeypot: "Website (leave empty)",
-    solutionLegend: "Product of interest",
+    productLegend: "Which product?",
     organization: "Organisation",
-    name: "Contact person",
+    name: "Full name",
     namePlaceholder: "Full name",
-    requestType: "Request type",
-    title: "Job title",
+    role: "Your role",
+    choose: "Select",
+    detail: { intro: "", academic: "Area of work", pilot: "Pilot type" } as Record<ContactPath, string>,
     email: "Work email",
     emailPlaceholder: "name.surname@hospital.org",
     freeMail: "If possible, use an address on your organisation's own domain.",
@@ -120,7 +113,6 @@ const copy = defineContent({
     consentAfter: "and understand that my personal data will be processed to answer my request.",
     submitNote: (email: string) => `When you press Send, your request goes directly to ${email}.`,
     preparing: "Sending",
-    submit: "Send request",
   },
 });
 
@@ -137,7 +129,9 @@ const freeMailDomains = [
 ];
 
 type Fields = LoiFields;
-type Errors = Partial<Record<keyof Fields | "solution", string>>;
+type Errors = Partial<Record<keyof Fields | "path", string>>;
+
+const FIELD_ORDER: (keyof Fields | "path")[] = ["path", "name", "role", "organization", "detail", "email", "message", "consent"];
 
 function message(c: Copy, code: LoiErrorCode): string {
   const entry = c.errors[code];
@@ -165,7 +159,7 @@ function Field({
     <div className={className}>
       <label htmlFor={htmlFor} className="flex items-baseline justify-between text-[13px] font-medium text-white/80">
         {label}
-        {optional && <span className="font-mono text-[10.5px] font-normal text-white/55">{optional}</span>}
+        {optional && <span className="text-[11px] font-normal text-white/55">{optional}</span>}
       </label>
       <div className="mt-2">{children}</div>
       {error ? (
@@ -184,23 +178,27 @@ const inputBase =
 
 type ContactFormProps = {
   locale: Locale;
-  solution: SolutionValue;
-  onSolutionChange: (solution: SolutionValue) => void;
+  path: ContactPath;
+  product: ProductValue;
+  onProductChange: (product: ProductValue) => void;
 };
 
-export default function ContactForm({ locale, solution, onSolutionChange }: ContactFormProps) {
+export default function ContactForm({ locale, path, product, onProductChange }: ContactFormProps) {
   const uid = useId();
   const c = copy[locale];
-  const contents = solutionContent[locale];
-  const content = contents[solution];
-  const accent = content.accent;
+  const view = contactView(locale, path, product);
+  const products = contactProducts(locale);
+  const accent = view.accent;
   const inputClass = `${inputBase} ${accent.inputFocus}`;
+  const hasProduct = path !== "academic";
+  const roles = roleOptions(locale, path, product);
+  const details = detailOptions(locale, path, product);
   const [fields, setFields] = useState<Fields>({
     organization: "",
     name: "",
-    title: "",
     email: "",
-    requestType: REQUEST_TYPES[locale][0],
+    role: "",
+    detail: "",
     message: "",
     consent: false,
   });
@@ -208,6 +206,11 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
   const [status, setStatus] = useState<"idle" | "submitting" | "sent">("idle");
   const [sendError, setSendError] = useState<"failed" | "rate" | null>(null);
   const honeypotRef = useRef<HTMLInputElement>(null);
+
+  // Role and detail lists change with the path and product (a physician never sees billing roles);
+  // a choice that is not in the current list counts as not chosen.
+  const role = roles.includes(fields.role) ? fields.role : "";
+  const detail = details.includes(fields.detail) ? fields.detail : "";
 
   const set = <K extends keyof Fields>(key: K, value: Fields[K]) => {
     setFields((f) => ({ ...f, [key]: value }));
@@ -228,21 +231,23 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
       return;
     }
 
-    const clean = sanitizeLoi(fields);
+    const clean = sanitizeLoi({ ...fields, role, detail });
     setFields(clean);
-    const codes = validateLoi(clean, solution, locale);
+    const sentProduct = hasProduct ? product : null;
+    const codes = validateLoi(clean, path, sentProduct, locale);
     const found: Errors = Object.fromEntries(
       Object.entries(codes).map(([key, code]) => [key, message(c, code as LoiErrorCode)]),
     );
     setErrors(found);
     if (Object.keys(found).length > 0) {
-      const first = Object.keys(found)[0];
-      document.getElementById(`${uid}-${first}`)?.focus();
+      // Focus the first invalid field in the order the form shows them, not the order they were validated.
+      const first = FIELD_ORDER.find((key) => found[key]);
+      if (first) document.getElementById(`${uid}-${first}`)?.focus();
       return;
     }
 
     setStatus("submitting");
-    const payload: LoiPayload = { ...clean, locale, solution, [HONEYPOT_FIELD]: "" };
+    const payload: LoiPayload = { ...clean, locale, path, product: sentProduct, [HONEYPOT_FIELD]: "" };
     try {
       const res = await fetch("/api/loi", {
         method: "POST",
@@ -250,8 +255,8 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
         body: JSON.stringify(payload),
       });
       if (res.ok) {
-        // Solution only: no organisation, name or message content is ever sent to analytics.
-        trackEvent("loi_submitted", { solution });
+        // Enumerated values only: no organisation, name, role or message content is sent to analytics.
+        trackEvent("loi_submitted", { path, product: sentProduct ?? "none" });
         setStatus("sent");
         return;
       }
@@ -276,9 +281,10 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
   });
 
   const border = (key: keyof Fields) => (errors[key] ? "border-rose-400/50" : "border-white/[0.1]");
+  const productLabel = products.find((p) => p.value === product)?.label ?? "";
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-hairline bg-white/[0.02] backdrop-blur-md">
+    <div className="relative overflow-hidden rounded-2xl border border-hairline bg-navy-850">
       <div
         aria-hidden="true"
         className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r via-white/10 to-transparent ${accent.topRule}`}
@@ -292,16 +298,15 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
             className="flex flex-col items-start p-7 sm:p-10"
             role="status"
           >
-            <CheckCircle2 className="h-8 w-8 text-emerald-300" strokeWidth={1.6} />
+            <CheckCircle2 className="h-8 w-8 text-white/80" strokeWidth={1.6} />
             <h2 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-white">{c.sentTitle}</h2>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60">
-              {c.sentBody(CONTACT_EMAIL)}
-            </p>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60">{c.sentBody(CONTACT_EMAIL)}</p>
             <dl className="mt-8 w-full divide-y divide-hairline rounded-xl border border-hairline text-sm">
               {[
+                [c.summary.path, view.path.label],
                 [c.summary.organization, fields.organization],
-                [c.summary.solution, content.label],
-                [c.summary.requestType, fields.requestType],
+                ...(hasProduct ? [[c.summary.product, productLabel]] : []),
+                [c.summary.role, fields.role],
               ].map(([k, v]) => (
                 <div key={k} className="flex justify-between gap-4 px-4 py-3">
                   <dt className="text-white/55">{k}</dt>
@@ -312,7 +317,7 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
             <div className="mt-8 w-full">
               <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.nextTitle}</p>
               <ol className="mt-3 divide-y divide-hairline rounded-xl border border-hairline">
-                {c.nextSteps.map((step, i) => (
+                {view.nextSteps.map((step, i) => (
                   <li key={step.title} className="grid grid-cols-[28px_1fr] gap-3 px-4 py-3.5">
                     <span className="font-mono text-[12px] text-white/55 tabular-nums">{i + 1}</span>
                     <span>
@@ -361,47 +366,81 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
               />
             </div>
 
-            <fieldset>
-              <legend className="text-[13px] font-medium text-white/80">{c.solutionLegend}</legend>
-              <div className="mt-2 grid gap-2 sm:grid-cols-3">
-                {SOLUTION_VALUES.map((value) => {
-                  const { icon: Icon, hint, label, accent: cardAccent } = contents[value];
-                  const checked = solution === value;
-                  return (
-                    <label
-                      key={value}
-                      className={`relative flex cursor-pointer flex-col rounded-xl border p-3.5 transition-colors duration-150 ease-out has-[:focus-visible]:ring-2 ${cardAccent.focusRing} ${
-                        checked
-                          ? cardAccent.selectedCard
-                          : "border-white/[0.1] hover:border-white/20 hover:bg-white/[0.02]"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        id={`${uid}-solution-${value}`}
-                        name="solution"
-                        value={value}
-                        checked={checked}
-                        onChange={() => {
-                          onSolutionChange(value);
-                          if (errors.solution) setErrors((e) => ({ ...e, solution: undefined }));
-                        }}
-                        className="sr-only"
-                      />
-                      <Icon
-                        className={`h-4 w-4 transition-colors duration-150 ease-out ${checked ? cardAccent.text : "text-white/55"}`}
-                        strokeWidth={1.8}
-                      />
-                      <span className="mt-3 text-[13px] font-medium text-white">{label}</span>
-                      <span className="mt-0.5 text-[11.5px] leading-snug text-white/55">{hint}</span>
-                    </label>
-                  );
-                })}
-              </div>
-              {errors.solution && <p className="mt-1.5 text-xs text-rose-300">{errors.solution}</p>}
-            </fieldset>
+            <div className="flex items-center gap-3">
+              <view.path.icon className="h-4 w-4 text-white/60" strokeWidth={1.7} aria-hidden="true" />
+              <p className="text-[15px] font-semibold tracking-[-0.01em] text-white">{view.path.label}</p>
+            </div>
+
+            {/* Product first: the physician and the revenue cycle manager get different roles and pilot types. */}
+            {hasProduct && (
+              <fieldset>
+                <legend className="text-[13px] font-medium text-white/80">{c.productLegend}</legend>
+                <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                  {products.map(({ value, icon: Icon, label, hint, accent: cardAccent }) => {
+                    const checked = product === value;
+                    return (
+                      <label
+                        key={value}
+                        className={`relative flex cursor-pointer flex-col rounded-xl border p-3.5 transition-colors duration-150 ease-out has-[:focus-visible]:ring-2 ${cardAccent.focusRing} ${
+                          checked ? cardAccent.selectedCard : "border-white/[0.1] hover:border-white/20 hover:bg-white/[0.02]"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          id={`${uid}-product-${value}`}
+                          name="product"
+                          value={value}
+                          checked={checked}
+                          onChange={() => {
+                            onProductChange(value);
+                            if (errors.path) setErrors((e) => ({ ...e, path: undefined }));
+                          }}
+                          className="sr-only"
+                        />
+                        <Icon
+                          className={`h-4 w-4 transition-colors duration-150 ease-out ${checked ? cardAccent.text : "text-white/55"}`}
+                          strokeWidth={1.8}
+                          aria-hidden="true"
+                        />
+                        <span className="mt-3 text-[13px] font-medium text-white">{label}</span>
+                        <span className="mt-0.5 text-[11.5px] leading-snug text-white/55">{hint}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+                {errors.path && <p className="mt-1.5 text-xs text-rose-300">{errors.path}</p>}
+              </fieldset>
+            )}
 
             <div className="grid gap-5 sm:grid-cols-2">
+              <Field label={c.name} htmlFor={`${uid}-name`} error={errors.name}>
+                <input
+                  {...errorProps("name")}
+                  autoComplete="name"
+                  maxLength={LIMITS.name}
+                  value={fields.name}
+                  onChange={(e) => set("name", e.target.value)}
+                  placeholder={c.namePlaceholder}
+                  className={`${inputClass} ${border("name")}`}
+                />
+              </Field>
+              <Field label={c.role} htmlFor={`${uid}-role`} error={errors.role}>
+                <select
+                  {...errorProps("role")}
+                  value={role}
+                  onChange={(e) => set("role", e.target.value)}
+                  className={`${inputClass} ${border("role")} [&>option]:bg-navy-850 ${role ? "" : "text-white/60"}`}
+                >
+                  <option value="" disabled>
+                    {c.choose}
+                  </option>
+                  {roles.map((r) => (
+                    <option key={r} value={r} className="text-white">
+                      {r}
+                    </option>
+                  ))}
+                </select>
+              </Field>
               <Field
                 className="sm:col-span-2"
                 label={c.organization}
@@ -414,60 +453,37 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
                   maxLength={LIMITS.organization}
                   value={fields.organization}
                   onChange={(e) => set("organization", e.target.value)}
-                  placeholder={content.placeholders.organization}
+                  placeholder={view.placeholders.organization}
                   className={`${inputClass} ${border("organization")}`}
                 />
               </Field>
-              <Field label={c.name} htmlFor={`${uid}-name`} error={errors.name}>
-                <input
-                  {...errorProps("name")}
-                  autoComplete="name"
-                  maxLength={LIMITS.name}
-                  value={fields.name}
-                  onChange={(e) => set("name", e.target.value)}
-                  placeholder={c.namePlaceholder}
-                  className={`${inputClass} ${border("name")}`}
-                />
-              </Field>
-              <Field label={c.requestType} htmlFor={`${uid}-requestType`}>
-                <select
-                  id={`${uid}-requestType`}
-                  value={fields.requestType}
-                  onChange={(e) => set("requestType", e.target.value)}
-                  className={`${inputClass} border-white/[0.1] [&>option]:bg-navy-850`}
+              {details.length > 0 && (
+                <Field
+                  className="sm:col-span-2"
+                  label={c.detail[path]}
+                  htmlFor={`${uid}-detail`}
+                  error={errors.detail}
                 >
-                  {REQUEST_TYPES[locale].map((t) => (
-                    <option key={t}>{t}</option>
-                  ))}
-                </select>
-              </Field>
-              <Field
-                className="sm:col-span-2"
-                label={c.title}
-                htmlFor={`${uid}-title`}
-                error={errors.title}
-                optional={c.optional}
-              >
-                <input
-                  {...errorProps("title")}
-                  autoComplete="organization-title"
-                  maxLength={LIMITS.title}
-                  value={fields.title}
-                  onChange={(e) => set("title", e.target.value)}
-                  placeholder={content.placeholders.title}
-                  className={`${inputClass} ${border("title")}`}
-                />
-              </Field>
+                  <select
+                    {...errorProps("detail")}
+                    value={detail}
+                    onChange={(e) => set("detail", e.target.value)}
+                    className={`${inputClass} ${border("detail")} [&>option]:bg-navy-850 ${detail ? "" : "text-white/60"}`}
+                  >
+                    <option value="" disabled>
+                      {c.choose}
+                    </option>
+                    {details.map((d) => (
+                      <option key={d} value={d} className="text-white">
+                        {d}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+              )}
             </div>
 
-            <Field
-              label={c.email}
-              htmlFor={`${uid}-email`}
-              error={errors.email}
-              hint={
-                freeMail ? c.freeMail : undefined
-              }
-            >
+            <Field label={c.email} htmlFor={`${uid}-email`} error={errors.email} hint={freeMail ? c.freeMail : undefined}>
               <input
                 {...errorProps("email")}
                 type="email"
@@ -487,6 +503,7 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
               label={c.message}
               htmlFor={`${uid}-message`}
               error={errors.message}
+              optional={MESSAGE_MIN[path] === 0 ? c.optional : undefined}
               hint={
                 <span className="flex justify-between gap-4">
                   <span>{c.messageHint}</span>
@@ -498,11 +515,11 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
             >
               <textarea
                 {...errorProps("message")}
-                rows={5}
+                rows={path === "intro" ? 3 : 5}
                 maxLength={LIMITS.message}
                 value={fields.message}
                 onChange={(e) => set("message", e.target.value)}
-                placeholder={content.placeholders.message}
+                placeholder={view.placeholders.message}
                 className={`${inputClass} resize-y ${border("message")}`}
               />
             </Field>
@@ -542,13 +559,11 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
             )}
 
             <div className="flex flex-col gap-4 border-t border-hairline pt-6 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-xs leading-relaxed text-white/55">
-                {c.submitNote(CONTACT_EMAIL)}
-              </p>
+              <p className="text-xs leading-relaxed text-white/55">{c.submitNote(CONTACT_EMAIL)}</p>
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors disabled:opacity-70 ${accent.buttonHover}`}
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors duration-150 ease-out hover:bg-white/90 disabled:opacity-70"
               >
                 {status === "submitting" ? (
                   <>
@@ -556,7 +571,7 @@ export default function ContactForm({ locale, solution, onSolutionChange }: Cont
                   </>
                 ) : (
                   <>
-                    {c.submit} <ArrowUpRight className="h-4 w-4" />
+                    {view.path.submit} <ArrowUpRight className="h-4 w-4" />
                   </>
                 )}
               </button>

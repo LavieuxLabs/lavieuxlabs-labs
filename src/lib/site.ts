@@ -49,8 +49,16 @@ export const TEAM_LEAD = {
   linkedin: null as string | null,
 };
 
-export const SOLUTION_VALUES = ["pharmadeux", "shield", "academic"] as const;
-export type SolutionValue = (typeof SOLUTION_VALUES)[number];
+// Contact has two axes: how the visitor wants to start (path) and which product it concerns. The
+// 15-minute intro call is the default, so a first contact never starts with a Letter of Intent.
+export const CONTACT_PATHS = ["intro", "academic", "pilot"] as const;
+export type ContactPath = (typeof CONTACT_PATHS)[number];
+export const PRODUCT_VALUES = ["pharmadeux", "shield"] as const;
+export type ProductValue = (typeof PRODUCT_VALUES)[number];
+
+/** Locale-free contact link; components prefix it with localizedPath(). */
+export const contactHref = (path: ContactPath, product?: ProductValue) =>
+  `/contact?path=${path}${product ? `&product=${product}` : ""}`;
 
 // Postal address stays in Turkish (it is an address); institution and unit names are translated.
 const officeNames = defineContent({
@@ -106,7 +114,7 @@ export const navigation = defineContent({
       { href: "/about", label: "Hakkımızda" },
       { href: "/contact", label: "İletişim" },
     ] as NavLink[],
-    cta: "Pilot başvurusu (LOI)",
+    cta: "Görüşme planla",
     homeAria: "LavieuxLabs ana sayfa",
     mainNav: "Ana navigasyon",
     openMenu: "Menüyü aç",
@@ -131,7 +139,7 @@ export const navigation = defineContent({
         links: [
           { href: "/about", label: "Hakkımızda" },
           { href: "/contact", label: "İletişim" },
-          { href: "/contact?solution=pharmadeux", label: "Pilot başvurusu (LOI)" },
+          { href: "/contact?path=pilot", label: "Pilot başvurusu (LOI)" },
         ],
       },
       {
@@ -168,7 +176,7 @@ export const navigation = defineContent({
       { href: "/about", label: "About" },
       { href: "/contact", label: "Contact" },
     ],
-    cta: "Apply for a pilot (LOI)",
+    cta: "Book a call",
     homeAria: "LavieuxLabs home",
     mainNav: "Main navigation",
     openMenu: "Open menu",
@@ -193,7 +201,7 @@ export const navigation = defineContent({
         links: [
           { href: "/about", label: "About" },
           { href: "/contact", label: "Contact" },
-          { href: "/contact?solution=pharmadeux", label: "Apply for a pilot (LOI)" },
+          { href: "/contact?path=pilot", label: "Apply for a pilot (LOI)" },
         ],
       },
       {

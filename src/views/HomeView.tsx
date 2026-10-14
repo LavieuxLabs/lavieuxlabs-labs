@@ -8,6 +8,7 @@ import CtaPanel from "@/components/CtaPanel";
 import JsonLd from "@/components/JsonLd";
 import { RailMarker } from "@/components/TelemetryRails";
 import { homeJsonLd } from "@/lib/structuredData";
+import { contactHref } from "@/lib/site";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
 import { metrics, testsLabel, trlLabel } from "@/lib/metrics";
@@ -37,6 +38,7 @@ const copy = defineContent<{
   titleSignature: string;
   lead: string;
   ctaProducts: string;
+  ctaIntro: string;
   ctaPilot: string;
   heroStats: { value: string; label: string }[];
   products: { eyebrow: string; title: string; description: string };
@@ -52,6 +54,7 @@ const copy = defineContent<{
     titleSignature: "karar destek",
     lead: "PharmaDeux, çoklu ilaç tedavisinde riskli kombinasyonları reçete anında hekime gösterir. Shield, SUT ve SGK red risklerini fatura gönderilmeden önce yakalar. İkisinde de son kararı yetkili kişi verir ve her adım kayda geçer.",
     ctaProducts: "Ürünleri inceleyin",
+    ctaIntro: "15 dk tanışma görüşmesi",
     ctaPilot: "Pilot başvurusu (LOI)",
     heroStats: [
       { value: String(metrics.safetyPlanes), label: "İlaç güvenliği kontrol başlığı" },
@@ -162,6 +165,7 @@ const copy = defineContent<{
     titleSignature: "Decision support",
     lead: "PharmaDeux shows the physician risky drug combinations in polypharmacy at the moment of prescription. Shield catches reimbursement and audit risks before a claim is submitted. In both, a qualified person makes the final decision and every step is recorded.",
     ctaProducts: "See the products",
+    ctaIntro: "15-minute intro call",
     ctaPilot: "Apply for a pilot (LOI)",
     heroStats: [
       { value: String(metrics.safetyPlanes), label: "Medication safety checks" },
@@ -317,10 +321,10 @@ export default function HomeView({ locale }: { locale: Locale }) {
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </a>
             <Link
-              href={href("/contact")}
+              href={href(contactHref("intro"))}
               className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/[0.06] px-5 py-3 text-sm font-medium text-white transition-colors duration-150 ease-out hover:bg-white/[0.1]"
             >
-              {c.ctaPilot}
+              {c.ctaIntro}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </Reveal>
@@ -401,7 +405,7 @@ export default function HomeView({ locale }: { locale: Locale }) {
         <CtaPanel
           locale={locale}
           {...c.pilot}
-          primaryHref={href("/contact")}
+          primaryHref={href(contactHref("pilot"))}
           primaryLabel={c.ctaPilot}
           aside={
             <ul className="divide-y divide-hairline border-y border-hairline">

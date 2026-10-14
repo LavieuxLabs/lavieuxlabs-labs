@@ -33,6 +33,7 @@ import FhirPreview from "@/components/FhirPreview";
 import { RailMarker } from "@/components/TelemetryRails";
 import QtSimulator from "@/components/QtSimulator";
 import { pharmaDeuxJsonLd } from "@/lib/structuredData";
+import { contactHref } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
 import { metrics, testsLabel, trlLabel } from "@/lib/metrics";
@@ -101,6 +102,7 @@ const copy = defineContent<{
   eyebrow: string;
   title: string;
   description: string;
+  ctaIntro: string;
   ctaPilot: string;
   ctaHow: string;
   problem: Heading;
@@ -149,6 +151,7 @@ const copy = defineContent<{
     title: "PharmaDeux CDSS. Reçete yazılırken ilaç güvenliğini kontrol eder.",
     description:
       "Çoklu ilaç tedavilerinde toksisite ve kümülatif organ yükünü reçete anında hekime bildiren klinik karar destek sistemi. Her uyarı, onu tetikleyen kural ve eşik değeriyle birlikte gösterilir; son karar hekimindir.",
+    ctaIntro: "15 dk tanışma görüşmesi",
     ctaPilot: "Pilot başvurusu (LOI)",
     ctaHow: "Nasıl çalıştığını görün",
     problem: {
@@ -486,6 +489,7 @@ const copy = defineContent<{
     title: "PharmaDeux CDSS. Checks medication safety while the prescription is written.",
     description:
       "Clinical decision support software alerting physicians to cumulative organ burden and toxicity at the moment of prescription. Each alert is shown with the rule and threshold that triggered it; the physician makes the final decision.",
+    ctaIntro: "15-minute intro call",
     ctaPilot: "Apply for a pilot (LOI)",
     ctaHow: "See how it works",
     problem: {
@@ -876,10 +880,10 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
       >
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link
-            href={href("/contact?solution=pharmadeux")}
+            href={href(contactHref("intro", "pharmadeux"))}
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors duration-150 ease-out hover:bg-white/90"
           >
-            {c.ctaPilot}
+            {c.ctaIntro}
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </Link>
           <a
@@ -1200,7 +1204,7 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
       <CtaPanel
         locale={locale}
         {...c.cta}
-        primaryHref={href("/contact?solution=pharmadeux")}
+        primaryHref={href(contactHref("pilot", "pharmadeux"))}
         primaryLabel={c.ctaPilot}
         aside={
           <ul className="divide-y divide-hairline self-center border-y border-hairline">

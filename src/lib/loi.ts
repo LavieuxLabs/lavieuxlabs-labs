@@ -1,34 +1,134 @@
-// Pilot / LOI request: field limits, sanitising and validation shared by the contact form (browser)
-// and the /api/loi route handler (server). The server re-runs the same checks, because the API can be
-// called without the form. Validation returns error codes; the form maps them to localised messages.
+// Contact request (intro call, academic partnership, pilot / LOI): field limits, option lists,
+// sanitising and validation shared by the contact form (browser) and the /api/loi route handler
+// (server). The server re-runs the same checks, because the API can be called without the form.
+// Validation returns error codes; the form maps them to localised messages.
 
-import { SOLUTION_VALUES, type SolutionValue } from "@/lib/site";
+import { CONTACT_PATHS, PRODUCT_VALUES, type ContactPath, type ProductValue } from "@/lib/site";
 import { defineContent, locales, type Locale } from "@/i18n/config";
 
 export const LIMITS = {
   organization: 120,
   name: 80,
-  title: 80,
   email: 254,
   message: 2000,
 } as const;
 
-export const MESSAGE_MIN = 20;
+/** The intro call needs no message; academic and pilot requests need a short description. */
+export const MESSAGE_MIN: Record<ContactPath, number> = { intro: 0, academic: 20, pilot: 20 };
 
 /** Name of the honeypot input. Real users never see it; bots that auto-fill every field do. */
 export const HONEYPOT_FIELD = "website_hp";
 
-export const REQUEST_TYPES = defineContent<string[]>({
-  tr: ["Niyet Mektubu (LOI) / Pilot", "Ürün demosu", "Retrospektif doğrulama iş birliği", "Genel bilgi"],
-  en: ["Letter of Intent (LOI) / Pilot", "Product demo", "Retrospective validation study", "General enquiry"],
+type Options = {
+  /** Who is writing. Product paths list the people who buy or use that product. */
+  roles: Record<ProductValue | "academic", string[]>;
+  /** Pilot type per product (pilot path only). */
+  pilotTypes: Record<ProductValue, string[]>;
+  /** Area of work (academic path only). */
+  academicFocus: string[];
+};
+
+export const CONTACT_OPTIONS = defineContent<Options>({
+  tr: {
+    roles: {
+      pharmadeux: [
+        "Hekim",
+        "Klinik eczacı",
+        "Başhekim / başhekim yardımcısı",
+        "Eczacılık hizmetleri sorumlusu",
+        "Bilgi işlem / HBYS sorumlusu",
+        "Diğer",
+      ],
+      shield: [
+        "Gelir döngüsü yöneticisi",
+        "Fatura / provizyon sorumlusu",
+        "Döner sermaye / mali işler",
+        "Hastane yöneticisi",
+        "Bilgi işlem / HBYS sorumlusu",
+        "Diğer",
+      ],
+      academic: [
+        "Hekim",
+        "Klinik eczacı",
+        "Farmakolog",
+        "Tıp fakültesi araştırmacısı",
+        "Eczacılık fakültesi araştırmacısı",
+        "Diğer",
+      ],
+    },
+    pilotTypes: {
+      pharmadeux: ["Retrospektif reçete doğrulaması", "CDSS gölge modu"],
+      shield: ["Retrospektif fatura testi", "Gönderim öncesi pilot"],
+    },
+    academicFocus: [
+      "Klinik doğrulama çalışması",
+      "Farmakoloji kuralları",
+      "Organ risk protokolleri",
+      "Ortak fon başvurusu",
+      "Diğer",
+    ],
+  },
+  en: {
+    roles: {
+      pharmadeux: [
+        "Physician",
+        "Clinical pharmacist",
+        "Chief medical officer / deputy",
+        "Head of pharmacy services",
+        "IT / HIS lead",
+        "Other",
+      ],
+      shield: [
+        "Revenue cycle manager",
+        "Billing / pre-authorisation lead",
+        "Finance office",
+        "Hospital manager",
+        "IT / HIS lead",
+        "Other",
+      ],
+      academic: [
+        "Physician",
+        "Clinical pharmacist",
+        "Pharmacologist",
+        "Medical faculty researcher",
+        "Pharmacy faculty researcher",
+        "Other",
+      ],
+    },
+    pilotTypes: {
+      pharmadeux: ["Retrospective prescription validation", "CDSS shadow mode"],
+      shield: ["Retrospective claims test", "Pre-submission pilot"],
+    },
+    academicFocus: [
+      "Clinical validation study",
+      "Pharmacology rules",
+      "Organ risk protocols",
+      "Joint funding application",
+      "Other",
+    ],
+  },
 });
+
+/** Role options for a path and product. */
+export function roleOptions(locale: Locale, path: ContactPath, product: ProductValue) {
+  const o = CONTACT_OPTIONS[locale];
+  return path === "academic" ? o.roles.academic : o.roles[product];
+}
+
+/** Second select: pilot type (pilot), area of work (academic); the intro call has none. */
+export function detailOptions(locale: Locale, path: ContactPath, product: ProductValue): string[] {
+  const o = CONTACT_OPTIONS[locale];
+  if (path === "pilot") return o.pilotTypes[product];
+  if (path === "academic") return o.academicFocus;
+  return [];
+}
 
 export type LoiFields = {
   organization: string;
   name: string;
-  title: string;
   email: string;
-  requestType: string;
+  role: string;
+  detail: string;
   message: string;
   consent: boolean;
 };
@@ -40,16 +140,16 @@ export type LoiErrorCode =
   | "nameMissing"
   | "nameLong"
   | "nameChars"
-  | "titleLong"
-  | "titleChars"
   | "email"
+  | "role"
+  | "detail"
   | "messageShort"
   | "messageLong"
   | "messageMarkup"
-  | "solution"
+  | "path"
   | "consent";
 
-export type LoiErrors = Partial<Record<keyof LoiFields | "solution", LoiErrorCode>>;
+export type LoiErrors = Partial<Record<keyof LoiFields | "path", LoiErrorCode>>;
 
 // C0/C1 control characters, zero-width / bidi override characters (used to disguise content).
 const CONTROL_CHARS =
@@ -91,22 +191,26 @@ export function sanitizeLoi(f: LoiFields): LoiFields {
     ...f,
     organization: cleanLine(f.organization),
     name: cleanLine(f.name),
-    title: cleanLine(f.title),
     email: cleanLine(f.email).toLowerCase(),
-    requestType: cleanLine(f.requestType),
+    role: cleanLine(f.role),
+    detail: cleanLine(f.detail),
     message: cleanText(f.message),
   };
 }
 
-export function isSolution(value: unknown): value is SolutionValue {
-  return SOLUTION_VALUES.some((v) => v === value);
+export function isContactPath(value: unknown): value is ContactPath {
+  return CONTACT_PATHS.some((v) => v === value);
+}
+
+export function isProduct(value: unknown): value is ProductValue {
+  return PRODUCT_VALUES.some((v) => v === value);
 }
 
 export function isLocale(value: unknown): value is Locale {
   return locales.some((l) => l === value);
 }
 
-export function validateLoi(f: LoiFields, solution: unknown, locale: Locale): LoiErrors {
+export function validateLoi(f: LoiFields, path: unknown, product: unknown, locale: Locale): LoiErrors {
   const errors: LoiErrors = {};
 
   if (f.organization.length < 2) errors.organization = "organizationMissing";
@@ -117,18 +221,21 @@ export function validateLoi(f: LoiFields, solution: unknown, locale: Locale): Lo
   else if (f.name.length > LIMITS.name) errors.name = "nameLong";
   else if (!NAME_PATTERN.test(f.name)) errors.name = "nameChars";
 
-  if (f.title) {
-    if (f.title.length > LIMITS.title) errors.title = "titleLong";
-    else if (!ORGANIZATION_PATTERN.test(f.title)) errors.title = "titleChars";
-  }
-
   if (!EMAIL_PATTERN.test(f.email)) errors.email = "email";
 
-  if (f.message.length < MESSAGE_MIN) errors.message = "messageShort";
+  // Path and product decide which options are valid; the academic path has no product.
+  if (!isContactPath(path) || (path !== "academic" && !isProduct(product))) {
+    errors.path = "path";
+    return errors;
+  }
+  const productForOptions: ProductValue = isProduct(product) ? product : "pharmadeux";
+  if (!roleOptions(locale, path, productForOptions).includes(f.role)) errors.role = "role";
+  const details = detailOptions(locale, path, productForOptions);
+  if (details.length > 0 ? !details.includes(f.detail) : f.detail !== "") errors.detail = "detail";
+
+  if (f.message.length < MESSAGE_MIN[path]) errors.message = "messageShort";
   else if (f.message.length > LIMITS.message) errors.message = "messageLong";
   else if (MARKUP_PATTERN.test(f.message)) errors.message = "messageMarkup";
-
-  if (!isSolution(solution) || !REQUEST_TYPES[locale].includes(f.requestType)) errors.solution = "solution";
 
   if (f.consent !== true) errors.consent = "consent";
   return errors;
@@ -138,10 +245,14 @@ export function validateLoi(f: LoiFields, solution: unknown, locale: Locale): Lo
 export const ERROR_LIMIT: Partial<Record<LoiErrorCode, number>> = {
   organizationLong: LIMITS.organization,
   nameLong: LIMITS.name,
-  titleLong: LIMITS.title,
-  messageShort: MESSAGE_MIN,
+  messageShort: MESSAGE_MIN.pilot,
   messageLong: LIMITS.message,
 };
 
-/** Request body the form posts to /api/loi. */
-export type LoiPayload = LoiFields & { locale: Locale; solution: SolutionValue; [HONEYPOT_FIELD]: string };
+/** Request body the form posts to /api/loi. `product` is null on the academic path. */
+export type LoiPayload = LoiFields & {
+  locale: Locale;
+  path: ContactPath;
+  product: ProductValue | null;
+  [HONEYPOT_FIELD]: string;
+};

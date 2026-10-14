@@ -10,14 +10,14 @@ import { defineMetadata } from "@/i18n/metadata";
 
 export const metadata = defineMetadata("/contact", {
   tr: {
-    title: "İletişim ve Niyet Mektubu (LOI)",
+    title: "İletişim: tanışma görüşmesi, akademik ortaklık ve pilot",
     description:
-      "PharmaDeux CDSS, Shield veya akademik iş birlikleri için pilot, demo ve Niyet Mektubu (LOI) talebinizi iletin.",
+      "PharmaDeux CDSS veya Shield için 15 dakikalık tanışma görüşmesi isteyin, akademik doğrulama ortaklığı önerin ya da pilot (LOI) başvurusu yapın.",
   },
   en: {
-    title: "Contact and Letter of Intent (LOI)",
+    title: "Contact: intro call, academic partnership and pilot",
     description:
-      "Send a pilot, demo or Letter of Intent (LOI) request for PharmaDeux CDSS, Shield or an academic collaboration.",
+      "Request a 15-minute intro call about PharmaDeux CDSS or Shield, propose an academic validation partnership, or apply for a pilot (LOI).",
   },
 });
 
@@ -25,9 +25,9 @@ const copy = defineContent({
   tr: {
     crumbs: { home: "Ana sayfa", here: "İletişim" },
     eyebrow: "İletişim",
-    title: "Pilot, demo ya da iş birliği için yazın.",
+    title: "Üç yoldan biriyle başlayın.",
     description:
-      "Formu doldurun; hangi ürünle ilgilendiğinizi ve kurumunuzun ihtiyacını kısaca yazın. Size e-postayla dönüyoruz.",
+      "Çoğu kurum 15 dakikalık bir tanışma görüşmesiyle başlar; bunun için bir taahhüt gerekmez. Akademik ortaklık ve pilot başvurusu ayrı yollardır.",
     location: {
       eyebrow: "Konum",
       title: "Ekip Konya'da çalışıyor.",
@@ -38,9 +38,9 @@ const copy = defineContent({
   en: {
     crumbs: { home: "Home", here: "Contact" },
     eyebrow: "Contact",
-    title: "Write to us about a pilot, a demo or a collaboration.",
+    title: "Start in one of three ways.",
     description:
-      "Fill in the form with the product you are interested in and a short note on your institution's needs. We reply by email.",
+      "Most institutions start with a 15-minute intro call, which needs no commitment. An academic partnership and a pilot application are separate paths.",
     location: {
       eyebrow: "Location",
       title: "The team works in Konya.",

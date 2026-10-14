@@ -7,7 +7,7 @@ import {
   type LoiFields,
 } from "@/lib/loi";
 
-// Pilot / LOI request delivery. The contact form posts JSON here; the request is validated again on
+// Contact request delivery (intro call, academic partnership, pilot / LOI). The contact form posts JSON here; the request is validated again on
 // the server and sent as a plain-text email to CONTACT_EMAIL through the Resend REST API (no SDK
 // dependency). Reply-To is the requester, so the team can answer straight from the inbox.
 //
@@ -17,7 +17,8 @@ import {
 //   RESEND_API_URL   optional override of https://api.resend.com (used by the end-to-end tests).
 
 const MAX_BODY_BYTES = 16 * 1024;
-const SOLUTION_LABELS = { pharmadeux: "PharmaDeux CDSS", shield: "Shield", academic: "Akademik İş Birliği" } as const;
+const PATH_LABELS = { intro: "15 dk tanışma", academic: "Akademik / klinik ortaklık", pilot: "Pilot / LOI" } as const;
+const PRODUCT_LABELS = { pharmadeux: "PharmaDeux CDSS", shield: "Shield" } as const;
 
 // Best-effort limit per client IP: 6 accepted requests per 10 minutes. It lives in the memory of one
 // server instance, so it slows down scripted abuse; it is not a guarantee across instances.
@@ -79,15 +80,17 @@ export async function POST(request: Request) {
   const fields: LoiFields = sanitizeLoi({
     organization: asString(body.organization),
     name: asString(body.name),
-    title: asString(body.title),
     email: asString(body.email),
-    requestType: asString(body.requestType),
+    role: asString(body.role),
+    detail: asString(body.detail),
     message: asString(body.message),
     consent: body.consent === true,
   });
-  const errors = validateLoi(fields, body.solution, locale);
+  const errors = validateLoi(fields, body.path, body.product, locale);
   if (Object.keys(errors).length > 0) return json(400, { error: "invalid", fields: errors });
-  const solution = body.solution as keyof typeof SOLUTION_LABELS;
+  const path = body.path as keyof typeof PATH_LABELS;
+  // The academic path carries no product; validation has already rejected a missing product elsewhere.
+  const product = path === "academic" ? null : PRODUCT_LABELS[body.product as keyof typeof PRODUCT_LABELS];
 
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   if (rateLimited(ip, Date.now())) return json(429, { error: "rate_limited" });
@@ -98,18 +101,18 @@ export async function POST(request: Request) {
     return json(503, { error: "not_configured" });
   }
 
-  const solutionLabel = SOLUTION_LABELS[solution];
-  const subject = `[${solutionLabel}] ${fields.requestType} — ${fields.organization}`;
+  const subject = `[${PATH_LABELS[path]}${product ? ` · ${product}` : ""}] ${fields.organization}`;
   const text = [
+    `Talep: ${PATH_LABELS[path]}`,
+    ...(product ? [`Ürün: ${product}`] : []),
     `Kurum: ${fields.organization}`,
-    `İlgili kişi: ${fields.name}${fields.title ? ` (${fields.title})` : ""}`,
+    `İlgili kişi: ${fields.name} (${fields.role})`,
     `E-posta: ${fields.email}`,
-    `İlgilenilen çözüm: ${solutionLabel}`,
-    `Talep türü: ${fields.requestType}`,
+    ...(fields.detail ? [`${path === "pilot" ? "Pilot türü" : "Çalışma alanı"}: ${fields.detail}`] : []),
     `Form dili: ${locale.toUpperCase()}`,
     `KVKK aydınlatma onayı: evet`,
     "",
-    fields.message,
+    fields.message || "(mesaj yok)",
     "",
     "—",
     "lavieuxlabs.com iletişim formundan gönderildi. Yanıtla, başvuru sahibine gider.",
