@@ -1,14 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <rect width="32" height="32" rx="7" fill="#080A0F"/>
-  <!-- LavieuxLabs mark, filled for 16px: vertical faces light, feet one step darker, plus in the mark violet, so the
-       plane seams read without hairlines that would blur at small sizes. Geometry: src/lib/logoMark.ts. -->
-  <g fill="#C9CAD0">
+  <!-- LavieuxLabs mark, filled for 16px, all cobalt in two steps: vertical faces lighter, feet and plus in
+       the mark colour #4353FA, so the planes read without hairlines that blur at small sizes.
+       Geometry: src/lib/logoMark.ts. -->
+  <g fill="#6F7DFF">
     <path d="M6 11.5 10.5 8.5V19L6 22z"/>
     <path d="M12.75 7l4.5-3v10.5l-4.5 3z"/>
   </g>
-  <path fill="#7F88FF" d="M22 7.5h3v2.5h2.5v3H25v2.5h-3V13h-2.5v-3H22z"/>
-  <g fill="#7C7E87">
+  <g fill="#4353FA">
     <path d="M10.5 19l9 6-4.5 3-9-6z"/>
     <path d="M17.25 14.5l9 6-4.5 3-9-6z"/>
+    <path d="M22 7.5h3v2.5h2.5v3H25v2.5h-3V13h-2.5v-3H22z"/>
   </g>
 </svg>

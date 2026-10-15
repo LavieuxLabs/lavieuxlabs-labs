@@ -165,7 +165,7 @@ export default function Navbar({ locale }: { locale: Locale }) {
           className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
         >
           <Link href={localizedPath(locale, "/")} className="group flex items-center gap-2.5" aria-label={nav.homeAria}>
-            <LogoMark size={28} className="text-titanium" />
+            <LogoMark size={28} />
             <span className="text-[15px] font-semibold tracking-[-0.02em] text-white">
               Lavieux<span className="text-white/50">Labs</span>
             </span>
