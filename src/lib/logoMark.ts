@@ -2,9 +2,9 @@
 // projection (vertical face + foot, one plane seam each; edges on a 2:3 slope), the inner L set back
 // along the depth axis, and an equal-armed medical plus on the right wing. Single source for LogoMark
 // (src/components/LogoMark.tsx) and the OG card (src/lib/ogImage.tsx). Line drawing on a 32-unit grid,
-// 1.5-unit stroke. The favicon (src/app/icon.svg) is a filled, 16px-tuned rendering of the same planes.
+// 1.75-unit stroke. The favicon (src/app/icon.svg) is a filled, 16px-tuned rendering of the same planes.
 export const MARK_VIEWBOX = "0 0 32 32";
-export const MARK_STROKE = 1.5;
+export const MARK_STROKE = 1.75;
 /** Outlines (silhouettes) and plane seams, outer L first. */
 export const MARK_PATHS = [
   "M6 11.5 10.5 8.5V19l9 6-4.5 3-9-6z",
