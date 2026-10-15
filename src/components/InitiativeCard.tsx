@@ -32,12 +32,14 @@ const accents = {
     icon: "text-pharma",
     link: "text-teal-200 hover:text-teal-100",
     ambient: "ambient-card-pharma",
+    ambientHover: "ambient-card-pharma-hover",
     hover: "hover:border-pharma/40",
   },
   indigo: {
     icon: "text-shield",
     link: "text-indigo-200 hover:text-indigo-100",
     ambient: "ambient-card-shield",
+    ambientHover: "ambient-card-shield-hover",
     hover: "hover:border-shield/40",
   },
 } as const;
@@ -68,10 +70,15 @@ export default function InitiativeCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ type: "spring", bounce: 0, duration: 0.5 }}
-      className={`relative isolate flex flex-col overflow-hidden rounded-2xl border border-hairline bg-navy-850 p-6 transition-colors duration-150 ease-out hover:bg-navy-800 sm:p-8 ${tone.hover} ${className}`}
+      className={`group relative isolate flex flex-col overflow-hidden rounded-2xl border border-hairline bg-navy-850 p-6 transition-colors duration-150 ease-out hover:bg-navy-800 sm:p-8 ${tone.hover} ${className}`}
     >
       {/* The product's own ambient light drifts in from the card's top corner. */}
       <div aria-hidden="true" className={`pointer-events-none absolute inset-0 -z-10 print:hidden ${tone.ambient}`} />
+      {/* On hover (or keyboard focus inside the card) a stronger, wider wash of the same light fades in. */}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-150 ease-out group-focus-within:opacity-100 group-hover:opacity-100 print:hidden ${tone.ambientHover}`}
+      />
       <div className="flex items-center gap-2.5">
         <Icon className={`h-4 w-4 ${tone.icon}`} strokeWidth={1.7} aria-hidden="true" />
         <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{category}</p>

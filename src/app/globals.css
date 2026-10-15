@@ -114,6 +114,16 @@
 @utility ambient-card-shield {
   background-image: radial-gradient(90% 70% at 0% 0%, rgb(217 155 38 / 0.07), transparent 70%);
 }
+/*
+ * Hover layer of the home product cards: a stronger, wider wash of the same light. Gradients cannot be
+ * interpolated, so InitiativeCard stacks this layer over the rest layer and fades its opacity (150ms).
+ */
+@utility ambient-card-pharma-hover {
+  background-image: radial-gradient(130% 100% at 0% 0%, rgb(200 42 53 / 0.2), transparent 72%);
+}
+@utility ambient-card-shield-hover {
+  background-image: radial-gradient(130% 100% at 0% 0%, rgb(217 155 38 / 0.18), transparent 74%);
+}
 
 /*
  * Page-level atmosphere on the ground (BackdropTint): home = Chinese Red and mustard light drifting in
@@ -121,8 +131,8 @@
  */
 @utility backdrop-dual {
   background-image:
-    radial-gradient(55% 50% at 6% 0%, rgb(200 42 53 / 0.08), transparent 72%),
-    radial-gradient(55% 50% at 94% 0%, rgb(217 155 38 / 0.08), transparent 72%);
+    radial-gradient(60% 55% at 6% 0%, rgb(200 42 53 / 0.13), transparent 72%),
+    radial-gradient(60% 55% at 94% 0%, rgb(217 155 38 / 0.13), transparent 72%);
 }
 @utility backdrop-steel {
   background-image:
