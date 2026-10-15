@@ -1,8 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <rect width="32" height="32" rx="7" fill="#080A0F"/>
-  <!-- "LL" monogram, 16px-tuned: 4-unit bars and gaps (2px at 16px), even coordinates only. -->
-  <g fill="#9E9FA5">
-    <path d="M6 5h4v18h16v4H6z"/>
-    <path d="M14 9h4v6h8v4H14z"/>
+  <!-- LavieuxLabs mark, filled for 16px: vertical faces and the plus light, feet one step darker, so the
+       plane seams read without hairlines that would blur at small sizes. Geometry: src/lib/logoMark.ts. -->
+  <g fill="#C9CAD0">
+    <path d="M6 11.5 10.5 8.5V19L6 22z"/>
+    <path d="M12.75 7l4.5-3v10.5l-4.5 3z"/>
+    <path d="M22 7.5h3v2.5h2.5v3H25v2.5h-3V13h-2.5v-3H22z"/>
+  </g>
+  <g fill="#7C7E87">
+    <path d="M10.5 19l9 6-4.5 3-9-6z"/>
+    <path d="M17.25 14.5l9 6-4.5 3-9-6z"/>
   </g>
 </svg>

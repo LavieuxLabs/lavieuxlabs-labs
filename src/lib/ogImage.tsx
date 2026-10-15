@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { SITE_URL } from "@/lib/site";
 import type { Locale } from "@/i18n/config";
-import { MARK_INNER, MARK_OUTER, MARK_VIEWBOX } from "@/lib/logoMark";
+import { MARK_PATHS, MARK_STROKE, MARK_VIEWBOX } from "@/lib/logoMark";
 
 // Shared OpenGraph card (1200×630) in the site's design language: optical obsidian ground,
 // a hairline frame, the LavieuxLabs mark, a white headline and a spec strip with numbers in
@@ -49,12 +49,13 @@ const upperTr = (text: string) =>
     .map((part) => (BRAND.test(part) ? part.toUpperCase() : part.toLocaleUpperCase("tr-TR")))
     .join(" · ");
 
-// Same geometry as LogoMark (src/components/Navbar.tsx): the "LL" monogram from src/lib/logoMark.ts.
+// Same geometry as LogoMark (src/components/LogoMark.tsx): the mark from src/lib/logoMark.ts.
 function Mark() {
   return (
-    <svg width="44" height="44" viewBox={MARK_VIEWBOX} fill="#9E9FA5">
-      <path d={MARK_OUTER} />
-      <path d={MARK_INNER} />
+    <svg width="44" height="44" viewBox={MARK_VIEWBOX} fill="none" stroke="#9E9FA5" strokeWidth={MARK_STROKE}>
+      {MARK_PATHS.map((d) => (
+        <path key={d} d={d} />
+      ))}
     </svg>
   );
 }

@@ -9,22 +9,13 @@ import LanguageSwitch from "@/components/LanguageSwitch";
 import CommandPalette from "@/components/CommandPalette";
 import { navigation } from "@/lib/site";
 import { localizedPath, stripLocale, type Locale } from "@/i18n/config";
-import { MARK_INNER, MARK_OUTER, MARK_VIEWBOX } from "@/lib/logoMark";
+import LogoMark from "@/components/LogoMark";
 
 const productIcons = { pill: Pill, shield: ShieldCheck };
 const productTone = {
   pill: "border-teal-400/25 bg-teal-400/10 text-teal-300",
   shield: "border-indigo-400/25 bg-indigo-400/10 text-indigo-300",
 };
-
-export function LogoMark({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox={MARK_VIEWBOX} fill="currentColor" aria-hidden="true" className={className}>
-      <path d={MARK_OUTER} />
-      <path d={MARK_INNER} />
-    </svg>
-  );
-}
 
 function ProductsMenu({ active, locale }: { active: boolean; locale: Locale }) {
   const nav = navigation[locale];
@@ -174,7 +165,7 @@ export default function Navbar({ locale }: { locale: Locale }) {
           className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
         >
           <Link href={localizedPath(locale, "/")} className="group flex items-center gap-2.5" aria-label={nav.homeAria}>
-            <LogoMark className="h-7 w-7 text-titanium" />
+            <LogoMark size={28} className="text-titanium" />
             <span className="text-[15px] font-semibold tracking-[-0.02em] text-white">
               Lavieux<span className="text-white/50">Labs</span>
             </span>

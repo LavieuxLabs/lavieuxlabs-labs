@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { fontVariables } from "@/lib/fonts";
 import SiteBackdrop from "@/components/SiteBackdrop";
-import { LogoMark } from "@/components/Navbar";
+import LogoMark from "@/components/LogoMark";
 
 // With two root layouts ((tr) and en) there is no single layout to compose a 404 from, so unmatched
 // URLs render this standalone, bilingual document in the site's editorial archive language.
@@ -20,7 +20,7 @@ export default function GlobalNotFound() {
         <SiteBackdrop />
         <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center px-4 py-24 sm:px-6">
           <Link href="/" className="flex w-fit items-center gap-2.5" aria-label="LavieuxLabs ana sayfa">
-            <LogoMark className="h-7 w-7 text-titanium" />
+            <LogoMark size={28} className="text-titanium" />
             <span className="text-[15px] font-semibold tracking-[-0.02em] text-white">
               Lavieux<span className="text-white/50">Labs</span>
             </span>

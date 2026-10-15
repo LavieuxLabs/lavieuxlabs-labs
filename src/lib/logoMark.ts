@@ -1,8 +1,15 @@
-// LavieuxLabs "LL" monogram, the umbrella mark for every product line: two nested L forms on a 32-unit
-// grid. Same bar width for both, an equal gap on both axes, and the inner L starts lower (stepped top);
-// both feet end on one line. Single source for LogoMark (src/components/Navbar.tsx) and the OG card
-// (src/lib/ogImage.tsx). The favicon (src/app/icon.svg) uses a 16px-tuned variant of the same form:
-// thinner bars and wider gaps on whole pixels, so the two L's do not merge at small sizes.
+// LavieuxLabs mark, the umbrella mark for every product line: two nested "L" forms drawn in isometric
+// projection (vertical face + foot, one plane seam each; edges on a 2:3 slope), the inner L set back
+// along the depth axis, and an equal-armed medical plus on the right wing. Single source for LogoMark
+// (src/components/LogoMark.tsx) and the OG card (src/lib/ogImage.tsx). Line drawing on a 32-unit grid,
+// 1.5-unit stroke. The favicon (src/app/icon.svg) is a filled, 16px-tuned rendering of the same planes.
 export const MARK_VIEWBOX = "0 0 32 32";
-export const MARK_OUTER = "M7.75 6.5h3.5v15.5h13v3.5H7.75z";
-export const MARK_INNER = "M12.75 9.5h3.5v7.5h8v3.5H12.75z";
+export const MARK_STROKE = 1.5;
+/** Outlines (silhouettes) and plane seams, outer L first. */
+export const MARK_PATHS = [
+  "M6 11.5 10.5 8.5V19l9 6-4.5 3-9-6z",
+  "M10.5 19 6 22",
+  "M12.75 7l4.5-3v10.5l9 6-4.5 3-9-6z",
+  "M17.25 14.5 12.75 17.5",
+  "M22 7.5h3v2.5h2.5v3H25v2.5h-3V13h-2.5v-3H22z",
+] as const;

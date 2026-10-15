@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { LogoMark } from "@/components/Navbar";
+import LogoMark from "@/components/LogoMark";
 import { CookieSettingsButton } from "@/components/CookieBanner";
 import LanguageSwitch from "@/components/LanguageSwitch";
 import CopyEmail from "@/components/CopyEmail";
@@ -84,7 +84,7 @@ export default function Footer({ locale }: { locale: Locale }) {
       <div className="mx-auto max-w-7xl px-4 pt-12 pb-10 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Link href={href("/")} className="group flex items-center gap-2.5 self-start" aria-label={nav.homeAria}>
-            <LogoMark className="h-6 w-6 text-titanium" />
+            <LogoMark size={24} className="text-titanium" />
             <span className="text-[15px] font-semibold tracking-[-0.02em] text-white">
               Lavieux<span className="text-white/50">Labs</span>
             </span>
