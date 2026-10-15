@@ -1,4 +1,4 @@
-import { MARK_PATHS, MARK_STROKE, MARK_VIEWBOX } from "@/lib/logoMark";
+import { MARK_BODY, MARK_PLUS, MARK_PLUS_COLOR, MARK_STROKE, MARK_VIEWBOX } from "@/lib/logoMark";
 
 type LogoMarkProps = {
   /** Rendered width and height in px. */
@@ -6,7 +6,8 @@ type LogoMarkProps = {
   className?: string;
 };
 
-// Line drawing in currentColor: set the colour with a text-* class (the spine is text-titanium).
+// Dual tone: the L body draws in currentColor (set with a text-* class; the spine is text-titanium), the
+// plus always carries the mark violet with a faint fill of the same colour.
 export default function LogoMark({ size = 28, className = "" }: LogoMarkProps) {
   return (
     <svg
@@ -20,9 +21,10 @@ export default function LogoMark({ size = 28, className = "" }: LogoMarkProps) {
       aria-hidden="true"
       className={`shrink-0 ${className}`}
     >
-      {MARK_PATHS.map((d) => (
+      {MARK_BODY.map((d) => (
         <path key={d} d={d} />
       ))}
+      <path d={MARK_PLUS} stroke={MARK_PLUS_COLOR} fill={MARK_PLUS_COLOR} fillOpacity={0.15} />
     </svg>
   );
 }
