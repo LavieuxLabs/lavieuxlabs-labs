@@ -10,7 +10,8 @@ import {
   type Reading,
   type Tone,
 } from "@/lib/clinicalCases";
-import { defineContent, type Locale } from "@/i18n/config";
+import Link from "next/link";
+import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import CopyPayloadButton from "@/components/CopyPayloadButton";
 import { caseToFhirBundle } from "@/lib/fhirPayload";
 import { useClientValue } from "@/lib/useClientValue";
@@ -57,6 +58,12 @@ const copy = defineContent({
     patient: "Hasta",
     prescription: "Reçete",
     finding: "Bulgu",
+    standard: "Standart",
+    standards: {
+      "/standartlar/kumulatif-organ-yuku": "Kümülatif organ yükü",
+      "/standartlar/ckd-epi-2021": "CKD-EPI 2021 ve renal doz",
+      "/standartlar/tisdale-score": "Tisdale QT risk skoru",
+    },
     caption: "Örnek vakalar · gerçek hasta verisi değildir · klinik karar için kullanılmaz",
     customize: "Özelleştir",
     customizeAria: "Vakayı özelleştirin",
@@ -80,6 +87,12 @@ const copy = defineContent({
     patient: "Patient",
     prescription: "Order",
     finding: "Finding",
+    standard: "Standard",
+    standards: {
+      "/standartlar/kumulatif-organ-yuku": "Cumulative organ burden",
+      "/standartlar/ckd-epi-2021": "CKD-EPI 2021 and renal dosing",
+      "/standartlar/tisdale-score": "Tisdale QT risk score",
+    },
     caption: "Example cases · not real patient data · not for clinical decisions",
     customize: "Customise",
     customizeAria: "Customise the case",
@@ -555,6 +568,14 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
             </dd>
           </div>
         )}
+        <div className="grid grid-cols-[64px_1fr] gap-3 py-2">
+          <dt className="text-white/55">{c.standard}</dt>
+          <dd>
+            <Link href={localizedPath(locale, active.standard)} className="text-white/80 underline decoration-white/30 underline-offset-2 transition-colors duration-150 ease-out hover:text-white hover:decoration-white/70">
+              {c.standards[active.standard]}
+            </Link>
+          </dd>
+        </div>
       </dl>
       <div className="mt-2 flex items-center justify-between gap-3">
         <p aria-label={c.stampAria} className="min-w-0 truncate font-mono text-[10.5px] text-white/55 tabular-nums">

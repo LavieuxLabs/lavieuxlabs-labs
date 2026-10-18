@@ -92,6 +92,7 @@ const copy = defineContent<{
         links: [
           { href: "/initiatives/pharmadeux", label: "PharmaDeux'yü inceleyin" },
           { href: "/initiatives/pharmadeux#simulator", label: "QT simülatörünü deneyin" },
+          { href: "/standartlar/kumulatif-organ-yuku", label: "Organ yükü standardı" },
         ],
       },
       {
@@ -107,6 +108,7 @@ const copy = defineContent<{
         links: [
           { href: "/initiatives/shield", label: "Shield'ı inceleyin" },
           { href: "/initiatives/shield#simulator", label: "Fatura simülatörünü deneyin" },
+          { href: "/standartlar/sut-fatura-denetimi", label: "SUT denetim standardı" },
         ],
       },
     ],
@@ -148,7 +150,7 @@ const copy = defineContent<{
         href: "/initiatives/shield",
       },
     ],
-    standardsLink: { label: "Standartlar", text: "Regülasyon ve mühendislik standartlarımızı inceleyin" },
+    standardsLink: { label: "Standartlar", text: "Tisdale, CKD-EPI 2021 ve kümülatif organ yükü dahil klinik, teknik ve regülasyon standartları" },
     pipeline: {
       eyebrow: "Doğrulama ve karar",
       title: "Bir bulgu dört adımda karara dönüşür.",
@@ -238,6 +240,7 @@ const copy = defineContent<{
         links: [
           { href: "/initiatives/pharmadeux", label: "See PharmaDeux" },
           { href: "/initiatives/pharmadeux#simulator", label: "Try the QT simulator" },
+          { href: "/standartlar/kumulatif-organ-yuku", label: "Organ burden standard" },
         ],
       },
       {
@@ -253,6 +256,7 @@ const copy = defineContent<{
         links: [
           { href: "/initiatives/shield", label: "See Shield" },
           { href: "/initiatives/shield#simulator", label: "Try the claim simulator" },
+          { href: "/standartlar/sut-fatura-denetimi", label: "SUT audit standard" },
         ],
       },
     ],
@@ -294,7 +298,7 @@ const copy = defineContent<{
         href: "/initiatives/shield",
       },
     ],
-    standardsLink: { label: "Standards", text: "See our regulatory and engineering standards" },
+    standardsLink: { label: "Standards", text: "Clinical, technical and regulatory standards, including Tisdale, CKD-EPI 2021 and cumulative organ burden" },
     pipeline: {
       eyebrow: "Verification and decision",
       title: "A finding becomes a decision in four steps.",

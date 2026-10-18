@@ -6,7 +6,8 @@ import { qtFromSearch, qtToUrl, setQtState, useQtState, type QtState } from "@/l
 import ShareLinkButton from "@/components/ShareLinkButton";
 import Cite from "@/components/Cite";
 import { trackEvent } from "@/lib/analytics";
-import { defineContent, type Locale } from "@/i18n/config";
+import Link from "next/link";
+import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 
 const copy = defineContent({
   tr: {
@@ -31,6 +32,8 @@ const copy = defineContent({
     points: "puan",
     tiers: { low: "düşük risk", moderate: "orta risk", high: "yüksek risk" },
     rule: "Tetiklenen kural",
+    standard: "Standart",
+    standardLink: "Tisdale QT risk skoru",
     rules: {
       two: "İki ilacın ürün bilgisinde QT uzaması var; etkiler toplanabilir (farmakodinamik etkileşim).",
       one: "Reçetede bir QT uzatan ilaç var; Tisdale skoruna 3 puan ekler.",
@@ -65,6 +68,8 @@ const copy = defineContent({
     points: "points",
     tiers: { low: "low risk", moderate: "moderate risk", high: "high risk" },
     rule: "Rule triggered",
+    standard: "Standard",
+    standardLink: "Tisdale QT risk score",
     rules: {
       two: "Both drugs list QT prolongation in their product information; the effects can add up (pharmacodynamic interaction).",
       one: "The order contains one QT-prolonging drug, which adds 3 points to the Tisdale score.",
@@ -217,6 +222,14 @@ export default function QtSimulator({ locale }: { locale: Locale }) {
             <dt className="text-white/55">ATC</dt>
             <dd className="font-mono text-white/75 tabular-nums">
               {a.atc} · {b.atc}
+            </dd>
+          </div>
+          <div className="grid grid-cols-[96px_1fr] gap-3 px-5 py-2.5">
+            <dt className="text-white/55">{c.standard}</dt>
+            <dd>
+              <Link href={localizedPath(locale, "/standartlar/tisdale-score")} className="text-white/80 underline decoration-white/30 underline-offset-2 transition-colors duration-150 ease-out hover:text-white hover:decoration-white/70">
+                {c.standardLink}
+              </Link>
             </dd>
           </div>
           <div className="grid grid-cols-[96px_1fr] gap-3 px-5 py-2.5">
