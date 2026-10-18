@@ -26,6 +26,8 @@ export type ClinicalCase = {
   patient: string;
   prescription: string;
   finding: string;
+  /** Locale-free path of the reference page behind the finding. */
+  standard: StandardPath;
   /** Tisdale score components, shown only when the QT plane is the finding. */
   tisdale?: { factor: string; points: number }[];
   readings: Record<ReadingKey, Reading>;
@@ -33,13 +35,17 @@ export type ClinicalCase = {
 
 type Measurement = { value: number; tone: Tone; level: number };
 
+export type StandardPath = "/standartlar/kumulatif-organ-yuku" | "/standartlar/ckd-epi-2021" | "/standartlar/tisdale-score";
+
 const measurements: {
   id: string;
   readings: Record<ReadingKey, Measurement>;
+  standard: StandardPath;
   tisdalePoints?: number[];
 }[] = [
   {
     id: "polypharmacy",
+    standard: "/standartlar/kumulatif-organ-yuku",
     readings: {
       liver: { value: 24, tone: "normal", level: 24 / 120 },
       qtc: { value: 410, tone: "normal", level: (410 - 350) / 200 },
@@ -48,6 +54,7 @@ const measurements: {
   },
   {
     id: "renal",
+    standard: "/standartlar/ckd-epi-2021",
     readings: {
       liver: { value: 31, tone: "normal", level: 31 / 120 },
       qtc: { value: 432, tone: "normal", level: (432 - 350) / 200 },
@@ -56,6 +63,7 @@ const measurements: {
   },
   {
     id: "qtc",
+    standard: "/standartlar/tisdale-score",
     readings: {
       liver: { value: 29, tone: "normal", level: 29 / 120 },
       qtc: { value: 485, tone: "high", level: (485 - 350) / 200 },
@@ -160,6 +168,7 @@ function build(locale: Locale): ClinicalCase[] {
       patient: t.patient,
       prescription: t.prescription,
       finding: t.finding,
+      standard: m.standard,
       tisdale: m.tisdalePoints?.map((points, k) => ({ factor: t.tisdaleFactors?.[k] ?? "", points })),
       readings: { liver: reading("liver"), qtc: reading("qtc"), renal: reading("renal") },
     };
@@ -253,6 +262,7 @@ export function buildCustomCase(locale: Locale, params: CustomParams): ClinicalC
     patient: t.patient,
     prescription: drugs.join(" · "),
     finding: [high ? t.qtHigh : t.qtModerate, ...(renalAdjust ? [t.renal] : [])].join(" "),
+    standard: "/standartlar/tisdale-score",
     tisdale,
     readings: {
       liver: { value: String(CUSTOM_ALT), status: t.status.liver, tone: "normal", level: CUSTOM_ALT / 120 },
