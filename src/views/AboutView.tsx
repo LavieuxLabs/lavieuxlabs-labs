@@ -110,19 +110,19 @@ const copy = defineContent<{
       {
         label: "Vizyon",
         title: "Her klinik ve idari kararın nedeni gösterilebilmeli.",
-        body: "Bir karar destek sisteminin değeri ne kadar akıllı göründüğüyle değil, sonucunu tekrar üretip nedenini gösterebilmesiyle ölçülür.",
+        body: "Bir karar destek sistemi sonucunu tekrar üretebilmeli ve nedenini gösterebilmeli. Değerini bununla ölçüyoruz.",
       },
       {
         label: "Misyon",
         title: "Hata maliyeti yüksek alanlar için test edilebilir yazılım.",
-        body: "İlaç güvenliği ve faturalama gibi alanlarda hekimin ve uzmanın yerine geçen değil, işini kolaylaştıran araçlar yapıyoruz.",
+        body: "İlaç güvenliği ve faturalama gibi alanlarda hekimin ve uzmanın işini kolaylaştıran araçlar yapıyoruz. Karar onlarda kalır.",
       },
     ],
     rules: {
       eyebrow: "Neden kural tabanlı",
-      title: "Karar anında tahmin değil, kural.",
+      title: "Karar anında kural tabanlı sistem kullanıyoruz.",
       description:
-        "Olasılıksal ve üretken modeller araştırma ve analiz için faydalı. Ama bir reçeteyi durdurabilecek bir uyarının her seferinde aynı sonucu vermesi ve hangi kaynaktan geldiğinin gösterilebilmesi gerekir. Bu yüzden karar anında kural tabanlı sistem kullanıyoruz.",
+        "Olasılıksal ve üretken modeller araştırma ve analiz için faydalı. Ama hekimin önüne gelen bir uyarının her seferinde aynı sonucu vermesi ve hangi kaynaktan geldiğinin gösterilebilmesi gerekir. Bu yüzden karar anında kural tabanlı sistem kullanıyoruz.",
     },
     columns: { criterion: "Ölçüt", probabilistic: "Olasılıksal model", deterministic: "Kural tabanlı sistem" },
     shortColumns: { probabilistic: "Olasılıksal", deterministic: "Kural tabanlı" },
@@ -140,7 +140,7 @@ const copy = defineContent<{
       {
         criterion: "Doğrulama",
         probabilistic: "Davranış istatistiksel olarak, örneklem üzerinden tahmin edilir.",
-        deterministic: "Her kural, tanımlı test senaryolarıyla doğrudan doğrulanır.",
+        deterministic: "Her kural, tanımlı test senaryolarıyla doğrudan test edilir.",
       },
       {
         criterion: "Değişiklik yönetimi",
@@ -170,21 +170,21 @@ const copy = defineContent<{
         ],
         outcome: {
           label: "Hekim için",
-          body: "Uydurma çıktı üretebilecek bir bileşen yok. Her uyarı, onu tetikleyen kural ve eşik değeriyle gelir; aynı hasta için sonuç tekrar üretilebilir.",
+          body: "Karar yolunda üretken model yok. Her uyarı, onu tetikleyen kural ve eşik değeriyle gelir; aynı hasta için sonuç tekrar üretilebilir.",
         },
       },
       {
         title: "Sağlık veri katmanı ve birlikte çalışabilirlik",
-        body: "Klinik veri HL7 FHIR R4 kaynakları olarak alınır. FHIR'a geçmemiş HBYS'lerin HL7 v2 mesajları FHIR R4'e dönüştürülür. İlaç, tanı ve birimler ATC, ICD-10 ve UCUM ile eşleştirilir.",
+        body: "Veri katmanı, klinik veriyi HL7 FHIR R4 kaynakları olarak alacak şekilde tasarlandı. Pilot kurulumunda FHIR'a geçmemiş HBYS'lerin HL7 v2 mesajları FHIR R4'e dönüştürülür. İlaç, tanı ve birimler ATC, ICD-10 ve UCUM ile eşleştirilir.",
         rows: [
           { label: "Standart", value: "HL7 FHIR R4", mono: true },
           { label: "Köprü", value: "HL7 v2 · MLLP → FHIR R4" },
           { label: "Kodlama", value: "ATC · ICD-10 · UCUM", mono: true },
-          { label: "Kurulum", value: "Kurum içi (Docker) · izole VPC" },
+          { label: "Pilot kurulumu", value: "Kurum içi (Docker) · izole VPC" },
         ],
         outcome: {
           label: "Bilgi işlem için",
-          body: "Pilot mimarisi kurum içi (on-prem) ve izole çalışacak şekilde tasarlanmıştır; pilot süreçlerde veri kurum altyapısından çıkarılmaz. Sistem mevcut HBYS akışını değiştirmeden, yanına eklenen bir katman olarak çalışır.",
+          body: "Pilot mimarisi kurum içi (on-prem) ve izole çalışacak şekilde tasarlanmıştır; pilot süreçlerde veri kurum altyapısından çıkarılmaz. Sistem, mevcut HBYS akışını değiştirmeden yanına eklenen bir katman olarak çalışacak şekilde tasarlandı.",
         },
       },
       {
@@ -214,6 +214,7 @@ const copy = defineContent<{
         rows: [
           { label: "Kaynaklar", value: "KÜB / KT · kılavuzlar · hakemli literatür" },
           { label: "İzlenebilirlik", value: "Kural → kaynak" },
+          { label: "Örnekler", value: "Standartlar ve referanslar", href: localizedPath("tr", "/standartlar") },
         ],
       },
       {
@@ -290,7 +291,7 @@ const copy = defineContent<{
       eyebrow: "Klinik iş birliği",
       title: "Klinik doğrulamayı sahadaki hekimlerle yürütmeyi hedefliyoruz.",
       description:
-        "Klinik karar destek sistemleri sahadaki ekiplerin iş akışına göre tasarlanmalıdır. Danışma kurulu henüz toplanmadı; aşağıdakiler pilot döneminde kuracağımız çalışma biçimidir.",
+        "Klinik karar destek sistemleri sahadaki ekiplerin iş akışına göre tasarlanmalıdır. Danışma kurulu kurulum aşamasında; henüz resmi bir kurul yok. Aşağıdakiler pilot döneminde kuracağımız çalışma biçimidir.",
     },
     collaboration: [
       {
@@ -311,7 +312,7 @@ const copy = defineContent<{
       },
       {
         title: "Yayın",
-        body: "Pilot doğrulama sonuçlarının, ortak kurumların klinisyenleri ve araştırmacılarıyla birlikte hakemli tıp dergilerinde bağımsız duyarlılık raporu olarak yayımlanması hedeflenir.",
+        body: "Pilot doğrulama sonuçlarının, ortak kurumların klinisyenleri ve araştırmacılarıyla birlikte hakemli tıp dergilerinde duyarlılık, özgüllük ve PPV raporu olarak yayımlanması hedeflenir.",
         rows: [
           { label: "Hedef", value: "Hakemli yayın" },
           { label: "Raporlama", value: "Duyarlılık · özgüllük · PPV" },
@@ -340,7 +341,7 @@ const copy = defineContent<{
         rows: [
           { label: "Kim", value: "Eğitim ve araştırma · üniversite hastaneleri" },
           { label: "Amaç", value: "Retrospektif vaka testi · gölge mod pilotu" },
-          { label: "Aşama", value: "Şimdi · klinik seviye kanıt" },
+          { label: "Aşama", value: "Şimdi gerekli · hedef: klinik düzeyde ilk kanıt" },
         ],
         link: "Pilot başvurusu (PharmaDeux)",
       },
@@ -351,7 +352,7 @@ const copy = defineContent<{
         rows: [
           { label: "Kim", value: "Tıp ve farmakoloji akademisyenleri" },
           { label: "Amaç", value: "Kural setleri · organ risk protokolleri" },
-          { label: "Aşama", value: "Şimdi · danışma kurulu kurulum aşamasında" },
+          { label: "Aşama", value: "Şimdi gerekli · danışma kurulu kurulum aşamasında, henüz resmi bir kurul yok" },
         ],
         link: "Akademik iş birliği",
       },
@@ -362,7 +363,7 @@ const copy = defineContent<{
         rows: [
           { label: "Kim", value: "Özel ve vakıf hastaneleri" },
           { label: "Amaç", value: "Retrospektif fatura analizi" },
-          { label: "Aşama", value: "Şimdi · ilk ölçülmüş sonuç" },
+          { label: "Aşama", value: "Şimdi gerekli · hedef: ilk ölçülmüş sonuç" },
         ],
         link: "Pilot başvurusu (Shield)",
       },
@@ -397,7 +398,7 @@ const copy = defineContent<{
     advisory: {
       label: "Danışma",
       title: "Klinik ve Akademik Danışma Kurulu",
-      body: "Kurul kurulum aşamasında; henüz resmi olarak oluşmuş bir kurul yok. Klinik doğrulama, organ risk protokolleri ve farmakoloji kuralları tıp fakültesi akademisyenleri ve klinik danışmanlarla birlikte yürütülecek. Yeni akademik ortaklıklara açığız.",
+      body: "Danışma kurulu kurulum aşamasında; henüz resmi bir kurul yok. Klinik doğrulama, organ risk protokolleri ve farmakoloji kuralları tıp fakültesi akademisyenleri ve klinik danışmanlarla birlikte yürütülecek. Yeni akademik ortaklıklara açığız.",
       rows: [
         { label: "Kapsam", value: "Klinik doğrulama · organ risk protokolleri · farmakoloji kuralları" },
         { label: "Danışmanlar", value: "Tıp fakültesi akademisyenleri · klinik danışmanlar" },
@@ -421,19 +422,19 @@ const copy = defineContent<{
       {
         label: "Vision",
         title: "The reason behind every clinical and administrative decision should be visible.",
-        body: "A decision support system is worth what it can reproduce and explain, not how clever it looks.",
+        body: "A decision support system should reproduce its result and show the reason for it. That is how we measure its value.",
       },
       {
         label: "Mission",
         title: "Testable software where errors are expensive.",
-        body: "In medication safety and billing, we build tools that make the physician's and specialist's work easier, not tools that replace them.",
+        body: "In medication safety and billing, we build tools that make the physician's and specialist's work easier. The decision stays with them.",
       },
     ],
     rules: {
       eyebrow: "Why rule-based",
-      title: "At the point of decision, rules rather than predictions.",
+      title: "We use a rule-based system at the point of decision.",
       description:
-        "Probabilistic and generative models are useful for research and analysis. But an alert that can stop a prescription has to give the same result every time and show where it comes from. That is why we use a rule-based system at the point of decision.",
+        "Probabilistic and generative models are useful for research and analysis. But an alert shown to the physician has to give the same result every time and show where it comes from. That is why we use a rule-based system at the point of decision.",
     },
     columns: { criterion: "Criterion", probabilistic: "Probabilistic model", deterministic: "Rule-based system" },
     shortColumns: { probabilistic: "Probabilistic", deterministic: "Rule-based" },
@@ -451,7 +452,7 @@ const copy = defineContent<{
       {
         criterion: "Verification",
         probabilistic: "Behaviour is estimated statistically, from a sample.",
-        deterministic: "Each rule is verified directly against defined test cases.",
+        deterministic: "Each rule is tested directly against defined test cases.",
       },
       {
         criterion: "Change control",
@@ -481,21 +482,21 @@ const copy = defineContent<{
         ],
         outcome: {
           label: "For physicians",
-          body: "No component can make up an answer. Every alert comes with the rule and threshold that triggered it, and the result can be reproduced for the same patient.",
+          body: "There is no generative model in the decision path. Every alert comes with the rule and threshold that triggered it, and the result can be reproduced for the same patient.",
         },
       },
       {
         title: "Health data layer and interoperability",
-        body: "Clinical data arrives as HL7 FHIR R4 resources. HL7 v2 messages from hospital information systems (HIS) that have not moved to FHIR are converted to FHIR R4. Drugs, diagnoses and units are mapped to ATC, ICD-10 and UCUM.",
+        body: "The data layer is designed to take in clinical data as HL7 FHIR R4 resources. In a pilot installation, HL7 v2 messages from hospital information systems (HIS) that have not moved to FHIR are converted to FHIR R4. Drugs, diagnoses and units are mapped to ATC, ICD-10 and UCUM.",
         rows: [
           { label: "Standard", value: "HL7 FHIR R4", mono: true },
           { label: "Bridge", value: "HL7 v2 · MLLP → FHIR R4" },
           { label: "Coding", value: "ATC · ICD-10 · UCUM", mono: true },
-          { label: "Deployment", value: "On-premises (Docker) · isolated VPC" },
+          { label: "Pilot deployment", value: "On-premises (Docker) · isolated VPC" },
         ],
         outcome: {
           label: "For hospital IT",
-          body: "The pilot architecture is designed to run on-premises and in isolation. During a pilot, data is not moved outside the institution's infrastructure. The system runs as a layer next to the existing HIS workflow, without changing it.",
+          body: "The pilot architecture is designed to run on-premises and in isolation. During a pilot, data is not moved outside the institution's infrastructure. The system is designed to run as a layer next to the existing HIS workflow, without changing it.",
         },
       },
       {
@@ -525,6 +526,7 @@ const copy = defineContent<{
         rows: [
           { label: "Sources", value: "SmPC / PIL · guidelines · peer-reviewed literature" },
           { label: "Traceability", value: "Rule → source" },
+          { label: "Examples", value: "Standards and references", href: localizedPath("en", "/standartlar") },
         ],
       },
       {
@@ -601,7 +603,7 @@ const copy = defineContent<{
       eyebrow: "Clinical collaboration",
       title: "We aim to run clinical validation with physicians in the field.",
       description:
-        "Clinical decision support has to be designed around the workflow of the teams who use it. The advisory board has not met yet. What follows is how we will work during the pilots.",
+        "Clinical decision support has to be designed around the workflow of the teams who use it. The advisory board is being set up; no formal board exists yet. What follows is how we will work during the pilots.",
     },
     collaboration: [
       {
@@ -622,7 +624,7 @@ const copy = defineContent<{
       },
       {
         title: "Publication",
-        body: "We aim to publish pilot validation findings with partner clinicians and researchers in peer-reviewed journals, as independent sensitivity reports.",
+        body: "We aim to publish pilot validation findings with partner clinicians and researchers in peer-reviewed journals, as reports of sensitivity, specificity and PPV.",
         rows: [
           { label: "Goal", value: "Peer-reviewed publication" },
           { label: "Reporting", value: "Sensitivity · specificity · PPV" },
@@ -651,7 +653,7 @@ const copy = defineContent<{
         rows: [
           { label: "Who", value: "Training-and-research · university hospitals" },
           { label: "Purpose", value: "Retrospective case testing · shadow mode pilot" },
-          { label: "Stage", value: "Now · clinical-level evidence" },
+          { label: "Stage", value: "Needed now · goal: first clinical-level evidence" },
         ],
         link: "Pilot application (PharmaDeux)",
       },
@@ -662,7 +664,7 @@ const copy = defineContent<{
         rows: [
           { label: "Who", value: "Medicine and pharmacology academics" },
           { label: "Purpose", value: "Rule sets · organ risk protocols" },
-          { label: "Stage", value: "Now · advisory board being set up" },
+          { label: "Stage", value: "Needed now · advisory board being set up, no formal board yet" },
         ],
         link: "Academic collaboration",
       },
@@ -673,7 +675,7 @@ const copy = defineContent<{
         rows: [
           { label: "Who", value: "Private and foundation hospitals" },
           { label: "Purpose", value: "Retrospective claims analysis" },
-          { label: "Stage", value: "Now · first measured result" },
+          { label: "Stage", value: "Needed now · goal: first measured result" },
         ],
         link: "Pilot application (Shield)",
       },
@@ -708,7 +710,7 @@ const copy = defineContent<{
     advisory: {
       label: "Advisory",
       title: "Clinical and Academic Advisory Board",
-      body: "The board is being set up. No formal board exists yet. Clinical validation, organ risk protocols and pharmacology rules will be worked out with medical faculty academics and clinical advisors. We are open to new academic partnerships.",
+      body: "The advisory board is being set up; no formal board exists yet. Clinical validation, organ risk protocols and pharmacology rules will be worked out with medical faculty academics and clinical advisors. We are open to new academic partnerships.",
       rows: [
         { label: "Scope", value: "Clinical validation · organ risk protocols · pharmacology rules" },
         { label: "Advisors", value: "Medical faculty academics · clinical advisors" },
