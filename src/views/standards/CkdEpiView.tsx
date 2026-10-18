@@ -12,12 +12,12 @@ export const metadata = defineMetadata(PATH, {
   tr: {
     title: "CKD-EPI 2021 eGFR",
     description:
-      "CKD-EPI 2021 kreatinin denklemi: formül ve katsayılar, LOINC 98979-8 eşlemesi, KDIGO GFR kategorileri ve PharmaDeux'un renal doz kontrol ilkeleri.",
+      "CKD-EPI 2021 kreatinin denklemi: formül ve katsayılar, Cockcroft–Gault ile farkı, LOINC 98979-8 eşlemesi, KDIGO GFR kategorileri, renal doz kontrol ilkeleri ve sınırlar.",
   },
   en: {
     title: "CKD-EPI 2021 eGFR",
     description:
-      "The CKD-EPI 2021 creatinine equation: formula and coefficients, LOINC 98979-8 mapping, KDIGO GFR categories and PharmaDeux's renal dose check principles.",
+      "The CKD-EPI 2021 creatinine equation: formula and coefficients, how it differs from Cockcroft–Gault, LOINC 98979-8 mapping, KDIGO GFR categories, renal dose check principles and limits.",
   },
 });
 
@@ -32,9 +32,6 @@ const KDIGO_LABELS: Record<string, { tr: string; en: string }> = {
 };
 const KDIGO = KDIGO_BANDS.map((b) => ({ g: b.stage, range: b.range, ...KDIGO_LABELS[b.stage] }));
 
-const KDIGO_REF =
-  "Kidney Disease: Improving Global Outcomes (KDIGO) CKD Work Group. KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease. Kidney International Supplements. 2013.";
-
 const copy = defineContent({
   tr: {
     crumb: "CKD-EPI 2021",
@@ -42,8 +39,17 @@ const copy = defineContent({
     title: "CKD-EPI 2021 ile eGFR",
     description:
       "Serum kreatinin, yaş ve cinsiyetten ırk katsayısı kullanmadan tahmini glomerüler filtrasyon hızı (eGFR) hesaplayan denklem.",
+    problem: "Klinik problem",
+    problemBody: [
+      "Böbrekle atılan bir ilaçta klirens düşer ama doz aynı kalırsa ilaç birikir. Birikim, aynı organı etkileyen diğer ilaçlarla birlikte kümülatif organ yükünü artırır.",
+      "Laboratuvar raporundaki eGFR (CKD-EPI) vücut yüzeyine göre düzeltilmiştir (mL/dk/1,73 m²). Birçok ürün bilgisi ise Cockcroft–Gault ile tahmin edilen kreatinin klirensini verir (mL/dk). İkisi aynı sayı değildir.",
+    ],
     formula: "Formül",
     formulaBody: "Serum kreatinin (Scr) mg/dL, yaş yıl cinsindendir. Sonuç vücut yüzeyine göre düzeltilmiştir (mL/dk/1,73 m²).",
+    cg: "Cockcroft–Gault ile farkı",
+    cgBody: "Ağırlık kg, Scr mg/dL cinsindendir. Sonuç kreatinin klirensidir ve vücut yüzeyine göre düzeltilmemiştir (mL/dk).",
+    cgAbsolute:
+      "Vücut yüzeyi ortalamadan çok farklı hastada indekslenmemiş eGFR (mL/dk) şöyle bulunur: eGFR × VYA / 1,73. VYA, vücut yüzey alanıdır (m²).",
     coefficients: "Katsayılar",
     param: "Parametre",
     female: "Kadın",
@@ -62,13 +68,21 @@ const copy = defineContent({
     gfr: "eGFR (mL/dk/1,73 m²)",
     label: "Tanım",
     dosing: "Renal doz kontrolünde temel ilkeler",
+    kdigoNote:
+      "Doz eşiği ilaca özgüdür ve ürün bilgisinden gelir. Bu yüzden PharmaDeux'da kategori başına sabit bir davranış tanımlanmaz: aynı G3b hastada bir ilaç doz ayarı gerektirirken diğeri gerektirmeyebilir. Kural çıktıları kurumun klinik politikasına göre ayarlanır ve son karar hekimindir.",
     dosingBody: "Böbrek fonksiyonuna göre doz kontrolünde gözetilen ilkeler:",
     dosingItems: [
       "Doz eşiği ürün bilgisinden (KÜB) gelir ve ürün bilgisinin kullandığı ölçüte göre uygulanır. Ürün bilgisi kreatinin klirensi (Cockcroft–Gault, mL/dk) veriyorsa eGFR (mL/dk/1,73 m²) onun yerine konmaz.",
       "PharmaDeux'da kural güncel laboratuvar değerine bakar; gerekli değer yoksa eksik veri olarak işaretlenir, atlanmaz.",
       "Aynı reçete farklı böbrek fonksiyonunda farklı sonuç verebilir: eGFR'si 90 olan hastada güvenli olan doz 30'da ayar gerektirebilir.",
-      "Akut böbrek hasarında kreatinin kararlı değildir; denklemle hesaplanan eGFR bu durumda gerçek filtrasyonu yansıtmayabilir.",
     ],
+    limits: "Sınırlar",
+    limitsItems: [
+      "Akut böbrek hasarında kreatinin kararlı değildir. Denklemle hesaplanan eGFR bu durumda gerçek filtrasyonu yansıtmayabilir.",
+      "Kreatinin kas kütlesine bağlıdır. Kaşektik veya kas kütlesi çok düşük hastada eGFR filtrasyonu olduğundan yüksek gösterebilir. Aşırı obez hastada indeksli ve indekslenmemiş değerler belirgin biçimde ayrışır.",
+      "CKD-EPI 2021 erişkinler (18 yaş ve üzeri) için geliştirilmiştir. Çocuklarda pediatrik denklemler (ör. Schwartz) kullanılır.",
+    ],
+    review: "Klinik inceleme: bu sayfa henüz bir hekim tarafından incelenmedi.",
     related: [
       { href: "/initiatives/pharmadeux?case=renal#simulator", label: "Örnek vaka: renal doz eşiği" },
       { href: "/standartlar/tisdale-score", label: "Tisdale skoru" },
@@ -81,8 +95,17 @@ const copy = defineContent({
     title: "eGFR with CKD-EPI 2021",
     description:
       "The equation estimating glomerular filtration rate (eGFR) from serum creatinine, age and sex, without a race coefficient.",
+    problem: "Clinical problem",
+    problemBody: [
+      "When clearance of a renally excreted drug falls but the dose stays the same, the drug accumulates. Together with other drugs acting on the same organ, this raises the cumulative organ burden.",
+      "The eGFR on a laboratory report (CKD-EPI) is indexed to body surface area (mL/min/1.73 m²). Many product labels instead give creatinine clearance estimated with Cockcroft–Gault (mL/min). The two are not the same number.",
+    ],
     formula: "Formula",
     formulaBody: "Serum creatinine (Scr) in mg/dL, age in years. The result is indexed to body surface area (mL/min/1.73 m²).",
+    cg: "How it differs from Cockcroft–Gault",
+    cgBody: "Weight in kg, Scr in mg/dL. The result is creatinine clearance and is not indexed to body surface area (mL/min).",
+    cgAbsolute:
+      "When body surface area is far from average, the non-indexed eGFR (mL/min) is eGFR × BSA / 1.73, where BSA is body surface area (m²).",
     coefficients: "Coefficients",
     param: "Parameter",
     female: "Female",
@@ -101,13 +124,21 @@ const copy = defineContent({
     gfr: "eGFR (mL/min/1.73 m²)",
     label: "Description",
     dosing: "Core principles of renal dose checks",
+    kdigoNote:
+      "Dose thresholds are drug-specific and come from the product information. PharmaDeux therefore defines no fixed behaviour per category: in the same G3b patient, one drug may need a dose adjustment and another may not. Rule outputs are configured to the institution's clinical policy, and the physician makes the final decision.",
     dosingBody: "Principles that apply when checking doses against kidney function:",
     dosingItems: [
       "The dose threshold comes from the product information (SmPC) and is applied on the measure the label uses. If the label gives creatinine clearance (Cockcroft–Gault, mL/min), eGFR (mL/min/1.73 m²) is not substituted for it.",
       "In PharmaDeux, a rule reads the latest laboratory value. If a required value is missing, it is flagged, never skipped.",
       "The same order can give a different result at different kidney function: a dose that is safe at an eGFR of 90 may need adjusting at 30.",
-      "In acute kidney injury, creatinine is not at steady state, so an equation-based eGFR may not reflect true filtration.",
     ],
+    limits: "Limits",
+    limitsItems: [
+      "In acute kidney injury, creatinine is not at steady state. An equation-based eGFR may not reflect true filtration.",
+      "Creatinine depends on muscle mass. In cachexia or very low muscle mass, eGFR can overestimate filtration. In severe obesity, indexed and non-indexed values diverge markedly.",
+      "CKD-EPI 2021 was developed for adults (18 years and older). Children are assessed with paediatric equations (e.g. Schwartz).",
+    ],
+    review: "Clinical review: this page has not been reviewed by a physician yet.",
     related: [
       { href: "/initiatives/pharmadeux?case=renal#simulator", label: "Example case: renal dose threshold" },
       { href: "/standartlar/tisdale-score", label: "Tisdale score" },
@@ -118,7 +149,7 @@ const copy = defineContent({
 
 export default function CkdEpiView({ locale }: { locale: Locale }) {
   const c = copy[locale];
-  const refs = [...CITATIONS.ckdepi2021.refs, KDIGO_REF];
+  const refs = [...CITATIONS.ckdepi2021.refs, ...CITATIONS.cockcroftGault.refs, ...CITATIONS.kdigo2024.refs];
   return (
     <StandardDoc
       locale={locale}
@@ -142,7 +173,12 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
         citations: refs,
       })}
     >
-      <h2>{c.formula}</h2>
+      <h2>{c.problem}</h2>
+      {c.problemBody.map((text) => (
+        <p key={text}>{text}</p>
+      ))}
+
+      <h2 className="mt-12">{c.formula}</h2>
       <pre className="mt-4 overflow-x-auto rounded-xl border border-hairline bg-navy-900 px-5 py-4 font-mono text-[13px] leading-relaxed text-white/85">
         {"eGFR = 142 × min(Scr/κ, 1)^α × max(Scr/κ, 1)^−1.200\n       × 0.9938^Age × 1.012 [if female]"}
       </pre>
@@ -177,6 +213,13 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
       </table>
 
       <EgfrCalculator locale={locale} />
+
+      <h3>{c.cg}</h3>
+      <pre className="mt-4 overflow-x-auto rounded-xl border border-hairline bg-navy-900 px-5 py-4 font-mono text-[13px] leading-relaxed text-white/85">
+        {"CrCl = (140 − Age) × Weight / (72 × Scr)\n       × 0.85 [if female]"}
+      </pre>
+      <p>{c.cgBody}</p>
+      <p>{c.cgAbsolute}</p>
 
       <h2 className="mt-12">{c.loinc}</h2>
       <p>{c.loincBody}</p>
@@ -222,6 +265,7 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
           ))}
         </tbody>
       </table>
+      <p>{c.kdigoNote}</p>
 
       <h2 className="mt-12">{c.dosing}</h2>
       <p>{c.dosingBody}</p>
@@ -230,6 +274,14 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
           <li key={item}>{item}</li>
         ))}
       </ul>
+
+      <h2 className="mt-12">{c.limits}</h2>
+      <ul>
+        {c.limitsItems.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+      <p className="text-[13px]">{c.review}</p>
     </StandardDoc>
   );
 }

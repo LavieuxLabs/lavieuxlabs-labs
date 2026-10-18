@@ -4,7 +4,7 @@ import type { Locale } from "@/i18n/config";
 // it is certain; no DOIs or page numbers are added from memory. Titles of standards and regulations are
 // their official titles (not translated).
 
-export type CiteKey = "tisdale" | "drew2010" | "fridericia" | "ckdepi2021" | "mdrRule11" | "iec62304";
+export type CiteKey = "tisdale" | "drew2010" | "fridericia" | "ckdepi2021" | "kdigo2024" | "cockcroftGault" | "mdrRule11" | "iec62304";
 
 type Citation = { term: Record<Locale, string>; what: Record<Locale, string>; refs: string[] };
 
@@ -49,6 +49,25 @@ export const CITATIONS: Record<CiteKey, Citation> = {
       "Inker LA, Eneanya ND, Coresh J, et al. New creatinine- and cystatin C–based equations to estimate GFR without race. N Engl J Med. 2021;385(19):1737–1749.",
       "Previous version (2009): Levey AS, Stevens LA, Schmid CH, et al. A new equation to estimate glomerular filtration rate. Ann Intern Med. 2009;150(9):604–612.",
     ],
+  },
+  kdigo2024: {
+    term: { tr: "KDIGO 2024 KBH kılavuzu", en: "KDIGO 2024 CKD guideline" },
+    what: {
+      tr: "Kronik böbrek hastalığının değerlendirilmesi ve yönetimi kılavuzu; GFR kategorileri G1–G5 (mL/dk/1,73 m²).",
+      en: "Guideline for the evaluation and management of chronic kidney disease; GFR categories G1–G5 (mL/min/1.73 m²).",
+    },
+    refs: [
+      "Kidney Disease: Improving Global Outcomes (KDIGO) CKD Work Group. KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease. Kidney Int. 2024;105(4S):S117–S314.",
+      "Previous version (2012): Kidney Disease: Improving Global Outcomes (KDIGO) CKD Work Group. KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease. Kidney International Supplements. 2013.",
+    ],
+  },
+  cockcroftGault: {
+    term: { tr: "Cockcroft–Gault", en: "Cockcroft–Gault" },
+    what: {
+      tr: "Serum kreatinin, yaş, ağırlık ve cinsiyetten kreatinin klirensini tahmin eden denklem; sonuç vücut yüzeyine göre düzeltilmemiştir (mL/dk).",
+      en: "Equation estimating creatinine clearance from serum creatinine, age, weight and sex; the result is not indexed to body surface area (mL/min).",
+    },
+    refs: ["Cockcroft DW, Gault MH. Prediction of creatinine clearance from serum creatinine. Nephron. 1976;16(1):31–41."],
   },
   mdrRule11: {
     term: { tr: "MDR Kural 11", en: "MDR Rule 11" },
