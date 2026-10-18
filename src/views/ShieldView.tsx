@@ -37,11 +37,12 @@ export const metadata = defineMetadata("/initiatives/shield", {
   tr: {
     title: "Shield",
     description:
-      "Hastane fatura ve provizyon süreçlerindeki SUT/SGK red risklerini işlem öncesinde tespit eden kurumsal denetim katmanı.",
+      "Hastane fatura ve provizyon kalemlerini gönderimden önce SUT ve SGK provizyon kurallarına göre denetler. Riskli kalem, gerekçesiyle birlikte uzmanın kuyruğuna düşer.",
   },
   en: {
     title: "Shield",
-    description: "Pre-claim revenue integrity platform identifying reimbursement and audit risks before submission.",
+    description:
+      "Checks hospital billing and provision line items before submission against SUT (Turkey's reimbursement rulebook) and SGK (Social Security Institution) provision rules. A risky line item goes to the specialist's queue together with the reason.",
   },
 });
 
@@ -65,13 +66,13 @@ const simCopy = defineContent({
     eyebrow: "Fatura uygunluk simülatörü",
     title: "Bir kalem seçin, red riskini gönderimden önce görün.",
     description:
-      "Branş, fatura kalemi ve tanı kodu değiştikçe kural motoru skoru yeniden hesaplar. Eşik 40'ın üzerindeki kalem uzmanın kuyruğuna düşer.",
+      "Branş, fatura kalemi ve tanı kodu değiştikçe kural motoru skoru yeniden hesaplar. Skoru 40 ve üzerinde olan kalem uzmanın kuyruğuna düşer.",
   },
   en: {
     eyebrow: "Claim check simulator",
     title: "Pick a line item and see its rejection risk before submission.",
     description:
-      "As the department, line item and diagnosis code change, the rule engine recalculates the score. Items above the threshold of 40 go to the specialist's queue.",
+      "As the department, line item and diagnosis code change, the rule engine recalculates the score. Items scoring 40 or more go to the specialist's queue.",
   },
 });
 
@@ -132,15 +133,15 @@ const copy = defineContent<{
     eyebrow: "İdari uyum ve gelir güvencesi",
     title: "Shield. Red riskini fatura gönderilmeden önce görün.",
     description:
-      "Hastane fatura ve provizyon süreçlerindeki SUT/SGK red risklerini işlem öncesinde tespit eden kurumsal denetim katmanı. Riskli kalem, nedeniyle birlikte uzmanın kuyruğuna düşer; gönderip göndermemeye uzman karar verir.",
+      "Fatura ve provizyon kalemlerini gönderimden önce SUT ve SGK provizyon kurallarına göre denetler. Riskli kalem, gerekçesiyle birlikte uzmanın kuyruğuna düşer; gönderip göndermemeye uzman karar verir.",
     ctaIntro: "15 dk tanışma ve demo",
     ctaPilot: "Retrospektif pilot başvurusu (LOI)",
     ctaTry: "Örneği deneyin",
     problem: {
       eyebrow: "Sorun",
-      title: "Red, gönderimden sonra öğrenildiğinde iş iki katına çıkar.",
+      title: "Gönderimden sonra öğrenilen red, itiraz ve yeniden gönderim gerektirir.",
       description:
-        "Reddedilen faturaların önemli bir kısmı önlenebilir hatalardan doğar: eksik belge, kod uyumsuzluğu, limit aşımı. Bunlar gönderimden önce, kuralla ve gerekçesiyle yakalanabilir.",
+        "Red nedenlerinin bir kısmı önlenebilir hatalardır: eksik belge, kod uyumsuzluğu, limit aşımı. Bunlar gönderimden önce, kuralla ve gerekçesiyle yakalanabilir.",
     },
     problems: [
       {
@@ -180,8 +181,8 @@ const copy = defineContent<{
       },
       {
         title: "İnceleme kuyruğu",
-        body: "Eşiği aşan kalemler uzmanın kuyruğuna düşer. Shield kendi başına gönderim kararı vermez.",
-        detail: "eşik ≥ 40 · HITL",
+        body: "Skoru 40 ve üzerinde olan kalemler uzmanın kuyruğuna düşer. Shield kendi başına gönderim kararı vermez.",
+        detail: "eşik ≥ 40 · uzman onayı",
       },
       {
         title: "Karar",
@@ -291,14 +292,14 @@ const copy = defineContent<{
     ],
     isolationHeading: {
       eyebrow: "Erişim ve izolasyon",
-      title: "Her kurumun verisi ayrı tutulur.",
+      title: "Tasarım gereği her kurumun verisi ayrı tutulur.",
       description:
-        "Her kurum kendi alanında çalışır. Sorgular, kuyruklar ve kayıtlar başka bir kurumun verisine erişemez; kimin neyi görebileceği role göre belirlenir.",
+        "Bu bölüm mimari şartnamedir; çok kurumlu canlı bir servis henüz çalışmıyor. Pilot kurulumunda her kurum kendi alanında çalışır ve sorgular, kuyruklar ve kayıtlar başka bir kurumun verisine erişemez. Kimin neyi görebileceği role göre belirlenir.",
     },
     isolation: [
-      { label: "İzolasyon", value: "Her kurumun verisi, kuyruğu ve kaydı ayrı tutulur" },
-      { label: "Sorgu kapsamı", value: "Kurum kimliği her sorguda zorunlu" },
-      { label: "Erişim", value: "Rol bazında, en az yetki ilkesiyle" },
+      { label: "İzolasyon", value: "Tasarım gereği her kurumun verisi, kuyruğu ve kaydı ayrı tutulur" },
+      { label: "Sorgu kapsamı", value: "Tasarım gereği kurum kimliği her sorguda zorunludur" },
+      { label: "Erişim", value: "Pilot kurulumunda rol bazında, en az yetki ilkesiyle" },
     ],
     rolesLabel: "Örnek rol tanımları",
     roles: [
@@ -365,7 +366,7 @@ const copy = defineContent<{
       { id: "retrospektif", label: "Retrospective pilot" },
     ],
     heroStats: [
-      { value: "Pre-claim", label: "When the check runs" },
+      { value: "Before submission", label: "When the check runs" },
       { value: "0–100", label: "Risk score" },
       { value: "Specialist", label: "Who decides" },
       { value: "Append-only", label: "Audit log" },
@@ -374,15 +375,15 @@ const copy = defineContent<{
     eyebrow: "Administrative compliance and revenue assurance",
     title: "Shield. See rejection risk before the claim is submitted.",
     description:
-      "Pre-claim revenue integrity platform identifying reimbursement and audit risks before submission. A risky line item goes to the specialist's queue with its reason, and the specialist decides whether to submit it.",
+      "Checks billing and provision line items before submission against SUT (Turkey's reimbursement rulebook) and SGK (Social Security Institution) provision rules. A risky line item goes to the specialist's queue with its reason, and the specialist decides whether to submit it.",
     ctaIntro: "15-minute intro and demo",
     ctaPilot: "Apply for a retrospective pilot (LOI)",
     ctaTry: "Try the example",
     problem: {
       eyebrow: "Problem",
-      title: "A rejection found after submission doubles the work.",
+      title: "A rejection found after submission means an appeal and a resubmission.",
       description:
-        "Many rejected claims stem from preventable errors: missing documents, code mismatches and exceeded limits. A rule can catch them before submission and state the reason.",
+        "Some rejections come from preventable errors: missing documents, code mismatches and exceeded limits. A rule can catch them before submission and state the reason.",
     },
     problems: [
       {
@@ -422,8 +423,8 @@ const copy = defineContent<{
       },
       {
         title: "Review queue",
-        body: "Items above the threshold go to the specialist's queue. Shield never decides on submission by itself.",
-        detail: "threshold ≥ 40 · HITL",
+        body: "Items scoring 40 or more go to the specialist's queue. Shield never decides on submission by itself.",
+        detail: "threshold ≥ 40 · specialist approval",
       },
       {
         title: "Decision",
@@ -533,14 +534,14 @@ const copy = defineContent<{
     ],
     isolationHeading: {
       eyebrow: "Access and isolation",
-      title: "Each institution's data is kept separate.",
+      title: "By design, each institution's data is kept separate.",
       description:
-        "Each institution works in its own space. Queries, queues and logs cannot reach another institution's data, and roles decide who can see what.",
+        "This section is an architecture specification; no live multi-institution service is running yet. In a pilot installation each institution works in its own space, and queries, queues and logs cannot reach another institution's data. Roles decide who can see what.",
     },
     isolation: [
-      { label: "Isolation", value: "Each institution's data, queue and log are kept separate" },
-      { label: "Query scope", value: "Institution ID required on every query" },
-      { label: "Access", value: "Role-based, least privilege" },
+      { label: "Isolation", value: "By design, each institution's data, queue and log are kept separate" },
+      { label: "Query scope", value: "By design, an institution ID is required on every query" },
+      { label: "Access", value: "In a pilot installation, role-based with least privilege" },
     ],
     rolesLabel: "Example roles",
     roles: [
