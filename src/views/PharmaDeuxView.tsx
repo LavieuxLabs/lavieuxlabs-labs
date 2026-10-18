@@ -35,6 +35,7 @@ import QtSimulator from "@/components/QtSimulator";
 import { pharmaDeuxJsonLd } from "@/lib/structuredData";
 import { contactHref } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
+import type { StandardPath } from "@/lib/clinicalCases";
 import { defineMetadata } from "@/i18n/metadata";
 import { metrics, testsLabel, testsNote, trlLabel } from "@/lib/metrics";
 
@@ -74,6 +75,8 @@ const integrationMeta = [
 const pairCounts = [5, 8, 10, 15].map((n) => ({ n, pairs: (n * (n - 1)) / 2 }));
 
 type Heading = { eyebrow: string; title: string; description: string };
+/** A safety plane; planes with a reference page carry its locale-free path and render as a link. */
+type Plane = string | { name: string; href: StandardPath };
 
 const devCopy = defineContent({
   tr: { label: "Geliştirme durumu", step: "Geliştirme adımı", rules: "Doğrulanmış kural (sentetik)", version: "Sürüm", updated: "Güncelleme" },
@@ -111,7 +114,7 @@ const copy = defineContent<{
   how: Heading;
   pipeline: { title: string; body: string; detail: string }[];
   planes: { label: string; title: string; body: string };
-  planeGroups: { title: string; planes: string[] }[];
+  planeGroups: { title: string; planes: Plane[] }[];
   integration: Heading;
   integrationCards: { title: string; body: string; rows: SpecRow[] }[];
   integrationNote: string;
@@ -150,7 +153,7 @@ const copy = defineContent<{
     eyebrow: "Klinik karar destek · ilaç güvenliği",
     title: "PharmaDeux CDSS. Reçete yazılırken ilaç güvenliğini kontrol eder.",
     description:
-      "Çoklu ilaç tedavilerinde toksisite ve kümülatif organ yükünü reçete anında hekime bildiren klinik karar destek sistemi. Her uyarı, onu tetikleyen kural ve eşik değeriyle birlikte gösterilir; son karar hekimindir.",
+      "Reçete anında ilaç-ilaç etkileşimini, kümülatif organ yükünü ve QTc · Tisdale risk skorunu hekime gösterir. Her uyarı onu tetikleyen kural ve eşikle gelir. Son karar hekimindir: uyarıyı gerekçe yazarak geçebilir ve bu karar yalnızca eklenebilir kayda yazılır.",
     ctaIntro: "15 dk tanışma görüşmesi",
     ctaPilot: "Pilot başvurusu (LOI)",
     ctaHow: "Nasıl çalıştığını görün",
@@ -228,7 +231,7 @@ const copy = defineContent<{
     planes: {
       label: `${metrics.safetyPlanes} güvenlik düzlemi`,
       title: `Dört başlık altında ${metrics.safetyPlanes} kontrol`,
-      body: "Her kontrolün kendi sürümü ve testi var. Eşik değerleri kurumun politikasına göre ayarlanabilir.",
+      body: "Her kontrolün kendi sürümü ve testi var. Eşik değerleri kurumun politikasına göre ayarlanabilir. Altı çizili düzlemlerin formülü ve kaynağı standart sayfasındadır.",
     },
     // Safety planes grouped by clinical domain. Keep in sync with the engine's plane registry.
     planeGroups: [
@@ -238,12 +241,12 @@ const copy = defineContent<{
       },
       {
         title: "Organ toksisitesi",
-        planes: ["Nefrotoksisite", "Hepatotoksisite", "Kardiyotoksisite / QT uzaması", "Hematolojik toksisite"],
+        planes: ["Nefrotoksisite", "Hepatotoksisite", { name: "Kardiyotoksisite / QT uzaması", href: "/standartlar/tisdale-score" }, "Hematolojik toksisite"],
       },
       {
         title: "Kümülatif yük",
         planes: [
-          "Antikolinerjik yük",
+          { name: "Antikolinerjik yük", href: "/standartlar/kumulatif-organ-yuku" },
           "Serotonerjik yük",
           "Sedatif / MSS depresan yük",
           "Kanama riski yükü",
@@ -254,7 +257,7 @@ const copy = defineContent<{
         title: "Hasta ve doz",
         planes: [
           "Doz aralığı uygunluğu",
-          "Renal doz ayarı",
+          { name: "Renal doz ayarı", href: "/standartlar/ckd-epi-2021" },
           "Hepatik doz ayarı",
           "Geriatrik uygunluk",
           "Gebelik ve laktasyon",
@@ -488,7 +491,7 @@ const copy = defineContent<{
     eyebrow: "Clinical decision support · medication safety",
     title: "PharmaDeux CDSS. Checks medication safety while the prescription is written.",
     description:
-      "Clinical decision support software alerting physicians to cumulative organ burden and toxicity at the moment of prescription. Each alert is shown with the rule and threshold that triggered it. The physician makes the final decision.",
+      "Shows the physician drug–drug interactions, cumulative organ burden and the QTc · Tisdale risk score at the moment of prescription. Each alert comes with the rule and threshold that triggered it. The physician makes the final decision and can override an alert with a reason, which is written to an append-only record.",
     ctaIntro: "15-minute intro call",
     ctaPilot: "Apply for a pilot (LOI)",
     ctaHow: "See how it works",
@@ -566,7 +569,7 @@ const copy = defineContent<{
     planes: {
       label: `${metrics.safetyPlanes} safety planes`,
       title: `${metrics.safetyPlanes} checks under four headings`,
-      body: "Each check has its own version and tests. Thresholds can be set to match the institution's policy.",
+      body: "Each check has its own version and tests. Thresholds can be set to match the institution's policy. Underlined planes link to a reference page with the formula and source.",
     },
     planeGroups: [
       {
@@ -575,12 +578,12 @@ const copy = defineContent<{
       },
       {
         title: "Organ toxicity",
-        planes: ["Nephrotoxicity", "Hepatotoxicity", "Cardiotoxicity / QT prolongation", "Haematological toxicity"],
+        planes: ["Nephrotoxicity", "Hepatotoxicity", { name: "Cardiotoxicity / QT prolongation", href: "/standartlar/tisdale-score" }, "Haematological toxicity"],
       },
       {
         title: "Cumulative burden",
         planes: [
-          "Anticholinergic burden",
+          { name: "Anticholinergic burden", href: "/standartlar/kumulatif-organ-yuku" },
           "Serotonergic burden",
           "Sedative / CNS depressant burden",
           "Bleeding risk burden",
@@ -591,7 +594,7 @@ const copy = defineContent<{
         title: "Patient and dose",
         planes: [
           "Dose range check",
-          "Renal dose adjustment",
+          { name: "Renal dose adjustment", href: "/standartlar/ckd-epi-2021" },
           "Hepatic dose adjustment",
           "Geriatric appropriateness",
           "Pregnancy and lactation",
@@ -990,14 +993,26 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
                         <span className="font-mono text-[11px] text-white/55 tabular-nums">{group.planes.length}</span>
                       </div>
                       <ul className="-mx-5 mt-3 divide-y divide-hairline border-t border-hairline">
-                        {group.planes.map((plane, pi) => (
-                          <li key={plane} className="flex items-baseline gap-3 px-5 py-2">
-                            <span className="font-mono text-[11px] text-white/55 tabular-nums">
-                              P{String(offset + pi + 1).padStart(2, "0")}
-                            </span>
-                            <span className="text-[13px] text-white/70">{plane}</span>
-                          </li>
-                        ))}
+                        {group.planes.map((plane, pi) => {
+                          const name = typeof plane === "string" ? plane : plane.name;
+                          return (
+                            <li key={name} className="flex items-baseline gap-3 px-5 py-2">
+                              <span className="font-mono text-[11px] text-white/55 tabular-nums">
+                                P{String(offset + pi + 1).padStart(2, "0")}
+                              </span>
+                              {typeof plane === "string" ? (
+                                <span className="text-[13px] text-white/70">{name}</span>
+                              ) : (
+                                <Link
+                                  href={localizedPath(locale, plane.href)}
+                                  className="text-[13px] text-white/70 underline decoration-white/25 underline-offset-2 transition-colors duration-150 ease-out hover:text-white hover:decoration-white/60"
+                                >
+                                  {name}
+                                </Link>
+                              )}
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   );
