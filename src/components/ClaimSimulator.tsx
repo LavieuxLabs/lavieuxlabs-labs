@@ -3,7 +3,8 @@
 import { useEffect, useId, useState } from "react";
 import ShareLinkButton from "@/components/ShareLinkButton";
 import { trackEvent } from "@/lib/analytics";
-import { defineContent, type Locale } from "@/i18n/config";
+import Link from "next/link";
+import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 
 // Shield claim check simulator. The rule set is fictional (rule IDs, weights) and labelled as such; it
 // names no SUT article numbers, because invented legal references would read as real. ICD-10 codes are
@@ -87,6 +88,8 @@ const copy = defineContent({
     none: "Kural tetiklenmedi.",
     status: { review: "İncelemede · uzmana gider", below: "Eşik altı · gönderilebilir" },
     threshold: (t: number) => `Eşik ${t}`,
+    standard: "Standart",
+    standardLink: "SUT fatura denetimi",
     note: "Kurgusal kural seti · kurgusal veri. Gerçek kurallar SUT, paket tanımları ve kurum sözleşmesinden türetilir; bu örnekte mevzuat madde numarası gösterilmez. ICD-10 kodları gerçektir.",
     savings: "Geçmiş faturalar üzerinde doğrulanmış tasarruf metriği henüz yayımlanmamıştır.",
   },
@@ -121,6 +124,8 @@ const copy = defineContent({
     none: "No rule triggered.",
     status: { review: "In review · goes to a specialist", below: "Below threshold · can be submitted" },
     threshold: (t: number) => `Threshold ${t}`,
+    standard: "Standard",
+    standardLink: "SUT billing audit",
     note: "Fictional rule set · fictional data. Real rules are derived from SUT (Turkey's reimbursement rules), package definitions and the institution's contract. This example shows no legal article numbers. ICD-10 codes are real.",
     savings: "No savings metric validated on historical claims has been published yet.",
   },
@@ -268,6 +273,16 @@ export default function ClaimSimulator({ locale }: { locale: Locale }) {
         <p className={`border-t border-hairline px-5 py-3 text-[12.5px] font-medium ${score >= THRESHOLD ? "text-amber-200" : "text-white/75"}`}>
           {score >= THRESHOLD ? c.status.review : c.status.below}
         </p>
+        <dl className="border-t border-hairline text-[12.5px]">
+          <div className="grid grid-cols-[96px_1fr] gap-3 px-5 py-2.5">
+            <dt className="text-white/55">{c.standard}</dt>
+            <dd>
+              <Link href={localizedPath(locale, "/standartlar/sut-fatura-denetimi")} className="text-white/80 underline decoration-white/30 underline-offset-2 transition-colors duration-150 ease-out hover:text-white hover:decoration-white/70">
+                {c.standardLink}
+              </Link>
+            </dd>
+          </div>
+        </dl>
       </div>
       <div className="border-t border-hairline px-5 py-3 text-[11px] leading-relaxed text-white/55">
         <p>{c.note}</p>
