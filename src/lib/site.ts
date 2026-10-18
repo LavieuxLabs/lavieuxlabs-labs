@@ -21,7 +21,7 @@ export const LEGAL_ENTITY = {
 };
 
 // ISO 8601; rendered per locale with formatDate().
-export const LEGAL_LAST_UPDATED = "2026-10-08";
+export const LEGAL_LAST_UPDATED = "2026-10-18";
 
 // How the organisation describes itself. LavieuxLabs is an independent student venture, not a unit,
 // partner or technopark company of the university; every imprint, header and JSON-LD reads from here.

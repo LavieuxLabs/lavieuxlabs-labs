@@ -54,7 +54,8 @@ const sectionsTr: LegalSection[] = [
         </p>
         <h3>Analitik</h3>
         <p>
-          Sitenin nasıl kullanıldığını anonim ve toplu olarak ölçmek için kullanılır. Açık rızanıza tabidir ve rıza
+          Sitenin nasıl kullanıldığını toplu olarak ölçmek için kullanılır. Kullanılan araç ve çerezleri, aşağıdaki
+          çerez tablosuna eklenir. Açık rızanıza tabidir ve rıza
           vermediğiniz sürece etkinleştirilmez.
         </p>
       </>
@@ -170,7 +171,8 @@ const sectionsEn: LegalSection[] = [
         </p>
         <h3>Analytics</h3>
         <p>
-          Used to measure, anonymously and in aggregate, how the site is used. Requires your explicit consent and is not
+          Used to measure in aggregate how the site is used. The tool used and its cookies are added to the cookie
+          table below. Requires your explicit consent and is not
           enabled without it.
         </p>
       </>
