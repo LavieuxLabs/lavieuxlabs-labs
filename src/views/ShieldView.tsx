@@ -129,7 +129,7 @@ const copy = defineContent<{
       { value: "Append-only", label: "Denetim kaydı" },
     ],
     crumbs: { home: "Ana sayfa", products: "Ürünler" },
-    eyebrow: "Gelir bütünlüğü · provizyon denetimi",
+    eyebrow: "İdari uyum ve gelir güvencesi",
     title: "Shield. Red riskini fatura gönderilmeden önce görün.",
     description:
       "Hastane fatura ve provizyon süreçlerindeki SUT/SGK red risklerini işlem öncesinde tespit eden kurumsal denetim katmanı. Riskli kalem, nedeniyle birlikte uzmanın kuyruğuna düşer; gönderip göndermemeye uzman karar verir.",
@@ -371,7 +371,7 @@ const copy = defineContent<{
       { value: "Append-only", label: "Audit log" },
     ],
     crumbs: { home: "Home", products: "Products" },
-    eyebrow: "Revenue integrity · claim pre-check",
+    eyebrow: "Administrative compliance and revenue assurance",
     title: "Shield. See rejection risk before the claim is submitted.",
     description:
       "Pre-claim revenue integrity platform identifying reimbursement and audit risks before submission. A risky line item goes to the specialist's queue with its reason, and the specialist decides whether to submit it.",

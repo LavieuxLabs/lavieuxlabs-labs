@@ -4,7 +4,7 @@ import type { Locale } from "@/i18n/config";
 // it is certain; no DOIs or page numbers are added from memory. Titles of standards and regulations are
 // their official titles (not translated).
 
-export type CiteKey = "tisdale" | "fridericia" | "ckdepi2021" | "mdrRule11" | "iec62304";
+export type CiteKey = "tisdale" | "drew2010" | "fridericia" | "ckdepi2021" | "mdrRule11" | "iec62304";
 
 type Citation = { term: Record<Locale, string>; what: Record<Locale, string>; refs: string[] };
 
@@ -17,6 +17,16 @@ export const CITATIONS: Record<CiteKey, Citation> = {
     },
     refs: [
       "Tisdale JE, Jaynes HA, Kingery JR, et al. Development and validation of a risk score to predict QT interval prolongation in hospitalized patients. Circ Cardiovasc Qual Outcomes. 2013;6(4):479–487.",
+    ],
+  },
+  drew2010: {
+    term: { tr: "AHA/ACCF torsade de pointes bildirisi", en: "AHA/ACCF torsade de pointes statement" },
+    what: {
+      tr: "Hastanede torsade de pointes'in önlenmesi üzerine bilimsel bildiri; QTc >500 ms veya başlangıca göre >60 ms uzama yüksek risk göstergesidir.",
+      en: "Scientific statement on preventing torsade de pointes in hospital; QTc >500 ms or a >60 ms increase from baseline indicates high risk.",
+    },
+    refs: [
+      "Drew BJ, Ackerman MJ, Funk M, et al. Prevention of torsade de pointes in hospital settings: a scientific statement from the American Heart Association and the American College of Cardiology Foundation. Circulation. 2010;121:1047–1060.",
     ],
   },
   fridericia: {

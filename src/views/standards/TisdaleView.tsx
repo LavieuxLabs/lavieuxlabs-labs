@@ -45,6 +45,12 @@ const copy = defineContent({
     what: "Ne ölçer",
     whatBody:
       "Skor bir ölçüm değildir; bir olasılık sınıflamasıdır. Ölçülen QTc (Fridericia düzeltmeli, ms) skorun girdilerinden biridir. Bu yüzden ikisi ayrı yazılır: \"QTc 485 ms · Tisdale 11: yüksek risk\".",
+    mechanism: "Mekanizma",
+    mechanismBody: [
+      "QT uzatan ilaçların çoğu kalp kasında hızlı gecikmeli doğrultucu potasyum akımını (IKr) bloke eder. Bu akımı taşıyan kanal hERG geniyle kodlanır. Akım azalınca repolarizasyon uzar ve EKG'de QT aralığı uzar.",
+      "Risk iki yoldan artar. Farmakodinamik yolda iki IKr blokeri etkisini toplar. Farmakokinetik yolda bir CYP3A4 veya CYP2D6 inhibitörü, bu enzimlerle yıkılan QT uzatan ilacın plazma düzeyini yükseltir.",
+      "QTc'nin 500 ms'yi aşması veya başlangıca göre 60 ms'den fazla uzaması torsade de pointes riskinin arttığını gösterir. Bu eşikler literatürden gelir; Tisdale skorunun parçası değildir.",
+    ],
     factors: "Risk faktörleri ve puanları",
     factor: "Faktör",
     points: "Puan",
@@ -67,6 +73,9 @@ const copy = defineContent({
     limits: "Sınırlar",
     limitsBody:
       "Skor hastanede yatan erişkinlerde geliştirilmiş ve doğrulanmıştır; ayaktan hastalarda ve çocuklarda aynı eşiklerin geçerliliği gösterilmemiştir. \"QT uzatan ilaç\" ürün bilgisinde QT uzaması yer alan ilaçtır.",
+    limitsExtra:
+      "Skorda konjenital uzun QT sendromu yer almaz. Bu hastalarda risk skorla değerlendirilemez.",
+    review: "Klinik inceleme: bu sayfa henüz bir hekim tarafından incelenmedi.",
     try: "Skoru örnek bir hastada denemek için",
     trySim: "QT risk simülatörü",
     related: [
@@ -84,6 +93,12 @@ const copy = defineContent({
     what: "What it measures",
     whatBody:
       "The score is a risk classification, not a measurement. The measured QTc (Fridericia-corrected, ms) is one of its inputs. The two are therefore written separately: \"QTc 485 ms · Tisdale 11: high risk\".",
+    mechanism: "Mechanism",
+    mechanismBody: [
+      "Most QT-prolonging drugs block the rapid delayed rectifier potassium current (IKr) in cardiac muscle. The channel that carries this current is encoded by the hERG gene. Less current means longer repolarisation, which shows as a longer QT interval on the ECG.",
+      "Risk rises along two paths. Pharmacodynamically, two IKr blockers add their effects. Pharmacokinetically, a CYP3A4 or CYP2D6 inhibitor raises the plasma level of a QT-prolonging drug cleared by that enzyme.",
+      "A QTc above 500 ms, or an increase of more than 60 ms from baseline, indicates a higher risk of torsade de pointes. These thresholds come from the literature and are not part of the Tisdale score.",
+    ],
     factors: "Risk factors and points",
     factor: "Factor",
     points: "Points",
@@ -106,6 +121,9 @@ const copy = defineContent({
     limits: "Limits",
     limitsBody:
       "The score was developed and validated in hospitalised adults. The same thresholds have not been shown to hold for outpatients or children. A \"QTc-prolonging drug\" is one whose product information lists QT prolongation.",
+    limitsExtra:
+      "Congenital long QT syndrome is not a factor in the score. In these patients the score does not assess risk.",
+    review: "Clinical review: this page has not been reviewed by a physician yet.",
     try: "To try the score on an example patient, open the",
     trySim: "QT risk simulator",
     related: [
@@ -118,7 +136,7 @@ const copy = defineContent({
 
 export default function TisdaleView({ locale }: { locale: Locale }) {
   const c = copy[locale];
-  const refs = [...CITATIONS.tisdale.refs, ...CITATIONS.fridericia.refs];
+  const refs = [...CITATIONS.tisdale.refs, ...CITATIONS.drew2010.refs, ...CITATIONS.fridericia.refs];
   return (
     <StandardDoc
       locale={locale}
@@ -145,6 +163,11 @@ export default function TisdaleView({ locale }: { locale: Locale }) {
     >
       <h2>{c.what}</h2>
       <p>{c.whatBody}</p>
+
+      <h2 className="mt-12">{c.mechanism}</h2>
+      {c.mechanismBody.map((text) => (
+        <p key={text}>{text}</p>
+      ))}
 
       <h2 className="mt-12">{c.factors}</h2>
       <table>
@@ -212,6 +235,8 @@ export default function TisdaleView({ locale }: { locale: Locale }) {
 
       <h2 className="mt-12">{c.limits}</h2>
       <p>{c.limitsBody}</p>
+      <p>{c.limitsExtra}</p>
+      <p className="text-[13px]">{c.review}</p>
     </StandardDoc>
   );
 }
