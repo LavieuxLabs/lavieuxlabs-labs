@@ -4,7 +4,7 @@ import type { Locale } from "@/i18n/config";
 // it is certain; no DOIs or page numbers are added from memory. Titles of standards and regulations are
 // their official titles (not translated).
 
-export type CiteKey = "tisdale" | "drew2010" | "fridericia" | "ckdepi2021" | "kdigo2024" | "cockcroftGault" | "mdrRule11" | "iec62304";
+export type CiteKey = "tisdale" | "drew2010" | "fridericia" | "ckdepi2021" | "kdigo2024" | "cockcroftGault" | "tripleWhammy" | "mdrRule11" | "iec62304";
 
 type Citation = { term: Record<Locale, string>; what: Record<Locale, string>; refs: string[] };
 
@@ -68,6 +68,16 @@ export const CITATIONS: Record<CiteKey, Citation> = {
       en: "Equation estimating creatinine clearance from serum creatinine, age, weight and sex; the result is not indexed to body surface area (mL/min).",
     },
     refs: ["Cockcroft DW, Gault MH. Prediction of creatinine clearance from serum creatinine. Nephron. 1976;16(1):31–41."],
+  },
+  tripleWhammy: {
+    term: { tr: "Triple whammy (üçlü darbe)", en: "Triple whammy nephrotoxicity" },
+    what: {
+      tr: "Diüretik, ACE inhibitörü veya ARB ve NSAİİ'nin birlikte kullanımında renal hemodinamiden kaynaklanan akut böbrek hasarı riski.",
+      en: "Risk of acute kidney injury driven by renal haemodynamics when a diuretic, an ACE inhibitor or ARB and an NSAID are used together.",
+    },
+    refs: [
+      "Lapi F, Azoulay L, Yin H, Nessim SJ, Suissa S. Concurrent use of diuretics, angiotensin converting enzyme inhibitors, and angiotensin receptor blockers with non-steroidal anti-inflammatory drugs and risk of acute kidney injury: nested case-control study. BMJ. 2013;346:e8525.",
+    ],
   },
   mdrRule11: {
     term: { tr: "MDR Kural 11", en: "MDR Rule 11" },

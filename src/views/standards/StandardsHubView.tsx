@@ -11,12 +11,12 @@ export const metadata = defineMetadata("/standartlar", {
   tr: {
     title: "Standartlar ve referanslar",
     description:
-      "PharmaDeux ve Shield'ın dayandığı klinik, teknik ve idari standartlar: Tisdale QT risk skoru, CKD-EPI 2021 eGFR, HL7 FHIR R4 entegrasyonu ve SUT fatura denetimi; formüller, eşikler, kodlar ve kaynaklar.",
+      "PharmaDeux ve Shield'ın dayandığı klinik, teknik ve idari standartlar: Tisdale QT risk skoru, CKD-EPI 2021 eGFR, kümülatif organ yükü, HL7 FHIR R4 entegrasyonu ve SUT fatura denetimi; formüller, eşikler, kodlar ve kaynaklar.",
   },
   en: {
     title: "Standards and references",
     description:
-      "The clinical, technical and administrative standards behind PharmaDeux and Shield: the Tisdale QT risk score, CKD-EPI 2021 eGFR, HL7 FHIR R4 integration and SUT billing audit, with formulas, thresholds, codes and sources.",
+      "The clinical, technical and administrative standards behind PharmaDeux and Shield: the Tisdale QT risk score, CKD-EPI 2021 eGFR, cumulative organ burden, HL7 FHIR R4 integration and SUT billing audit, with formulas, thresholds, codes and sources.",
   },
 });
 
@@ -66,6 +66,16 @@ const copy = defineContent<{
         source: "Inker LA et al. N Engl J Med 2021",
         product: "PharmaDeux · renal doz kontrolü",
         status: "Algoritmik olarak uygulandı · sentetik testten geçiyor",
+      },
+      {
+        href: "/standartlar/kumulatif-organ-yuku",
+        category: "clinical",
+        title: "Polifarmaside kümülatif organ yükü",
+        summary: "İkili etkileşimin ötesinde renal, kardiyak, hepatik ve antikolinerjik yük; triple whammy mekanizması.",
+        codes: ["eGFR", "QTc", "ALT · AST", "Triple whammy"],
+        source: "Lapi F et al. BMJ 2013",
+        product: "PharmaDeux · organ toksisitesi ve kümülatif yük düzlemleri",
+        status: "Her düzlem sürümlü ve testli · klinik etkisi henüz bir kurumda ölçülmedi",
       },
       {
         href: "/standartlar/fhir-r4-entegrasyonu",
@@ -129,6 +139,16 @@ const copy = defineContent<{
         source: "Inker LA et al. N Engl J Med 2021",
         product: "PharmaDeux · renal dose check",
         status: "Implemented algorithmically · passes synthetic tests",
+      },
+      {
+        href: "/standartlar/kumulatif-organ-yuku",
+        category: "clinical",
+        title: "Cumulative organ burden in polypharmacy",
+        summary: "Renal, cardiac, hepatic and anticholinergic burden beyond pairwise interactions; the triple whammy mechanism.",
+        codes: ["eGFR", "QTc", "ALT · AST", "Triple whammy"],
+        source: "Lapi F et al. BMJ 2013",
+        product: "PharmaDeux · organ toxicity and cumulative burden planes",
+        status: "Each plane versioned and tested · clinical effect not yet measured in an institution",
       },
       {
         href: "/standartlar/fhir-r4-entegrasyonu",

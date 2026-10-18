@@ -81,6 +81,7 @@ const copy = defineContent({
     related: [
       { href: "/initiatives/pharmadeux#simulator", label: "QT risk simülatörü" },
       { href: "/standartlar/ckd-epi-2021", label: "CKD-EPI 2021" },
+      { href: "/standartlar/kumulatif-organ-yuku", label: "Kümülatif organ yükü" },
       { href: "/standartlar/fhir-r4-entegrasyonu", label: "FHIR R4 entegrasyonu" },
     ],
   },
@@ -129,6 +130,7 @@ const copy = defineContent({
     related: [
       { href: "/initiatives/pharmadeux#simulator", label: "QT risk simulator" },
       { href: "/standartlar/ckd-epi-2021", label: "CKD-EPI 2021" },
+      { href: "/standartlar/kumulatif-organ-yuku", label: "Cumulative organ burden" },
       { href: "/standartlar/fhir-r4-entegrasyonu", label: "FHIR R4 integration" },
     ],
   },

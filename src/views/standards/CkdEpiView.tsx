@@ -86,6 +86,7 @@ const copy = defineContent({
     related: [
       { href: "/initiatives/pharmadeux?case=renal#simulator", label: "Örnek vaka: renal doz eşiği" },
       { href: "/standartlar/tisdale-score", label: "Tisdale skoru" },
+      { href: "/standartlar/kumulatif-organ-yuku", label: "Kümülatif organ yükü" },
       { href: "/standartlar/fhir-r4-entegrasyonu", label: "FHIR R4 entegrasyonu" },
     ],
   },
@@ -142,6 +143,7 @@ const copy = defineContent({
     related: [
       { href: "/initiatives/pharmadeux?case=renal#simulator", label: "Example case: renal dose threshold" },
       { href: "/standartlar/tisdale-score", label: "Tisdale score" },
+      { href: "/standartlar/kumulatif-organ-yuku", label: "Cumulative organ burden" },
       { href: "/standartlar/fhir-r4-entegrasyonu", label: "FHIR R4 integration" },
     ],
   },
