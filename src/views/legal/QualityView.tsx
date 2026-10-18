@@ -1,4 +1,6 @@
 import LegalDocument, { type LegalFact, type LegalSection } from "@/components/LegalDocument";
+import Cite from "@/components/Cite";
+import type { CiteKey } from "@/lib/citations";
 import { CONTACT_EMAIL } from "@/lib/site";
 import { testsLabel } from "@/lib/metrics";
 import type { Locale } from "@/i18n/config";
@@ -17,6 +19,9 @@ export const metadata = defineMetadata("/legal/quality", {
   },
 });
 
+// Source marker next to a standard or regulation in the framework tables (only entries in CITATIONS).
+const FRAMEWORK_CITE: Partial<Record<string, CiteKey>> = { "EU MDR 2017/745": "mdrRule11", "IEC 62304": "iec62304" };
+
 // Turkish original. The English version below is a convenience translation; LegalDocument states
 // that the Turkish text prevails.
 const frameworksTr = [
@@ -31,7 +36,7 @@ const frameworksTr = [
   ["ISO 13485", "Tıbbi cihaz kalite yönetim sistemi", "Yol haritasında"],
   ["IEC 62366-1", "Kullanılabilirlik mühendisliği", "Yol haritasında"],
   ["ISO/IEC 27001", "Bilgi güvenliği yönetim sistemi", "Kontrol setine uyum hedefi"],
-  ["HL7 FHIR R4", "Sağlık verisi birlikte çalışabilirlik standardı", "Uygulamada"],
+  ["HL7 FHIR R4", "Sağlık verisi birlikte çalışabilirlik standardı", "Veri modeli entegre · canlı HBYS bağlantısı yok"],
 ];
 
 const sectionsTr: LegalSection[] = [
@@ -66,7 +71,10 @@ const sectionsTr: LegalSection[] = [
             <tbody>
               {frameworksTr.map(([code, scope, status]) => (
                 <tr key={code}>
-                  <td className="font-mono text-xs whitespace-nowrap text-white/85">{code}</td>
+                  <td className="font-mono text-xs whitespace-nowrap text-white/85">
+                    {code}
+                    {FRAMEWORK_CITE[code] && <Cite id={FRAMEWORK_CITE[code]} />}
+                  </td>
                   <td>{scope}</td>
                   <td>{status}</td>
                 </tr>
@@ -140,7 +148,7 @@ const sectionsTr: LegalSection[] = [
         <p>Platform mimarimiz aşağıdaki güvenlik ilkeleri üzerine kurgulanır:</p>
         <ul>
           <li>Rol tabanlı erişim kontrolü (RBAC) ve en az yetki ilkesi,</li>
-          <li>Multi-tenant mimaride kurum verilerinin mantıksal olarak izolasyonu,</li>
+          <li>Çok kurumlu mimaride, tasarım gereği kurum verilerinin mantıksal izolasyonu,</li>
           <li>
             Kararların ve kullanıcı işlemlerinin yalnızca eklenebilir (append-only) denetim kayıtlarında tutulması,
           </li>
@@ -160,6 +168,8 @@ const sectionsTr: LegalSection[] = [
           {CONTACT_EMAIL}
         </a>{" "}
         adresine “Güvenlik / Kalite Bildirimi” konu başlığıyla bildiriniz. Bildirimler öncelikli olarak değerlendirilir.
+        Güvenlik açığı bildirimine ilişkin iletişim bilgileri RFC 9116 biçiminde{" "}
+        <a href="/.well-known/security.txt">security.txt</a> dosyasında da yer alır.
       </p>
     ),
   },
@@ -177,7 +187,7 @@ const frameworksEn = [
   ["ISO 13485", "Quality management system for medical devices", "On the roadmap"],
   ["IEC 62366-1", "Usability engineering", "On the roadmap"],
   ["ISO/IEC 27001", "Information security management system", "Control set target"],
-  ["HL7 FHIR R4", "Health data interoperability standard", "In use"],
+  ["HL7 FHIR R4", "Health data interoperability standard", "Data model integrated · no live HIS connection"],
 ];
 
 const sectionsEn: LegalSection[] = [
@@ -210,7 +220,10 @@ const sectionsEn: LegalSection[] = [
             <tbody>
               {frameworksEn.map(([code, scope, status]) => (
                 <tr key={code}>
-                  <td className="font-mono text-xs whitespace-nowrap text-white/85">{code}</td>
+                  <td className="font-mono text-xs whitespace-nowrap text-white/85">
+                    {code}
+                    {FRAMEWORK_CITE[code] && <Cite id={FRAMEWORK_CITE[code]} />}
+                  </td>
                   <td>{scope}</td>
                   <td>{status}</td>
                 </tr>
@@ -285,7 +298,7 @@ const sectionsEn: LegalSection[] = [
         <p>Our platform architecture is built on the following security principles:</p>
         <ul>
           <li>Role-based access control (RBAC) and least privilege;</li>
-          <li>Logical isolation of each institution’s data in a multi-tenant architecture;</li>
+          <li>By design, logical isolation of each institution’s data in a multi-institution architecture;</li>
           <li>Decisions and user actions kept in append-only audit logs;</li>
           <li>Data minimisation, and anonymisation or pseudonymisation in pilot studies;</li>
           <li>Encryption in transit and secure software development life cycle practices.</li>
@@ -304,7 +317,8 @@ const sectionsEn: LegalSection[] = [
           {CONTACT_EMAIL}
         </a>{" "}
         with the subject line “Güvenlik / Kalite Bildirimi” (security / quality report). Reports are handled with
-        priority.
+        priority. Contact details for vulnerability reports are also published in RFC 9116 format in{" "}
+        <a href="/.well-known/security.txt">security.txt</a>.
       </p>
     ),
   },

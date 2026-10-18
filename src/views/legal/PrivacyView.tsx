@@ -172,7 +172,7 @@ const sectionsTr: LegalSection[] = [
           boyunca saklanır. Bu sürelerin sona ermesiyle veriler silinir, yok edilir veya anonim hale getirilir.
         </p>
         <p>
-          Verilerinizin güvenliği için erişimin yetkili personelle sınırlandırılması, iletim sırasında şifreleme ve
+          Verilerinizin güvenliği için erişimin yetkili ekip üyeleriyle sınırlandırılması, iletim sırasında şifreleme ve
           erişim kayıtlarının tutulması gibi idari ve teknik tedbirler uygulanır.
         </p>
       </>
@@ -330,7 +330,7 @@ const sectionsEn: LegalSection[] = [
       <>
         <p>
           Your personal data is collected through the information you enter in the contact form, which is delivered
-          to our company email address by our email delivery provider when you submit it, the emails you send us
+          to our email address by our email delivery provider when you submit it, the emails you send us
           directly, and automatically by the website infrastructure. It is processed on the following legal bases under
           Article 5(2) of KVKK:
         </p>
@@ -383,7 +383,7 @@ const sectionsEn: LegalSection[] = [
         </p>
         <p>
           To keep your data secure, we apply administrative and technical measures such as limiting access to authorised
-          staff, encrypting data in transit and keeping access logs.
+          team members, encrypting data in transit and keeping access logs.
         </p>
       </>
     ),
