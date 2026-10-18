@@ -4,7 +4,7 @@ import type { Locale } from "@/i18n/config";
 // it is certain; no DOIs or page numbers are added from memory. Titles of standards and regulations are
 // their official titles (not translated).
 
-export type CiteKey = "tisdale" | "drew2010" | "fridericia" | "ckdepi2021" | "kdigo2024" | "cockcroftGault" | "tripleWhammy" | "mdrRule11" | "iec62304";
+export type CiteKey = "tisdale" | "drew2010" | "fridericia" | "ckdepi2021" | "kdigo2024" | "cockcroftGault" | "tripleWhammy" | "mdrRule11" | "iec62304" | "iso14971" | "iso13485" | "iec62366" | "iso27001";
 
 type Citation = { term: Record<Locale, string>; what: Record<Locale, string>; refs: string[] };
 
@@ -97,5 +97,37 @@ export const CITATIONS: Record<CiteKey, Citation> = {
       en: "Life cycle process standard for medical device software. Status for LavieuxLabs: architecture aligned, not certified yet.",
     },
     refs: ["IEC 62304:2006+AMD1:2015 — Medical device software — Software life cycle processes."],
+  },
+  iso14971: {
+    term: { tr: "ISO 14971:2019", en: "ISO 14971:2019" },
+    what: {
+      tr: "Tıbbi cihazlarda risk yönetiminin uygulanması standardı.",
+      en: "Standard for applying risk management to medical devices.",
+    },
+    refs: ["ISO 14971:2019. Medical devices — Application of risk management to medical devices. International Organization for Standardization."],
+  },
+  iso13485: {
+    term: { tr: "ISO 13485:2016", en: "ISO 13485:2016" },
+    what: {
+      tr: "Tıbbi cihazlar için kalite yönetim sistemi standardı.",
+      en: "Quality management system standard for medical devices.",
+    },
+    refs: ["ISO 13485:2016. Medical devices — Quality management systems — Requirements for regulatory purposes. International Organization for Standardization."],
+  },
+  iec62366: {
+    term: { tr: "IEC 62366-1:2015", en: "IEC 62366-1:2015" },
+    what: {
+      tr: "Tıbbi cihazlarda kullanılabilirlik mühendisliğinin uygulanması standardı.",
+      en: "Standard for applying usability engineering to medical devices.",
+    },
+    refs: ["IEC 62366-1:2015+AMD1:2020. Medical devices — Part 1: Application of usability engineering to medical devices. International Electrotechnical Commission."],
+  },
+  iso27001: {
+    term: { tr: "ISO/IEC 27001:2022", en: "ISO/IEC 27001:2022" },
+    what: {
+      tr: "Bilgi güvenliği, siber güvenlik ve gizlilik koruması için yönetim sistemi standardı.",
+      en: "Management system standard for information security, cybersecurity and privacy protection.",
+    },
+    refs: ["ISO/IEC 27001:2022. Information security, cybersecurity and privacy protection — Information security management systems — Requirements. ISO/IEC."],
   },
 };

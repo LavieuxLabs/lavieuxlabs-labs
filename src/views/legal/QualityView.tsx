@@ -20,7 +20,14 @@ export const metadata = defineMetadata("/legal/quality", {
 });
 
 // Source marker next to a standard or regulation in the framework tables (only entries in CITATIONS).
-const FRAMEWORK_CITE: Partial<Record<string, CiteKey>> = { "EU MDR 2017/745": "mdrRule11", "IEC 62304": "iec62304" };
+const FRAMEWORK_CITE: Partial<Record<string, CiteKey>> = {
+  "EU MDR 2017/745": "mdrRule11",
+  "IEC 62304": "iec62304",
+  "ISO 14971": "iso14971",
+  "ISO 13485": "iso13485",
+  "IEC 62366-1": "iec62366",
+  "ISO/IEC 27001": "iso27001",
+};
 
 // Turkish original. The English version below is a convenience translation; LegalDocument states
 // that the Turkish text prevails.
