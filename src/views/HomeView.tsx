@@ -61,7 +61,7 @@ const copy = defineContent<{
     stamp: `CDSS · MDR SINIF IIa HEDEFİ · ${trlLabel("tr")}`,
     title: "İlaç güvenliği ve hastane faturalaması için karar destek yazılımı.",
     titleSignature: "karar destek",
-    lead: "PharmaDeux, çoklu ilaç tedavisinde riskli kombinasyonları reçete anında hekime gösterir. Shield, SUT ve SGK red risklerini fatura gönderilmeden önce yakalar. İkisinde de son kararı yetkili kişi verir ve her adım kayda geçer.",
+    lead: "PharmaDeux, çoklu ilaç kullanan hastada riskli kombinasyonları reçete anında hekime gösterir. Shield, SUT ve SGK red riskini fatura gönderilmeden önce yakalar. Son kararı yetkili kişi verir; her adım kayda geçer.",
     ctaProducts: "Ürünleri inceleyin",
     ctaIntro: "15 dk tanışma görüşmesi",
     ctaIntroPlan: "15 dk tanışma görüşmesi planlayın",
@@ -119,9 +119,9 @@ const copy = defineContent<{
     initiatives: [
       {
         name: "PharmaDeux CDSS",
-        category: "Klinik karar destek · ilaç güvenliği",
+        category: "Klinik karar destek (CDS)",
         summary:
-          "Çoklu ilaç tedavilerinde toksisite ve kümülatif organ yükünü reçete anında hekime bildiren klinik karar destek sistemi. Her uyarı, onu tetikleyen kural ve eşik değeriyle birlikte gösterilir.",
+          "Reçete anında ilaç-ilaç etkileşimini, kümülatif organ yükünü ve QTc · Tisdale risk skorunu hekime gösterir. Her uyarı onu tetikleyen kural ve eşikle gelir. Hekim uyarıyı gerekçe yazarak geçerse bu karar denetim izine yazılır.",
         specs: [
           { value: String(metrics.safetyPlanes), label: "Güvenlik düzlemi" },
           { value: testsLabel("tr"), label: "Otomatik test" },
@@ -134,9 +134,9 @@ const copy = defineContent<{
       },
       {
         name: "Shield",
-        category: "Gelir bütünlüğü · provizyon denetimi",
+        category: "İdari uyum ve gelir güvencesi",
         summary:
-          "Hastane fatura ve provizyon süreçlerindeki SUT/SGK red risklerini işlem öncesinde tespit eden kurumsal denetim katmanı. Riskli kalem, gerekçesiyle birlikte uzmanın kuyruğuna düşer.",
+          "Fatura ve provizyon kalemlerini gönderimden önce SUT ve SGK provizyon kurallarına göre denetler. Riskli kalem, gerekçesiyle birlikte uzmanın kuyruğuna düşer.",
         specs: [
           { value: "0–100", label: "Risk skoru, kural katkılarının toplamı" },
           { value: "Gönderim öncesi", label: "Kontrol anı" },
@@ -207,7 +207,7 @@ const copy = defineContent<{
     stamp: `CDSS · MDR CLASS IIa TARGET · ${trlLabel("en")}`,
     title: "Decision support software for medication safety and hospital billing.",
     titleSignature: "Decision support",
-    lead: "PharmaDeux shows the physician risky drug combinations in polypharmacy at the moment of prescription. Shield catches reimbursement and audit risks before a claim is submitted. In both, a qualified person makes the final decision and every step is recorded.",
+    lead: "PharmaDeux shows the physician risky drug combinations in polypharmacy at the moment of prescription. Shield catches reimbursement risk before a claim is submitted. A qualified person makes the final decision, and every step is recorded.",
     ctaProducts: "See the products",
     ctaIntro: "15-minute intro call",
     ctaIntroPlan: "Book a 15-minute intro call",
@@ -265,9 +265,9 @@ const copy = defineContent<{
     initiatives: [
       {
         name: "PharmaDeux CDSS",
-        category: "Clinical decision support · medication safety",
+        category: "Clinical decision support (CDS)",
         summary:
-          "Clinical decision support software alerting physicians to cumulative organ burden and toxicity at the moment of prescription. Each alert is shown with the rule and threshold that triggered it.",
+          "Shows the physician drug–drug interactions, cumulative organ burden and the QTc · Tisdale risk score at the moment of prescription. Each alert comes with the rule and threshold that triggered it. When the physician overrides an alert with a reason, the decision is written to the audit trail.",
         specs: [
           { value: String(metrics.safetyPlanes), label: "Safety planes" },
           { value: testsLabel("en"), label: "Automated tests" },
@@ -280,9 +280,9 @@ const copy = defineContent<{
       },
       {
         name: "Shield",
-        category: "Revenue integrity · claim pre-check",
+        category: "Administrative compliance and revenue assurance",
         summary:
-          "Pre-claim revenue integrity platform identifying reimbursement and audit risks before submission. A risky line item goes to the specialist's queue together with the reason.",
+          "Checks billing and provision line items before submission against SUT (Turkey's reimbursement rulebook) and SGK (Social Security Institution) provision rules. A risky line item goes to the specialist's queue together with the reason.",
         specs: [
           { value: "0–100", label: "Risk score, sum of rule contributions" },
           { value: "Pre-claim", label: "When the check runs" },
