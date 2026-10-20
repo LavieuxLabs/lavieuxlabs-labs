@@ -21,10 +21,10 @@ export type StandardEntry = {
 
 const copy: Record<
   Locale,
-  { search: string; all: string; clinical: string; technical: string; administrative: string; filter: string; empty: string; open: string; product: string; status: string }
+  { search: string; all: string; clinical: string; technical: string; administrative: string; filter: string; empty: string; open: string; product: string; status: string; groupCore: string; groupAdmin: string }
 > = {
-  tr: { search: "Standart, kod veya kaynak arayın", all: "Tümü", clinical: "Klinik", technical: "Teknik", administrative: "İdari / Denetim", filter: "Kategori", empty: "Sonuç yok.", open: "Sayfayı aç", product: "Ürün", status: "Durum" },
-  en: { search: "Search a standard, code or source", all: "All", clinical: "Clinical", technical: "Technical", administrative: "Administrative / Audit", filter: "Category", empty: "No results.", open: "Open page", product: "Product", status: "Status" },
+  tr: { search: "Standart, kod veya kaynak arayın", all: "Tümü", clinical: "Klinik", technical: "Teknik", administrative: "İdari / Denetim", filter: "Kategori", empty: "Sonuç yok.", open: "Sayfayı aç", product: "Ürün", status: "Durum", groupCore: "Klinik ve teknik altyapı", groupAdmin: "İdari ve denetim" },
+  en: { search: "Search a standard, code or source", all: "All", clinical: "Clinical", technical: "Technical", administrative: "Administrative / Audit", filter: "Category", empty: "No results.", open: "Open page", product: "Product", status: "Status", groupCore: "Clinical and technical infrastructure", groupAdmin: "Administrative and audit" },
 };
 
 // Category · title · summary · codes · product · status · footer: one subgrid track each, so the
@@ -45,7 +45,10 @@ const gridWidth = (n: number) =>
 // Case- and accent-insensitive, so "ckd epi" finds "CKD-EPI" and "dogrulama" finds "doğrulama".
 const fold = (t: string) => t.toLocaleLowerCase("tr-TR").replace(/ı/g, "i").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, "");
 
-/** Searchable, filterable list of the reference pages, as one joined hairline grid. */
+/**
+ * Searchable, filterable list of the reference pages: clinical and technical pages in a joined
+ * hairline grid, administrative pages below as full-width horizontal cards.
+ */
 export default function StandardsIndex({ locale, entries }: { locale: Locale; entries: StandardEntry[] }) {
   const t = copy[locale];
   const uid = useId();
@@ -60,6 +63,8 @@ export default function StandardsIndex({ locale, entries }: { locale: Locale; en
         (!q || fold(`${e.title} ${e.summary} ${e.codes.join(" ")} ${e.source} ${e.product}`).includes(q)),
     );
   }, [entries, query, category]);
+  const core = results.filter((e) => e.category !== "administrative");
+  const admin = results.filter((e) => e.category === "administrative");
 
   return (
     <div>
@@ -105,46 +110,103 @@ export default function StandardsIndex({ locale, entries }: { locale: Locale; en
         {results.length === 0 ? (
           <p className="rounded-2xl border border-hairline px-5 py-8 text-center text-[13px] text-white/55">{t.empty}</p>
         ) : (
-          <ul className={`grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline ${gridWidth(results.length)}`}>
-            {results.map((e, i) => (
-              <li
-                key={e.href}
-                className={`group relative flex flex-col bg-navy-850 transition-colors duration-150 ease-out hover:bg-navy-800 sm:grid sm:grid-cols-[minmax(0,1fr)] sm:grid-rows-subgrid ${results.length === 3 && i === 2 ? "sm:col-span-2 xl:col-span-1" : ""}`}
-                style={{ gridRow: `span ${TRACKS} / span ${TRACKS}` }}
-              >
-                <Link
-                  href={localizedPath(locale, e.href)}
-                  className="flex h-full min-w-0 flex-col p-5 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white/60 sm:row-span-7 sm:grid sm:grid-cols-[minmax(0,1fr)] sm:grid-rows-subgrid sm:p-6"
-                >
-                  <span className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{t[e.category]}</span>
-                  <span className="mt-3 text-[15px] font-semibold tracking-[-0.01em] text-white">{e.title}</span>
-                  <span className="mt-1.5 text-[13.5px] leading-relaxed text-white/60">{e.summary}</span>
-                  <span className="mt-4 flex flex-wrap content-start gap-x-3 gap-y-1 font-mono text-[11.5px] text-white/70">
-                    {e.codes.map((code) => (
-                      <span key={code}>{code}</span>
-                    ))}
-                  </span>
-                  <span className="-mx-5 mt-5 grid grid-cols-[64px_1fr] items-start gap-3 border-t border-hairline px-5 py-2 sm:-mx-6 sm:px-6">
-                    <span className="text-[11.5px] text-white/55">{t.product}</span>
-                    <span className="text-[12.5px] leading-snug text-white/80">{e.product}</span>
-                  </span>
-                  <span className="-mx-5 grid grid-cols-[64px_1fr] items-start gap-3 border-t border-hairline px-5 py-2 sm:-mx-6 sm:px-6">
-                    <span className="text-[11.5px] text-white/55">{t.status}</span>
-                    <span className="text-[12.5px] leading-snug text-white/80">{e.status}</span>
-                  </span>
-                  <span className="-mx-5 mt-auto flex items-center justify-between gap-3 border-t border-hairline px-5 pt-4 text-[12px] text-white/55 sm:-mx-6 sm:mt-0 sm:self-end sm:px-6">
-                    <span lang="en" className="min-w-0 truncate">{e.source}</span>
-                    <span className="inline-flex shrink-0 items-center gap-1 text-white/75 transition-colors duration-150 ease-out group-hover:text-white">
-                      {t.open}
-                      <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-                    </span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className="space-y-10">
+            {core.length > 0 && (
+              <div>
+                <h3 className="mb-4 text-[11px] font-medium tracking-wider text-white/50 uppercase">{t.groupCore}</h3>
+                <ul className={`grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline ${gridWidth(core.length)}`}>
+                  {core.map((e, i) => (
+                    <li
+                      key={e.href}
+                      className={`group relative flex flex-col bg-navy-850 transition-colors duration-150 ease-out hover:bg-navy-800 sm:grid sm:grid-cols-[minmax(0,1fr)] sm:grid-rows-subgrid ${core.length === 3 && i === 2 ? "sm:col-span-2 xl:col-span-1" : ""}`}
+                      style={{ gridRow: `span ${TRACKS} / span ${TRACKS}` }}
+                    >
+                      <Link
+                        href={localizedPath(locale, e.href)}
+                        className="flex h-full min-w-0 flex-col p-5 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white/60 sm:row-span-7 sm:grid sm:grid-cols-[minmax(0,1fr)] sm:grid-rows-subgrid sm:p-6"
+                      >
+                        <span className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{t[e.category]}</span>
+                        <span className="mt-3 text-[15px] font-semibold tracking-[-0.01em] text-white">{e.title}</span>
+                        <span className="mt-1.5 text-[13.5px] leading-relaxed text-white/60">{e.summary}</span>
+                        <Codes codes={e.codes} />
+                        <span className="-mx-5 mt-5 grid grid-cols-[64px_1fr] items-start gap-3 border-t border-hairline px-5 py-2 sm:-mx-6 sm:px-6">
+                          <span className="text-[11.5px] text-white/55">{t.product}</span>
+                          <span className="text-[12.5px] leading-snug text-white/80">{e.product}</span>
+                        </span>
+                        <span className="-mx-5 grid grid-cols-[64px_1fr] items-start gap-3 border-t border-hairline px-5 py-2 sm:-mx-6 sm:px-6">
+                          <span className="text-[11.5px] text-white/55">{t.status}</span>
+                          <span className="text-[12.5px] leading-snug text-white/80">{e.status}</span>
+                        </span>
+                        <span className="-mx-5 mt-auto flex items-center justify-between gap-3 border-t border-hairline px-5 pt-4 text-[12px] text-white/55 sm:-mx-6 sm:mt-0 sm:self-end sm:px-6">
+                          <span lang="en" className="min-w-0 truncate">{e.source}</span>
+                          <OpenLabel label={t.open} />
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {admin.length > 0 && (
+              <div>
+                <h3 className="mb-4 text-[11px] font-medium tracking-wider text-white/50 uppercase">{t.groupAdmin}</h3>
+                {/* Full-width horizontal card: description on the left, product · status · source on the
+                    right. The right column's rows run from the vertical divider to the right wall. */}
+                <ul className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline">
+                  {admin.map((e) => (
+                    <li key={e.href} className="group relative bg-navy-850 transition-colors duration-150 ease-out hover:bg-navy-800">
+                      <Link
+                        href={localizedPath(locale, e.href)}
+                        className="grid min-w-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white/60 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)]"
+                      >
+                        <span className="flex min-w-0 flex-col p-5 sm:p-6">
+                          <span className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{t[e.category]}</span>
+                          <span className="mt-3 text-[15px] font-semibold tracking-[-0.01em] text-white">{e.title}</span>
+                          <span className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-white/60">{e.summary}</span>
+                          <Codes codes={e.codes} />
+                        </span>
+                        <span className="flex min-w-0 flex-col divide-y divide-hairline border-t border-hairline lg:border-t-0 lg:border-l">
+                          <span className="grid flex-1 grid-cols-[64px_1fr] items-center gap-3 px-5 py-2.5 sm:px-6">
+                            <span className="text-[11.5px] text-white/55">{t.product}</span>
+                            <span className="text-[12.5px] leading-snug text-white/80">{e.product}</span>
+                          </span>
+                          <span className="grid flex-1 grid-cols-[64px_1fr] items-center gap-3 px-5 py-2.5 sm:px-6">
+                            <span className="text-[11.5px] text-white/55">{t.status}</span>
+                            <span className="text-[12.5px] leading-snug text-white/80">{e.status}</span>
+                          </span>
+                          <span className="flex flex-1 items-center justify-between gap-3 px-5 py-3 text-[12px] text-white/55 sm:px-6">
+                            <span lang="en" className="min-w-0 truncate">{e.source}</span>
+                            <OpenLabel label={t.open} />
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
+  );
+}
+
+function Codes({ codes }: { codes: string[] }) {
+  return (
+    <span className="mt-4 flex flex-wrap content-start gap-x-3 gap-y-1 font-mono text-[11.5px] text-white/70">
+      {codes.map((code) => (
+        <span key={code}>{code}</span>
+      ))}
+    </span>
+  );
+}
+
+function OpenLabel({ label }: { label: string }) {
+  return (
+    <span className="inline-flex shrink-0 items-center gap-1 text-white/75 transition-colors duration-150 ease-out group-hover:text-white">
+      {label}
+      <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+    </span>
   );
 }
