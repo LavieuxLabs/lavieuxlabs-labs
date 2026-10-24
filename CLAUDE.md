@@ -75,6 +75,7 @@ Kağıt yüzeyi kuralları:
   * İddiayı ölçülebilir gerçeğe indir (2.480+ test, THS 4, CE işareti yok). Bir şey henüz yoksa "henüz yok" yaz.
   * Mümkünse somut bir klinik veya operasyonel örnek ver ("eGFR'si 90 olan hastada güvenli olan reçete 30'da doz ayarı gerektirebilir").
   * İngilizce jargon yalnızca terim olarak yerleşmişse kalır (FHIR, append-only); ürün açıklamasında Türkçe karşılık kullanılır ("gönderim öncesi", "pre-claim" değil).
+  * PharmaDeux'un resmî telaffuzu "Farmadeuks"tur (son ünlü u, son ses s). Türkçe ekler buna göre yazılır: PharmaDeux'u, PharmaDeux'un, PharmaDeux'a, PharmaDeux'ta, PharmaDeux'tan, PharmaDeux'la, PharmaDeux'tur. Marka adı ve İngilizce metindeki biçimi (PharmaDeux's) değişmez.
   * Tüm iletişim adresi tek kaynaktan gelir: `CONTACT_EMAIL` (`contact@lavieuxlabs.com`); e-posta gösterilen kart ve butonlarda `CopyEmail` kullanılır (tıklayınca panoya kopyalar).
 
 - DIETER RAMS (Fonksiyonel Doğruluk):

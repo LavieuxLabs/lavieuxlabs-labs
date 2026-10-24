@@ -70,11 +70,11 @@ const copy = defineContent({
     label: "Tanım",
     dosing: "Renal doz kontrolünde temel ilkeler",
     kdigoNote:
-      "Doz eşiği ilaca özgüdür ve ürün bilgisinden gelir. Bu yüzden PharmaDeux'da kategori başına sabit bir davranış tanımlanmaz: aynı G3b hastada bir ilaç doz ayarı gerektirirken diğeri gerektirmeyebilir. Kural çıktıları kurumun klinik politikasına göre ayarlanır ve son karar hekimindir.",
+      "Doz eşiği ilaca özgüdür ve ürün bilgisinden gelir. Bu yüzden PharmaDeux'ta kategori başına sabit bir davranış tanımlanmaz: aynı G3b hastada bir ilaç doz ayarı gerektirirken diğeri gerektirmeyebilir. Kural çıktıları kurumun klinik politikasına göre ayarlanır ve son karar hekimindir.",
     dosingBody: "Böbrek fonksiyonuna göre doz kontrolünde gözetilen ilkeler:",
     dosingItems: [
       "Doz eşiği ürün bilgisinden (KÜB) gelir ve ürün bilgisinin kullandığı ölçüte göre uygulanır. Ürün bilgisi kreatinin klirensi (Cockcroft–Gault, mL/dk) veriyorsa eGFR (mL/dk/1,73 m²) onun yerine konmaz.",
-      "PharmaDeux'da kural güncel laboratuvar değerine bakar; gerekli değer yoksa eksik veri olarak işaretlenir, atlanmaz.",
+      "PharmaDeux'ta kural güncel laboratuvar değerine bakar; gerekli değer yoksa eksik veri olarak işaretlenir, atlanmaz.",
       "Aynı reçete farklı böbrek fonksiyonunda farklı sonuç verebilir: eGFR'si 90 olan hastada güvenli olan doz 30'da ayar gerektirebilir.",
     ],
     limits: "Sınırlar",

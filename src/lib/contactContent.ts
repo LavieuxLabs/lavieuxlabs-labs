@@ -143,7 +143,7 @@ const copy = defineContent<ContactCopy>({
       intro: {
         pharmadeux: [
           { title: "Kısa form", body: "Kurumunuzu ve rolünüzü yazın. Mesaj isteğe bağlıdır." },
-          { title: "15 dakikalık görüşme", body: "Reçete ve ilaç güvenliği akışınızı dinler, PharmaDeux'yü örnek bir vaka üzerinde gösteririz." },
+          { title: "15 dakikalık görüşme", body: "Reçete ve ilaç güvenliği akışınızı dinler, PharmaDeux'u örnek bir vaka üzerinde gösteririz." },
           { title: "Uygunluk notu", body: "Projenin kurumunuza uyup uymadığını açıkça söyleriz. Sonraki adım için taahhüt istenmez." },
         ],
         shield: [

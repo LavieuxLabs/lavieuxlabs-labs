@@ -6,7 +6,7 @@ const copy = defineContent({
   tr: {
     title: "LavieuxLabs — İlaç güvenliği üzerine bağımsız öğrenci Ar-Ge girişimi",
     description:
-      "LavieuxLabs ekibi, reçete anında ilaç güvenliğini kontrol eden PharmaDeux'yü geliştiriyor. Sitede ayrıca Tarık Ziya Eren'in bağımsız projesi Shield tanıtılıyor; Shield fatura gönderilmeden önce SUT/SGK red riskini gösterir. Son kararı her zaman yetkili kişi verir.",
+      "LavieuxLabs ekibi, reçete anında ilaç güvenliğini kontrol eden PharmaDeux'u geliştiriyor. Sitede ayrıca Tarık Ziya Eren'in bağımsız projesi Shield tanıtılıyor; Shield fatura gönderilmeden önce SUT/SGK red riskini gösterir. Son kararı her zaman yetkili kişi verir.",
   },
   en: {
     title: "LavieuxLabs — Independent student R&D venture in medication safety",

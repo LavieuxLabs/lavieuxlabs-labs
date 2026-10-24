@@ -53,27 +53,27 @@ export const teamCopy = defineContent<Record<MemberId, { role: string; summary: 
     "tarik-ziya-eren": {
       role: "Proje lideri, sistem mimarisi ve API",
       summary:
-        "PharmaDeux'ün proje koordinasyonu, sistem mimarisi, API katmanı ve analiz süreçlerinin orkestrasyonundan sorumludur. Klinik karar motorlarının sistemle bütünleşmesi, güvenlik ve teknik mimari çalışmalarını yürütür.",
+        "PharmaDeux'un proje koordinasyonu, sistem mimarisi, API katmanı ve analiz süreçlerinin orkestrasyonundan sorumludur. Klinik karar motorlarının sistemle bütünleşmesi, güvenlik ve teknik mimari çalışmalarını yürütür.",
     },
     "semih-coban": {
       role: "Klinik veri ve ilaç bilgi katmanı",
       summary:
-        "PharmaDeux'ün klinik veri ve ilaç bilgi katmanı üzerinde çalışır. İlaç verilerinin yapılandırılması, klinik kuralların veri temeli ve bu katmanın dokümantasyonuyla ilgilenir. Klinik analiz modüllerinin geliştirilmesine de katkı sağlar.",
+        "PharmaDeux'un klinik veri ve ilaç bilgi katmanı üzerinde çalışır. İlaç verilerinin yapılandırılması, klinik kuralların veri temeli ve bu katmanın dokümantasyonuyla ilgilenir. Klinik analiz modüllerinin geliştirilmesine de katkı sağlar.",
     },
     "mert-ali-ay": {
       role: "Frontend ve klinik arayüz",
       summary:
-        "PharmaDeux'ün klinik çalışma alanı, reçete arayüzü ve analiz panosunun geliştirilmesine katkı sağlar. Kullanıcı deneyimi, arayüz bileşenleri ve klinik sonuçların kullanıcıya sunulması üzerinde çalışır.",
+        "PharmaDeux'un klinik çalışma alanı, reçete arayüzü ve analiz panosunun geliştirilmesine katkı sağlar. Kullanıcı deneyimi, arayüz bileşenleri ve klinik sonuçların kullanıcıya sunulması üzerinde çalışır.",
     },
     "samed-demirci": {
       role: "Veri hattı ve entegrasyon",
       summary:
-        "PharmaDeux'ün veri işleme süreçleri, veri hattı ve ilgili entegrasyonlarına katkı sağlar. Klinik veri akışları ve analiz sistemleri arasındaki bağlantıların geliştirilmesinde çalışmıştır.",
+        "PharmaDeux'un veri işleme süreçleri, veri hattı ve ilgili entegrasyonlarına katkı sağlar. Klinik veri akışları ve analiz sistemleri arasındaki bağlantıların geliştirilmesinde çalışmıştır.",
     },
     "yusuf-kaya": {
       role: "Kalite güvencesi ve test otomasyonu",
       summary:
-        "PharmaDeux'ün yazılım testleri, API sözleşme kontrolleri, regresyon testleri ve otomatik kalite doğrulama süreçlerine katkı sağlar.",
+        "PharmaDeux'un yazılım testleri, API sözleşme kontrolleri, regresyon testleri ve otomatik kalite doğrulama süreçlerine katkı sağlar.",
     },
   },
   en: {

@@ -107,7 +107,7 @@ const copy = defineContent<{
     hero: {
       kicker: "Bağımsız öğrenci Ar-Ge girişimi, Konya",
       title: "İlaç güvenliği ve hastane faturalaması için iki yazılım projesi.",
-      lead: "LavieuxLabs ekibi ilaç güvenliği için PharmaDeux'yü geliştiriyor. Bu sitede ayrıca Tarık Ziya Eren'in hastane faturalaması için geliştirdiği bağımsız proje Shield tanıtılıyor. İkisi de prototip ve klinik veya kurumsal ortamda henüz doğrulanmadı.",
+      lead: "LavieuxLabs ekibi ilaç güvenliği için PharmaDeux'u geliştiriyor. Bu sitede ayrıca Tarık Ziya Eren'in hastane faturalaması için geliştirdiği bağımsız proje Shield tanıtılıyor. İkisi de prototip ve klinik veya kurumsal ortamda henüz doğrulanmadı.",
       primary: "15 dk tanışma görüşmesi",
       secondary: "Projeleri inceleyin",
       academic: "Araştırma iş birliği önerin",
@@ -189,7 +189,7 @@ const copy = defineContent<{
           { label: "Sıradaki adım", value: "Geçmiş vakalarla retrospektif doğrulama" },
           { label: "Düzenleyici durum", value: "MDR Sınıf IIa hedefi, CE işareti yok" },
         ],
-        link: "PharmaDeux'yü ayrıntılı inceleyin",
+        link: "PharmaDeux'u ayrıntılı inceleyin",
       },
       shield: {
         name: "Shield",

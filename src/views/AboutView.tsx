@@ -98,7 +98,7 @@ const copy = defineContent<{
         },
         {
           title: "Test",
-          body: `Her klinik gereksinim, onu uygulayan kurala ve onu sınayan teste bağlıdır. Hiçbir değişiklik gözden geçirilmeden ve regresyon testinden geçmeden yayına çıkmaz. PharmaDeux'te ${testsLabel("tr")} otomatik test var; bu yazılım düzeyinde bir ölçüdür, klinik doğrulama değildir.`,
+          body: `Her klinik gereksinim, onu uygulayan kurala ve onu sınayan teste bağlıdır. Hiçbir değişiklik gözden geçirilmeden ve regresyon testinden geçmeden yayına çıkmaz. PharmaDeux'ta ${testsLabel("tr")} otomatik test var; bu yazılım düzeyinde bir ölçüdür, klinik doğrulama değildir.`,
         },
         {
           title: "Doğrulama",
@@ -143,7 +143,7 @@ const copy = defineContent<{
     projects: {
       label: "Projeler",
       title: "Sitede iki proje var; sahiplikleri farklı.",
-      intro: "PharmaDeux'ü ekip birlikte geliştiriyor. Shield, Tarık Ziya Eren'in bağımsız projesi olarak bu sitede tanıtılıyor.",
+      intro: "PharmaDeux'u ekip birlikte geliştiriyor. Shield, Tarık Ziya Eren'in bağımsız projesi olarak bu sitede tanıtılıyor.",
       pharma: {
         name: "PharmaDeux",
         owner: "LavieuxLabs ekibinin ortak projesi",
@@ -170,7 +170,7 @@ const copy = defineContent<{
     },
     team: {
       label: "Ekibimiz",
-      title: "PharmaDeux'ü geliştiren ekip.",
+      title: "PharmaDeux'u geliştiren ekip.",
       intro:
         "Ekip, Konya Teknik Üniversitesi'nde okuyan öğrencilerden oluşuyor ve PharmaDeux üzerinde birlikte çalışıyor. Her üyenin üzerinde çalıştığı alanları aşağıya yazdık. Shield, Tarık Ziya Eren'in bağımsız projesidir; ekibin ortak projesi değildir.",
     },
@@ -182,7 +182,7 @@ const copy = defineContent<{
         {
           title: "Klinik doğrulama ortağı",
           who: "Eğitim ve araştırma, üniversite hastaneleri",
-          body: "PharmaDeux'ü geçmiş vakalarda ve gölge modda ölçmek için klinik veri ve bağımsız bir uzman paneli.",
+          body: "PharmaDeux'u geçmiş vakalarda ve gölge modda ölçmek için klinik veri ve bağımsız bir uzman paneli.",
           link: "Pilot başvurusu (PharmaDeux)",
           path: "pilot",
           product: "pharmadeux",

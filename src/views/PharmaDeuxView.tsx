@@ -181,7 +181,7 @@ const copy = defineContent<{
     },
     cases: {
       label: "Örnek vaka",
-      title: "Bir vakada PharmaDeux'nün gösterdikleri.",
+      title: "Bir vakada PharmaDeux'un gösterdikleri.",
       intro: [
         "Üç kurgusal hastadan birini seçin ya da eGFR'yi ve antibiyotiği kendiniz değiştirin. Panel bütün reçeteye bakar: böbrek, karaciğer ve QTc değeri, motorun bulgusu ve dayandığı standart.",
       ],
@@ -345,7 +345,7 @@ const copy = defineContent<{
           items: [
             { name: "FHIR R4 Bundle", detail: "Analiz için Bundle içe aktarılır, sonuç Bundle olarak dışa aktarılır.", status: "code" },
             { name: "Kodlama", detail: "ATC (ilaç), ICD-10 (tanı), UCUM (birim).", status: "code" },
-            { name: "FHIR Subscription (rest-hook)", detail: "Yeni ilaç isteminde HBYS'nin PharmaDeux'yü kendiliğinden çağırması.", status: "planned" },
+            { name: "FHIR Subscription (rest-hook)", detail: "Yeni ilaç isteminde HBYS'nin PharmaDeux'u kendiliğinden çağırması.", status: "planned" },
             { name: "HL7 v2 (MLLP)", detail: "FHIR'a geçmemiş sistemlerden mesaj alıp FHIR R4'e dönüştürmek.", status: "planned" },
           ],
         },
@@ -426,7 +426,7 @@ const copy = defineContent<{
       intro:
         "Geçmiş vakalarla doğrulama çalışmasına katılabilecek klinik eczacılık ekipleri, hekimler ve araştırma hastaneleriyle görüşmek istiyoruz. İlk adım 15 dakikalık bir tanışma görüşmesidir ve bir taahhüt istemez.",
       modes: [
-        { title: "Tanışma görüşmesi", body: "15 dakika. Kurumunuzun sorusunu ve PharmaDeux'nün bugünkü durumunu konuşuruz.", link: "15 dk tanışma görüşmesi" },
+        { title: "Tanışma görüşmesi", body: "15 dakika. Kurumunuzun sorusunu ve PharmaDeux'un bugünkü durumunu konuşuruz.", link: "15 dk tanışma görüşmesi" },
         { title: "Akademik ve klinik ortaklık", body: "Protokol yazımı, referans paneli ve ortak yayın için araştırma iş birliği.", link: "Ortaklık için yazın" },
         { title: "Pilot ve geçmiş vaka doğrulaması", body: "Kapsam ve veri koşulları bağlayıcı olmayan bir Niyet Mektubu (LOI) ile yazılır.", link: "Pilot başvurusu (LOI)" },
       ],

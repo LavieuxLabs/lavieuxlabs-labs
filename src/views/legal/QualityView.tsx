@@ -160,7 +160,7 @@ const sectionsTr: LegalSection[] = [
     content: (
       <>
         <p>
-          PharmaDeux’ün mimarisi aşağıdaki güvenlik ilkeleri üzerine tasarlanır. Bunlar tasarım ilkeleridir; hangisinin
+          PharmaDeux’un mimarisi aşağıdaki güvenlik ilkeleri üzerine tasarlanır. Bunlar tasarım ilkeleridir; hangisinin
           prototipte uygulandığı ürün sayfasında ayrıca yazılır.
         </p>
         <ul>
@@ -365,7 +365,7 @@ const documents: Record<
     eyebrow: "Yasal: Kalite ve regülasyon",
     title: "Kalite, Bilgi Güvenliği ve MDR",
     summary:
-      "PharmaDeux'ü geliştirirken hangi standartları referans aldığımızı ve düzenleyici süreçte bugün nerede olduğumuzu yazdık. Bu sayfa bir sertifika beyanı değildir.",
+      "PharmaDeux'u geliştirirken hangi standartları referans aldığımızı ve düzenleyici süreçte bugün nerede olduğumuzu yazdık. Bu sayfa bir sertifika beyanı değildir.",
     facts: [
       { label: "Belge türü", value: "Düzenleyici durum beyanı" },
       { label: "Kapsam", value: "PharmaDeux CDSS; Shield ayrı bir projedir" },
