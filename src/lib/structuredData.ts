@@ -1,4 +1,4 @@
-import { CONTACT_EMAIL, SITE_URL, office } from "@/lib/site";
+import { CONTACT_EMAIL, SITE_URL, STANDARDS_UPDATED, office, type StandardPath } from "@/lib/site";
 import { TEAM, TEAM_LEAD, teamCopy } from "@/lib/team";
 import { metrics } from "@/lib/metrics";
 import { defineContent, type Locale } from "@/i18n/config";
@@ -245,9 +245,9 @@ export function shieldJsonLd(locale: Locale) {
 
 // ── Standards & reference portal ─────────────────────────────────────────────
 // Reference pages carry no reviewedBy: a named reviewer is only added when one has actually reviewed
-// the page. dateModified comes from the metrics source of truth.
+// the page. dateModified is the page's own content date (STANDARDS_UPDATED), not the product metrics date.
 
-const STANDARDS_PATH = "/standartlar";
+const STANDARDS_PATH = "/standartlar" satisfies StandardPath;
 const standardsName: Record<Locale, string> = { tr: "Standartlar ve referanslar", en: "Standards and references" };
 
 function standardsBreadcrumb(locale: Locale, page?: { name: string; path: string }) {
@@ -269,7 +269,7 @@ export function standardsHubJsonLd(locale: Locale, pages: { name: string; path: 
         name: standardsName[locale],
         url: absoluteUrl(locale, STANDARDS_PATH),
         inLanguage: inLanguage[locale],
-        dateModified: metrics.lastUpdated,
+        dateModified: STANDARDS_UPDATED[STANDARDS_PATH],
         publisher: { "@id": ORG_ID },
         mainEntity: {
           "@type": "ItemList",
@@ -283,7 +283,7 @@ export function standardsHubJsonLd(locale: Locale, pages: { name: string; path: 
 
 type StandardPage = {
   locale: Locale;
-  path: string;
+  path: StandardPath;
   name: string;
   description: string;
   /** MedicalWebPage for clinical references, TechnicalArticle for integration documentation. */
@@ -301,7 +301,7 @@ export function standardPageJsonLd({ locale, path, name, description, kind, abou
     description,
     url: absoluteUrl(locale, path),
     inLanguage: inLanguage[locale],
-    dateModified: metrics.lastUpdated,
+    dateModified: STANDARDS_UPDATED[path],
     isPartOf: { "@id": `${absoluteUrl(locale, STANDARDS_PATH)}#page` },
     publisher: { "@id": ORG_ID },
     author: { "@id": ORG_ID },

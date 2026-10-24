@@ -3,7 +3,7 @@ import { Fragment, type ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
 import { LINK } from "@/components/paper/Editorial";
-import { metrics } from "@/lib/metrics";
+import { STANDARDS_UPDATED, type StandardPath } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 
 const copy = defineContent({
@@ -33,6 +33,8 @@ const copy = defineContent({
 
 type StandardDocProps = {
   locale: Locale;
+  /** Locale-free path of this page; selects its "last updated" date. */
+  path: StandardPath;
   /** Breadcrumb label of this page. */
   crumb: string;
   /** Short category line above the title (e.g. "Klinik standart: QT riski"). */
@@ -70,9 +72,9 @@ function Reference({ text }: { text: string }) {
 /**
  * Shell for the standards reference pages on the paper surface (Academic Editorial): breadcrumb, title and
  * summary; on wide screens a contents list in the left three columns beside the datasheet column; numbered
- * references, related pages and a last-updated line from the metrics source of truth. No entrance motion.
+ * references, related pages and a last-updated line from the page's own date (STANDARDS_UPDATED). No entrance motion.
  */
-export default function StandardDoc({ locale, crumb, eyebrow, title, description, jsonLd, toc, references, related, children }: StandardDocProps) {
+export default function StandardDoc({ locale, path, crumb, eyebrow, title, description, jsonLd, toc, references, related, children }: StandardDocProps) {
   const c = copy[locale];
   const href = (path: string) => localizedPath(locale, path);
   const contents = [...toc, ...(references?.length ? [{ id: "referanslar", label: c.references }] : [])];
@@ -181,7 +183,7 @@ export default function StandardDoc({ locale, crumb, eyebrow, title, description
             <p className="mt-8 max-w-[72ch] border-t border-rule pt-5 text-[14px] leading-[1.6] text-ink-3">
               {c.disclaimer}{" "}
               <span className="whitespace-nowrap">
-                {c.updated}: {formatDate(locale, metrics.lastUpdated)}
+                {c.updated}: {formatDate(locale, STANDARDS_UPDATED[path])}
               </span>
             </p>
           </div>

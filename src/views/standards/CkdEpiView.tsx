@@ -156,6 +156,7 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
   return (
     <StandardDoc
       locale={locale}
+      path={PATH}
       crumb={c.crumb}
       eyebrow={c.eyebrow}
       title={c.title}

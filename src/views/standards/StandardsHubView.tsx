@@ -6,7 +6,7 @@ import { LINK, PaperSection, TEXT_ACTION } from "@/components/paper/Editorial";
 import StandardsIndex, { type StandardEntry } from "@/components/StandardsIndex";
 import StandardsGrid, { PRINCIPLE_COUNT } from "@/components/StandardsGrid";
 import { standardsHubJsonLd } from "@/lib/structuredData";
-import { metrics } from "@/lib/metrics";
+import { STANDARDS_UPDATED } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
 
@@ -318,7 +318,7 @@ export default function StandardsHubView({ locale }: { locale: Locale }) {
             <p className="text-[14px] leading-[1.6] text-ink-3">
               {c.disclaimer}{" "}
               <span className="whitespace-nowrap">
-                {c.updated}: {formatDate(locale, metrics.lastUpdated)}
+                {c.updated}: {formatDate(locale, STANDARDS_UPDATED["/standartlar"])}
               </span>
             </p>
           </div>

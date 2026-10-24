@@ -1,7 +1,7 @@
 import Reveal from "@/components/Reveal";
 import SectionHeader from "@/components/SectionHeader";
 import PrintButton from "@/components/PrintButton";
-import { CONTACT_EMAIL, SITE_LAST_MODIFIED, SITE_URL, office, organizationProfile } from "@/lib/site";
+import { CONTACT_EMAIL, PILOT_PROTOCOL_REVISION, SITE_URL, office, organizationProfile } from "@/lib/site";
 import { defineContent, type Locale } from "@/i18n/config";
 
 type Row = { term: string; detail: string };
@@ -32,8 +32,9 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
               "Planlanan, HBYS bağlantısı gerektirir. Sistem güncel veriyi değerlendirir ama hekime ya da uzmana hiçbir şey göstermez. Bulgular sonradan gerçek kararlarla karşılaştırılır.",
           },
           {
-            term: "Faz C · Canlı pilot",
-            detail: "İsteğe bağlı. Etik kurul ve kurum onayıyla, sınırlı bir serviste uyarılar kullanıcıya gösterilir.",
+            term: "Faz C · Planlanan pilot çalışma",
+            detail:
+              "İsteğe bağlı, henüz başlamadı. Yalnızca etik kurul ve kurum onayı alınırsa sınırlı bir serviste uyarılar kullanıcıya gösterilir.",
           },
           { term: "Süre ve servisler", detail: "Kurumla birlikte belirlenir ve LOI'de yazılır." },
         ],
@@ -100,9 +101,9 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
               "Planned; needs an HIS connection. The system assesses current data but shows nothing to physicians or specialists. Its findings are compared with the actual decisions afterwards.",
           },
           {
-            term: "Phase C · Live pilot",
+            term: "Phase C · Proposed pilot study",
             detail:
-              "Optional. With ethics committee and institutional approval, alerts are shown to users on a limited ward.",
+              "Optional and not started. Only once ethics committee and institutional approval are in place are alerts shown to users on a limited ward.",
           },
           { term: "Duration and wards", detail: "Agreed with the institution and written into the LOI." },
         ],
@@ -230,7 +231,7 @@ export default function PilotProtocol({ locale, tone = "dark" }: { locale: Local
             <p className="text-[15pt] font-semibold tracking-[-0.02em]">LavieuxLabs</p>
             <p className="text-[8.5pt]">
               {s.document} · {s.revision}{" "}
-              <span className="font-mono tabular-nums">{SITE_LAST_MODIFIED}</span>
+              <span className="font-mono tabular-nums">{PILOT_PROTOCOL_REVISION}</span>
             </p>
           </div>
           <dl className="mt-2 grid grid-cols-4 gap-3 border-b pb-2 text-[7.5pt] leading-snug">

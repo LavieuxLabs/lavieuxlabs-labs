@@ -38,7 +38,7 @@ const copy = defineContent({
       "Hastane faturası SGK'ya gitmeden önce Sağlık Uygulama Tebliği (SUT) koşullarına göre nasıl denetlenir: Shield'ın kural motoru, denetim düzlemleri ve kural skoru.",
     status: "Durum",
     statusBody:
-      "Shield geliştirme aşamasındadır. Bu sayfa kural motorunun tasarımını belgeler. Aşağıdaki R- kodlu kurallar örnek kural setindendir; SUT madde numarası veya resmi işlem kodu değildir.",
+      "Shield, Tarık Ziya Eren'in bağımsız projesidir. Geliştirme aşamasındadır. Bu sayfa kural motorunun tasarımını belgeler. Aşağıdaki R- kodlu kurallar örnek kural setindendir; SUT madde numarası veya resmi işlem kodu değildir.",
     engine: "Kural motoru: gönderim öncesi",
     engineBody:
       "SUT, SGK'nın hangi sağlık hizmetini hangi koşulla ödediğini belirleyen tebliğdir. Koşulu sağlamayan kalem kesinti veya ret ile döner. Shield faturayı gönderimden önce sürümlü kurallardan geçirir. Aynı fatura ve aynı kural sürümü her zaman aynı sonucu verir.",
@@ -126,7 +126,7 @@ const copy = defineContent({
       "How a hospital claim is checked against the Health Implementation Communiqué (SUT) before it goes to SGK, Turkey's Social Security Institution: Shield's rule engine, audit planes and rule score.",
     status: "Status",
     statusBody:
-      "Shield is in development. This page documents the rule engine design. The R- rules below come from the example rule set. They are not SUT article numbers or official procedure codes.",
+      "Shield is an independent project by Tarık Ziya Eren. It is in development. This page documents the rule engine design. The R- rules below come from the example rule set. They are not SUT article numbers or official procedure codes.",
     engine: "Rule engine: pre-submission",
     engineBody:
       "The SUT is the communiqué that sets which health services SGK pays for, and under which conditions. An item that misses a condition comes back as a deduction or a rejection. Shield runs the claim through versioned rules before submission. The same claim and the same rule version always give the same result.",
@@ -214,6 +214,7 @@ export default function SutAuditView({ locale }: { locale: Locale }) {
   return (
     <StandardDoc
       locale={locale}
+      path={PATH}
       crumb={c.crumb}
       eyebrow={c.eyebrow}
       title={c.title}
