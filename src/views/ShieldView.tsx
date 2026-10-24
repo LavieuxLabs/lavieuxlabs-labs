@@ -137,7 +137,7 @@ const copy = defineContent<{
     hero: {
       title: "Hastane faturasındaki red riskini gönderimden önce gösteren denetim yazılımı.",
       lead: "Shield fatura ve provizyon kalemlerini gönderimden önce SUT ve SGK kurallarına göre kontrol eder. Riskli kalem, tetiklenen kuralla birlikte fatura uzmanının kuyruğuna düşer; gönderim kararını uzman verir.",
-      owner: "Tarık Ziya Eren’in bağımsız projesi · LavieuxLabs sitesinde tanıtılıyor · prototip",
+      owner: "Tarık Ziya Eren’in bağımsız projesi; LavieuxLabs sitesinde tanıtılıyor. Henüz prototip aşamasında.",
       primary: "15 dk tanışma görüşmesi",
       secondary: "Örnek faturayı inceleyin",
       summaryTitle: "Kısaca",
@@ -326,7 +326,7 @@ const copy = defineContent<{
     hero: {
       title: "Claim audit software that shows rejection risk on a hospital claim before it is submitted.",
       lead: "Shield checks claim and provision line items before submission against SUT (Turkey's reimbursement rulebook) and SGK (Social Security Institution) rules. A risky item goes to the billing specialist with the rule it triggered; the specialist decides.",
-      owner: "An independent project by Tarık Ziya Eren · presented on the LavieuxLabs website · prototype",
+      owner: "An independent project by Tarık Ziya Eren, presented on the LavieuxLabs website. It is still a prototype.",
       primary: "15-minute intro call",
       secondary: "Review an example claim",
       summaryTitle: "At a glance",

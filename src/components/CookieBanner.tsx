@@ -190,7 +190,8 @@ function Toggle({
       aria-label={label}
       disabled={disabled}
       onClick={() => onChange?.(!checked)}
-      className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border transition-colors ${
+      // The visible track stays 20 × 36 px; the transparent ::after extends the hit area to 44 × 44 px.
+      className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border transition-colors after:absolute after:-inset-x-1 after:-inset-y-3 ${
         checked ? tone.toggleOn : tone.toggleOff
       } ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
     >
@@ -347,7 +348,8 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
                     type="button"
                     onClick={close}
                     aria-label={c.close}
-                    className={`rounded-md p-1 ${t.close}`}
+                    // 24 px visible; ::after makes a 44 × 44 px hit area that grows upwards, not into the intro text below.
+                    className={`relative rounded-md p-1 after:absolute after:-inset-x-2.5 after:-top-3.5 after:-bottom-1.5 ${t.close}`}
                   >
                     <X className="h-4 w-4" aria-hidden="true" />
                   </button>
@@ -408,12 +410,13 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
               </AnimatePresence>
             </div>
 
+            {/* 44 px targets on touch screens at any width; the compact 36 px row only with a mouse or trackpad. */}
             <div className={`flex flex-wrap items-center justify-end gap-2 border-t px-3 py-2.5 sm:p-4 ${t.footer}`}>
               {customizing ? (
                 <button
                   type="button"
                   onClick={() => decide(draft, "custom")}
-                  className={`min-h-11 flex-1 rounded-lg px-3.5 py-2 text-[13px] font-medium sm:min-h-0 sm:flex-none ${t.secondary}`}
+                  className={`min-h-11 flex-1 rounded-lg px-3.5 py-2 text-[13px] font-medium sm:flex-none sm:pointer-fine:min-h-0 ${t.secondary}`}
                 >
                   {c.save}
                 </button>
@@ -421,7 +424,7 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
                 <button
                   type="button"
                   onClick={() => setCustomizing(true)}
-                  className={`min-h-11 flex-1 rounded-lg px-3.5 py-2 text-[13px] font-medium sm:min-h-0 sm:flex-none ${t.ghost}`}
+                  className={`min-h-11 flex-1 rounded-lg px-3.5 py-2 text-[13px] font-medium sm:flex-none sm:pointer-fine:min-h-0 ${t.ghost}`}
                 >
                   {c.customize}
                 </button>
@@ -429,14 +432,14 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
               <button
                 type="button"
                 onClick={() => decide(NONE, "rejected")}
-                className={`min-h-11 flex-1 rounded-lg px-3.5 py-2 text-[13px] font-medium sm:min-h-0 sm:flex-none ${t.primary}`}
+                className={`min-h-11 flex-1 rounded-lg px-3.5 py-2 text-[13px] font-medium sm:flex-none sm:pointer-fine:min-h-0 ${t.primary}`}
               >
                 {c.reject}
               </button>
               <button
                 type="button"
                 onClick={() => decide(ALL, "accepted")}
-                className={`min-h-11 flex-1 rounded-lg px-3.5 py-2 text-[13px] font-medium sm:min-h-0 sm:flex-none ${t.primary}`}
+                className={`min-h-11 flex-1 rounded-lg px-3.5 py-2 text-[13px] font-medium sm:flex-none sm:pointer-fine:min-h-0 ${t.primary}`}
               >
                 {c.accept}
               </button>
