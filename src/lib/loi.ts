@@ -134,7 +134,6 @@ export type LoiFields = {
   role: string;
   detail: string;
   message: string;
-  consent: boolean;
 };
 
 export type LoiErrorCode =
@@ -150,8 +149,7 @@ export type LoiErrorCode =
   | "messageShort"
   | "messageLong"
   | "messageMarkup"
-  | "path"
-  | "consent";
+  | "path";
 
 export type LoiErrors = Partial<Record<keyof LoiFields | "path", LoiErrorCode>>;
 
@@ -247,7 +245,6 @@ export function validateLoi(f: LoiFields, path: unknown, product: unknown, local
   else if (f.message.length > LIMITS.message) errors.message = "messageLong";
   else if (MARKUP_PATTERN.test(f.message)) errors.message = "messageMarkup";
 
-  if (f.consent !== true) errors.consent = "consent";
   return errors;
 }
 

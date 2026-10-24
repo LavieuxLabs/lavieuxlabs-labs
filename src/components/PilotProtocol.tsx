@@ -164,7 +164,7 @@ const sheet = defineContent({
     imprint: { organization: "Kuruluş", address: "Konum", contact: "İletişim", web: "Web" },
     organization: `LavieuxLabs · ${organizationProfile.tr.short}`,
     footer:
-      "Bu belge bilgilendirme amaçlıdır ve bağlayıcı değildir. LavieuxLabs henüz şirketleşmedi. Pilotun kapsamı, süresi, veri işleme koşulları ve başarı ölçütleri, hastane yönetimiyle imzalanması planlanan Niyet Mektubu'nda (LOI) yazılacaktır.",
+      "Bu belge bilgilendirme amaçlıdır ve bağlayıcı değildir. LavieuxLabs henüz şirketleşmedi ve bu belge herhangi bir kişiyi yetkili imzacı olarak göstermez. Shield için proje sahibi Tarık Ziya Eren'dir; PharmaDeux ekibin ortak projesidir. Her LOI, imzadan önce gerçek tarafları ve imza yetkisini ayrıca belirlemelidir.",
   },
   en: {
     button: "Print / save as PDF",
@@ -174,7 +174,7 @@ const sheet = defineContent({
     imprint: { organization: "Organisation", address: "Location", contact: "Contact", web: "Web" },
     organization: `LavieuxLabs · ${organizationProfile.en.short}`,
     footer:
-      "This document is for information and is not binding. LavieuxLabs is not incorporated yet. The pilot's scope, duration, data processing conditions and success criteria will be set out in the Letter of Intent (LOI) planned to be signed with hospital management.",
+      "This document is for information and is not binding. LavieuxLabs is not incorporated and this document does not name any person as an authorised signatory. Tarık Ziya Eren owns the Shield project; PharmaDeux is the team's joint project. Each LOI must separately identify the actual parties and signing authority before signature.",
   },
 });
 

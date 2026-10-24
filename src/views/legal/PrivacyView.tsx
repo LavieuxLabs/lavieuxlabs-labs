@@ -123,20 +123,22 @@ const sectionsTr: LegalSection[] = [
         <p>
           Kişisel verileriniz; iletişim formuna girdiğiniz ve form gönderildiğinde e-posta gönderim hizmeti
           sağlayıcımız aracılığıyla iletişim adresimize (contact@lavieuxlabs.com) iletilen bilgiler, doğrudan gönderdiğiniz e-postalar ve
-          web sitesi altyapısı tarafından otomatik yollarla toplanır. Veriler, KVKK md. 5/2 kapsamında
-          aşağıdaki hukuki sebeplere dayanılarak işlenir:
+          web sitesi altyapısı tarafından otomatik yollarla toplanır. Her işleme faaliyeti için uygulanacak hukuki
+          sebep ayrı değerlendirilir:
         </p>
         <ul>
           <li>
-            <strong>md. 5/2(c):</strong> Bir sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması (pilot, LOI ve
-            iş birliği görüşmeleri),
+            <strong>md. 5/2(c):</strong> İlgili kişinin talebi üzerine bir sözleşmenin kurulmasına yönelik pilot veya
+            iş birliği görüşmelerinin yürütülmesi için doğrudan gerekli olan işlemler,
           </li>
           <li>
-            <strong>md. 5/2(ç):</strong> Veri sorumlusunun hukuki yükümlülüğünü yerine getirebilmesi,
+            <strong>md. 5/2(ç):</strong> Somut olayda uygulanabilir bir kayıt, başvuru yanıtlama veya yetkili merciye
+            bilgi verme yükümlülüğünün yerine getirilmesi,
           </li>
           <li>
             <strong>md. 5/2(f):</strong> İlgili kişinin temel hak ve özgürlüklerine zarar vermemek kaydıyla, veri
-            sorumlusunun meşru menfaati (talep yanıtlama, site güvenliği).
+            sorumlusunun meşru menfaati (ilk temas ve akademik iş birliği taleplerini yanıtlama, kötüye kullanımı
+            önleme ve site güvenliği).
           </li>
         </ul>
         <p>
@@ -188,8 +190,12 @@ const sectionsTr: LegalSection[] = [
     content: (
       <>
         <p>
-          Kişisel verileriniz, işleme amacının gerektirdiği süre ve ilgili mevzuatta öngörülen zamanaşımı süreleri
-          boyunca saklanır. Bu sürelerin sona ermesiyle veriler silinir, yok edilir veya anonim hale getirilir.
+          Sonuçlanmayan iletişim talepleri son yazışmadan itibaren en fazla 12 ay saklanır. Aktif bir pilot, iş birliği
+          veya sözleşme görüşmesine dönüşen yazışmalar, görüşme sona erdikten sonra en fazla 24 ay saklanır; yürürlükteki
+          mevzuatın daha uzun bir süreyi zorunlu kıldığı veya hukuki bir uyuşmazlık için saklamanın gerekli olduğu
+          durumlar saklıdır. Resend, e-posta ve günlük verilerini kendi hizmet koşulları uyarınca 30 gün tutar. Süresi
+          dolan kayıtlar üç ayda bir gözden geçirilir ve silinir; silme kayıtları ilgili mevzuatın gerektirdiği süre
+          boyunca tutulur.
         </p>
         <p>
           Verilerinizin güvenliği için erişimin yetkili ekip üyeleriyle sınırlandırılması, iletim sırasında şifreleme ve
@@ -356,20 +362,22 @@ const sectionsEn: LegalSection[] = [
         <p>
           Your personal data is collected through the information you enter in the contact form, which is delivered
           to our contact address (contact@lavieuxlabs.com) by our email delivery provider when you submit it, the emails you send us
-          directly, and automatically by the website infrastructure. It is processed on the following legal bases under
-          Article 5(2) of KVKK:
+          directly, and automatically by the website infrastructure. The applicable legal basis is assessed separately
+          for each processing activity:
         </p>
         <ul>
           <li>
-            <strong>Art. 5(2)(c):</strong> processing is directly related to concluding or performing a contract
-            (pilot, LOI and collaboration discussions);
+            <strong>Art. 5(2)(c):</strong> processing directly necessary, at the individual&apos;s request, to take steps
+            toward a pilot or collaboration agreement;
           </li>
           <li>
-            <strong>Art. 5(2)(ç):</strong> processing is necessary for the data controller to meet a legal obligation;
+            <strong>Art. 5(2)(ç):</strong> processing necessary to meet a record-keeping, application-response or
+            competent-authority obligation that applies in the specific case;
           </li>
           <li>
             <strong>Art. 5(2)(f):</strong> processing is necessary for the data controller’s legitimate interests
-            (answering requests, site security), provided it does not harm your fundamental rights and freedoms.
+            (answering first-contact and academic collaboration requests, preventing abuse and keeping the site
+            secure), provided it does not harm your fundamental rights and freedoms.
           </li>
         </ul>
         <p>
@@ -421,8 +429,11 @@ const sectionsEn: LegalSection[] = [
     content: (
       <>
         <p>
-          Your personal data is kept for as long as the purpose of processing requires and for the limitation periods
-          set by law. When these periods end, the data is deleted, destroyed or anonymised.
+          Contact requests that do not proceed are kept for no more than 12 months after the last message. Messages that
+          become part of an active pilot, collaboration or contract discussion are kept for no more than 24 months after
+          that discussion ends, unless applicable law requires a longer period or they must be preserved for a legal
+          dispute. Under its own service terms, Resend keeps email and log data for 30 days. Expired records are reviewed
+          and deleted every three months; deletion records are kept for the period required by applicable law.
         </p>
         <p>
           To keep your data secure, we apply administrative and technical measures such as limiting access to authorised

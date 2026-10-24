@@ -66,9 +66,9 @@ const sectionsTr: LegalSection[] = [
             katkılarının ve hakların aralarında nasıl paylaşıldığı bu sitede beyan edilmez.
           </li>
           <li>
-            <strong>Site içeriği:</strong> Sitedeki metinler, şekiller, logo ve tasarım öğeleri önceden izin
-            alınmadan çoğaltılamaz, dağıtılamaz, değiştirilemez veya ticari amaçla kullanılamaz. Kaynak gösterilerek
-            yapılan kısa alıntılar bu kapsamın dışındadır.
+            <strong>Site içeriği:</strong> Metin, şekil, logo ve tasarım öğeleri üzerindeki haklar, bunları meydana
+            getiren veya hukuken devralan kişilere aittir. İlgili hak sahibinin ya da lisansın izin vermediği kullanım
+            için önceden izin gerekir. Kaynak gösterilerek yapılan ve mevzuatın izin verdiği kısa alıntılar saklıdır.
           </li>
           <li>
             <strong>Üçüncü taraf varlıklar:</strong> IBM Plex ve Newsreader yazı tipleri SIL Open Font License, Lucide
@@ -98,11 +98,18 @@ const sectionsTr: LegalSection[] = [
     id: "loi",
     title: "Talepler ve Niyet Mektupları",
     content: (
-      <p>
-        İletişim formu aracılığıyla iletilen talepler ve bunları takip eden Niyet Mektupları (LOI), aksi açıkça yazılı
-        olarak kararlaştırılmadıkça taraflar için bağlayıcı bir yükümlülük doğurmaz. Pilot ve iş birliği çalışmalarının
-        koşulları, taraflar arasında ayrıca imzalanacak sözleşmelerle belirlenir.
-      </p>
+      <>
+        <p>
+          İletişim formu aracılığıyla iletilen talepler ve bunları takip eden Niyet Mektupları (LOI), aksi açıkça yazılı
+          olarak kararlaştırılmadıkça taraflar için bağlayıcı bir yükümlülük doğurmaz. Pilot ve iş birliği çalışmalarının
+          koşulları, gerçek tarafları ve temsil yetkisini açıkça gösteren ayrı sözleşmelerle belirlenir.
+        </p>
+        <p>
+          LavieuxLabs tüzel kişi değildir ve tek başına sözleşme tarafı veya yetkili imzacı olarak gösterilemez. Shield
+          bakımından proje sahibi Tarık Ziya Eren&apos;dir. PharmaDeux ekip projesidir; onun adına imza atacak kişi veya
+          kişilerin yetkisi, ilgili ekip üyelerince yazılı olarak belirlenmeden hiçbir LOI&apos;de imza istenmez.
+        </p>
+      </>
     ),
   },
   {
@@ -111,9 +118,9 @@ const sectionsTr: LegalSection[] = [
     content: (
       <p>
         Sitedeki bilgilerin doğru ve güncel olması için özen gösterilir; ancak içeriğin eksiksizliği, doğruluğu veya
-        belirli bir amaca uygunluğu konusunda açık ya da örtülü bir garanti verilmez. Yürürlükteki mevzuatın izin
-        verdiği ölçüde, sitenin kullanımından veya kullanılamamasından doğan doğrudan ya da dolaylı zararlardan
-        LavieuxLabs sorumlu tutulamaz.
+        belirli bir amaca uygunluğu konusunda açık ya da örtülü bir garanti verilmez. Emredici hukuk hükümleri ile
+        içeriği hazırlayan veya yayımlayan gerçek kişilerin kanundan doğan sorumlulukları saklıdır; “LavieuxLabs” adı
+        tüzel kişiliği olmayan bir marka veya ekip adı olduğu için ayrı bir sorumluluk süjesi olarak gösterilmez.
       </p>
     ),
   },
@@ -201,9 +208,10 @@ const sectionsEn: LegalSection[] = [
             does not state how the members’ contributions or the rights are shared between them.
           </li>
           <li>
-            <strong>Site content:</strong> the text, figures, logo and design elements on this site may not be copied,
-            distributed, modified or used commercially without prior permission. Short quotations with attribution are
-            excluded.
+            <strong>Site content:</strong> rights in the text, figures, logo and design elements belong to the people
+            who created them or lawfully acquired those rights. Prior permission is required where the relevant rights
+            holder or licence does not permit the intended use. Short attributed quotations permitted by law remain
+            unaffected.
           </li>
           <li>
             <strong>Third-party assets:</strong> the IBM Plex and Newsreader typefaces are used under the SIL Open Font
@@ -234,11 +242,18 @@ const sectionsEn: LegalSection[] = [
     id: "loi",
     title: "Requests and Letters of Intent",
     content: (
-      <p>
-        Requests sent through the contact form, and any Letters of Intent (LOI) that follow, do not create binding
-        obligations for either party unless expressly agreed in writing. The terms of pilot and collaboration work are
-        set in separate contracts signed by the parties.
-      </p>
+      <>
+        <p>
+          Requests sent through the contact form, and any Letters of Intent (LOI) that follow, do not create binding
+          obligations for either party unless expressly agreed in writing. Pilot and collaboration terms are set in
+          separate contracts that identify the actual parties and their authority to sign.
+        </p>
+        <p>
+          LavieuxLabs is not a legal person and cannot by itself be named as a contracting party or authorised signatory.
+          Tarık Ziya Eren owns the Shield project. PharmaDeux is a team project; no LOI is presented for signature until
+          the relevant team members have documented who may sign for that project.
+        </p>
+      </>
     ),
   },
   {
@@ -247,8 +262,9 @@ const sectionsEn: LegalSection[] = [
     content: (
       <p>
         We take care to keep the information on the site accurate and up to date, but give no express or implied warranty
-        that it is complete, accurate or fit for a particular purpose. To the extent permitted by applicable law,
-        LavieuxLabs is not liable for direct or indirect damage arising from the use of, or inability to use, the site.
+        that it is complete, accurate or fit for a particular purpose. Mandatory law and the statutory responsibility of
+        the individuals who prepare or publish the content remain unaffected. “LavieuxLabs” is a brand or team name
+        without legal personality and is not presented as a separate bearer of liability.
       </p>
     ),
   },

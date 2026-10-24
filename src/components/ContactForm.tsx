@@ -41,7 +41,6 @@ const copy = defineContent({
       messageLong: (max: number) => `Mesaj en fazla ${max} karakter olabilir.`,
       messageMarkup: "Mesaj HTML, betik veya bağlantı kodu içeremez.",
       path: "Lütfen bir temas yolu ve proje seçiniz.",
-      consent: "Devam etmek için aydınlatma metnini okuduğunuzu belirtiniz.",
     },
     optional: "isteğe bağlı",
     sentTitle: "Talebiniz alındı.",
@@ -79,9 +78,9 @@ const copy = defineContent({
       pilot: "Bu form bir pilot talebi iletir. Niyet Mektubu (LOI) veya sözleşme yerine geçmez.",
     } as Record<ContactPath, string>,
     dataNote: "Bu forma hasta verisi veya gerçek fatura verisi yazmayınız.",
-    consentBefore: "Kişisel verilerimin, talebimin yanıtlanması amacıyla",
+    noticeBefore: "Göndermeden önce",
     consentLink: "KVKK Aydınlatma Metni",
-    consentAfter: "kapsamında işleneceğini okudum ve anladım.",
+    noticeAfter: "ni inceleyiniz. Formun gönderilmesi açık rıza beyanı veya metni kabul ettiğiniz anlamına gelmez.",
     submitNote: (email: string) => `Gönder'e tıkladığınızda talebiniz doğrudan ${email} adresine iletilir.`,
     preparing: "Gönderiliyor",
   },
@@ -100,7 +99,6 @@ const copy = defineContent({
       messageLong: (max: number) => `Message can be at most ${max} characters.`,
       messageMarkup: "The message cannot contain HTML, scripts or link code.",
       path: "Select a way to start and a project.",
-      consent: "To continue, confirm that you have read the privacy notice.",
     },
     optional: "optional",
     sentTitle: "Your request has been received.",
@@ -136,9 +134,9 @@ const copy = defineContent({
       pilot: "This form sends a pilot request. It does not replace a Letter of Intent (LOI) or an agreement.",
     } as Record<ContactPath, string>,
     dataNote: "Do not enter patient data or real claim data in this form.",
-    consentBefore: "I have read the",
+    noticeBefore: "Before sending, review the",
     consentLink: "Privacy Notice (KVKK)",
-    consentAfter: "and understand that my personal data will be processed to answer my request.",
+    noticeAfter: ". Sending the form is not a declaration of explicit consent or acceptance of the notice.",
     submitNote: (email: string) => `When you press Send, your request goes directly to ${email}.`,
     preparing: "Sending",
   },
@@ -159,7 +157,7 @@ const freeMailDomains = [
 type Fields = LoiFields;
 type Errors = Partial<Record<keyof Fields | "path", string>>;
 
-const FIELD_ORDER: (keyof Fields | "path")[] = ["path", "name", "role", "organization", "detail", "email", "message", "consent"];
+const FIELD_ORDER: (keyof Fields | "path")[] = ["path", "name", "role", "organization", "detail", "email", "message"];
 
 function message(c: Copy, code: LoiErrorCode): string {
   const entry = c.errors[code];
@@ -335,7 +333,6 @@ export default function ContactForm({ locale, path, product, onProductChange, to
     role: "",
     detail: "",
     message: "",
-    consent: false,
   });
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "sent">("idle");
@@ -413,7 +410,7 @@ export default function ContactForm({ locale, path, product, onProductChange, to
   };
 
   const startOver = () => {
-    setFields((f) => ({ ...f, message: "", consent: false }));
+    setFields((f) => ({ ...f, message: "" }));
     setErrors({});
     setSendError(null);
     setStatus("idle");
@@ -712,29 +709,15 @@ export default function ContactForm({ locale, path, product, onProductChange, to
               />
             </Field>
 
-            <div>
-              <label className={skin.consent}>
-                <input
-                  {...errorProps("consent")}
-                  type="checkbox"
-                  checked={fields.consent}
-                  onChange={(e) => set("consent", e.target.checked)}
-                  className={skin.consentBox}
-                />
-                <span>
-                  {c.consentBefore}{" "}
-                  <Link href={localizedPath(locale, "/legal/privacy")} className={skin.consentLink}>
-                    {c.consentLink}
-                  </Link>{" "}
-                  {c.consentAfter}
-                </span>
-              </label>
-              {errors.consent && (
-                <p id={`${uid}-consent-error`} className={`mt-1.5 ${skin.consentError} ${skin.error}`}>
-                  {errors.consent}
-                </p>
-              )}
-            </div>
+            <p className={skin.consent}>
+              <span>
+                {c.noticeBefore}{" "}
+                <Link href={localizedPath(locale, "/legal/privacy")} className={skin.consentLink}>
+                  {c.consentLink}
+                </Link>
+                {c.noticeAfter}
+              </span>
+            </p>
 
             {sendError && (
               <p role="alert" className={skin.alert}>
