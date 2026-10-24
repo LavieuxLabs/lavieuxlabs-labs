@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import CopyEmail from "@/components/CopyEmail";
 import { LINK } from "@/components/paper/Editorial";
-import { LEGAL_ENTITY, LEGAL_UPDATED, navigation, type LegalPath } from "@/lib/site";
+import { DATA_CONTROLLER, LEGAL_UPDATED, navigation, type LegalPath } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 
 const copy = defineContent({
@@ -15,9 +15,8 @@ const copy = defineContent({
     facts: "Belge künyesi",
     updated: "Son güncelleme",
     contents: "İçindekiler",
-    entity: "Unvan",
+    entity: "Ad soyad",
     address: "Adres",
-    mersis: "MERSİS No",
     email: "E-posta",
   },
   en: {
@@ -28,9 +27,8 @@ const copy = defineContent({
     facts: "Document details",
     updated: "Last updated",
     contents: "Contents",
-    entity: "Name",
+    entity: "Full name",
     address: "Address",
-    mersis: "MERSIS no.",
     email: "Email",
   },
 });
@@ -215,9 +213,8 @@ export default function LegalDocument({ locale, eyebrow, title, summary, facts, 
 export function ControllerDetails({ locale }: { locale: Locale }) {
   const c = copy[locale];
   const rows: { label: string; value: ReactNode }[] = [
-    { label: c.entity, value: LEGAL_ENTITY.name },
-    ...(LEGAL_ENTITY.address ? [{ label: c.address, value: LEGAL_ENTITY.address }] : []),
-    ...(LEGAL_ENTITY.mersis ? [{ label: c.mersis, value: LEGAL_ENTITY.mersis }] : []),
+    { label: c.entity, value: DATA_CONTROLLER.name },
+    ...(DATA_CONTROLLER.address ? [{ label: c.address, value: DATA_CONTROLLER.address }] : []),
     { label: c.email, value: <CopyEmail locale={locale} tone="paper" className="text-ink" /> },
   ];
   return (

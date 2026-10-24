@@ -9,19 +9,18 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://lavieuxlab
 
 export const CONSENT_STORAGE_KEY = "lavieux_cookie_consent";
 
-// Legal entity details shown in the policies. Fill in once the company registration is final;
-// fields left null are omitted from the rendered text.
-export const LEGAL_ENTITY = {
-  name: "LavieuxLabs",
+// The natural person who determines the purposes and means of personal-data processing for this website.
+// This role does not change PharmaDeux ownership or create authority to sign for its contributors.
+export const DATA_CONTROLLER = {
+  name: "Tarık Ziya Eren",
   address: null as string | null,
-  mersis: null as string | null,
 };
 
 // Last content change of each legal page, ISO 8601, rendered per locale with formatDate(). Dates come from the git
 // history (last commit that changed the page) and from the dated, uncommitted edits after it. Each page shows its own
 // date; the footer shows the latest. Update a page's date whenever its text changes.
 export const LEGAL_UPDATED = {
-  "/legal/privacy": "2026-10-23",
+  "/legal/privacy": "2026-10-24",
   "/legal/cookies": "2026-10-24",
   "/legal/terms": "2026-10-24",
   "/legal/quality": "2026-10-24",

@@ -28,7 +28,8 @@ const sectionsTr: LegalSection[] = [
         <p>
           Bu aydınlatma metni, 6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) md. 10 ve Aydınlatma
           Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ uyarınca, veri sorumlusu
-          sıfatıyla LavieuxLabs (“LavieuxLabs”, “biz”) tarafından hazırlanmıştır.
+          sıfatıyla Tarık Ziya Eren tarafından hazırlanmıştır. “LavieuxLabs”, bu sitede kullanılan ekip ve marka
+          adıdır; ayrı bir tüzel kişilik değildir.
         </p>
         <ControllerDetails locale="tr" />
       </>
@@ -266,9 +267,10 @@ const sectionsEn: LegalSection[] = [
     content: (
       <>
         <p>
-          This privacy notice is issued by LavieuxLabs (“LavieuxLabs”, “we”) as data controller under Article 10 of
+          This privacy notice is issued by Tarık Ziya Eren as data controller under Article 10 of
           Turkey’s Law No. 6698 on the Protection of Personal Data (“KVKK”) and the Communiqué on the Procedures and
-          Principles for Fulfilling the Obligation to Inform.
+          Principles for Fulfilling the Obligation to Inform. “LavieuxLabs” is the team and brand name used on this
+          site, not a separate legal person.
         </p>
         <ControllerDetails locale="en" />
       </>
@@ -505,7 +507,7 @@ const documents: Record<
     facts: [
       { label: "Belge türü", value: "Aydınlatma metni ve gizlilik politikası" },
       { label: "Mevzuat", value: "6698 sayılı KVKK, md. 10–11" },
-      { label: "Veri sorumlusu", value: "LavieuxLabs" },
+      { label: "Veri sorumlusu", value: "Tarık Ziya Eren" },
     ],
     sections: sectionsTr,
   },
@@ -517,7 +519,7 @@ const documents: Record<
     facts: [
       { label: "Document type", value: "Privacy notice and policy" },
       { label: "Law", value: "KVKK (Law No. 6698), Art. 10–11" },
-      { label: "Data controller", value: "LavieuxLabs" },
+      { label: "Data controller", value: "Tarık Ziya Eren" },
     ],
     sections: sectionsEn,
   },
