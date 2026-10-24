@@ -3,6 +3,6 @@
 // Paths are locale-free (see stripLocale). PAPER_PATHS match exactly; PAPER_PREFIXES cover a whole section, so a new
 // standards reference page is on paper without another entry here.
 export const PAPER_PATHS: readonly string[] = ["/", "/initiatives/pharmadeux", "/initiatives/shield", "/contact", "/about", "/standartlar"];
-export const PAPER_PREFIXES: readonly string[] = ["/standartlar/"];
+export const PAPER_PREFIXES: readonly string[] = ["/standartlar/", "/legal/"];
 
 export const isPaperPath = (path: string) => PAPER_PATHS.includes(path) || PAPER_PREFIXES.some((prefix) => path.startsWith(prefix));

@@ -2,8 +2,48 @@ import Link from "next/link";
 import LegalDocument, { type LegalFact, type LegalSection } from "@/components/LegalDocument";
 import { CookieSettingsButton } from "@/components/CookieBanner";
 import { CONSENT_STORAGE_KEY } from "@/lib/site";
+import { analyticsProvider } from "@/lib/analyticsConfig";
+import { BUTTON_OUTLINE } from "@/components/paper/Editorial";
 import { localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
+
+// What the analytics category says follows the configured provider; with none, nothing loads and the banner does
+// not offer the category. Text for a provider is shown only once that provider is configured.
+const tool = analyticsProvider()?.kind ?? null;
+const analyticsText = {
+  tr: {
+    none: "Sitenin nasıl kullanıldığını toplu olarak ölçmek için ayrılmış bir kategoridir. Şu an analitik aracı kullanılmıyor: hiçbir analitik scripti yüklenmez ve bu kategori çerez bandında gösterilmez. Bir araç devreye alınırsa bu metin ve çerez tablosu güncellenir, araç yalnızca onayınızla çalışır ve onayınız yeniden sorulur.",
+    cookieless: "Sitenin nasıl kullanıldığını, çerez kullanmayacak biçimde yapılandırılmış bir araçla toplu olarak ölçer. Script yalnızca onayınızdan sonra yüklenir; onayınızı geri aldığınızda ölçüm durur.",
+    ga4: "Sitenin nasıl kullanıldığını Google Analytics 4 ile ölçer. Bu araç çerez kullanır ve veriyi Google'a gönderir. Script yalnızca onayınızdan sonra yüklenir; onayınızı geri aldığınızda ölçüm durur.",
+  },
+  en: {
+    none: "A category for measuring in aggregate how the site is used. No analytics tool is in use at the moment: no analytics script loads and the cookie banner does not offer this category. If a tool is introduced, this text and the cookie table are updated, the tool runs only with your consent, and you are asked again.",
+    cookieless: "Measures in aggregate how the site is used, with a tool configured not to set cookies. The script loads only after you consent; measurement stops when you withdraw consent.",
+    ga4: "Measures how the site is used with Google Analytics 4. This tool sets cookies and sends data to Google. The script loads only after you consent; measurement stops when you withdraw consent.",
+  },
+};
+const gaRow = {
+  tr: { labels: ["Ad", "Tür", "Kategori", "Amaç", "Süre"], type: "Üçüncü taraf çerezleri (Google)", category: "Analitik", purpose: "Ziyaretleri ayırt ederek kullanım istatistiği üretir.", duration: "Google tarafından belirlenir;", policy: "Google çerez politikası" },
+  en: { labels: ["Name", "Type", "Category", "Purpose", "Duration"], type: "Third-party cookies (Google)", category: "Analytics", purpose: "Distinguishes visits to produce usage statistics.", duration: "Set by Google. See the", policy: "Google cookie policy" },
+};
+function GaRow({ locale }: { locale: Locale }) {
+  if (tool !== "ga4") return null;
+  const r = gaRow[locale];
+  return (
+    <tr>
+      <td data-label={r.labels[0]} className="font-mono text-[13px]">_ga, _ga_*</td>
+      <td data-label={r.labels[1]}>{r.type}</td>
+      <td data-label={r.labels[2]}>{r.category}</td>
+      <td data-label={r.labels[3]}>{r.purpose}</td>
+      <td data-label={r.labels[4]}>
+        {r.duration}{" "}
+        <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer">
+          {r.policy}
+        </a>
+      </td>
+    </tr>
+  );
+}
 
 export const metadata = defineMetadata("/legal/cookies", {
   tr: {
@@ -44,7 +84,8 @@ const sectionsTr: LegalSection[] = [
         </p>
         <h3>Tercih</h3>
         <p>
-          Dil ve görünüm gibi seçimlerinizi sonraki ziyaretlerinizde hatırlamak için kullanılır. Açık rızanıza tabidir.
+          Dil ve görünüm gibi seçimleri hatırlamak için ayrılmış bir kategoridir. Şu an bu kategoride bir araç
+          kullanılmıyor; bu yüzden çerez bandında gösterilmez.
         </p>
         <h3>Harici içerik</h3>
         <p>
@@ -53,11 +94,7 @@ const sectionsTr: LegalSection[] = [
           harita yalnızca siz “Haritayı yükle” düğmesine tıkladığınızda, o sayfa görüntülemesi için yüklenir.
         </p>
         <h3>Analitik</h3>
-        <p>
-          Sitenin nasıl kullanıldığını toplu olarak ölçmek için kullanılır. Kullanılan araç ve çerezleri, aşağıdaki
-          çerez tablosuna eklenir. Açık rızanıza tabidir ve rıza
-          vermediğiniz sürece etkinleştirilmez.
-        </p>
+        <p>{analyticsText.tr[tool ?? "none"]}</p>
       </>
     ),
   },
@@ -67,7 +104,7 @@ const sectionsTr: LegalSection[] = [
     content: (
       <>
         <div className="overflow-x-auto">
-          <table>
+          <table className="stack">
             <thead>
               <tr>
                 <th>Ad</th>
@@ -79,32 +116,33 @@ const sectionsTr: LegalSection[] = [
             </thead>
             <tbody>
               <tr>
-                <td className="font-mono text-xs">{CONSENT_STORAGE_KEY}</td>
-                <td>Yerel depolama</td>
-                <td>Zorunlu</td>
-                <td>Çerez onay tercihinizi ve tercih tarihini saklar.</td>
-                <td>Siz silene veya tercihinizi değiştirene kadar</td>
+                <td data-label="Ad" className="font-mono text-[13px]">{CONSENT_STORAGE_KEY}</td>
+                <td data-label="Tür">Yerel depolama</td>
+                <td data-label="Kategori">Zorunlu</td>
+                <td data-label="Amaç">Çerez onay tercihinizi, tercih tarihini ve o sırada yapılandırılmış analitik aracını saklar.</td>
+                <td data-label="Süre">Siz silene veya tercihinizi değiştirene kadar</td>
               </tr>
               <tr>
-                <td>Google Haritalar</td>
-                <td>Üçüncü taraf çerezleri (Google)</td>
-                <td>Harici içerik</td>
-                <td>
+                <td data-label="Ad">Google Haritalar</td>
+                <td data-label="Tür">Üçüncü taraf çerezleri (Google)</td>
+                <td data-label="Kategori">Harici içerik</td>
+                <td data-label="Amaç">
                   İletişim sayfasındaki konum haritasının gösterilmesi. Yalnızca onayınız veya talebiniz üzerine
                   yüklenir.
                 </td>
-                <td>
+                <td data-label="Süre">
                   Google tarafından belirlenir;{" "}
                   <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer">
                     Google çerez politikası
                   </a>
                 </td>
               </tr>
+              <GaRow locale="tr" />
             </tbody>
           </table>
         </div>
         <p>
-          Bu sitede reklam veya takip amaçlı çerez kullanılmamaktadır. Tercih veya analitik kategorisinde bir araç
+          {tool === "ga4" ? "Bu sitede reklam amaçlı çerez kullanılmamaktadır." : "Bu sitede reklam veya takip amaçlı çerez kullanılmamaktadır."} Tercih veya analitik kategorisinde bir araç
           devreye alınması halinde bu tablo güncellenir ve ilgili araç yalnızca onayınızla etkinleştirilir.
         </p>
       </>
@@ -119,7 +157,7 @@ const sectionsTr: LegalSection[] = [
           Çerez tercihlerinizi istediğiniz zaman aşağıdaki düğmeyi veya sayfa altbilgisindeki “Çerez Ayarları”
           bağlantısını kullanarak değiştirebilir, verdiğiniz rızayı geri alabilirsiniz.
         </p>
-        <CookieSettingsButton locale="tr" className="mt-5 cursor-pointer rounded-lg border border-white/15 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:border-white/30 hover:bg-white/[0.06]" />
+        <CookieSettingsButton locale="tr" className={`mt-4 cursor-pointer ${BUTTON_OUTLINE}`} />
         <p>
           Ayrıca tarayıcınızın ayarlarından çerezleri ve site verilerini silebilir veya engelleyebilirsiniz. Zorunlu
           verilerin engellenmesi halinde tercihiniz hatırlanamaz ve onay bildirimi her ziyarette yeniden gösterilir.
@@ -162,7 +200,10 @@ const sectionsEn: LegalSection[] = [
           Article 5(2)(f) of KVKK; cannot be turned off.
         </p>
         <h3>Preferences</h3>
-        <p>Used to remember choices such as language and display on your next visit. Requires your explicit consent.</p>
+        <p>
+          A category for remembering choices such as language and display. No tool in this category is in use at the
+          moment, so the cookie banner does not offer it.
+        </p>
         <h3>External content</h3>
         <p>
           Allows third-party content such as Google Maps on the contact page to load. When it loads, the provider may set
@@ -170,11 +211,7 @@ const sectionsEn: LegalSection[] = [
           only for that page view.
         </p>
         <h3>Analytics</h3>
-        <p>
-          Used to measure in aggregate how the site is used. The tool used and its cookies are added to the cookie
-          table below. Requires your explicit consent and is not
-          enabled without it.
-        </p>
+        <p>{analyticsText.en[tool ?? "none"]}</p>
       </>
     ),
   },
@@ -184,7 +221,7 @@ const sectionsEn: LegalSection[] = [
     content: (
       <>
         <div className="overflow-x-auto">
-          <table>
+          <table className="stack">
             <thead>
               <tr>
                 <th>Name</th>
@@ -196,29 +233,30 @@ const sectionsEn: LegalSection[] = [
             </thead>
             <tbody>
               <tr>
-                <td className="font-mono text-xs">{CONSENT_STORAGE_KEY}</td>
-                <td>Local storage</td>
-                <td>Strictly necessary</td>
-                <td>Stores your cookie choice and the date you made it.</td>
-                <td>Until you delete it or change your choice</td>
+                <td data-label="Name" className="font-mono text-[13px]">{CONSENT_STORAGE_KEY}</td>
+                <td data-label="Type">Local storage</td>
+                <td data-label="Category">Strictly necessary</td>
+                <td data-label="Purpose">Stores your cookie choice, the date you made it and the analytics tool configured at that time.</td>
+                <td data-label="Duration">Until you delete it or change your choice</td>
               </tr>
               <tr>
-                <td>Google Maps</td>
-                <td>Third-party cookies (Google)</td>
-                <td>External content</td>
-                <td>Shows the location map on the contact page. Loads only with your consent or at your request.</td>
-                <td>
+                <td data-label="Name">Google Maps</td>
+                <td data-label="Type">Third-party cookies (Google)</td>
+                <td data-label="Category">External content</td>
+                <td data-label="Purpose">Shows the location map on the contact page. Loads only with your consent or at your request.</td>
+                <td data-label="Duration">
                   Set by Google. See the{" "}
                   <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer">
                     Google cookie policy
                   </a>
                 </td>
               </tr>
+              <GaRow locale="en" />
             </tbody>
           </table>
         </div>
         <p>
-          This site does not use advertising or tracking cookies. If a preference or analytics tool is introduced, this
+          {tool === "ga4" ? "This site does not use advertising cookies." : "This site does not use advertising or tracking cookies."} If a preference or analytics tool is introduced, this
           table will be updated and the tool will only be enabled with your consent.
         </p>
       </>
@@ -235,7 +273,7 @@ const sectionsEn: LegalSection[] = [
         </p>
         <CookieSettingsButton
           locale="en"
-          className="mt-5 cursor-pointer rounded-lg border border-white/15 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:border-white/30 hover:bg-white/[0.06]"
+          className={`mt-4 cursor-pointer ${BUTTON_OUTLINE}`}
         />
         <p>
           You can also delete or block cookies and site data in your browser settings. If necessary data is blocked,
@@ -267,8 +305,8 @@ const documents: Record<
       "Bu sitede hangi çerezleri ve benzeri teknolojileri neden kullandığımızı ve tercihinizi nasıl değiştirebileceğinizi anlatıyoruz.",
     facts: [
       { label: "Belge türü", value: "Çerez politikası" },
-      { label: "Hukuki dayanak", value: "KVKK md. 5/2(f) · açık rıza" },
-      { label: "Takip ve reklam çerezi", value: "Kullanılmıyor" },
+      { label: "Hukuki dayanak", value: "KVKK md. 5/2(f); açık rıza" },
+      { label: tool === "ga4" ? "Reklam çerezi" : "Takip ve reklam çerezi", value: "Kullanılmıyor" },
     ],
     sections: sectionsTr,
   },
@@ -279,8 +317,8 @@ const documents: Record<
       "Which cookies and similar technologies this site uses, why, and how you can change your choice.",
     facts: [
       { label: "Document type", value: "Cookie policy" },
-      { label: "Legal basis", value: "KVKK Art. 5(2)(f) · explicit consent" },
-      { label: "Tracking or ad cookies", value: "None used" },
+      { label: "Legal basis", value: "KVKK Art. 5(2)(f); explicit consent" },
+      { label: tool === "ga4" ? "Advertising cookies" : "Tracking or ad cookies", value: "None used" },
     ],
     sections: sectionsEn,
   },

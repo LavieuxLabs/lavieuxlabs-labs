@@ -38,12 +38,12 @@ const frameworksTr = [
     "PharmaDeux için Sınıf IIa hedefi",
   ],
   ["Tıbbi Cihaz Yönetmeliği (TİTCK)", "MDR ile uyumlaştırılmış ulusal düzenleme", "Referans çerçeve"],
-  ["IEC 62304", "Tıbbi cihaz yazılımı yaşam döngüsü süreçleri", "Mimari uyum"],
-  ["ISO 14971", "Tıbbi cihazlar için risk yönetimi", "Mimari uyum"],
+  ["IEC 62304", "Tıbbi cihaz yazılımı yaşam döngüsü süreçleri", "Tasarım girdisi"],
+  ["ISO 14971", "Tıbbi cihazlar için risk yönetimi", "Tasarım girdisi"],
   ["ISO 13485", "Tıbbi cihaz kalite yönetim sistemi", "Yol haritasında"],
   ["IEC 62366-1", "Kullanılabilirlik mühendisliği", "Yol haritasında"],
   ["ISO/IEC 27001", "Bilgi güvenliği yönetim sistemi", "Kontrol setine uyum hedefi"],
-  ["HL7 FHIR R4", "Sağlık verisi birlikte çalışabilirlik standardı", "Veri modeli entegre · canlı HBYS bağlantısı yok"],
+  ["HL7 FHIR R4", "Sağlık verisi birlikte çalışabilirlik standardı", "Veri modeli entegre; canlı HBYS bağlantısı yok"],
 ];
 
 const sectionsTr: LegalSection[] = [
@@ -53,10 +53,13 @@ const sectionsTr: LegalSection[] = [
     content: (
       <>
         <p className="note">
-          <strong>PharmaDeux CDSS ve Shield geliştirme aşamasındadır.</strong> Ürünlerimiz henüz CE işareti taşımamakta
-          ve piyasaya arz edilmemiş olup, klinik ortamda yalnızca etik kurul onaylı araştırma protokolleri kapsamında
-          kullanılabilir. Bu sayfada yer alan standartlar, geliştirme süreçlerimizde referans alınan çerçeveyi ifade
-          eder; ayrıca belirtilmedikçe bir sertifikasyon beyanı değildir.
+          <strong>PharmaDeux CDSS geliştirme aşamasındadır.</strong> CE işareti yoktur, piyasaya arz edilmemiştir ve
+          klinik kullanımda değildir. Bu sayfadaki standartlar, PharmaDeux geliştirilirken referans alınan çerçeveyi
+          gösterir; bir sertifikasyon beyanı değildir. LavieuxLabs’ın işleyen bir kalite yönetim sistemi henüz yoktur.
+        </p>
+        <p>
+          Shield, Tarık Ziya Eren’in bağımsız prototip projesidir ve bu sayfadaki çerçevenin parçası değildir.
+          Düzenleyici değerlendirmesi aşağıda ayrıca anlatılır.
         </p>
       </>
     ),
@@ -67,7 +70,7 @@ const sectionsTr: LegalSection[] = [
     content: (
       <>
         <div className="overflow-x-auto">
-          <table>
+          <table className="stack">
             <thead>
               <tr>
                 <th>Standart / mevzuat</th>
@@ -78,19 +81,20 @@ const sectionsTr: LegalSection[] = [
             <tbody>
               {frameworksTr.map(([code, scope, status]) => (
                 <tr key={code}>
-                  <td className="font-mono text-xs whitespace-nowrap text-white/85">
+                  <td data-label="Standart / mevzuat" className="font-mono text-[13px] text-ink">
                     {code}
-                    {FRAMEWORK_CITE[code] && <Cite id={FRAMEWORK_CITE[code]} />}
+                    {FRAMEWORK_CITE[code] && <Cite id={FRAMEWORK_CITE[code]} tone="paper" />}
                   </td>
-                  <td>{scope}</td>
-                  <td>{status}</td>
+                  <td data-label="Kapsam">{scope}</td>
+                  <td data-label="Durum">{status}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
         <p>
-          <strong>Mimari uyum:</strong> Süreç ve dokümantasyon, standardın gerekliliklerine göre kurgulanmaktadır.{" "}
+          <strong>Tasarım girdisi:</strong> Standart, yazılımın mimarisi ve geliştirme süreçleri tasarlanırken referans
+          alınır; uygunluk değerlendirmesi veya sertifikasyon yapılmadı.{" "}
           <strong>Yol haritasında:</strong> Uygulama ve belgelendirme, ürünün düzenleyici yol haritasında planlanmıştır.
         </p>
       </>
@@ -106,16 +110,18 @@ const sectionsTr: LegalSection[] = [
           Ek VIII Kural 11 kapsamında Sınıf IIa tıbbi cihaz yazılımı (SaMD) hedefiyle tasarlanmaktadır. Bu kapsamda:
         </p>
         <ul>
-          <li>Kullanım amacı, hedef kullanıcı ve hedef hasta popülasyonu yazılı olarak tanımlanır,</li>
+          <li>Kullanım amacı, hedef kullanıcı ve hedef hasta popülasyonu yazılı olarak tanımlanacaktır,</li>
           <li>
-            Klinik değerlendirme; literatür, retrospektif doğrulama ve gerektiğinde prospektif çalışmalarla desteklenir,
+            Klinik değerlendirmenin literatür, retrospektif doğrulama ve gerektiğinde prospektif çalışmalarla
+            desteklenmesi planlanır; retrospektif doğrulama henüz yapılmadı,
           </li>
-          <li>Risk yönetimi, tasarımın tüm aşamalarında ISO 14971 yaklaşımıyla yürütülür,</li>
+          <li>Risk yönetiminin tasarımın tüm aşamalarında ISO 14971 yaklaşımıyla yürütülmesi hedeflenir,</li>
           <li>Piyasaya arz sonrası gözetim (PMS) ve olay bildirim süreçleri ürünle birlikte planlanır.</li>
         </ul>
         <p>
-          Shield, klinik tanı veya tedavi kararı üretmeyen; geri ödeme ve provizyon süreçlerini destekleyen operasyonel
-          bir platform olarak tasarlanmıştır. Düzenleyici sınıflandırması, nihai kullanım amacına göre değerlendirilir.
+          Shield, Tarık Ziya Eren’in bağımsız projesidir. Klinik tanı veya tedavi kararı üretmeyen; geri ödeme ve
+          provizyon süreçlerini destekleyen operasyonel bir prototip olarak tasarlanmıştır. Düzenleyici
+          sınıflandırması, nihai kullanım amacına göre değerlendirilir.
         </p>
       </>
     ),
@@ -130,7 +136,8 @@ const sectionsTr: LegalSection[] = [
         </li>
         <li>
           <strong>Doğrulama:</strong> Yazılım değişiklikleri otomatik birim ve entegrasyon testlerinden geçmeden yayına
-          alınmaz. PharmaDeux test kümesinde {testsLabel("tr")} otomatik test bulunur.
+          alınmaz. PharmaDeux test kümesinde {testsLabel("tr")} otomatik test bulunur; bu yazılım düzeyinde bir
+          ölçüdür, klinik doğrulama değildir.
         </li>
         <li>
           <strong>Değişiklik kontrolü:</strong> Kural setleri ve bilgi tabanı sürümlenir; her değişiklik gözden
@@ -152,7 +159,10 @@ const sectionsTr: LegalSection[] = [
     title: "Bilgi güvenliği",
     content: (
       <>
-        <p>Platform mimarimiz aşağıdaki güvenlik ilkeleri üzerine kurgulanır:</p>
+        <p>
+          PharmaDeux’ün mimarisi aşağıdaki güvenlik ilkeleri üzerine tasarlanır. Bunlar tasarım ilkeleridir; hangisinin
+          prototipte uygulandığı ürün sayfasında ayrıca yazılır.
+        </p>
         <ul>
           <li>Rol tabanlı erişim kontrolü (RBAC) ve en az yetki ilkesi,</li>
           <li>Çok kurumlu mimaride, tasarım gereği kurum verilerinin mantıksal izolasyonu,</li>
@@ -170,7 +180,8 @@ const sectionsTr: LegalSection[] = [
     title: "Güvenlik ve kalite bildirimleri",
     content: (
       <p>
-        Ürünlerimizle ilgili bir güvenlik açığı, kalite sorunu veya klinik güvenlik endişesi tespit ettiyseniz, lütfen{" "}
+        PharmaDeux, Shield veya bu site ile ilgili bir güvenlik açığı, kalite sorunu veya klinik güvenlik endişesi
+        tespit ettiyseniz, lütfen{" "}
         <a href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Güvenlik / Kalite Bildirimi")}`}>
           {CONTACT_EMAIL}
         </a>{" "}
@@ -185,16 +196,16 @@ const sectionsTr: LegalSection[] = [
 const frameworksEn = [
   [
     "EU MDR 2017/745",
-    "Medical Device Regulation · software classification under Annex VIII Rule 11",
+    "Medical Device Regulation; software classification under Annex VIII Rule 11",
     "Class IIa target for PharmaDeux",
   ],
   ["Medical Device Regulation (TİTCK)", "Turkish national regulation harmonised with the MDR", "Reference framework"],
-  ["IEC 62304", "Medical device software life cycle processes", "Architecture aligned"],
-  ["ISO 14971", "Risk management for medical devices", "Architecture aligned"],
+  ["IEC 62304", "Medical device software life cycle processes", "Design input"],
+  ["ISO 14971", "Risk management for medical devices", "Design input"],
   ["ISO 13485", "Quality management system for medical devices", "On the roadmap"],
   ["IEC 62366-1", "Usability engineering", "On the roadmap"],
   ["ISO/IEC 27001", "Information security management system", "Control set target"],
-  ["HL7 FHIR R4", "Health data interoperability standard", "Data model integrated · no live HIS connection"],
+  ["HL7 FHIR R4", "Health data interoperability standard", "Data model integrated; no live HIS connection"],
 ];
 
 const sectionsEn: LegalSection[] = [
@@ -202,12 +213,18 @@ const sectionsEn: LegalSection[] = [
     id: "durum",
     title: "Regulatory status",
     content: (
-      <p className="note">
-        <strong>PharmaDeux CDSS and Shield are in development.</strong> Our products do not yet carry a CE mark and have
-        not been placed on the market. In a clinical setting, they may only be used within research protocols approved by
-        an ethics committee. The standards on this page describe the framework we use as a reference during development.
-        Unless stated otherwise, they are not a statement of certification.
-      </p>
+      <>
+        <p className="note">
+          <strong>PharmaDeux CDSS is in development.</strong> It has no CE mark, has not been placed on the market and is
+          not in clinical use. The standards on this page show the framework used as a reference while PharmaDeux is
+          developed; they are not a statement of certification. LavieuxLabs does not have an operating quality management
+          system yet.
+        </p>
+        <p>
+          Shield is an independent prototype by Tarık Ziya Eren and is not part of the framework on this page. Its
+          regulatory assessment is described separately below.
+        </p>
+      </>
     ),
   },
   {
@@ -216,7 +233,7 @@ const sectionsEn: LegalSection[] = [
     content: (
       <>
         <div className="overflow-x-auto">
-          <table>
+          <table className="stack">
             <thead>
               <tr>
                 <th>Standard / regulation</th>
@@ -227,20 +244,21 @@ const sectionsEn: LegalSection[] = [
             <tbody>
               {frameworksEn.map(([code, scope, status]) => (
                 <tr key={code}>
-                  <td className="font-mono text-xs whitespace-nowrap text-white/85">
+                  <td data-label="Standard / regulation" className="font-mono text-[13px] text-ink">
                     {code}
-                    {FRAMEWORK_CITE[code] && <Cite id={FRAMEWORK_CITE[code]} />}
+                    {FRAMEWORK_CITE[code] && <Cite id={FRAMEWORK_CITE[code]} tone="paper" />}
                   </td>
-                  <td>{scope}</td>
-                  <td>{status}</td>
+                  <td data-label="Scope">{scope}</td>
+                  <td data-label="Status">{status}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
         <p>
-          <strong>Architecture aligned:</strong> processes and documentation are being built to the standard’s
-          requirements. <strong>On the roadmap:</strong> implementation and certification are planned in the product’s
+          <strong>Design input:</strong> the standard is used as a reference when the software architecture and
+          development processes are designed; no conformity assessment or certification has been done.{" "}
+          <strong>On the roadmap:</strong> implementation and certification are planned in the product’s
           regulatory roadmap.
         </p>
       </>
@@ -256,15 +274,18 @@ const sectionsEn: LegalSection[] = [
           software (SaMD) targeting Class IIa under MDR Annex VIII Rule 11. Accordingly:
         </p>
         <ul>
-          <li>The intended use, intended users and intended patient population are defined in writing;</li>
-          <li>Clinical evaluation is supported by literature, retrospective validation and, where needed, prospective studies;</li>
-          <li>Risk management follows ISO 14971 throughout design;</li>
+          <li>The intended use, intended users and intended patient population will be defined in writing;</li>
+          <li>
+            Clinical evaluation is planned to be supported by literature, retrospective validation and, where needed,
+            prospective studies; no retrospective validation has been done yet;
+          </li>
+          <li>Risk management is intended to follow ISO 14971 throughout design;</li>
           <li>Post-market surveillance (PMS) and incident reporting are planned together with the product.</li>
         </ul>
         <p>
-          Shield is designed as an operational platform that supports reimbursement and pre-authorisation processes and
-          does not produce clinical diagnoses or treatment decisions. Its regulatory classification is assessed against
-          its final intended use.
+          Shield is an independent project by Tarık Ziya Eren. It is designed as an operational prototype that supports
+          reimbursement and pre-authorisation processes and does not produce clinical diagnoses or treatment decisions.
+          Its regulatory classification is assessed against its final intended use.
         </p>
       </>
     ),
@@ -280,7 +301,8 @@ const sectionsEn: LegalSection[] = [
         </li>
         <li>
           <strong>Verification:</strong> software changes are not released until they pass automated unit and
-          integration tests. The PharmaDeux test suite has {testsLabel("en")} automated tests.
+          integration tests. The PharmaDeux test suite has {testsLabel("en")} automated tests; this is a
+          software-level measure, not clinical validation.
         </li>
         <li>
           <strong>Change control:</strong> rule sets and the knowledge base are
@@ -302,7 +324,10 @@ const sectionsEn: LegalSection[] = [
     title: "Information security",
     content: (
       <>
-        <p>Our platform architecture is built on the following security principles:</p>
+        <p>
+          PharmaDeux’s architecture is designed on the following security principles. These are design principles; which
+          of them are implemented in the prototype is stated separately on the product page.
+        </p>
         <ul>
           <li>Role-based access control (RBAC) and least privilege;</li>
           <li>By design, logical isolation of each institution’s data in a multi-institution architecture;</li>
@@ -318,7 +343,8 @@ const sectionsEn: LegalSection[] = [
     title: "Security and quality reports",
     content: (
       <p>
-        If you find a security vulnerability, quality issue or clinical safety concern related to our products, please
+        If you find a security vulnerability, quality issue or clinical safety concern related to PharmaDeux, Shield or
+        this site, please
         report it to{" "}
         <a href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Güvenlik / Kalite Bildirimi")}`}>
           {CONTACT_EMAIL}
@@ -336,26 +362,26 @@ const documents: Record<
   { eyebrow: string; title: string; summary: string; facts: LegalFact[]; sections: LegalSection[] }
 > = {
   tr: {
-    eyebrow: "Yasal · Kalite ve regülasyon",
+    eyebrow: "Yasal: Kalite ve regülasyon",
     title: "Kalite, Bilgi Güvenliği ve MDR",
     summary:
-      "Ürünleri geliştirirken hangi standartları referans aldığımızı ve düzenleyici süreçte bugün nerede olduğumuzu yazdık. Bu sayfa bir sertifika beyanı değildir.",
+      "PharmaDeux'ü geliştirirken hangi standartları referans aldığımızı ve düzenleyici süreçte bugün nerede olduğumuzu yazdık. Bu sayfa bir sertifika beyanı değildir.",
     facts: [
       { label: "Belge türü", value: "Düzenleyici durum beyanı" },
-      { label: "Kapsam", value: "PharmaDeux CDSS · Shield" },
-      { label: "Durum", value: "Geliştirmede · CE işareti yok" },
+      { label: "Kapsam", value: "PharmaDeux CDSS; Shield ayrı bir projedir" },
+      { label: "Durum", value: "Geliştirmede; CE işareti yok" },
     ],
     sections: sectionsTr,
   },
   en: {
-    eyebrow: "Legal · Quality and regulation",
+    eyebrow: "Legal: Quality and regulation",
     title: "Quality, Information Security and MDR",
     summary:
-      "The standards we develop our products against, and where we stand in the regulatory process today. This page is not a certification statement.",
+      "The standards PharmaDeux is developed against, and where it stands in the regulatory process today. This page is not a certification statement.",
     facts: [
       { label: "Document type", value: "Regulatory status statement" },
-      { label: "Scope", value: "PharmaDeux CDSS · Shield" },
-      { label: "Status", value: "In development · no CE mark" },
+      { label: "Scope", value: "PharmaDeux CDSS; Shield is a separate project" },
+      { label: "Status", value: "In development; no CE mark" },
     ],
     sections: sectionsEn,
   },

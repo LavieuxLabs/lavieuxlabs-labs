@@ -51,12 +51,32 @@ const sectionsTr: LegalSection[] = [
     id: "fikri-mulkiyet",
     title: "Fikri mülkiyet",
     content: (
-      <p>
-        Sitedeki metinler, görseller, logolar, yazılım ve tasarım öğeleri dahil tüm içerik üzerindeki haklar
-        LavieuxLabs’e veya lisans verenlerine aittir. İçerik, önceden yazılı izin alınmaksızın çoğaltılamaz,
-        dağıtılamaz, değiştirilemez veya ticari amaçla kullanılamaz. Kaynak gösterilerek yapılan kısa alıntılar bu
-        kapsamın dışındadır.
-      </p>
+      <>
+        <p>
+          LavieuxLabs, henüz şirketleşmemiş bir öğrenci girişiminin adıdır; tüzel kişiliği yoktur. Bu nedenle bu
+          sitede LavieuxLabs, aşağıdaki projelerin veya içeriğin hak sahibi olarak gösterilmez.
+        </p>
+        <ul>
+          <li>
+            <strong>Shield:</strong> Tarık Ziya Eren’in bağımsız olarak geliştirdiği projedir. Shield’ın bu sitede
+            tanıtılması, ona ilişkin hakların LavieuxLabs’a veya ekibin diğer üyelerine devredildiği anlamına gelmez.
+          </li>
+          <li>
+            <strong>PharmaDeux:</strong> LavieuxLabs ekibinin üyelerinin birlikte geliştirdiği projedir. Üyelerin
+            katkılarının ve hakların aralarında nasıl paylaşıldığı bu sitede beyan edilmez.
+          </li>
+          <li>
+            <strong>Site içeriği:</strong> Sitedeki metinler, şekiller, logo ve tasarım öğeleri önceden izin
+            alınmadan çoğaltılamaz, dağıtılamaz, değiştirilemez veya ticari amaçla kullanılamaz. Kaynak gösterilerek
+            yapılan kısa alıntılar bu kapsamın dışındadır.
+          </li>
+          <li>
+            <strong>Üçüncü taraf varlıklar:</strong> IBM Plex ve Newsreader yazı tipleri SIL Open Font License, Lucide
+            simgeleri ISC lisansı, GitHub ve LinkedIn simgelerinin çizimleri Simple Icons (CC0) kaynaklıdır ve kendi
+            lisanslarına tabidir. GitHub, LinkedIn, HL7 ve FHIR gibi adlar ve markalar sahiplerine aittir.
+          </li>
+        </ul>
+      </>
     ),
   },
   {
@@ -166,11 +186,33 @@ const sectionsEn: LegalSection[] = [
     id: "fikri-mulkiyet",
     title: "Intellectual property",
     content: (
-      <p>
-        All rights in the content of the site, including text, images, logos, software and design elements, belong to
-        LavieuxLabs or its licensors. The content may not be copied, distributed, modified or used commercially without
-        prior written permission. Short quotations with attribution are excluded.
-      </p>
+      <>
+        <p>
+          LavieuxLabs is the name of a student venture that is not incorporated yet and has no legal personality. This
+          site therefore does not present LavieuxLabs as the holder of rights in the projects or content below.
+        </p>
+        <ul>
+          <li>
+            <strong>Shield:</strong> an independent project developed by Tarık Ziya Eren. Presenting Shield on this
+            site does not mean that rights in it have been transferred to LavieuxLabs or to the other team members.
+          </li>
+          <li>
+            <strong>PharmaDeux:</strong> a project developed jointly by the members of the LavieuxLabs team. This site
+            does not state how the members’ contributions or the rights are shared between them.
+          </li>
+          <li>
+            <strong>Site content:</strong> the text, figures, logo and design elements on this site may not be copied,
+            distributed, modified or used commercially without prior permission. Short quotations with attribution are
+            excluded.
+          </li>
+          <li>
+            <strong>Third-party assets:</strong> the IBM Plex and Newsreader typefaces are used under the SIL Open Font
+            License, Lucide icons under the ISC licence, and the GitHub and LinkedIn icon drawings come from Simple Icons
+            (CC0); each follows its own licence. Names and marks such as GitHub, LinkedIn, HL7 and FHIR belong to their
+            owners.
+          </li>
+        </ul>
+      </>
     ),
   },
   {
