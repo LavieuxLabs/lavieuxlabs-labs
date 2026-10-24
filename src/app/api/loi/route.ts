@@ -110,7 +110,7 @@ export async function POST(request: Request) {
     `E-posta: ${fields.email}`,
     ...(fields.detail ? [`${path === "pilot" ? "Pilot türü" : "Çalışma alanı"}: ${fields.detail}`] : []),
     `Form dili: ${locale.toUpperCase()}`,
-    `KVKK aydınlatma onayı: evet`,
+    `Aydınlatma metni okundu: evet`,
     "",
     fields.message || "(mesaj yok)",
     "",

@@ -162,7 +162,7 @@ export default function QtSimulator({ locale }: { locale: Locale }) {
                 type="button"
                 aria-pressed={patient.qtc === v}
                 onClick={() => setPatient((p) => ({ ...p, qtc: v as Baseline }))}
-                className={`flex-1 rounded-[5px] px-2 py-1 font-mono text-[12px] tabular-nums transition-colors duration-150 ease-out ${
+                className={`min-h-9 flex-1 rounded-[5px] px-2 py-1 font-mono text-[12px] tabular-nums transition-colors duration-150 ease-out ${
                   patient.qtc === v ? "bg-white/[0.1] text-white print:font-semibold print:underline" : "text-white/55 hover:text-white"
                 }`}
               >
@@ -172,7 +172,7 @@ export default function QtSimulator({ locale }: { locale: Locale }) {
           </span>
           <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2">
             {(Object.keys(c.toggles) as (keyof typeof c.toggles)[]).map((key) => (
-              <label key={key} className="flex cursor-pointer items-center gap-2 text-[12.5px] text-white/75">
+              <label key={key} className="flex min-h-8 cursor-pointer items-center gap-2 text-[12.5px] text-white/75">
                 <input
                   type="checkbox"
                   checked={patient[key]}

@@ -106,10 +106,11 @@ const copy = defineContent({
     empty: "Bu filtrede talep yok.",
     matchesAria: "Kural motoru eşleşmeleri",
     matches: "Kural motoru eşleşmeleri",
-    riskTotal: "Red riski (Σ kural katkısı)",
+    riskTotal: "Kural skoru (Σ kural katkısı)",
+    exampleRuleset: "Örnek kural seti · sürümsüz",
     decisionAria: "Karar",
     decisionTitle: "Uzman kararı",
-    overThreshold: (t: number) => `Risk skoru eşik değerinde veya üzerinde (≥ ${t}); gönderim kararı uzmana bırakıldı.`,
+    overThreshold: (t: number) => `Kural skoru eşik değerinde veya üzerinde (≥ ${t}); gönderim kararı uzmana bırakıldı.`,
     recorded: "Karar denetim izine eklendi; kayıt değiştirilemez.",
     underThreshold: (t: number) => `Skor eşik (${t}) altında; talep incelemeye alınmadı.`,
     trail: "Denetim izi",
@@ -155,10 +156,11 @@ const copy = defineContent({
     empty: "No claims match this filter.",
     matchesAria: "Rule engine matches",
     matches: "Rule engine matches",
-    riskTotal: "Rejection risk (Σ rule contributions)",
+    riskTotal: "Rule score (Σ rule contributions)",
+    exampleRuleset: "Example rule set · unversioned",
     decisionAria: "Decision",
     decisionTitle: "Specialist decision",
-    overThreshold: (t: number) => `Risk score at or above the threshold (≥ ${t}). The specialist decides on submission.`,
+    overThreshold: (t: number) => `Rule score at or above the threshold (≥ ${t}). The specialist decides on submission.`,
     recorded: "Decision added to the audit trail. The entry cannot be changed.",
     underThreshold: (t: number) => `Score below the threshold (${t}). The claim was not queued for review.`,
     trail: "Audit trail",
@@ -284,7 +286,7 @@ export default function ShieldConsole({ locale }: { locale: Locale }) {
               type="button"
               aria-pressed={filter === f}
               onClick={() => setFilter(f)}
-              className={`rounded-md px-2.5 py-1 text-[12px] transition-colors duration-150 ease-out ${
+              className={`relative before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] rounded-md px-2.5 py-1 text-[12px] transition-colors duration-150 ease-out ${
                 filter === f ? "bg-navy-850 text-white" : "text-white/55 hover:text-white"
               }`}
             >
@@ -386,7 +388,7 @@ export default function ShieldConsole({ locale }: { locale: Locale }) {
             </p>
             <div className="flex items-center gap-3">
               <p className="text-[11px] whitespace-nowrap text-white/55">
-                ruleset <span className="font-mono tabular-nums">v3.8.1</span>
+                {c.exampleRuleset}
               </p>
               <CopyPayloadButton
                 locale={locale}
@@ -448,7 +450,7 @@ export default function ShieldConsole({ locale }: { locale: Locale }) {
                   key={d}
                   type="button"
                   onClick={() => decide(d)}
-                  className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-[12.5px] text-white/85 transition-colors duration-150 ease-out hover:bg-white/[0.07]"
+                  className="min-h-11 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-[12.5px] text-white/85 transition-colors duration-150 ease-out hover:bg-white/[0.07]"
                 >
                   {c.actions[d]}
                 </button>

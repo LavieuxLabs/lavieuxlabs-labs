@@ -22,8 +22,8 @@ export const testsLabel = (locale: Locale) => `${groupDigits(locale, metrics.aut
 /** What the test count is: shown next to it wherever the number is a headline. */
 export const testsNote = (locale: Locale) =>
   locale === "tr"
-    ? "Birim ve entegrasyon testleri · her sürümde CI hattında çalıştırılır"
-    : "Unit and integration tests · run in CI on every release";
+    ? "PharmaDeux deposundaki birim ve entegrasyon testleri (alt sınır). CI hattı bunları her gönderimde çalıştırır; bu sayı güncel bir CI sonucu değildir."
+    : "Unit and integration tests in the PharmaDeux repository (a lower bound). CI runs them on every push; this number is not a current CI result.";
 
 /** "THS 4" / "TRL 4". */
 export const trlLabel = (locale: Locale) => `${locale === "tr" ? "THS" : "TRL"} ${metrics.trl}`;

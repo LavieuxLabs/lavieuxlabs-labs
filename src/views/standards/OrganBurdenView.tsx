@@ -1,3 +1,4 @@
+import Cite from "@/components/Cite";
 import StandardDoc from "@/components/StandardDoc";
 import { CITATIONS } from "@/lib/citations";
 import { metrics } from "@/lib/metrics";
@@ -23,7 +24,7 @@ export const metadata = defineMetadata(PATH, {
 const copy = defineContent({
   tr: {
     crumb: "Kümülatif organ yükü",
-    eyebrow: "Klinik standart · çoklu ilaç güvenliği",
+    eyebrow: "Klinik standart: çoklu ilaç güvenliği",
     title: "Polifarmaside kümülatif organ yükü",
     description:
       "Çoklu ilaç kullanan hastada risk tek bir ilaç çiftinden gelmeyebilir. Bu sayfa renal, kardiyak, hepatik ve antikolinerjik düzlemlerde biriken yükü anlatır.",
@@ -44,7 +45,7 @@ const copy = defineContent({
         monitoring: "Serum kreatinin, eGFR, potasyum",
       },
       {
-        plane: "Kardiyak · QTc",
+        plane: "Kardiyak (QTc)",
         mechanism: "IKr blokajının toplanması; diüretiğe bağlı hipokalemi ve hipomagnezemi",
         monitoring: "EKG'de QTc, potasyum, magnezyum",
       },
@@ -54,7 +55,7 @@ const copy = defineContent({
         monitoring: "ALT, AST, ALP, total bilirubin",
       },
       {
-        plane: "Antikolinerjik · SSS",
+        plane: "Antikolinerjik (SSS)",
         mechanism: "Muskarinik reseptör blokajının toplanması; sedatif etkilerin eklenmesi",
         monitoring: "Laboratuvar karşılığı yok; konfüzyon, düşme, idrar retansiyonu ve kabızlık klinik olarak izlenir",
       },
@@ -81,14 +82,14 @@ const copy = defineContent({
     ],
     review: "Klinik inceleme: bu sayfa henüz bir hekim tarafından incelenmedi.",
     related: [
-      { href: "/initiatives/pharmadeux?case=polypharmacy#simulator", label: "Örnek vaka: polifarmasi" },
+      { href: "/initiatives/pharmadeux?case=polypharmacy#vakalar", label: "Örnek vaka: polifarmasi" },
       { href: "/standartlar/tisdale-score", label: "Tisdale skoru" },
       { href: "/standartlar/ckd-epi-2021", label: "CKD-EPI 2021" },
     ],
   },
   en: {
     crumb: "Cumulative organ burden",
-    eyebrow: "Clinical standard · medication safety",
+    eyebrow: "Clinical standard: medication safety",
     title: "Cumulative organ burden in polypharmacy",
     description:
       "In a patient on many drugs, risk may not come from a single drug pair. This page covers the burden that builds up across renal, cardiac, hepatic and anticholinergic planes.",
@@ -109,7 +110,7 @@ const copy = defineContent({
         monitoring: "Serum creatinine, eGFR, potassium",
       },
       {
-        plane: "Cardiac · QTc",
+        plane: "Cardiac (QTc)",
         mechanism: "Additive IKr block; diuretic-induced hypokalaemia and hypomagnesaemia",
         monitoring: "QTc on ECG, potassium, magnesium",
       },
@@ -119,7 +120,7 @@ const copy = defineContent({
         monitoring: "ALT, AST, ALP, total bilirubin",
       },
       {
-        plane: "Anticholinergic · CNS",
+        plane: "Anticholinergic (CNS)",
         mechanism: "Additive muscarinic receptor block; added sedative effects",
         monitoring: "No laboratory marker; confusion, falls, urinary retention and constipation are monitored clinically",
       },
@@ -146,7 +147,7 @@ const copy = defineContent({
     ],
     review: "Clinical review: this page has not been reviewed by a physician yet.",
     related: [
-      { href: "/initiatives/pharmadeux?case=polypharmacy#simulator", label: "Example case: polypharmacy" },
+      { href: "/initiatives/pharmadeux?case=polypharmacy#vakalar", label: "Example case: polypharmacy" },
       { href: "/standartlar/tisdale-score", label: "Tisdale score" },
       { href: "/standartlar/ckd-epi-2021", label: "CKD-EPI 2021" },
     ],
@@ -163,6 +164,13 @@ export default function OrganBurdenView({ locale }: { locale: Locale }) {
       eyebrow={c.eyebrow}
       title={c.title}
       description={c.description}
+      toc={[
+        { id: "problem", label: c.problem },
+        { id: "duzlemler", label: c.planes },
+        { id: "triple-whammy", label: c.triple },
+        { id: "pharmadeux", label: c.engine },
+        { id: "sinirlar", label: c.limits },
+      ]}
       references={refs}
       related={c.related}
       jsonLd={standardPageJsonLd({
@@ -174,12 +182,12 @@ export default function OrganBurdenView({ locale }: { locale: Locale }) {
         citations: refs,
       })}
     >
-      <h2>{c.problem}</h2>
+      <h2 id="problem">{c.problem}</h2>
       {c.problemBody.map((text) => (
         <p key={text}>{text}</p>
       ))}
 
-      <h2 className="mt-12">{c.planes}</h2>
+      <h2 id="duzlemler" className="mt-12">{c.planes}</h2>
       <table>
         <thead>
           <tr>
@@ -191,32 +199,35 @@ export default function OrganBurdenView({ locale }: { locale: Locale }) {
         <tbody>
           {c.planeRows.map((r) => (
             <tr key={r.plane}>
-              <td className="font-medium text-white">{r.plane}</td>
+              <td className="font-medium text-ink">{r.plane}</td>
               <td>{r.mechanism}</td>
               <td>{r.monitoring}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <p className="text-[13px]">{c.planesNote}</p>
+      <p className="text-[14px]">{c.planesNote}</p>
 
-      <h2 className="mt-12">{c.triple}</h2>
+      <h2 id="triple-whammy" className="mt-12">
+        {c.triple}
+        <Cite id="tripleWhammy" tone="paper" />
+      </h2>
       {c.tripleBody.map((text) => (
         <p key={text}>{text}</p>
       ))}
 
-      <h2 className="mt-12">{c.engine}</h2>
+      <h2 id="pharmadeux" className="mt-12">{c.engine}</h2>
       {c.engineBody.map((text) => (
         <p key={text}>{text}</p>
       ))}
 
-      <h2 className="mt-12">{c.limits}</h2>
+      <h2 id="sinirlar" className="mt-12">{c.limits}</h2>
       <ul>
         {c.limitsItems.map((item) => (
           <li key={item}>{item}</li>
         ))}
       </ul>
-      <p className="text-[13px]">{c.review}</p>
+      <p className="text-[14px]">{c.review}</p>
     </StandardDoc>
   );
 }

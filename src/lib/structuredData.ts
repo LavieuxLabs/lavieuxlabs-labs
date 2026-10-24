@@ -1,28 +1,29 @@
-import { CONTACT_EMAIL, SITE_URL, TEAM_LEAD, office } from "@/lib/site";
+import { CONTACT_EMAIL, SITE_URL, office } from "@/lib/site";
+import { TEAM, TEAM_LEAD, teamCopy } from "@/lib/team";
 import { metrics } from "@/lib/metrics";
 import { defineContent, type Locale } from "@/i18n/config";
 import { absoluteUrl } from "@/i18n/metadata";
 
-// Schema.org structured data. LavieuxLabs is described as a ResearchOrganization, not a
-// MedicalOrganization: the latter is for care providers (hospitals, clinics) and would misstate
-// what the company does. Product entries state regulatory status plainly (no CE mark yet) and
-// carry no offers, since nothing is on sale. One organization node (@id) is shared by both
-// languages; WebSite, products and breadcrumbs are emitted per locale with inLanguage.
+// Schema.org structured data. LavieuxLabs is a plain Organization: an unincorporated student venture, not a
+// research institute or a care provider, and not presented as the holder of rights in the software. Product
+// entries state regulatory status plainly (no CE mark yet) and carry no offers, since nothing is on sale. One
+// organization node (@id) is shared by both languages; WebSite, products and breadcrumbs are emitted per locale.
 
 const ORG_ID = `${SITE_URL}/#organization`;
+// The team lead is one Person node: a member of the organization and, separately, creator of Shield, an
+// independent project. No founder is named: who founded the venture is not stated anywhere on the site.
+const PERSON_ID = `${SITE_URL}/#tarik-ziya-eren`;
 
 const inLanguage: Record<Locale, string> = { tr: "tr-TR", en: "en" };
 
 const copy = defineContent({
   tr: {
     orgDescription:
-      "Konya Teknik Üniversitesi öğrencileri tarafından geliştirilen, ilaç güvenliği ve hastane faturalaması için karar destek yazılımı üreten bağımsız sağlık teknolojileri Ar-Ge girişimi. Şirketleşme öncesi, Ar-Ge ve pilot aşamasında.",
-    founderTitle: "Proje lideri ve sistem mimarı",
+      "Konya Teknik Üniversitesi öğrencilerinin kurduğu, henüz şirketleşmemiş bağımsız öğrenci Ar-Ge girişimi. Üniversitenin resmî birimi veya ortağı değildir. Ekibin ortak projesi PharmaDeux ilaç güvenliği ve klinik karar desteği üzerinedir; sitede ayrıca Tarık Ziya Eren'in bağımsız projesi Shield tanıtılır.",
     knowsAbout: [
       "Klinik karar destek sistemleri",
       "İlaç güvenliği",
       "Farmakovijilans",
-      "Sağlık gelir döngüsü yönetimi",
       "HL7 FHIR",
     ],
     home: "Ana sayfa",
@@ -41,25 +42,23 @@ const copy = defineContent({
     shield: {
       subCategory: "Hastane gelir bütünlüğü ve provizyon denetimi",
       description:
-        "Hastane fatura ve provizyon süreçlerindeki SUT/SGK red risklerini işlem öncesinde tespit eden kurumsal denetim katmanı. Riskli kalemleri gerekçesiyle uzman incelemesine yönlendirir; tanı koymaz ve tedavi kararı vermez.",
+        "Tarık Ziya Eren'in bağımsız prototip projesi; LavieuxLabs sitesinde tanıtılır. Hastane fatura ve provizyon kalemlerindeki SUT/SGK red riskini gönderim öncesinde gösterir ve riskli kalemi gerekçesiyle uzman incelemesine yönlendirir. Gerçek faturalarda doğrulanmadı; tanı koymaz ve tedavi kararı vermez.",
       features: [
         "Gönderim öncesi red riski kontrolü",
-        "Kural katkılarından oluşan 0–100 risk skoru",
+        "Kural katkılarından oluşan 0–100 kural skoru (ret olasılığı değil)",
         "Uzman inceleme kuyruğu",
-        "Yalnızca eklenebilir denetim kaydı ve kurum bazında izolasyon",
+        "Yalnızca eklenebilir denetim kaydı ve kurum bazında izolasyon (tasarım ilkesi)",
       ],
       audience: "Hastane gelir döngüsü ve provizyon ekipleri",
     },
   },
   en: {
     orgDescription:
-      "Independent health technology R&D venture built by students of Konya Technical University, developing decision support software for medication safety and hospital billing. Not yet incorporated; in R&D and pilot stage.",
-    founderTitle: "Project lead and system architect",
+      "An independent student R&D venture founded by students of Konya Technical University and not yet incorporated. It is not an official unit or partner of the university. The team's joint project PharmaDeux works on medication safety and clinical decision support; the site also presents Shield, an independent project by Tarık Ziya Eren.",
     knowsAbout: [
       "Clinical decision support systems",
       "Medication safety",
       "Pharmacovigilance",
-      "Healthcare revenue cycle management",
       "HL7 FHIR",
     ],
     home: "Home",
@@ -78,12 +77,12 @@ const copy = defineContent({
     shield: {
       subCategory: "Hospital revenue integrity and claim pre-check",
       description:
-        "Pre-claim revenue integrity platform identifying reimbursement and audit risks before submission. Routes risky line items to specialist review with the reason attached; it does not diagnose or make treatment decisions.",
+        "An independent prototype by Tarık Ziya Eren, presented on the LavieuxLabs website. It flags SUT/SGK rejection risk on hospital claim and provision line items before submission and routes a risky item to specialist review with the reason attached. It has not been validated on real claims; it does not diagnose or make treatment decisions.",
       features: [
         "Rejection risk check before submission",
-        "0–100 risk score built from rule contributions",
+        "0–100 rule score built from rule contributions (not a probability of rejection)",
         "Specialist review queue",
-        "Append-only audit log and per-institution isolation",
+        "Append-only audit log and per-institution isolation (design principle)",
       ],
       audience: "Hospital revenue cycle and claims teams",
     },
@@ -93,31 +92,44 @@ const copy = defineContent({
 function organization(locale: Locale) {
   const place = office(locale);
   return {
-    "@type": "ResearchOrganization",
+    // A plain Organization: an unincorporated student venture, not a research institute or a care provider.
+    "@type": "Organization",
     "@id": ORG_ID,
     name: "LavieuxLabs",
     url: SITE_URL,
     logo: `${SITE_URL}/icon.svg`,
     description: copy[locale].orgDescription,
     email: CONTACT_EMAIL,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: place.street,
-      postalCode: place.postalCode,
-      addressLocality: place.district,
-      addressRegion: place.city,
-      addressCountry: "TR",
-    },
-    founder: {
-      "@type": "Person",
-      name: TEAM_LEAD.name,
-      jobTitle: copy[locale].founderTitle,
-      ...(TEAM_LEAD.github || TEAM_LEAD.linkedin
-        ? { sameAs: [TEAM_LEAD.github, TEAM_LEAD.linkedin].filter((url): url is string => !!url) }
-        : {}),
-    },
+    // No postal address: the only address on the site is the university faculty where the team studies,
+    // which is not the venture's own office. The city is enough to place it.
+    location: { "@type": "Place", address: { "@type": "PostalAddress", addressLocality: place.city, addressCountry: "TR" } },
+    member: { "@id": PERSON_ID },
     areaServed: "TR",
     knowsAbout: copy[locale].knowsAbout,
+  };
+}
+
+/** Person node for a team member; the lead keeps the shared PERSON_ID used across pages. */
+function teamMember(locale: Locale, m: (typeof TEAM)[number]) {
+  const links = [m.github, m.linkedin].filter((url): url is string => !!url);
+  return {
+    "@type": "Person",
+    "@id": m.id === TEAM_LEAD.id ? PERSON_ID : `${SITE_URL}/#${m.id}`,
+    name: m.name,
+    jobTitle: teamCopy[locale][m.id].role,
+    ...(links.length ? { sameAs: links } : {}),
+  };
+}
+
+function teamLead(locale: Locale) {
+  return {
+    "@type": "Person",
+    "@id": PERSON_ID,
+    name: TEAM_LEAD.name,
+    jobTitle: teamCopy[locale][TEAM_LEAD.id].role,
+    ...(TEAM_LEAD.github || TEAM_LEAD.linkedin
+      ? { sameAs: [TEAM_LEAD.github, TEAM_LEAD.linkedin].filter((url): url is string => !!url) }
+      : {}),
   };
 }
 
@@ -126,6 +138,7 @@ export function homeJsonLd(locale: Locale) {
     "@context": "https://schema.org",
     "@graph": [
       organization(locale),
+      teamLead(locale),
       {
         "@type": "WebSite",
         "@id": `${absoluteUrl(locale, "/")}#website`,
@@ -151,13 +164,19 @@ function breadcrumb(locale: Locale, name: string, path: string) {
 export function pharmaDeuxJsonLd(locale: Locale) {
   const c = copy[locale].pharma;
   const path = "/initiatives/pharmadeux";
+  const url = absoluteUrl(locale, path);
+  const members = TEAM.map((m) => teamMember(locale, m));
+  // The software is created by the team members together; the venture only publishes the page. No rights holder
+  // is stated, because the sharing of rights between members is not documented on the site.
   return {
     "@context": "https://schema.org",
     "@graph": [
+      ...members,
       {
         "@type": "SoftwareApplication",
+        "@id": `${url}#software`,
         name: "PharmaDeux CDSS",
-        url: absoluteUrl(locale, path),
+        url,
         applicationCategory: "HealthApplication",
         applicationSubCategory: c.subCategory,
         operatingSystem: "Web",
@@ -166,7 +185,17 @@ export function pharmaDeuxJsonLd(locale: Locale) {
         featureList: c.features,
         softwareRequirements: c.requirements,
         audience: { "@type": "MedicalAudience", audienceType: "Clinician" },
-        creator: { "@id": ORG_ID },
+        creativeWorkStatus: "Prototype",
+        creator: members.map((p) => ({ "@id": p["@id"] })),
+      },
+      {
+        "@type": "WebPage",
+        "@id": `${url}#webpage`,
+        url,
+        name: "PharmaDeux CDSS",
+        inLanguage: inLanguage[locale],
+        isPartOf: { "@id": `${absoluteUrl(locale, "/")}#website` },
+        about: { "@id": `${url}#software` },
         publisher: { "@id": ORG_ID },
       },
       breadcrumb(locale, "PharmaDeux CDSS", path),
@@ -177,13 +206,18 @@ export function pharmaDeuxJsonLd(locale: Locale) {
 export function shieldJsonLd(locale: Locale) {
   const c = copy[locale].shield;
   const path = "/initiatives/shield";
+  const url = absoluteUrl(locale, path);
+  // Creator and publisher are different parties: Shield is Tarık Ziya Eren's project (creator), and
+  // LavieuxLabs only publishes the web page that presents it. The software node has no publisher.
   return {
     "@context": "https://schema.org",
     "@graph": [
+      teamLead(locale),
       {
         "@type": "SoftwareApplication",
+        "@id": `${url}#software`,
         name: "Shield",
-        url: absoluteUrl(locale, path),
+        url,
         applicationCategory: "BusinessApplication",
         applicationSubCategory: c.subCategory,
         operatingSystem: "Web",
@@ -191,7 +225,17 @@ export function shieldJsonLd(locale: Locale) {
         description: c.description,
         featureList: c.features,
         audience: { "@type": "BusinessAudience", audienceType: c.audience },
-        creator: { "@id": ORG_ID },
+        creativeWorkStatus: "Prototype",
+        creator: { "@id": PERSON_ID },
+      },
+      {
+        "@type": "WebPage",
+        "@id": `${url}#webpage`,
+        url,
+        name: "Shield",
+        inLanguage: inLanguage[locale],
+        isPartOf: { "@id": `${absoluteUrl(locale, "/")}#website` },
+        about: { "@id": `${url}#software` },
         publisher: { "@id": ORG_ID },
       },
       breadcrumb(locale, "Shield", path),

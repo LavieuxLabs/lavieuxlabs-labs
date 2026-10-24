@@ -47,6 +47,19 @@
   --color-titanium: #9e9fa5;
 
   /*
+   * Paper surface (home page, Academic Editorial): neutral paper, not cream, with ink text. Contrast on
+   * paper: ink 16.8:1, ink-2 8.8:1, ink-3 5.6:1 (5.1:1 on the band). Product names on paper use the dark
+   * steps of the accent scales (teal-700 10.9:1, indigo-700 6.5:1); clinical states use Tailwind's own
+   * rose-700 / amber-700 / emerald-700, so status never borrows a brand colour.
+   */
+  --color-paper: #f7f7f4;
+  --color-paper-band: #eeefea;
+  --color-ink: #16181c;
+  --color-ink-2: #41464f;
+  --color-ink-3: #5f6570;
+  --color-rule: #d5d7d3;
+
+  /*
    * Accent scales. teal → PharmaDeux Chinese Red: 400 = #C82A35 for fills (3.2:1 on panels, not for
    * text), 200 / 300 = #E8605F for text and links (AA on the elevated panel too), 100 = #EC7A82 for link
    * hover only, 500 = #A8222D hover fill; the `pharma` icon colour is #DB3B44 so icons keep 3:1 on the
@@ -90,16 +103,9 @@
   --color-emerald-950: #0f2a1e;
 }
 
-/* Signature face: one emphasised phrase per screen at most (trial: hero "karar destek"). */
-@utility font-signature {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-}
-
 /*
- * Product ambient light: a very wide radial wash in the product accent, ≈6–8%, behind a product hero or
- * inside a home product card. Radial gradient only: no blur filter, no coloured shadow, no animation.
+ * Product ambient light: a very wide radial wash in the product accent, ≈6–8%, behind a product hero.
+ * Radial gradient only: no blur filter, no coloured shadow, no animation.
  */
 @utility ambient-pharma {
   background-image: radial-gradient(70% 65% at 74% 34%, rgb(200 42 53 / 0.07), transparent 72%);
@@ -108,32 +114,10 @@
   /* Mustard reads weaker than red on the dark ground, so it needs more opacity and spread for the same warmth. */
   background-image: radial-gradient(80% 75% at 74% 34%, rgb(217 155 38 / 0.11), transparent 74%);
 }
-@utility ambient-card-pharma {
-  background-image: radial-gradient(90% 70% at 0% 0%, rgb(200 42 53 / 0.08), transparent 70%);
-}
-@utility ambient-card-shield {
-  background-image: radial-gradient(90% 70% at 0% 0%, rgb(217 155 38 / 0.07), transparent 70%);
-}
 /*
- * Hover layer of the home product cards: a stronger, wider wash of the same light. Gradients cannot be
- * interpolated, so InitiativeCard stacks this layer over the rest layer and fades its opacity (150ms).
+ * Page-level atmosphere on the dark ground (BackdropTint): about / legal = deep surgical steel from above
+ * and warm titanium from below. The paper home page has no tint.
  */
-@utility ambient-card-pharma-hover {
-  background-image: radial-gradient(130% 100% at 0% 0%, rgb(200 42 53 / 0.2), transparent 72%);
-}
-@utility ambient-card-shield-hover {
-  background-image: radial-gradient(130% 100% at 0% 0%, rgb(217 155 38 / 0.18), transparent 74%);
-}
-
-/*
- * Page-level atmosphere on the ground (BackdropTint): home = Chinese Red and mustard light drifting in
- * from the top corners; about / legal = deep surgical steel from above and warm titanium from below.
- */
-@utility backdrop-dual {
-  background-image:
-    radial-gradient(60% 55% at 6% 0%, rgb(200 42 53 / 0.13), transparent 72%),
-    radial-gradient(60% 55% at 94% 0%, rgb(217 155 38 / 0.13), transparent 72%);
-}
 @utility backdrop-steel {
   background-image:
     radial-gradient(85% 60% at 50% 0%, rgb(140 165 200 / 0.07), transparent 72%),
@@ -212,6 +196,43 @@ body {
   }
 }
 
+/* Frosted navigation over the paper surface. Solid when the user asks for reduced transparency. */
+@utility material-paper {
+  background-color: rgb(247 247 244 / 0.86);
+  backdrop-filter: blur(16px) saturate(140%);
+  @media (prefers-reduced-transparency: reduce) {
+    background-color: rgb(247 247 244);
+    backdrop-filter: none;
+  }
+}
+
+/*
+ * A document whose main content is a paper surface is a light document: native controls and scrollbars
+ * follow (color-scheme), and the canvas behind the page (overscroll, the strip under a short page) is paper,
+ * not obsidian. Scoped with :has() so every dark page keeps `color-scheme: dark` and its ground.
+ */
+html:has(main.surface-paper) {
+  color-scheme: light;
+  --background: #f7f7f4;
+}
+
+/* The skip link moves focus to <main> (tabindex -1); the whole page needs no focus outline. */
+main[tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* Paper pages select in ink, not in white (white selection disappears on paper). */
+.surface-paper ::selection {
+  background: rgb(22 24 28 / 0.16);
+  color: inherit;
+}
+
+/* Dark tool panels on a paper page (case workspace, QT simulator, FHIR preview) select in white again. */
+.surface-paper .panel-dark ::selection {
+  background: rgb(255 255 255 / 0.28);
+  color: inherit;
+}
+
 @layer components {
   /* Legal documents: neutral datasheet typography. No accent colour; links are underlined white. */
   .legal-prose h2 {
@@ -253,6 +274,111 @@ body {
   }
   .legal-prose .note {
     @apply mt-6 rounded-xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 text-sm leading-relaxed text-white/80;
+  }
+
+  /* Standards reference pages on paper: ink datasheet typography. Direct children only, so the dark tool
+     panels inside the column (calculators, JSON examples) keep their own styles. */
+  .paper-prose > h2 {
+    @apply scroll-mt-20 font-serif text-[26px] leading-tight font-medium tracking-[-0.015em] text-ink sm:text-[28px];
+  }
+  .paper-prose > h3 {
+    @apply mt-7 text-[17px] font-semibold tracking-[-0.01em] text-ink;
+  }
+  .paper-prose > p {
+    @apply mt-3 max-w-[68ch] text-[16px] leading-[1.65] text-ink-2;
+  }
+  .paper-prose > ul {
+    @apply mt-3 max-w-[68ch] list-disc space-y-1.5 pl-5 text-[16px] leading-[1.65] text-ink-2 marker:text-ink-3;
+  }
+  .paper-prose > p a,
+  .paper-prose > ul a,
+  .paper-prose > table a {
+    @apply text-ink underline decoration-ink/30 underline-offset-4 transition-colors duration-150 ease-out hover:decoration-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink;
+  }
+  .paper-prose > table {
+    @apply mt-5 w-full border-y border-rule text-left text-[15px];
+  }
+  .paper-prose > table caption {
+    @apply pb-2 text-left text-[14px] text-ink-3;
+  }
+  .paper-prose > table th {
+    @apply border-b border-rule py-2 pr-5 text-[14px] font-normal text-ink-3;
+  }
+  .paper-prose > table td {
+    @apply border-b border-rule py-2.5 pr-5 align-top leading-snug text-ink-2 [overflow-wrap:anywhere];
+  }
+  .paper-prose > table tr:last-child td {
+    @apply border-b-0;
+  }
+  .paper-prose > .note {
+    @apply mt-3 max-w-[68ch] border-l-2 border-ink pl-4 text-[16px] leading-[1.65] text-ink;
+  }
+
+  /* Legal documents on paper (LegalDocument). Scoped to .legal-paper so the dark .legal-prose stays as it is. */
+  .legal-paper h2 {
+    @apply font-serif text-[24px] leading-tight font-medium tracking-[-0.015em] text-ink sm:text-[26px];
+  }
+  .legal-paper h3 {
+    @apply mt-6 text-[17px] font-semibold tracking-[-0.01em] text-ink;
+  }
+  .legal-paper p {
+    @apply mt-3 max-w-[68ch] text-[16px] leading-[1.65] text-ink-2;
+  }
+  .legal-paper ul,
+  .legal-paper ol {
+    @apply mt-3 max-w-[68ch] space-y-1.5 pl-5 text-[16px] leading-[1.65] text-ink-2;
+  }
+  .legal-paper ul {
+    @apply list-disc marker:text-ink-3;
+  }
+  .legal-paper ol {
+    @apply list-[lower-alpha] marker:text-ink-3;
+  }
+  .legal-paper strong {
+    @apply font-semibold text-ink;
+  }
+  .legal-paper a:not([class]) {
+    @apply text-ink underline decoration-ink/30 underline-offset-4 transition-colors duration-150 ease-out hover:decoration-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink;
+  }
+  .legal-paper .note {
+    @apply mt-4 max-w-[68ch] border-l-2 border-ink pl-4 text-ink;
+  }
+  .legal-paper .note strong {
+    @apply text-ink;
+  }
+  .legal-paper table {
+    @apply mt-4 w-full border-y border-rule text-left text-[15px];
+  }
+  .legal-paper th {
+    @apply border-b border-rule py-2 pr-4 align-bottom text-[14px] font-normal text-ink-3;
+  }
+  .legal-paper td {
+    @apply border-b border-rule py-2.5 pr-4 align-top leading-snug text-ink-2 [overflow-wrap:anywhere];
+  }
+  .legal-paper tr:last-child td {
+    @apply border-b-0;
+  }
+  /* Wide tables become label / value rows on phones: every cell carries its column name in data-label, so nothing
+     is lost and nothing scrolls sideways. The header row stays in the DOM for assistive technology. */
+  @media (width < 40rem) {
+    .legal-paper table.stack thead {
+      @apply sr-only;
+    }
+    .legal-paper table.stack,
+    .legal-paper table.stack tbody,
+    .legal-paper table.stack tr {
+      @apply block;
+    }
+    .legal-paper table.stack tr {
+      @apply border-b border-rule py-2 last:border-b-0;
+    }
+    .legal-paper table.stack td {
+      @apply block border-b-0 py-1 pr-0;
+    }
+    .legal-paper table.stack td::before {
+      content: attr(data-label);
+      @apply block text-[13px] text-ink-3;
+    }
   }
 }
 
@@ -336,6 +462,12 @@ body {
 
   main a {
     text-decoration: none !important;
+  }
+
+  /* Technical detail kept in <details> on screen prints in full. */
+  main details::details-content {
+    content-visibility: visible !important;
+    display: block !important;
   }
 
   main [data-print-rule] {

@@ -5,6 +5,7 @@ import CookieBanner from "@/components/CookieBanner";
 import SiteBackdrop from "@/components/SiteBackdrop";
 import TelemetryRails from "@/components/TelemetryRails";
 import Analytics from "@/components/Analytics";
+import SkipLink from "@/components/SkipLink";
 import { fontVariables } from "@/lib/fonts";
 import { htmlLang, type Locale } from "@/i18n/config";
 
@@ -24,6 +25,7 @@ export default function SiteShell({ locale, children }: { locale: Locale; childr
       className={`${fontVariables} h-full antialiased`}
     >
       <body className="relative flex min-h-full flex-col bg-background font-sans text-foreground">
+        <SkipLink locale={locale} />
         <SiteBackdrop />
         <TelemetryRails />
         <Navbar locale={locale} />

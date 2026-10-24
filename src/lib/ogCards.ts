@@ -6,6 +6,8 @@ type Card = {
   eyebrow: string;
   title: string;
   specs: { value: string; label: string }[];
+  /** The page's surface: "paper" for paper pages (home, PharmaDeux), the dark ground (default) otherwise. */
+  surface?: "dark" | "paper";
 };
 
 // OpenGraph card copy for the pages that have their own image. The route files under
@@ -13,15 +15,15 @@ type Card = {
 export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Card>>({
   tr: {
     home: {
-      alt: "LavieuxLabs · İlaç güvenliği ve faturalama için karar destek yazılımı",
-      eyebrow: "Sağlık teknolojileri Ar-Ge",
-      title: "İlaç güvenliği ve faturalama için karar destek yazılımı.",
+      alt: "LavieuxLabs · İlaç güvenliği için PharmaDeux; sitede ayrıca bağımsız proje Shield tanıtılıyor",
+      eyebrow: "Bağımsız öğrenci Ar-Ge girişimi",
+      title: "İlaç güvenliği için PharmaDeux. Sitede ayrıca bağımsız proje Shield tanıtılıyor.",
       specs: [
-        { value: String(metrics.safetyPlanes), label: "Güvenlik düzlemi" },
-        { value: testsLabel("tr"), label: "Otomatik test" },
-        { value: "FHIR R4", label: "Veri standardı" },
-        { value: "Sınıf IIa", label: "MDR hedef sınıfı" },
+        { value: trlLabel("tr"), label: "PharmaDeux · öz değerlendirme" },
+        { value: testsLabel("tr"), label: "PharmaDeux otomatik testi" },
+        { value: "Henüz yok", label: "Klinik kanıt" },
       ],
+      surface: "paper",
     },
     pharmadeux: {
       alt: "PharmaDeux CDSS · Reçete yazılırken ilaç güvenliğini kontrol eder",
@@ -31,32 +33,34 @@ export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Ca
         { value: String(metrics.safetyPlanes), label: "Güvenlik düzlemi" },
         { value: testsLabel("tr"), label: "Otomatik test" },
         { value: "FHIR R4", label: "Veri standardı" },
-        { value: trlLabel("tr"), label: "Teknoloji hazırlık seviyesi" },
+        { value: trlLabel("tr"), label: "Ekibin öz değerlendirmesi" },
       ],
+      surface: "paper",
     },
     shield: {
       alt: "Shield · Red riskini fatura gönderilmeden önce görün",
-      eyebrow: "Shield · gelir bütünlüğü",
+      eyebrow: "Shield · bağımsız prototip",
       title: "Red riskini fatura gönderilmeden önce görün.",
       specs: [
-        { value: "0–100", label: "Risk skoru" },
+        { value: "0–100", label: "Kural skoru" },
         { value: "ICD-10 · SUT", label: "Kod sistemleri" },
         { value: "Uzman onayı", label: "Karar" },
-        { value: "Append-only", label: "Denetim kaydı" },
+        { value: "Prototip", label: "Aşama" },
       ],
+      surface: "paper",
     },
   },
   en: {
     home: {
-      alt: "LavieuxLabs · Decision support software for medication safety and hospital billing",
-      eyebrow: "Health technology R&D",
-      title: "Medication safety and billing decision support software.",
+      alt: "LavieuxLabs · PharmaDeux for medication safety; the site also presents Shield, an independent project",
+      eyebrow: "Independent student R&D venture",
+      title: "PharmaDeux for medication safety. The site also presents Shield, an independent project.",
       specs: [
-        { value: String(metrics.safetyPlanes), label: "Safety planes" },
-        { value: testsLabel("en"), label: "Automated tests" },
-        { value: "FHIR R4", label: "Data standard" },
-        { value: "Class IIa", label: "MDR target class" },
+        { value: trlLabel("en"), label: "PharmaDeux · self-assessed" },
+        { value: testsLabel("en"), label: "PharmaDeux automated tests" },
+        { value: "None yet", label: "Clinical evidence" },
       ],
+      surface: "paper",
     },
     pharmadeux: {
       alt: "PharmaDeux CDSS · Checks medication safety while the prescription is written",
@@ -66,19 +70,21 @@ export const ogCards = defineContent<Record<"home" | "pharmadeux" | "shield", Ca
         { value: String(metrics.safetyPlanes), label: "Safety planes" },
         { value: testsLabel("en"), label: "Automated tests" },
         { value: "FHIR R4", label: "Data standard" },
-        { value: trlLabel("en"), label: "Technology readiness" },
+        { value: trlLabel("en"), label: "Team self-assessment" },
       ],
+      surface: "paper",
     },
     shield: {
       alt: "Shield · See rejection risk before the claim is submitted",
-      eyebrow: "Shield · revenue integrity",
+      eyebrow: "Shield · independent prototype",
       title: "See rejection risk before the claim is submitted.",
       specs: [
-        { value: "0–100", label: "Risk score" },
+        { value: "0–100", label: "Rule score" },
         { value: "ICD-10 · SUT", label: "Code systems" },
         { value: "Specialist", label: "Decision" },
-        { value: "Append-only", label: "Audit log" },
+        { value: "Prototype", label: "Stage" },
       ],
+      surface: "paper",
     },
   },
 });

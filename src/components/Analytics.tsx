@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Script from "next/script";
 import { useConsent } from "@/components/CookieBanner";
 import { analyticsProvider } from "@/lib/analyticsConfig";
@@ -9,17 +9,21 @@ import { setAnalyticsEnabled } from "@/lib/analytics";
 /**
  * Optional, consent-gated analytics. Renders nothing when no provider is configured, and loads the
  * provider script only after the visitor grants the "analytics" category in the cookie banner. When
- * consent is withdrawn, events stop at once (and GA4 is switched off with its documented opt-out flag);
- * the already loaded script is gone on the next page load.
+ * consent is withdrawn, our own events stop at once (and GA4 is switched off with its documented opt-out flag).
+ * A provider script that already ran stays in memory and can record pageviews by itself on client-side navigation,
+ * so withdrawing consent after it loaded in this page session reloads the page once: the script is then gone.
  */
 export default function Analytics() {
   const provider = analyticsProvider();
   const consent = useConsent();
   const allowed = Boolean(provider && consent?.analytics);
+  const loaded = useRef(false);
 
   useEffect(() => {
     setAnalyticsEnabled(allowed);
     if (provider?.kind === "ga4") (window as unknown as Record<string, unknown>)[`ga-disable-${provider.id}`] = !allowed;
+    if (allowed) loaded.current = true;
+    else if (loaded.current) window.location.reload();
   }, [allowed, provider]);
 
   if (!provider || !allowed) return null;

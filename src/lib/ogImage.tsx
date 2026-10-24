@@ -33,7 +33,30 @@ type OgCardProps = {
   eyebrow: string;
   title: string;
   specs: OgSpec[];
+  /** "paper" mirrors the home page (ink on paper); "dark" (default) the product pages' obsidian ground. */
+  surface?: "dark" | "paper";
 };
+
+// One palette per surface, so the card looks like the page it links to.
+const SURFACES = {
+  dark: {
+    background: "#080A0F",
+    backgroundImage: "radial-gradient(ellipse 120% 90% at 50% 38%, #0E1016 0%, #0B0C12 38%, #080A0F 66%, #050609 100%)",
+    text: "#FFFFFF",
+    muted: "rgba(255,255,255,0.55)",
+    rule: "rgba(255,255,255,0.08)",
+    mark: MARK_COLOR,
+  },
+  paper: {
+    background: "#F7F7F4",
+    // Flat paper. Satori rejects `backgroundImage: "none"`, so the property is left out entirely.
+    backgroundImage: undefined,
+    text: "#16181C",
+    muted: "#5F6570",
+    rule: "#D5D7D3",
+    mark: "#16181C",
+  },
+} as const;
 
 const host = SITE_URL.replace(/^https?:\/\//, "");
 const hasDigit = (value: string) => /\d/.test(value);
@@ -50,18 +73,19 @@ const upperTr = (text: string) =>
     .join(" · ");
 
 // Same geometry as LogoMark (src/components/LogoMark.tsx): the mark from src/lib/logoMark.ts.
-function Mark() {
+function Mark({ color }: { color: string }) {
   return (
-    <svg width="44" height="44" viewBox={MARK_VIEWBOX} fill="none" stroke={MARK_COLOR} strokeWidth={MARK_STROKE}>
+    <svg width="44" height="44" viewBox={MARK_VIEWBOX} fill="none" stroke={color} strokeWidth={MARK_STROKE}>
       {MARK_BODY.map((d) => (
         <path key={d} d={d} />
       ))}
-      <path d={MARK_PLUS} fill={MARK_COLOR} fillOpacity={0.15} />
+      <path d={MARK_PLUS} fill={color} fillOpacity={0.15} />
     </svg>
   );
 }
 
-export async function renderOgCard({ locale, eyebrow, title, specs }: OgCardProps) {
+export async function renderOgCard({ locale, eyebrow, title, specs, surface = "dark" }: OgCardProps) {
+  const s = SURFACES[surface];
 
   return new ImageResponse(
     <div
@@ -70,11 +94,10 @@ export async function renderOgCard({ locale, eyebrow, title, specs }: OgCardProp
         height: "100%",
         display: "flex",
         padding: 48,
-        backgroundColor: "#080A0F",
-        backgroundImage:
-          "radial-gradient(ellipse 120% 90% at 50% 38%, #0E1016 0%, #0B0C12 38%, #080A0F 66%, #050609 100%)",
+        backgroundColor: s.background,
+        ...(s.backgroundImage ? { backgroundImage: s.backgroundImage } : {}),
         fontFamily: "IBM Plex Sans",
-        color: "#FFFFFF",
+        color: s.text,
       }}
     >
       <div
@@ -84,19 +107,19 @@ export async function renderOgCard({ locale, eyebrow, title, specs }: OgCardProp
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "44px 52px",
-          border: "1px solid rgba(255,255,255,0.08)",
+          border: `1px solid ${s.rule}`,
           borderRadius: 24,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <Mark />
+            <Mark color={s.mark} />
             <div style={{ display: "flex", fontSize: 30, fontWeight: 600, letterSpacing: "-0.02em" }}>
               <span>Lavieux</span>
-              <span style={{ color: "rgba(255,255,255,0.55)" }}>Labs</span>
+              <span style={{ color: s.muted }}>Labs</span>
             </div>
           </div>
-          <div style={{ display: "flex", fontFamily: "IBM Plex Mono", fontSize: 20, color: "rgba(255,255,255,0.55)" }}>
+          <div style={{ display: "flex", fontFamily: "IBM Plex Mono", fontSize: 20, color: s.muted }}>
             {host}
           </div>
         </div>
@@ -108,7 +131,7 @@ export async function renderOgCard({ locale, eyebrow, title, specs }: OgCardProp
               fontSize: 20,
               fontWeight: 600,
               letterSpacing: "0.06em",
-              color: "rgba(255,255,255,0.55)",
+              color: s.muted,
             }}
           >
             {upperFor(locale, eyebrow)}
@@ -132,7 +155,7 @@ export async function renderOgCard({ locale, eyebrow, title, specs }: OgCardProp
         <div
           style={{
             display: "flex",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
+            borderTop: `1px solid ${s.rule}`,
             paddingTop: 24,
           }}
         >
@@ -145,7 +168,7 @@ export async function renderOgCard({ locale, eyebrow, title, specs }: OgCardProp
                 flexDirection: "column",
                 gap: 6,
                 paddingLeft: i === 0 ? 0 : 24,
-                borderLeft: i === 0 ? "none" : "1px solid rgba(255,255,255,0.08)",
+                borderLeft: i === 0 ? "none" : `1px solid ${s.rule}`,
               }}
             >
               <div
@@ -159,7 +182,7 @@ export async function renderOgCard({ locale, eyebrow, title, specs }: OgCardProp
               >
                 {spec.value}
               </div>
-              <div style={{ display: "flex", fontSize: 18, color: "rgba(255,255,255,0.55)" }}>{spec.label}</div>
+              <div style={{ display: "flex", fontSize: 18, color: s.muted }}>{spec.label}</div>
             </div>
           ))}
         </div>

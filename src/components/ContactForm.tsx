@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useCallback, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, Loader2 } from "lucide-react";
@@ -9,6 +9,7 @@ import { contactProducts, contactView } from "@/lib/contactContent";
 import { trackEvent } from "@/lib/analytics";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import CopyEmail from "@/components/CopyEmail";
+import { BUTTON, BUTTON_OUTLINE, LINK } from "@/components/paper/Editorial";
 import {
   ERROR_LIMIT,
   HONEYPOT_FIELD,
@@ -39,25 +40,25 @@ const copy = defineContent({
       messageShort: (min: number) => `Lütfen talebinizi en az ${min} karakterle açıklayınız.`,
       messageLong: (max: number) => `Mesaj en fazla ${max} karakter olabilir.`,
       messageMarkup: "Mesaj HTML, betik veya bağlantı kodu içeremez.",
-      path: "Lütfen bir temas yolu ve ürün seçiniz.",
-      consent: "Devam etmek için aydınlatma metnini onaylamanız gerekir.",
+      path: "Lütfen bir temas yolu ve proje seçiniz.",
+      consent: "Devam etmek için aydınlatma metnini okuduğunuzu belirtiniz.",
     },
     optional: "isteğe bağlı",
     sentTitle: "Talebiniz alındı.",
-    // The intro call answer is a calendar invite; the other paths get an email reply. Same one-day window.
+    // No response-time promise: the team has no verified service level.
     sentBody: {
-      intro: "En geç 1 iş günü içinde tanışma görüşmesi için takvim daveti e-postanıza iletilecektir.",
-      academic: "En geç 1 iş günü içinde e-postayla dönüş yapılacaktır.",
-      pilot: "En geç 1 iş günü içinde e-postayla dönüş yapılacaktır.",
+      intro: "Görüşme zamanını birlikte belirlemek için size e-postayla yazacağız.",
+      academic: "Talebinize e-postayla dönüş yapacağız.",
+      pilot: "Talebinize e-postayla dönüş yapacağız.",
     } as Record<ContactPath, string>,
     nextTitle: "Sonraki adımlar",
-    summary: { path: "Talep", organization: "Kurum", product: "Ürün", role: "Rol" },
+    summary: { path: "Talep", organization: "Kurum", product: "Proje", role: "Rol" },
     newRequest: "Yeni talep oluştur",
     fallback: "Eklemek istediğiniz bir şey olursa doğrudan şu adrese yazabilirsiniz:",
     sendFailed: "Talebiniz şu anda iletilemedi. Lütfen birkaç dakika sonra tekrar deneyin ya da doğrudan şu adrese yazın:",
     rateLimited: "Kısa sürede çok sayıda talep gönderildi. Lütfen birkaç dakika sonra tekrar deneyin ya da doğrudan şu adrese yazın:",
     honeypot: "Web sitesi (boş bırakınız)",
-    productLegend: "Hangi ürün?",
+    productLegend: "Hangi proje?",
     organization: "Kurum adı",
     organizationLoose: "Kurum / üniversite",
     name: "Ad soyad",
@@ -70,7 +71,14 @@ const copy = defineContent({
     emailPlaceholder: "ad.soyad@kurum.com.tr",
     freeMail: "Mümkünse kurumsal alan adınıza ait bir e-posta adresi kullanmanızı öneririz.",
     message: "Mesaj",
-    messageHint: "Düz metin; lütfen hasta verisi paylaşmayınız.",
+    messageHint: "Düz metin. Hasta verisi veya gerçek fatura verisi yazmayınız.",
+    // What a request is and is not, said before the visitor writes anything.
+    requestNote: {
+      intro: "Bu form bir görüşme talebi iletir. Görüşme zamanını e-postayla birlikte belirleriz; gönderim bir randevu onayı değildir.",
+      academic: "Bu form bir iş birliği önerisi iletir. Bir anlaşma yapılmış veya ortak çalışma başlamış olmaz.",
+      pilot: "Bu form bir pilot talebi iletir. Niyet Mektubu (LOI) veya sözleşme yerine geçmez.",
+    } as Record<ContactPath, string>,
+    dataNote: "Bu forma hasta verisi veya gerçek fatura verisi yazmayınız.",
     consentBefore: "Kişisel verilerimin, talebimin yanıtlanması amacıyla",
     consentLink: "KVKK Aydınlatma Metni",
     consentAfter: "kapsamında işleneceğini okudum ve anladım.",
@@ -91,24 +99,24 @@ const copy = defineContent({
       messageShort: (min: number) => `Please describe your request in at least ${min} characters.`,
       messageLong: (max: number) => `Message can be at most ${max} characters.`,
       messageMarkup: "The message cannot contain HTML, scripts or link code.",
-      path: "Select a way to start and a product.",
+      path: "Select a way to start and a project.",
       consent: "To continue, confirm that you have read the privacy notice.",
     },
     optional: "optional",
     sentTitle: "Your request has been received.",
     sentBody: {
-      intro: "A calendar invitation for the intro call will be sent to your email within one business day.",
-      academic: "We will reply by email within one business day.",
-      pilot: "We will reply by email within one business day.",
+      intro: "We will email you to agree on a time for the call.",
+      academic: "We will reply to your request by email.",
+      pilot: "We will reply to your request by email.",
     } as Record<ContactPath, string>,
     nextTitle: "Next steps",
-    summary: { path: "Request", organization: "Organisation", product: "Product", role: "Role" },
+    summary: { path: "Request", organization: "Organisation", product: "Project", role: "Role" },
     newRequest: "Start a new request",
     fallback: "If you want to add anything, write to us directly at:",
     sendFailed: "Your request could not be sent right now. Please try again in a few minutes, or write to us directly at:",
     rateLimited: "Too many requests were sent in a short time. Please try again in a few minutes, or write to us directly at:",
     honeypot: "Website (leave empty)",
-    productLegend: "Which product?",
+    productLegend: "Which project?",
     organization: "Organisation",
     organizationLoose: "Organisation / university",
     name: "Full name",
@@ -121,7 +129,13 @@ const copy = defineContent({
     emailPlaceholder: "name.surname@hospital.org",
     freeMail: "If possible, use an address on your organisation's own domain.",
     message: "Message",
-    messageHint: "Plain text. Please do not share patient data.",
+    messageHint: "Plain text. Do not enter patient data or real claim data.",
+    requestNote: {
+      intro: "This form sends a request for a call. We agree on a time with you by email; sending it does not confirm an appointment.",
+      academic: "This form sends a collaboration proposal. It does not create an agreement or start a joint study.",
+      pilot: "This form sends a pilot request. It does not replace a Letter of Intent (LOI) or an agreement.",
+    } as Record<ContactPath, string>,
+    dataNote: "Do not enter patient data or real claim data in this form.",
     consentBefore: "I have read the",
     consentLink: "Privacy Notice (KVKK)",
     consentAfter: "and understand that my personal data will be processed to answer my request.",
@@ -152,6 +166,108 @@ function message(c: Copy, code: LoiErrorCode): string {
   return typeof entry === "function" ? entry(ERROR_LIMIT[code] ?? 0) : entry;
 }
 
+export type ContactTone = "dark" | "paper";
+
+// A failed submit focuses the first invalid field and the browser scrolls it into view. The margins keep it clear
+// of the fixed 64px navbar with its label above it (top) and its error message below it (bottom).
+const FIELD_SCROLL = "scroll-mt-28 scroll-mb-16";
+
+// Literal classes per surface. Dark: the panel on the dark ground. Paper: ink on paper, white fields with a
+// grey border (≥3:1), 16px field text so phones do not zoom, 44px+ targets; the product name keeps its accent.
+const skins = {
+  dark: {
+    shell: "relative overflow-hidden rounded-2xl border border-hairline bg-navy-850",
+    form: "space-y-6 p-6 sm:p-8",
+    label: "text-[13px] font-medium text-white/80",
+    optional: "text-[11px] font-normal text-white/55",
+    error: "text-xs text-rose-300",
+    hint: "text-xs text-white/55",
+    input:
+      `${FIELD_SCROLL} w-full rounded-lg border bg-navy-900/70 px-3.5 py-2.5 text-sm text-white placeholder:text-white/50 outline-none transition-colors focus:ring-2`,
+    border: "border-white/[0.1]",
+    borderError: "border-rose-400/50",
+    select: "[&>option]:bg-navy-850",
+    selectEmpty: "text-white/60",
+    option: "text-white",
+    note: "text-[13px] leading-relaxed text-white/60",
+    dataNote: "text-[13px] font-medium leading-relaxed text-white/80",
+    legend: "text-[13px] font-medium text-white/80",
+    consent: "flex cursor-pointer items-start gap-3 text-[13px] leading-relaxed text-white/60",
+    consentBox: `${FIELD_SCROLL} mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-titanium`,
+    consentLink:
+      "text-white/80 underline decoration-white/30 underline-offset-2 transition-colors duration-150 ease-out hover:text-white hover:decoration-white/70",
+    consentError: "pl-7",
+    alert: "rounded-lg border border-rose-400/30 bg-rose-400/[0.06] px-4 py-3 text-[13px] leading-relaxed text-rose-100",
+    alertEmail: "text-white",
+    submitRow: "border-t border-hairline pt-6",
+    submitNote: "text-xs leading-relaxed text-white/55",
+    submit:
+      "inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors duration-150 ease-out hover:bg-white/90 disabled:opacity-70",
+    sent: "flex flex-col items-start p-7 sm:p-10",
+    sentTitle: "text-2xl font-semibold tracking-[-0.03em] text-white",
+    sentBody: "mt-3 max-w-md text-sm leading-relaxed text-white/60",
+    summary: "mt-8 w-full divide-y divide-hairline rounded-xl border border-hairline text-sm",
+    summaryRow: "px-4 py-3",
+    summaryKey: "text-white/55",
+    summaryValue: "text-right text-white/85",
+    nextTitle: "text-[11px] font-medium tracking-wider text-white/50 uppercase",
+    nextList: "mt-3 divide-y divide-hairline rounded-xl border border-hairline",
+    nextItem: "px-4 py-3.5",
+    nextNumber: "font-mono text-[12px] text-white/55 tabular-nums",
+    nextStepTitle: "block text-[13.5px] font-medium text-white",
+    nextStepBody: "mt-1 block text-[12.5px] leading-relaxed text-white/60",
+    again:
+      "mt-8 rounded-lg border border-white/15 px-4 py-2.5 text-sm text-white/80 transition-colors duration-150 ease-out hover:bg-white/5",
+    fallback: "mt-6 text-xs text-white/55",
+    fallbackEmail: "text-white/80",
+  },
+  paper: {
+    shell: "relative border-t-2 border-ink",
+    form: "space-y-7 pt-5",
+    label: "text-[15px] font-medium text-ink",
+    optional: "text-[13px] font-normal text-ink-3",
+    error: "text-[14px] text-rose-700",
+    hint: "text-[14px] text-ink-3",
+    input: `${FIELD_SCROLL} w-full rounded-md border bg-white px-3.5 py-3 text-[16px] text-ink placeholder:text-ink-3 outline-none transition-colors duration-150 ease-out focus:border-ink focus:ring-2 focus:ring-ink/25`,
+    border: "border-ink-3",
+    borderError: "border-rose-700",
+    select: "",
+    selectEmpty: "text-ink-3",
+    option: "text-ink",
+    note: "text-[15px] leading-[1.6] text-ink-2",
+    dataNote: "text-[15px] font-medium leading-[1.6] text-ink",
+    legend: "text-[15px] font-medium text-ink",
+    consent: "flex cursor-pointer items-start gap-3 text-[15px] leading-[1.6] text-ink-2",
+    consentBox: `${FIELD_SCROLL} mt-1 h-[18px] w-[18px] shrink-0 cursor-pointer accent-ink`,
+    consentLink: LINK,
+    consentError: "pl-[30px]",
+    alert: "border border-rose-700/60 bg-white px-4 py-3 text-[15px] leading-[1.6] text-ink",
+    alertEmail: "text-ink",
+    submitRow: "border-t border-rule pt-6",
+    submitNote: "text-[14px] leading-[1.6] text-ink-3",
+    submit: `${BUTTON} shrink-0 gap-2 disabled:opacity-70`,
+    sent: "flex flex-col items-start pt-6",
+    sentTitle: "font-serif text-[30px] leading-[1.1] font-medium tracking-[-0.015em] text-ink",
+    sentBody: "mt-3 max-w-[56ch] text-[17px] leading-[1.6] text-ink-2",
+    summary: "mt-8 w-full divide-y divide-rule border-y border-rule text-[15px]",
+    summaryRow: "py-3",
+    summaryKey: "text-ink-3",
+    summaryValue: "text-right text-ink",
+    nextTitle: "font-serif text-[20px] font-medium text-ink",
+    nextList: "mt-3 divide-y divide-rule border-y border-rule",
+    nextItem: "py-4",
+    nextNumber: "font-serif text-[20px] leading-none text-ink-3",
+    nextStepTitle: "block text-[16px] font-semibold text-ink",
+    nextStepBody: "mt-1 block text-[15px] leading-[1.6] text-ink-2",
+    again: `mt-8 ${BUTTON_OUTLINE}`,
+    fallback: "mt-6 text-[15px] text-ink-2",
+    fallbackEmail: "text-ink",
+  },
+} satisfies Record<ContactTone, Record<string, string>>;
+
+// On paper only the product name carries its accent (the dark step of the product scale).
+const paperProductName: Record<ProductValue, string> = { pharmadeux: "text-teal-700", shield: "text-indigo-700" };
+
 function Field({
   className,
   label,
@@ -159,6 +275,7 @@ function Field({
   error,
   optional,
   hint,
+  skin,
   children,
 }: {
   className?: string;
@@ -167,43 +284,45 @@ function Field({
   error?: string;
   optional?: string;
   hint?: ReactNode;
+  skin: (typeof skins)[ContactTone];
   children: ReactNode;
 }) {
   return (
     <div className={className}>
-      <label htmlFor={htmlFor} className="flex items-baseline justify-between text-[13px] font-medium text-white/80">
+      <label htmlFor={htmlFor} className={`flex items-baseline justify-between gap-3 ${skin.label}`}>
         {label}
-        {optional && <span className="text-[11px] font-normal text-white/55">{optional}</span>}
+        {optional && <span className={skin.optional}>{optional}</span>}
       </label>
       <div className="mt-2">{children}</div>
       {error ? (
-        <p id={`${htmlFor}-error`} className="mt-1.5 text-xs text-rose-300">
+        <p id={`${htmlFor}-error`} className={`mt-1.5 ${skin.error}`}>
           {error}
         </p>
       ) : (
-        hint && <div className="mt-1.5 text-xs text-white/55">{hint}</div>
+        hint && <div className={`mt-1.5 ${skin.hint}`}>{hint}</div>
       )}
     </div>
   );
 }
-
-const inputBase =
-  "w-full rounded-lg border bg-navy-900/70 px-3.5 py-2.5 text-sm text-white placeholder:text-white/50 outline-none transition-colors focus:ring-2";
 
 type ContactFormProps = {
   locale: Locale;
   path: ContactPath;
   product: ProductValue;
   onProductChange: (product: ProductValue) => void;
+  /** "paper" on the paper contact page; "dark" (default) keeps the dark panel. */
+  tone?: ContactTone;
 };
 
-export default function ContactForm({ locale, path, product, onProductChange }: ContactFormProps) {
+export default function ContactForm({ locale, path, product, onProductChange, tone = "dark" }: ContactFormProps) {
   const uid = useId();
   const c = copy[locale];
+  const skin = skins[tone];
+  const paper = tone === "paper";
   const view = contactView(locale, path, product);
   const products = contactProducts(locale);
   const accent = view.accent;
-  const inputClass = `${inputBase} ${accent.inputFocus}`;
+  const inputClass = paper ? skin.input : `${skin.input} ${accent.inputFocus}`;
   const hasProduct = path !== "academic";
   const roles = roleOptions(locale, path, product);
   const details = detailOptions(locale, path, product);
@@ -222,6 +341,8 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
   const [status, setStatus] = useState<"idle" | "submitting" | "sent">("idle");
   const [sendError, setSendError] = useState<"failed" | "rate" | null>(null);
   const honeypotRef = useRef<HTMLInputElement>(null);
+  // Stable callback ref: the success heading mounts after the form has faded out, and takes focus once.
+  const sentHeading = useCallback((el: HTMLHeadingElement | null) => el?.focus(), []);
 
   // Role and detail lists change with the path and product (a physician never sees billing roles);
   // a choice that is not in the current list counts as not chosen.
@@ -256,9 +377,17 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
     );
     setErrors(found);
     if (Object.keys(found).length > 0) {
-      // Focus the first invalid field in the order the form shows them, not the order they were validated.
+      // Focus the first invalid field in the order the form shows them, not the order they were validated. Wait a
+      // frame so the error messages are in the layout, then scroll the field into view ourselves: scrollIntoView
+      // honours the field's scroll margins (navbar and label above, error below), while the browser's own focus
+      // scroll does not on phones and can leave the field under the fixed navbar.
       const first = FIELD_ORDER.find((key) => found[key]);
-      if (first) document.getElementById(`${uid}-${first}`)?.focus();
+      if (first)
+        requestAnimationFrame(() => {
+          const field = document.getElementById(`${uid}-${first}`);
+          field?.scrollIntoView({ block: "start" });
+          field?.focus({ preventScroll: true });
+        });
       return;
     }
 
@@ -296,63 +425,64 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
     "aria-describedby": errors[key] ? `${uid}-${key}-error` : undefined,
   });
 
-  const border = (key: keyof Fields) => (errors[key] ? "border-rose-400/50" : "border-white/[0.1]");
+  const border = (key: keyof Fields) => (errors[key] ? skin.borderError : skin.border);
   const productLabel = products.find((p) => p.value === product)?.label ?? "";
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-hairline bg-navy-850">
-      <div
-        aria-hidden="true"
-        className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r via-white/10 to-transparent ${accent.topRule}`}
-      />
+    <div className={skin.shell}>
+      {!paper && (
+        <div
+          aria-hidden="true"
+          className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r via-white/10 to-transparent ${accent.topRule}`}
+        />
+      )}
       <AnimatePresence mode="wait" initial={false}>
         {status === "sent" ? (
           <motion.div
             key="sent"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-start p-7 sm:p-10"
+            className={skin.sent}
             role="status"
           >
-            <CheckCircle2 className="h-8 w-8 text-white/80" strokeWidth={1.6} />
-            <h2 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-white">{c.sentTitle}</h2>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60">{c.sentBody[path]}</p>
-            <dl className="mt-8 w-full divide-y divide-hairline rounded-xl border border-hairline text-sm">
+            {!paper && <CheckCircle2 className="mb-6 h-8 w-8 text-white/80" strokeWidth={1.6} aria-hidden="true" />}
+            {/* Focus moves here once the request is sent, so keyboard and screen reader users land on the result. */}
+            <h2 ref={sentHeading} tabIndex={-1} className={`${skin.sentTitle} outline-none`}>
+              {c.sentTitle}
+            </h2>
+            <p className={skin.sentBody}>{c.sentBody[path]}</p>
+            <dl className={skin.summary}>
               {[
                 [c.summary.path, view.path.label],
                 ...(fields.organization ? [[c.summary.organization, fields.organization]] : []),
                 ...(hasProduct ? [[c.summary.product, productLabel]] : []),
                 [c.summary.role, fields.role],
               ].map(([k, v]) => (
-                <div key={k} className="flex justify-between gap-4 px-4 py-3">
-                  <dt className="text-white/55">{k}</dt>
-                  <dd className="text-right text-white/85">{v}</dd>
+                <div key={k} className={`flex justify-between gap-4 ${skin.summaryRow}`}>
+                  <dt className={skin.summaryKey}>{k}</dt>
+                  <dd className={skin.summaryValue}>{v}</dd>
                 </div>
               ))}
             </dl>
             <div className="mt-8 w-full">
-              <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{c.nextTitle}</p>
-              <ol className="mt-3 divide-y divide-hairline rounded-xl border border-hairline">
+              {paper ? <h3 className={skin.nextTitle}>{c.nextTitle}</h3> : <p className={skin.nextTitle}>{c.nextTitle}</p>}
+              <ol className={skin.nextList}>
                 {view.nextSteps.map((step, i) => (
-                  <li key={step.title} className="grid grid-cols-[28px_1fr] gap-3 px-4 py-3.5">
-                    <span className="font-mono text-[12px] text-white/55 tabular-nums">{i + 1}</span>
+                  <li key={step.title} className={`grid grid-cols-[28px_1fr] gap-3 ${skin.nextItem}`}>
+                    <span className={skin.nextNumber}>{i + 1}</span>
                     <span>
-                      <span className="block text-[13.5px] font-medium text-white">{step.title}</span>
-                      <span className="mt-1 block text-[12.5px] leading-relaxed text-white/60">{step.body}</span>
+                      <span className={skin.nextStepTitle}>{step.title}</span>
+                      <span className={skin.nextStepBody}>{step.body}</span>
                     </span>
                   </li>
                 ))}
               </ol>
             </div>
-            <button
-              type="button"
-              onClick={startOver}
-              className="mt-8 rounded-lg border border-white/15 px-4 py-2.5 text-sm text-white/80 transition-colors duration-150 ease-out hover:bg-white/5"
-            >
+            <button type="button" onClick={startOver} className={skin.again}>
               {c.newRequest}
             </button>
-            <p className="mt-6 text-xs text-white/55">
-              {c.fallback} <CopyEmail locale={locale} className="text-white/80" />
+            <p className={skin.fallback}>
+              {c.fallback} <CopyEmail locale={locale} tone={tone} className={skin.fallbackEmail} />
             </p>
           </motion.div>
         ) : (
@@ -363,7 +493,8 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="space-y-6 p-6 sm:p-8"
+            className={skin.form}
+            aria-labelledby={paper ? `${uid}-title` : undefined}
           >
             {/* Honeypot: off-screen rather than display:none, since some bots skip hidden inputs. */}
             <div
@@ -382,37 +513,68 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
               />
             </div>
 
-            <div className="flex items-center gap-3">
-              <view.path.icon className="h-4 w-4 text-white/60" strokeWidth={1.7} aria-hidden="true" />
-              <p className="text-[15px] font-semibold tracking-[-0.01em] text-white">{view.path.label}</p>
+            <div>
+              {paper ? (
+                <h2 id={`${uid}-title`} className="font-serif text-[26px] leading-[1.15] font-medium tracking-[-0.015em] text-ink sm:text-[30px]">
+                  {view.path.label}
+                </h2>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <view.path.icon className="h-4 w-4 text-white/60" strokeWidth={1.7} aria-hidden="true" />
+                  <p className="text-[15px] font-semibold tracking-[-0.01em] text-white">{view.path.label}</p>
+                </div>
+              )}
+              {/* What the request is not, and what must never be sent, before any field. */}
+              <div className={`${paper ? "mt-3 max-w-[60ch]" : "mt-3"} space-y-1.5`}>
+                <p className={skin.note}>{c.requestNote[path]}</p>
+                <p className={skin.dataNote}>{c.dataNote}</p>
+              </div>
             </div>
 
             {/* Product first: the physician and the revenue cycle manager get different roles and pilot types. */}
             {hasProduct && (
               <fieldset>
-                <legend className="text-[13px] font-medium text-white/80">{c.productLegend}</legend>
+                <legend className={skin.legend}>{c.productLegend}</legend>
                 <div className="mt-2 grid gap-2 sm:grid-cols-2">
                   {products.map(({ value, icon: Icon, label, hint, accent: cardAccent }) => {
                     const checked = product === value;
-                    return (
+                    const input = (
+                      <input
+                        type="radio"
+                        id={`${uid}-product-${value}`}
+                        name="product"
+                        value={value}
+                        checked={checked}
+                        onChange={() => {
+                          onProductChange(value);
+                          if (errors.path) setErrors((e) => ({ ...e, path: undefined }));
+                        }}
+                        className={paper ? "mt-1 h-[18px] w-[18px] shrink-0 cursor-pointer accent-ink" : "sr-only"}
+                      />
+                    );
+                    return paper ? (
+                      <label
+                        key={value}
+                        className={`flex min-h-11 cursor-pointer items-start gap-3 rounded-md border bg-white p-3.5 transition-colors duration-150 ease-out has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink ${
+                          checked ? "border-ink ring-1 ring-ink ring-inset" : "border-rule hover:border-ink-3"
+                        }`}
+                      >
+                        {input}
+                        <span>
+                          <span className={`block font-serif text-[18px] leading-tight font-medium ${paperProductName[value]}`} lang="en">
+                            {label}
+                          </span>
+                          <span className="mt-1 block text-[14px] leading-snug text-ink-2">{hint}</span>
+                        </span>
+                      </label>
+                    ) : (
                       <label
                         key={value}
                         className={`relative flex cursor-pointer flex-col rounded-xl border p-3.5 transition-colors duration-150 ease-out has-[:focus-visible]:ring-2 ${cardAccent.focusRing} ${
                           checked ? cardAccent.selectedCard : "border-white/[0.1] hover:border-white/20 hover:bg-white/[0.02]"
                         }`}
                       >
-                        <input
-                          type="radio"
-                          id={`${uid}-product-${value}`}
-                          name="product"
-                          value={value}
-                          checked={checked}
-                          onChange={() => {
-                            onProductChange(value);
-                            if (errors.path) setErrors((e) => ({ ...e, path: undefined }));
-                          }}
-                          className="sr-only"
-                        />
+                        {input}
                         <Icon
                           className={`h-4 w-4 transition-colors duration-150 ease-out ${checked ? cardAccent.text : "text-white/55"}`}
                           strokeWidth={1.8}
@@ -424,12 +586,12 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
                     );
                   })}
                 </div>
-                {errors.path && <p className="mt-1.5 text-xs text-rose-300">{errors.path}</p>}
+                {errors.path && <p className={`mt-1.5 ${skin.error}`}>{errors.path}</p>}
               </fieldset>
             )}
 
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field label={c.name} htmlFor={`${uid}-name`} error={errors.name}>
+              <Field label={c.name} htmlFor={`${uid}-name`} error={errors.name} skin={skin}>
                 <input
                   {...errorProps("name")}
                   autoComplete="name"
@@ -440,18 +602,18 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
                   className={`${inputClass} ${border("name")}`}
                 />
               </Field>
-              <Field label={c.role} htmlFor={`${uid}-role`} error={errors.role}>
+              <Field label={c.role} htmlFor={`${uid}-role`} error={errors.role} skin={skin}>
                 <select
                   {...errorProps("role")}
                   value={role}
                   onChange={(e) => set("role", e.target.value)}
-                  className={`${inputClass} ${border("role")} [&>option]:bg-navy-850 ${role ? "" : "text-white/60"}`}
+                  className={`${inputClass} ${border("role")} ${skin.select} ${role ? "" : skin.selectEmpty}`}
                 >
                   <option value="" disabled>
                     {c.choose}
                   </option>
                   {roles.map((r) => (
-                    <option key={r} value={r} className="text-white">
+                    <option key={r} value={r} className={skin.option}>
                       {r}
                     </option>
                   ))}
@@ -463,6 +625,7 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
                 htmlFor={`${uid}-organization`}
                 error={errors.organization}
                 optional={formal ? undefined : c.optional}
+                skin={skin}
               >
                 <input
                   {...errorProps("organization")}
@@ -480,18 +643,19 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
                   label={c.detail[path]}
                   htmlFor={`${uid}-detail`}
                   error={errors.detail}
+                  skin={skin}
                 >
                   <select
                     {...errorProps("detail")}
                     value={detail}
                     onChange={(e) => set("detail", e.target.value)}
-                    className={`${inputClass} ${border("detail")} [&>option]:bg-navy-850 ${detail ? "" : "text-white/60"}`}
+                    className={`${inputClass} ${border("detail")} ${skin.select} ${detail ? "" : skin.selectEmpty}`}
                   >
                     <option value="" disabled>
                       {c.choose}
                     </option>
                     {details.map((d) => (
-                      <option key={d} value={d} className="text-white">
+                      <option key={d} value={d} className={skin.option}>
                         {d}
                       </option>
                     ))}
@@ -505,6 +669,7 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
               htmlFor={`${uid}-email`}
               error={errors.email}
               hint={formal && freeMail ? c.freeMail : undefined}
+              skin={skin}
             >
               <input
                 {...errorProps("email")}
@@ -526,10 +691,11 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
               htmlFor={`${uid}-message`}
               error={errors.message}
               optional={MESSAGE_MIN[path] === 0 ? c.optional : undefined}
+              skin={skin}
               hint={
                 <span className="flex justify-between gap-4">
                   <span>{c.messageHint}</span>
-                  <span className="font-mono tabular-nums">
+                  <span className={paper ? "shrink-0 tabular-nums" : "font-mono tabular-nums"}>
                     {fields.message.length}/{LIMITS.message}
                   </span>
                 </span>
@@ -547,53 +713,48 @@ export default function ContactForm({ locale, path, product, onProductChange }: 
             </Field>
 
             <div>
-              <label className="flex cursor-pointer items-start gap-3 text-[13px] leading-relaxed text-white/60">
+              <label className={skin.consent}>
                 <input
                   {...errorProps("consent")}
                   type="checkbox"
                   checked={fields.consent}
                   onChange={(e) => set("consent", e.target.checked)}
-                  className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-titanium"
+                  className={skin.consentBox}
                 />
                 <span>
                   {c.consentBefore}{" "}
-                  <Link
-                    href={localizedPath(locale, "/legal/privacy")}
-                    className="text-white/80 underline decoration-white/30 underline-offset-2 transition-colors duration-150 ease-out hover:text-white hover:decoration-white/70"
-                  >
+                  <Link href={localizedPath(locale, "/legal/privacy")} className={skin.consentLink}>
                     {c.consentLink}
                   </Link>{" "}
                   {c.consentAfter}
                 </span>
               </label>
               {errors.consent && (
-                <p id={`${uid}-consent-error`} className="mt-1.5 pl-7 text-xs text-rose-300">
+                <p id={`${uid}-consent-error`} className={`mt-1.5 ${skin.consentError} ${skin.error}`}>
                   {errors.consent}
                 </p>
               )}
             </div>
 
             {sendError && (
-              <p role="alert" className="rounded-lg border border-rose-400/30 bg-rose-400/[0.06] px-4 py-3 text-[13px] leading-relaxed text-rose-100">
+              <p role="alert" className={skin.alert}>
                 {sendError === "rate" ? c.rateLimited : c.sendFailed}{" "}
-                <CopyEmail locale={locale} className="text-white" />
+                <CopyEmail locale={locale} tone={tone} className={skin.alertEmail} />
               </p>
             )}
 
-            <div className="flex flex-col gap-4 border-t border-hairline pt-6 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-xs leading-relaxed text-white/55">{c.submitNote(CONTACT_EMAIL)}</p>
-              <button
-                type="submit"
-                disabled={status === "submitting"}
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-navy-900 transition-colors duration-150 ease-out hover:bg-white/90 disabled:opacity-70"
-              >
+            <div className={`flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between ${skin.submitRow}`}>
+              <p className={skin.submitNote}>{c.submitNote(CONTACT_EMAIL)}</p>
+              <button type="submit" disabled={status === "submitting"} className={skin.submit}>
                 {status === "submitting" ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" /> {c.preparing}
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> {c.preparing}
                   </>
+                ) : paper ? (
+                  view.path.submit
                 ) : (
                   <>
-                    {view.path.submit} <ArrowUpRight className="h-4 w-4" />
+                    {view.path.submit} <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                   </>
                 )}
               </button>

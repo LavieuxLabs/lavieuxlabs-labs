@@ -20,8 +20,17 @@ export const LEGAL_ENTITY = {
   mersis: null as string | null,
 };
 
-// ISO 8601; rendered per locale with formatDate().
-export const LEGAL_LAST_UPDATED = "2026-10-18";
+// Last content change of each legal page, ISO 8601, rendered per locale with formatDate(). Dates come from the git
+// history (last commit that changed the page) and from the dated, uncommitted edits after it. Each page shows its own
+// date; the footer shows the latest. Update a page's date whenever its text changes.
+export const LEGAL_UPDATED = {
+  "/legal/privacy": "2026-10-23",
+  "/legal/cookies": "2026-10-24",
+  "/legal/terms": "2026-10-24",
+  "/legal/quality": "2026-10-24",
+} as const;
+export type LegalPath = keyof typeof LEGAL_UPDATED;
+export const LEGAL_LAST_UPDATED: string = Object.values(LEGAL_UPDATED).sort().reverse()[0];
 
 // How the organisation describes itself. LavieuxLabs is an independent student venture, not a unit,
 // partner or technopark company of the university; every imprint, header and JSON-LD reads from here.
@@ -30,24 +39,17 @@ export const organizationProfile = defineContent({
     short: "Bağımsız sağlık teknolojileri Ar-Ge girişimi",
     positioning:
       "LavieuxLabs, Konya Teknik Üniversitesi öğrencileri tarafından geliştirilen, bağımsız bir klinik karar destek ve sağlık teknolojileri Ar-Ge girişimidir.",
-    stage: "Henüz şirketleşmedik; ürünler Ar-Ge ve pilot hazırlık aşamasında.",
+    stage: "Henüz şirketleşmedik; projeler Ar-Ge ve prototip aşamasında.",
     independence: "Üniversitenin resmi bir birimi, ortağı veya teknokent firması değiliz.",
   },
   en: {
     short: "Independent health technology R&D venture",
     positioning:
       "LavieuxLabs is an independent clinical decision support and health technology R&D venture built by students of Konya Technical University.",
-    stage: "We are not incorporated yet. The products are in R&D and pilot preparation.",
+    stage: "We are not incorporated yet. The projects are at the R&D and prototype stage.",
     independence: "We are not an official unit, partner or technopark company of the university.",
   },
 });
-
-// Core team. A link left null is not rendered; email always goes through CONTACT_EMAIL.
-export const TEAM_LEAD = {
-  name: "Tarık Ziya Eren",
-  github: "https://github.com/TarikZiyaEren" as string | null,
-  linkedin: null as string | null,
-};
 
 // Contact has two axes: how the visitor wants to start (path) and which product it concerns. The
 // 15-minute intro call is the default, so a first contact never starts with a Letter of Intent.
@@ -103,12 +105,12 @@ export const navigation = defineContent({
       {
         href: "/initiatives/shield",
         name: "Shield",
-        description: "Fatura gönderilmeden önce red riski kontrolü",
+        description: "Bağımsız proje · fatura gönderilmeden önce red riski kontrolü",
         icon: "shield" as "pill" | "shield",
       },
     ],
-    productsLabel: "Ürünler",
-    allProducts: "Tüm ürünler",
+    productsLabel: "Projeler",
+    allProducts: "Tüm projeler",
     links: [
       { href: "/standartlar", label: "Standartlar" },
       { href: "/about", label: "Hakkımızda" },
@@ -127,11 +129,11 @@ export const navigation = defineContent({
     ] as NavLink[],
     footerColumns: [
       {
-        title: "Ürünler",
+        title: "Projeler",
         links: [
           { href: "/initiatives/pharmadeux", label: "PharmaDeux CDSS" },
           { href: "/initiatives/shield", label: "Shield" },
-          { href: "/#platformlar", label: "Tüm ürünler" },
+          { href: "/#platformlar", label: "Tüm projeler" },
         ],
       },
       {
@@ -165,12 +167,12 @@ export const navigation = defineContent({
       {
         href: "/initiatives/shield",
         name: "Shield",
-        description: "Claim rejection risk check before submission",
+        description: "Independent project · claim rejection risk check before submission",
         icon: "shield",
       },
     ],
-    productsLabel: "Products",
-    allProducts: "All products",
+    productsLabel: "Projects",
+    allProducts: "All projects",
     links: [
       { href: "/standartlar", label: "Standards" },
       { href: "/about", label: "About" },
@@ -189,15 +191,15 @@ export const navigation = defineContent({
     ],
     footerColumns: [
       {
-        title: "Products",
+        title: "Projects",
         links: [
           { href: "/initiatives/pharmadeux", label: "PharmaDeux CDSS" },
           { href: "/initiatives/shield", label: "Shield" },
-          { href: "/#platformlar", label: "All products" },
+          { href: "/#platformlar", label: "All projects" },
         ],
       },
       {
-        title: "Company",
+        title: "Organisation",
         links: [
           { href: "/about", label: "About" },
           { href: "/contact", label: "Contact" },

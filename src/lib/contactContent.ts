@@ -108,8 +108,8 @@ const copy = defineContent<ContactCopy>({
   tr: {
     paths: {
       intro: {
-        label: "15 dk tanışma ve demo",
-        hint: "İhtiyacınızı dinleyip ürünün size uyup uymadığını konuşuruz. Takvim daveti en geç 1 iş günü içinde gelir.",
+        label: "15 dk tanışma görüşmesi",
+        hint: "İhtiyacınızı dinleyip projenin size uyup uymadığını konuşuruz. Görüşme zamanını e-postayla birlikte belirleriz.",
         rows: [
           { label: "Kim için", value: "Hekim, eczacı, yönetici, gelir ekibi" },
           { label: "Taahhüt", value: "Yok · mesaj isteğe bağlı" },
@@ -118,16 +118,16 @@ const copy = defineContent<ContactCopy>({
       },
       academic: {
         label: "Akademik ve klinik ortaklık",
-        hint: "Klinik doğrulama ve farmakoloji kuralları üzerinde bilimsel iş birliği.",
+        hint: "Klinik doğrulama ve farmakoloji kuralları üzerinde önerilen bilimsel iş birliği. Henüz yürütülen bir ortak çalışma yok.",
         rows: [
           { label: "Kim için", value: "Hekim, farmakolog, tıp fakültesi araştırmacısı" },
-          { label: "Çıktı", value: "Ortak protokol · hakemli yayın" },
+          { label: "Hedef çıktı", value: "Ortak protokol · hakemli yayın" },
         ],
         submit: "İş birliği talebi gönder",
       },
       pilot: {
         label: "Pilot ve retrospektif doğrulama",
-        hint: "Kurum içinde resmi bir retrospektif test ya da gölge mod başlatmak için.",
+        hint: "Kurumunuzun geçmiş verileriyle bir doğrulama çalışmasını konuşmak için. Bağlayıcı olmayan bir Niyet Mektubuyla başlar; bir sözleşme değildir.",
         rows: [
           { label: "Kim için", value: "Hastane karar vericileri" },
           { label: "Belge", value: "Bağlayıcı olmayan Niyet Mektubu (LOI)" },
@@ -137,36 +137,36 @@ const copy = defineContent<ContactCopy>({
     },
     products: {
       pharmadeux: { label: "PharmaDeux CDSS", hint: "İlaç güvenliği · hekim ve eczacı" },
-      shield: { label: "Shield", hint: "Red riski · gelir döngüsü ekibi" },
+      shield: { label: "Shield", hint: "Tarık Ziya Eren'in bağımsız projesi · gelir döngüsü ekipleri" },
     },
     steps: {
       intro: {
         pharmadeux: [
           { title: "Kısa form", body: "Kurumunuzu ve rolünüzü yazın. Mesaj isteğe bağlıdır." },
           { title: "15 dakikalık görüşme", body: "Reçete ve ilaç güvenliği akışınızı dinler, PharmaDeux'yü örnek bir vaka üzerinde gösteririz." },
-          { title: "Uygunluk notu", body: "Ürünün kurumunuza uyup uymadığını açıkça söyleriz. Sonraki adım için taahhüt istenmez." },
+          { title: "Uygunluk notu", body: "Projenin kurumunuza uyup uymadığını açıkça söyleriz. Sonraki adım için taahhüt istenmez." },
         ],
         shield: [
           { title: "Kısa form", body: "Kurumunuzu ve rolünüzü yazın. Mesaj isteğe bağlıdır." },
           { title: "15 dakikalık görüşme", body: "Red ve kesinti nedenlerinizi dinler, Shield'ı örnek bir fatura üzerinde gösteririz." },
-          { title: "Uygunluk notu", body: "Ürünün kurumunuza uyup uymadığını açıkça söyleriz. Sonraki adım için taahhüt istenmez." },
+          { title: "Uygunluk notu", body: "Projenin kurumunuza uyup uymadığını açıkça söyleriz. Sonraki adım için taahhüt istenmez." },
         ],
       },
       academic: [
         { title: "Çalışma kapsamı ve hipotez", body: "Araştırma sorusunu, hedef popülasyonu ve birincil sonlanım noktalarını birlikte netleştiririz." },
         { title: "Etik kurul ve veri protokolü", body: "Etik kurul başvurusu, anonimleştirme ve veri işleme protokolü ile tarafların rolleri yazılır." },
-        { title: "Ortak doğrulama ve yayın", body: "Doğrulama çalışması birlikte yürütülür; bulgular hakemli yayın standartlarında raporlanır." },
+        { title: "Ortak doğrulama ve yayın", body: "Önerilen yol: doğrulama çalışmasının birlikte yürütülmesi ve bulguların hakemli yayın standartlarında raporlanması." },
       ],
       pilot: {
         pharmadeux: [
           { title: "Klinik ihtiyaç analizi", body: "Hedef servisleri, mevcut ilaç güvenliği süreçlerinizi ve klinik eczacılık iş akışınızı birlikte haritalarız." },
-          { title: "Retrospektif test protokolü (LOI)", body: "Anonimleştirilmiş geçmiş reçeteler üzerinde yürütülecek doğrulama protokolü ve ölçütleri, bağlayıcı olmayan bir Niyet Mektubu (LOI) ile tanımlanır." },
-          { title: "HBYS entegrasyonu ve gölge mod", body: "Etik kurul onaylı çalışma kapsamında HL7 FHIR R4 üzerinden bağlanır; gölge modda hekime hiçbir uyarı gösterilmez, sonuçlar yalnızca kayda yazılır." },
+          { title: "Retrospektif test protokolü (LOI)", body: "Anonimleştirilmiş geçmiş reçeteler üzerinde yürütülecek doğrulama protokolü ve ölçütleri, bağlayıcı olmayan bir Niyet Mektubu (LOI) ile tanımlanır. Çalışma etik kurul onayından önce başlamaz." },
+          { title: "Sonraki aşama: HBYS bağlantısı (planlanan)", body: "PharmaDeux bugün hiçbir HBYS'ye bağlı değil; FHIR R4 Bundle içe ve dışa aktarımı yalnızca kod düzeyinde var. Kurumdaki bağlantı ve hekime uyarı göstermeyen gölge mod, retrospektif sonuçlardan ve etik kurul onayından sonra ayrıca planlanır." },
         ],
         shield: [
           { title: "Red nedenlerinin analizi", body: "Red ve kesinti gerekçelerinizi, provizyon akışınızı ve en sık kayıp yaşanan noktaları birlikte inceleriz." },
-          { title: "Retrospektif fatura testi (LOI)", body: "Shield anonimleştirilmiş geçmiş faturalarda çalıştırılır; red yakalama ve yanlış pozitif oranları ölçülür. Kapsam LOI ile yazılır." },
-          { title: "Gönderim öncesi pilot", body: "İstenirse Shield faturalama akışınıza gönderim öncesi katman olarak bağlanır; işaretlenen kalemler uzman kuyruğunda değerlendirilir." },
+          { title: "Retrospektif fatura testi (LOI)", body: "Plana göre Shield anonimleştirilmiş geçmiş faturalarda çalıştırılır ve red yakalama ile yanlış pozitif oranları ölçülür. Bu çalışma henüz hiçbir kurumda yapılmadı. Kapsam bağlayıcı olmayan bir LOI ile yazılır." },
+          { title: "Sonraki aşama (henüz yok)", body: "Faturalama akışına bağlantı bugün sunulan bir hizmet değildir. Retrospektif sonuçlara göre, ilgili taraflarla ayrıca değerlendirilir." },
         ],
       },
     },
@@ -198,27 +198,27 @@ const copy = defineContent<ContactCopy>({
     },
     nextSteps: {
       intro: [
-        { title: "Takvim daveti", body: "En geç 1 iş günü içinde tanışma görüşmesi için takvim daveti e-postanıza iletilir." },
-        { title: "15 dakikalık görüşme", body: "İhtiyacınızı dinliyor, ürünü kısa bir demoyla gösteriyoruz." },
-        { title: "Kısa not", body: "Görüşmeden sonra ürünün uygunluğu ve olası sonraki adım hakkında kısa bir not paylaşıyoruz." },
+        { title: "Görüşme zamanı", body: "Talebinizi aldıktan sonra uygun bir görüşme zamanını e-postayla birlikte belirleriz." },
+        { title: "15 dakikalık görüşme", body: "İhtiyacınızı dinliyor, ilgili prototipi kısa bir demoyla gösteriyoruz." },
+        { title: "Kısa not", body: "Görüşmeden sonra projenin uygunluğu ve olası sonraki adım hakkında kısa bir not paylaşıyoruz." },
       ],
       academic: [
         { title: "Ön görüşme", body: "Araştırma sorusunu, tarafların rollerini ve veri ihtiyacını konuşuyoruz." },
-        { title: "Etik kurul ve veri protokolü", body: "Etik kurul başvurusu ve veri işleme protokolü birlikte hazırlanır." },
+        { title: "Etik kurul ve veri protokolü", body: "Etik kurul başvurusu ve veri işleme protokolünün birlikte hazırlanması önerilir." },
         { title: "Ortak çalışma planı", body: "Yöntem, sonlanım noktaları ve yayın planı yazılı hâle getirilir." },
       ],
       pilot: [
         { title: "Teknik keşif ve ön görüşme", body: "HBYS mimariniz, veri akışı ve FHIR R4 / HL7 v2 arayüzleri bilgi işlem ekibinizle incelenir." },
-        { title: "Güvenlik ve izolasyon protokolü", body: "Kurulum biçimi (kurum içi, izole VPC ya da internetsiz ağ), veri işleme sözleşmesi ve KVKK md. 12 tedbirleri üzerinde uzlaşılır." },
-        { title: "Pilot entegrasyon ve doğrulama", body: "Sistem test ortamında bağlanır ve bağımsız referansa karşı doğrulanır. Süre ve servisler kurumla birlikte belirlenir ve LOI'de yazılır." },
+        { title: "Güvenlik ve izolasyon protokolü", body: "Kurulum biçimi ve KVKK md. 12 tedbirleri konuşulur. Bugün kod düzeyinde mevcut kurulum Docker konteynerdir; izole VPC ve internetsiz ağ planlanan seçeneklerdir. Veri işleme koşulları ve imza tarafı, gerekli taraflar ve yetkili hukuk danışmanlarıyla netleştirilir." },
+        { title: "Pilot entegrasyon ve doğrulama", body: "Kapsam uygun görülürse sistem bir test ortamında çalıştırılır ve bağımsız bir referansa karşı ölçülür. Henüz hiçbir kurumda yapılmadı. Süre ve servisler kurumla birlikte belirlenir ve LOI'de yazılır." },
       ],
     },
   },
   en: {
     paths: {
       intro: {
-        label: "15-minute intro and demo",
-        hint: "We listen to what you need and talk about whether the product fits. The calendar invitation arrives within one business day.",
+        label: "15-minute intro call",
+        hint: "We listen to what you need and talk about whether the project fits. We agree on a time for the call by email.",
         rows: [
           { label: "For", value: "Physicians, pharmacists, managers, revenue teams" },
           { label: "Commitment", value: "None · message optional" },
@@ -227,16 +227,16 @@ const copy = defineContent<ContactCopy>({
       },
       academic: {
         label: "Academic and clinical partnership",
-        hint: "Scientific collaboration on clinical validation and pharmacology rules.",
+        hint: "A proposed scientific collaboration on clinical validation and pharmacology rules. No joint study is under way yet.",
         rows: [
           { label: "For", value: "Physicians, pharmacologists, medical faculty researchers" },
-          { label: "Output", value: "Joint protocol · peer-reviewed publication" },
+          { label: "Intended output", value: "Joint protocol · peer-reviewed publication" },
         ],
         submit: "Send a collaboration request",
       },
       pilot: {
         label: "Pilot and retrospective validation",
-        hint: "To start a formal retrospective test or shadow mode at your institution.",
+        hint: "To discuss a validation study on your institution's historical data. It starts with a non-binding Letter of Intent; that is not an agreement.",
         rows: [
           { label: "For", value: "Hospital decision makers" },
           { label: "Document", value: "Non-binding Letter of Intent (LOI)" },
@@ -246,36 +246,36 @@ const copy = defineContent<ContactCopy>({
     },
     products: {
       pharmadeux: { label: "PharmaDeux CDSS", hint: "Medication safety · physicians and pharmacists" },
-      shield: { label: "Shield", hint: "Rejection risk · revenue cycle teams" },
+      shield: { label: "Shield", hint: "Independent project by Tarık Ziya Eren · revenue cycle teams" },
     },
     steps: {
       intro: {
         pharmadeux: [
           { title: "Short form", body: "Tell us your institution and role. The message is optional." },
           { title: "15-minute call", body: "We listen to your prescribing and medication safety workflow and show PharmaDeux on an example case." },
-          { title: "Fit note", body: "We tell you plainly whether the product fits your institution. There is no commitment to a next step." },
+          { title: "Fit note", body: "We tell you plainly whether the project fits your institution. There is no commitment to a next step." },
         ],
         shield: [
           { title: "Short form", body: "Tell us your institution and role. The message is optional." },
           { title: "15-minute call", body: "We listen to your rejection and deduction reasons and show Shield on an example claim." },
-          { title: "Fit note", body: "We tell you plainly whether the product fits your institution. There is no commitment to a next step." },
+          { title: "Fit note", body: "We tell you plainly whether the project fits your institution. There is no commitment to a next step." },
         ],
       },
       academic: [
         { title: "Study scope and hypothesis", body: "Together we define the research question, the target population and the primary endpoints." },
         { title: "Ethics committee and data protocol", body: "We write down each party's role, the ethics application and the anonymisation and data processing protocol." },
-        { title: "Joint validation and publication", body: "We run the validation study together and report the findings to peer-review standards." },
+        { title: "Joint validation and publication", body: "Proposed: running the validation study together and reporting the findings to peer-review standards." },
       ],
       pilot: {
         pharmadeux: [
           { title: "Clinical needs review", body: "Together we map the target wards, your current medication safety processes and your clinical pharmacy workflow." },
-          { title: "Retrospective test protocol (LOI)", body: "The validation protocol for anonymised past prescriptions and its criteria are set out in a non-binding Letter of Intent (LOI)." },
-          { title: "HIS integration and shadow mode", body: "Under an ethics-approved study, the system connects over HL7 FHIR R4. In shadow mode, clinicians see no alerts and results are only logged." },
+          { title: "Retrospective test protocol (LOI)", body: "The validation protocol for anonymised past prescriptions and its criteria are set out in a non-binding Letter of Intent (LOI). The study does not start before ethics committee approval." },
+          { title: "Later stage: HIS connection (planned)", body: "PharmaDeux is not connected to any HIS today; FHIR R4 Bundle import and export exist only in the code. A connection at the institution, and a shadow mode that shows clinicians no alerts, are planned separately after retrospective results and ethics approval." },
         ],
         shield: [
           { title: "Rejection reason review", body: "Together we review your rejection and deduction reasons, your pre-authorisation flow and where revenue is most often lost." },
-          { title: "Retrospective claims test (LOI)", body: "Shield runs on anonymised past claims, and we measure rejection catch and false positive rates. The scope is set out in an LOI." },
-          { title: "Pre-submission pilot", body: "If you choose, Shield then connects to your billing flow as a pre-submission layer, and flagged items are reviewed in the specialist queue." },
+          { title: "Retrospective claims test (LOI)", body: "Under the plan, Shield runs on anonymised past claims and rejection catch and false positive rates are measured. This has not been done at any institution yet. The scope is set out in a non-binding LOI." },
+          { title: "Later stage (not available yet)", body: "A connection to your billing flow is not a service offered today. Depending on the retrospective results, it is assessed separately with the parties involved." },
         ],
       },
     },
@@ -307,19 +307,19 @@ const copy = defineContent<ContactCopy>({
     },
     nextSteps: {
       intro: [
-        { title: "Calendar invitation", body: "We send a calendar invitation for the intro call to your email within one business day." },
-        { title: "15-minute call", body: "We listen to what you need and show the product in a short demo." },
+        { title: "Time for the call", body: "Once we have your request, we agree on a time for the call with you by email." },
+        { title: "15-minute call", body: "We listen to what you need and show the relevant prototype in a short demo." },
         { title: "Short note", body: "After the call we share a short note on fit and a possible next step." },
       ],
       academic: [
         { title: "First conversation", body: "We discuss the research question, each party's role and the data needed." },
-        { title: "Ethics committee and data protocol", body: "The ethics application and data-processing protocol are prepared together." },
+        { title: "Ethics committee and data protocol", body: "We propose preparing the ethics application and data-processing protocol together." },
         { title: "Joint study plan", body: "Method, endpoints and publication plan are put in writing." },
       ],
       pilot: [
         { title: "Technical review and first call", body: "Your hospital information system (HIS) architecture, data flow and FHIR R4 / HL7 v2 interfaces are reviewed with your IT team." },
-        { title: "Security and isolation protocol", body: "We agree on the deployment model (on-premises, isolated VPC or air-gapped network), the data processing agreement and the safeguards under Article 12 of KVKK (Turkey's data protection law)." },
-        { title: "Pilot integration and validation", body: "The system connects in a test environment and is validated against an independent reference. Duration and wards are agreed with the institution and written into the LOI." },
+        { title: "Security and isolation protocol", body: "The deployment model and the safeguards under Article 12 of KVKK (Turkey's data protection law) are discussed. Today the deployment that exists in the code is a Docker container; an isolated VPC and an air-gapped network are planned options. The data processing terms and the signing party are settled with the parties involved and their authorised legal advisers." },
+        { title: "Pilot integration and validation", body: "If the scope fits, the system runs in a test environment and is measured against an independent reference. This has not been done at any institution yet. Duration and wards are agreed with the institution and written into the LOI." },
       ],
     },
   },

@@ -4,14 +4,14 @@ import { defineContent, locales, ogLocale, type Locale } from "@/i18n/config";
 
 const copy = defineContent({
   tr: {
-    title: "LavieuxLabs — İlaç güvenliği ve faturalama için karar destek yazılımı",
+    title: "LavieuxLabs — İlaç güvenliği üzerine bağımsız öğrenci Ar-Ge girişimi",
     description:
-      "PharmaDeux reçete anında ilaç güvenliğini, Shield fatura gönderilmeden önce SUT/SGK red riskini kontrol eder. Son kararı her zaman yetkili kişi verir.",
+      "LavieuxLabs ekibi, reçete anında ilaç güvenliğini kontrol eden PharmaDeux'yü geliştiriyor. Sitede ayrıca Tarık Ziya Eren'in bağımsız projesi Shield tanıtılıyor; Shield fatura gönderilmeden önce SUT/SGK red riskini gösterir. Son kararı her zaman yetkili kişi verir.",
   },
   en: {
-    title: "LavieuxLabs — Decision support software for medication safety and hospital billing",
+    title: "LavieuxLabs — Independent student R&D venture in medication safety",
     description:
-      "PharmaDeux checks medication safety at the moment of prescription. Shield checks reimbursement and audit risk before a claim is submitted. A qualified person always makes the final decision.",
+      "The LavieuxLabs team is building PharmaDeux, which checks medication safety at the moment of prescription. The site also presents Shield, an independent project by Tarık Ziya Eren that shows claim rejection risk before submission. A qualified person always makes the final decision.",
   },
 });
 

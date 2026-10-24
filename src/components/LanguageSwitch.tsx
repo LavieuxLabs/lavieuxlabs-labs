@@ -16,7 +16,30 @@ const groupLabel: Record<Locale, string> = { tr: "Dil seçimi", en: "Language" }
  * work without JavaScript and crawlers can follow them). On click the current query and section
  * hash are carried over; section ids are the same in both languages.
  */
-export default function LanguageSwitch({ locale, className = "" }: { locale: Locale; className?: string }) {
+const tones = {
+  dark: {
+    group: "border-hairline bg-white/[0.03]",
+    current: "bg-white/[0.08] text-white",
+    other: "text-white/55 hover:text-white",
+  },
+  paper: {
+    group: "border-rule bg-white",
+    current: "bg-ink text-white",
+    other: "text-ink-3 hover:text-ink",
+  },
+} as const;
+
+export default function LanguageSwitch({
+  locale,
+  className = "",
+  tone = "dark",
+}: {
+  locale: Locale;
+  className?: string;
+  /** "paper" on the light home surface; "dark" everywhere else. */
+  tone?: keyof typeof tones;
+}) {
+  const t = tones[tone];
   const pathname = usePathname();
   const router = useRouter();
 
@@ -31,7 +54,7 @@ export default function LanguageSwitch({ locale, className = "" }: { locale: Loc
     <div
       role="group"
       aria-label={groupLabel[locale]}
-      className={`flex w-max items-center rounded-md border border-hairline bg-white/[0.03] p-0.5 text-[11px] font-medium ${className}`}
+      className={`flex w-max items-center rounded-md border p-0.5 text-[11px] font-medium ${t.group} ${className}`}
     >
       {locales.map((target) =>
         target === locale ? (
@@ -40,7 +63,7 @@ export default function LanguageSwitch({ locale, className = "" }: { locale: Loc
             lang={target}
             aria-current="true"
             title={labels[target].name}
-            className="rounded-[5px] bg-white/[0.08] px-2 py-0.5 text-white"
+            className={`rounded-[5px] px-2 py-0.5 ${t.current}`}
           >
             {labels[target].short}
           </span>
@@ -53,7 +76,7 @@ export default function LanguageSwitch({ locale, className = "" }: { locale: Loc
             title={labels[target].name}
             aria-label={labels[target].name}
             onClick={carryOver}
-            className="rounded-[5px] px-2 py-0.5 text-white/55 transition-colors duration-150 ease-out hover:text-white"
+            className={`rounded-[5px] px-2 py-0.5 transition-colors duration-150 ease-out ${t.other}`}
           >
             {labels[target].short}
           </a>

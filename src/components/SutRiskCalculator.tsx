@@ -58,15 +58,15 @@ const copy = defineContent({
       "R-203": "30 gün içinde tekrar eden işlem",
       "R-019": "Epikriz imzasız",
     } as Record<RuleId, string>,
-    score: "Risk skoru",
+    score: "Kural skoru",
     points: "puan",
     none: "Kural tetiklenmedi",
     capped: (sum: number) => `Toplam ${sum}; skor 100'de sınırlanır.`,
     threshold: `Eşik ${THRESHOLD}`,
-    band: "Risk bandı",
-    high: "Yüksek risk",
+    band: "Skor aralığı",
+    high: "Yüksek skor",
     review: "İnceleme gerekli",
-    low: "Düşük risk",
+    low: "Düşük skor",
     queue: "Kuyruk",
     queued: "Uzman inceleme kuyruğuna düşer",
     notQueued: "Kuyruğa düşmez; gönderim akışında kalır",
@@ -92,15 +92,15 @@ const copy = defineContent({
       "R-203": "Procedure repeated within 30 days",
       "R-019": "Discharge summary unsigned",
     } as Record<RuleId, string>,
-    score: "Risk score",
+    score: "Rule score",
     points: "points",
     none: "No rule triggered",
     capped: (sum: number) => `Total ${sum}; the score is capped at 100.`,
     threshold: `Threshold ${THRESHOLD}`,
-    band: "Risk band",
-    high: "High risk",
+    band: "Score range",
+    high: "High score",
     review: "Review required",
-    low: "Low risk",
+    low: "Low score",
     queue: "Queue",
     queued: "Goes to the specialist review queue",
     notQueued: "Not queued · stays in the submission flow",
@@ -135,7 +135,7 @@ export default function SutRiskCalculator({ locale }: { locale: Locale }) {
         <button
           type="button"
           onClick={() => setOn(new Set(DEFAULT))}
-          className="shrink-0 text-[12px] text-white/55 transition-colors duration-150 ease-out hover:text-white print:hidden"
+          className="-my-1.5 shrink-0 rounded-sm py-1.5 text-[12px] text-white/55 transition-colors duration-150 ease-out hover:text-white focus-visible:outline-2 focus-visible:outline-white/60 print:hidden"
         >
           {c.reset}
         </button>

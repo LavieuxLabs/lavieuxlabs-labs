@@ -59,7 +59,7 @@ export const CONTACT_OPTIONS = defineContent<Options>({
       ],
     },
     pilotTypes: {
-      pharmadeux: ["Retrospektif reçete doğrulaması", "CDSS gölge modu"],
+      pharmadeux: ["Retrospektif reçete doğrulaması", "CDSS gölge modu (ileri aşama, HBYS bağlantısı gerektirir)"],
       shield: ["Retrospektif fatura testi", "Gönderim öncesi pilot"],
     },
     academicFocus: [
@@ -100,7 +100,7 @@ export const CONTACT_OPTIONS = defineContent<Options>({
       ],
     },
     pilotTypes: {
-      pharmadeux: ["Retrospective prescription validation", "CDSS shadow mode"],
+      pharmadeux: ["Retrospective prescription validation", "CDSS shadow mode (later stage, needs an HIS connection)"],
       shield: ["Retrospective claims test", "Pre-submission pilot"],
     },
     academicFocus: [
