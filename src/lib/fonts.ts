@@ -1,7 +1,7 @@
 import { IBM_Plex_Mono, IBM_Plex_Sans, Newsreader } from "next/font/google";
 
 // Shared by both root layouts and the global 404 so every document loads the same font files.
-// Roles: sans = body and cards, serif = hero and section titles (plus the italic signature), mono = numbers.
+// Roles: sans = body and cards, serif = hero and section titles, mono = numbers that are data.
 export const fontSans = IBM_Plex_Sans({
   variable: "--font-brand-sans",
   subsets: ["latin", "latin-ext"],
@@ -11,7 +11,6 @@ export const fontSans = IBM_Plex_Sans({
 export const fontSerif = Newsreader({
   variable: "--font-brand-serif",
   subsets: ["latin", "latin-ext"],
-  style: ["normal", "italic"],
   axes: ["opsz"],
 });
 

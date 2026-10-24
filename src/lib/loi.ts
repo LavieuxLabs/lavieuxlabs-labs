@@ -59,7 +59,7 @@ export const CONTACT_OPTIONS = defineContent<Options>({
       ],
     },
     pilotTypes: {
-      pharmadeux: ["Retrospektif reçete doğrulaması", "CDSS gölge modu"],
+      pharmadeux: ["Retrospektif reçete doğrulaması", "CDSS gölge modu (ileri aşama, HBYS bağlantısı gerektirir)"],
       shield: ["Retrospektif fatura testi", "Gönderim öncesi pilot"],
     },
     academicFocus: [
@@ -100,7 +100,7 @@ export const CONTACT_OPTIONS = defineContent<Options>({
       ],
     },
     pilotTypes: {
-      pharmadeux: ["Retrospective prescription validation", "CDSS shadow mode"],
+      pharmadeux: ["Retrospective prescription validation", "CDSS shadow mode (later stage, needs an HIS connection)"],
       shield: ["Retrospective claims test", "Pre-submission pilot"],
     },
     academicFocus: [
@@ -134,7 +134,6 @@ export type LoiFields = {
   role: string;
   detail: string;
   message: string;
-  consent: boolean;
 };
 
 export type LoiErrorCode =
@@ -150,8 +149,7 @@ export type LoiErrorCode =
   | "messageShort"
   | "messageLong"
   | "messageMarkup"
-  | "path"
-  | "consent";
+  | "path";
 
 export type LoiErrors = Partial<Record<keyof LoiFields | "path", LoiErrorCode>>;
 
@@ -247,7 +245,6 @@ export function validateLoi(f: LoiFields, path: unknown, product: unknown, local
   else if (f.message.length > LIMITS.message) errors.message = "messageLong";
   else if (MARKUP_PATTERN.test(f.message)) errors.message = "messageMarkup";
 
-  if (f.consent !== true) errors.consent = "consent";
   return errors;
 }
 

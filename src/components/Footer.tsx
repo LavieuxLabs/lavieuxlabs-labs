@@ -18,44 +18,46 @@ const cellClass = "bg-navy-950 px-4 py-4";
 
 const copy = defineContent({
   tr: {
-    tagline: "İlaç güvenliği ve hastane faturalaması için karar destek yazılımı.",
+    tagline: "İlaç güvenliği üzerine çalışan bağımsız bir öğrenci Ar-Ge girişimi. Shield, Tarık Ziya Eren'in bağımsız projesi olarak burada tanıtılır.",
     legal: "Yasal",
     imprint: "Künye",
-    organization: "Kuruluş",
-    organizationValue: `LavieuxLabs · ${organizationProfile.tr.short}`,
+    organization: "Girişim",
+    organizationValue: `LavieuxLabs · ${organizationProfile.tr.short} · henüz şirketleşmedi`,
     location: "Konum",
     contact: "İletişim",
-    status: "Ürün durumu",
-    pharmaStatus: "PharmaDeux CDSS · geliştirmede ·",
-    noCe: "· CE işareti yok",
-    shieldStatus: "Shield · geliştirmede",
+    status: "Proje durumu",
+    pharmaStatus: "PharmaDeux CDSS · ekibin ortak projesi · geliştirmede ·",
+    noCe: "(öz değerlendirme) · CE işareti yok",
+    shieldStatus: "Shield · Tarık Ziya Eren'in bağımsız projesi · prototip",
     regulation: "Regülasyon",
     regulationValue: "MDR 2017/745 · Kural 11 · Sınıf IIa hedefi",
     version: "Sürüm",
     site: "Site",
-    legalTexts: "Yasal metinler",
+    legalTexts: "Yasal metinlerde son değişiklik",
+    rights: "Haklar ve lisanslar",
     disclaimer:
-      "PharmaDeux CDSS ve Shield geliştirme aşamasındadır ve henüz piyasaya sunulmamıştır. Klinik kullanım için gerekli uygunluk değerlendirmeleri tamamlanmadı. Bu sitedeki içerik tıbbi tavsiye değildir; örnek veriler kurgusaldır.",
+      "PharmaDeux CDSS ve Shield geliştirme aşamasındadır ve henüz piyasaya sunulmamıştır. PharmaDeux için klinik kullanımda gerekli uygunluk değerlendirmesi yapılmadı. Bu sitedeki içerik tıbbi tavsiye değildir; örnek veriler kurgusaldır.",
   },
   en: {
-    tagline: "Decision support software for medication safety and hospital billing.",
+    tagline: "An independent student R&D venture working on medication safety. Shield is presented here as an independent project by Tarık Ziya Eren.",
     legal: "Legal",
     imprint: "Imprint",
-    organization: "Organisation",
-    organizationValue: `LavieuxLabs · ${organizationProfile.en.short}`,
+    organization: "Venture",
+    organizationValue: `LavieuxLabs · ${organizationProfile.en.short} · not incorporated`,
     location: "Location",
     contact: "Contact",
-    status: "Product status",
-    pharmaStatus: "PharmaDeux CDSS · in development ·",
-    noCe: "· no CE mark",
-    shieldStatus: "Shield · in development",
+    status: "Project status",
+    pharmaStatus: "PharmaDeux CDSS · the team's joint project · in development ·",
+    noCe: "(self-assessed) · no CE mark",
+    shieldStatus: "Shield · independent project by Tarık Ziya Eren · prototype",
     regulation: "Regulation",
     regulationValue: "MDR 2017/745 · Rule 11 · Class IIa target",
     version: "Version",
     site: "Site",
-    legalTexts: "Legal texts",
+    legalTexts: "Legal texts last changed",
+    rights: "Rights and licences",
     disclaimer:
-      "PharmaDeux CDSS and Shield are in development and not yet on the market. The conformity assessments required for clinical use have not been completed. Nothing on this site is medical advice. Example data is fictional.",
+      "PharmaDeux CDSS and Shield are in development and not yet on the market. The conformity assessment PharmaDeux would need for clinical use has not been done. Nothing on this site is medical advice. Example data is fictional.",
   },
 });
 
@@ -159,9 +161,10 @@ export default function Footer({ locale }: { locale: Locale }) {
           <div className="flex shrink-0 items-center gap-4">
             <VerificationImprint locale={locale} />
             <LanguageSwitch locale={locale} />
-            <p className="text-xs text-white/55">
-              © <span className="font-mono tabular-nums">2026</span> LavieuxLabs
-            </p>
+            {/* No copyright holder is named here: Shield and PharmaDeux have different owners (see Terms). */}
+            <Link href={href("/legal/terms#fikri-mulkiyet")} className="text-xs text-white/55 transition-colors duration-150 ease-out hover:text-white">
+              {c.rights}
+            </Link>
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Cite from "@/components/Cite";
 import StandardDoc from "@/components/StandardDoc";
 import { CITATIONS } from "@/lib/citations";
 import { standardPageJsonLd } from "@/lib/structuredData";
@@ -38,7 +39,7 @@ const MAX = FACTORS.reduce((n, f) => n + f.points, 0);
 const copy = defineContent({
   tr: {
     crumb: "Tisdale skoru",
-    eyebrow: "Klinik standart · QT riski",
+    eyebrow: "Klinik standart: QT riski",
     title: "Tisdale QT risk skoru",
     description:
       "Hastanede yatan hastada QTc uzaması riskini yatak başında var olan bilgilerle öngören, on faktörlü bir puanlama sistemi.",
@@ -72,7 +73,7 @@ const copy = defineContent({
     ],
     limits: "Sınırlar",
     limitsBody:
-      "Skor hastanede yatan erişkinlerde geliştirilmiş ve doğrulanmıştır; ayaktan hastalarda ve çocuklarda aynı eşiklerin geçerliliği gösterilmemiştir. \"QT uzatan ilaç\" ürün bilgisinde QT uzaması yer alan ilaçtır.",
+      "Tisdale QT uzaması risk skoru, 2013 yılında tek bir üçüncü basamak sağlık kurumunun kalp bakım ünitelerine yatırılan 900 hastadan oluşan geliştirme kohortunda oluşturulmuş ve 300 ek hastada doğrulanmıştır. Farklı klinik popülasyonlara genellenebilirliği ayrıca değerlendirilmelidir. Ayaktan hastalarda ve çocuklarda aynı eşiklerin geçerliliği gösterilmemiştir. \"QT uzatan ilaç\" ürün bilgisinde QT uzaması yer alan ilaçtır.",
     limitsExtra:
       "Skorda konjenital uzun QT sendromu yer almaz. Bu hastalarda risk skorla değerlendirilemez.",
     review: "Klinik inceleme: bu sayfa henüz bir hekim tarafından incelenmedi.",
@@ -87,7 +88,7 @@ const copy = defineContent({
   },
   en: {
     crumb: "Tisdale score",
-    eyebrow: "Clinical standard · QT risk",
+    eyebrow: "Clinical standard: QT risk",
     title: "Tisdale QT risk score",
     description:
       "A ten-factor scoring system that predicts QTc prolongation risk in hospitalised patients from information available at the bedside.",
@@ -121,7 +122,7 @@ const copy = defineContent({
     ],
     limits: "Limits",
     limitsBody:
-      "The score was developed and validated in hospitalised adults. The same thresholds have not been shown to hold for outpatients or children. A \"QTc-prolonging drug\" is one whose product information lists QT prolongation.",
+      "The Tisdale QT prolongation risk score was developed in 2013 in a cohort of 900 patients admitted to the cardiac care units of a single tertiary care centre, and validated in 300 additional patients. Its generalisability to other clinical populations needs to be assessed separately. The same thresholds have not been shown to hold for outpatients or children. A \"QTc-prolonging drug\" is one whose product information lists QT prolongation.",
     limitsExtra:
       "Congenital long QT syndrome is not a factor in the score. In these patients the score does not assess risk.",
     review: "Clinical review: this page has not been reviewed by a physician yet.",
@@ -142,10 +143,19 @@ export default function TisdaleView({ locale }: { locale: Locale }) {
   return (
     <StandardDoc
       locale={locale}
+      path={PATH}
       crumb={c.crumb}
       eyebrow={c.eyebrow}
       title={c.title}
       description={c.description}
+      toc={[
+        { id: "olcum", label: c.what },
+        { id: "mekanizma", label: c.mechanism },
+        { id: "faktorler", label: c.factors },
+        { id: "siniflar", label: c.tiers },
+        { id: "pharmadeux", label: c.engine },
+        { id: "sinirlar", label: c.limits },
+      ]}
       references={refs}
       related={c.related}
       jsonLd={standardPageJsonLd({
@@ -163,15 +173,18 @@ export default function TisdaleView({ locale }: { locale: Locale }) {
         citations: refs,
       })}
     >
-      <h2>{c.what}</h2>
+      <h2 id="olcum">{c.what}</h2>
       <p>{c.whatBody}</p>
 
-      <h2 className="mt-12">{c.mechanism}</h2>
+      <h2 id="mekanizma" className="mt-12">{c.mechanism}</h2>
       {c.mechanismBody.map((text) => (
         <p key={text}>{text}</p>
       ))}
 
-      <h2 className="mt-12">{c.factors}</h2>
+      <h2 id="faktorler" className="mt-12">
+        {c.factors}
+        <Cite id="tisdale" tone="paper" />
+      </h2>
       <table>
         <thead>
           <tr>
@@ -187,14 +200,14 @@ export default function TisdaleView({ locale }: { locale: Locale }) {
             </tr>
           ))}
           <tr>
-            <td className="font-medium text-white">{c.total}</td>
-            <td className="text-right font-mono text-white tabular-nums">{MAX}</td>
+            <td className="font-medium text-ink">{c.total}</td>
+            <td className="text-right font-mono text-ink tabular-nums">{MAX}</td>
           </tr>
         </tbody>
       </table>
-      <p className="text-[13px]">{c.note}</p>
+      <p className="text-[14px]">{c.note}</p>
 
-      <h2 className="mt-12">{c.tiers}</h2>
+      <h2 id="siniflar" className="mt-12">{c.tiers}</h2>
       <table>
         <thead>
           <tr>
@@ -204,21 +217,21 @@ export default function TisdaleView({ locale }: { locale: Locale }) {
         </thead>
         <tbody>
           <tr>
-            <td className="text-emerald-300">{c.low}</td>
+            <td className="text-emerald-700">{c.low}</td>
             <td className="text-right font-mono tabular-nums">0–6</td>
           </tr>
           <tr>
-            <td className="text-amber-300">{c.moderate}</td>
+            <td className="text-amber-700">{c.moderate}</td>
             <td className="text-right font-mono tabular-nums">7–10</td>
           </tr>
           <tr>
-            <td className="text-rose-300">{c.high}</td>
+            <td className="text-rose-700">{c.high}</td>
             <td className="text-right font-mono tabular-nums">≥11</td>
           </tr>
         </tbody>
       </table>
 
-      <h2 className="mt-12">{c.engine}</h2>
+      <h2 id="pharmadeux" className="mt-12">{c.engine}</h2>
       <p>{c.engineBody}</p>
       <table>
         <tbody>
@@ -235,10 +248,10 @@ export default function TisdaleView({ locale }: { locale: Locale }) {
         {locale === "tr" ? "nü açın." : "."}
       </p>
 
-      <h2 className="mt-12">{c.limits}</h2>
+      <h2 id="sinirlar" className="mt-12">{c.limits}</h2>
       <p>{c.limitsBody}</p>
       <p>{c.limitsExtra}</p>
-      <p className="text-[13px]">{c.review}</p>
+      <p className="text-[14px]">{c.review}</p>
     </StandardDoc>
   );
 }

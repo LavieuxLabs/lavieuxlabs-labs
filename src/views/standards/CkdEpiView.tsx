@@ -1,4 +1,5 @@
-import StandardDoc from "@/components/StandardDoc";
+import Cite from "@/components/Cite";
+import StandardDoc, { Formula, Term, ToolPanel } from "@/components/StandardDoc";
 import EgfrCalculator from "@/components/EgfrCalculator";
 import { CKD_EPI_2021 as K, KDIGO_BANDS } from "@/lib/ckdEpi";
 import { CITATIONS } from "@/lib/citations";
@@ -35,7 +36,7 @@ const KDIGO = KDIGO_BANDS.map((b) => ({ g: b.stage, range: b.range, ...KDIGO_LAB
 const copy = defineContent({
   tr: {
     crumb: "CKD-EPI 2021",
-    eyebrow: "Klinik standart · böbrek fonksiyonu",
+    eyebrow: "Klinik standart: böbrek fonksiyonu",
     title: "CKD-EPI 2021 ile eGFR",
     description:
       "Serum kreatinin, yaş ve cinsiyetten ırk katsayısı kullanmadan tahmini glomerüler filtrasyon hızı (eGFR) hesaplayan denklem.",
@@ -69,11 +70,11 @@ const copy = defineContent({
     label: "Tanım",
     dosing: "Renal doz kontrolünde temel ilkeler",
     kdigoNote:
-      "Doz eşiği ilaca özgüdür ve ürün bilgisinden gelir. Bu yüzden PharmaDeux'da kategori başına sabit bir davranış tanımlanmaz: aynı G3b hastada bir ilaç doz ayarı gerektirirken diğeri gerektirmeyebilir. Kural çıktıları kurumun klinik politikasına göre ayarlanır ve son karar hekimindir.",
+      "Doz eşiği ilaca özgüdür ve ürün bilgisinden gelir. Bu yüzden PharmaDeux'ta kategori başına sabit bir davranış tanımlanmaz: aynı G3b hastada bir ilaç doz ayarı gerektirirken diğeri gerektirmeyebilir. Kural çıktıları kurumun klinik politikasına göre ayarlanır ve son karar hekimindir.",
     dosingBody: "Böbrek fonksiyonuna göre doz kontrolünde gözetilen ilkeler:",
     dosingItems: [
       "Doz eşiği ürün bilgisinden (KÜB) gelir ve ürün bilgisinin kullandığı ölçüte göre uygulanır. Ürün bilgisi kreatinin klirensi (Cockcroft–Gault, mL/dk) veriyorsa eGFR (mL/dk/1,73 m²) onun yerine konmaz.",
-      "PharmaDeux'da kural güncel laboratuvar değerine bakar; gerekli değer yoksa eksik veri olarak işaretlenir, atlanmaz.",
+      "PharmaDeux'ta kural güncel laboratuvar değerine bakar; gerekli değer yoksa eksik veri olarak işaretlenir, atlanmaz.",
       "Aynı reçete farklı böbrek fonksiyonunda farklı sonuç verebilir: eGFR'si 90 olan hastada güvenli olan doz 30'da ayar gerektirebilir.",
     ],
     limits: "Sınırlar",
@@ -84,7 +85,7 @@ const copy = defineContent({
     ],
     review: "Klinik inceleme: bu sayfa henüz bir hekim tarafından incelenmedi.",
     related: [
-      { href: "/initiatives/pharmadeux?case=renal#simulator", label: "Örnek vaka: renal doz eşiği" },
+      { href: "/initiatives/pharmadeux?case=renal#vakalar", label: "Örnek vaka: renal doz eşiği" },
       { href: "/standartlar/tisdale-score", label: "Tisdale skoru" },
       { href: "/standartlar/kumulatif-organ-yuku", label: "Kümülatif organ yükü" },
       { href: "/standartlar/fhir-r4-entegrasyonu", label: "FHIR R4 entegrasyonu" },
@@ -92,7 +93,7 @@ const copy = defineContent({
   },
   en: {
     crumb: "CKD-EPI 2021",
-    eyebrow: "Clinical standard · kidney function",
+    eyebrow: "Clinical standard: kidney function",
     title: "eGFR with CKD-EPI 2021",
     description:
       "The equation estimating glomerular filtration rate (eGFR) from serum creatinine, age and sex, without a race coefficient.",
@@ -141,7 +142,7 @@ const copy = defineContent({
     ],
     review: "Clinical review: this page has not been reviewed by a physician yet.",
     related: [
-      { href: "/initiatives/pharmadeux?case=renal#simulator", label: "Example case: renal dose threshold" },
+      { href: "/initiatives/pharmadeux?case=renal#vakalar", label: "Example case: renal dose threshold" },
       { href: "/standartlar/tisdale-score", label: "Tisdale score" },
       { href: "/standartlar/kumulatif-organ-yuku", label: "Cumulative organ burden" },
       { href: "/standartlar/fhir-r4-entegrasyonu", label: "FHIR R4 integration" },
@@ -155,10 +156,19 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
   return (
     <StandardDoc
       locale={locale}
+      path={PATH}
       crumb={c.crumb}
       eyebrow={c.eyebrow}
       title={c.title}
       description={c.description}
+      toc={[
+        { id: "problem", label: c.problem },
+        { id: "formul", label: c.formula },
+        { id: "loinc", label: c.loinc },
+        { id: "kdigo", label: c.kdigo },
+        { id: "doz", label: c.dosing },
+        { id: "sinirlar", label: c.limits },
+      ]}
       references={refs}
       related={c.related}
       jsonLd={standardPageJsonLd({
@@ -175,15 +185,24 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
         citations: refs,
       })}
     >
-      <h2>{c.problem}</h2>
+      <h2 id="problem">{c.problem}</h2>
       {c.problemBody.map((text) => (
         <p key={text}>{text}</p>
       ))}
 
-      <h2 className="mt-12">{c.formula}</h2>
-      <pre className="mt-4 overflow-x-auto rounded-xl border border-hairline bg-navy-900 px-5 py-4 font-mono text-[13px] leading-relaxed text-white/85">
-        {"eGFR = 142 × min(Scr/κ, 1)^α × max(Scr/κ, 1)^−1.200\n       × 0.9938^Age × 1.012 [if female]"}
-      </pre>
+      <h2 id="formul" className="mt-12">{c.formula}</h2>
+      <Formula
+        plain="eGFR = 142 × min(Scr/κ, 1)^α × max(Scr/κ, 1)^−1.200 × 0.9938^Age × 1.012 [if female]"
+        caption={
+          <>
+            CKD-EPI 2021
+            <Cite id="ckdepi2021" tone="paper" />
+          </>
+        }
+      >
+        <Term>eGFR = 142</Term> <Term>× min(Scr/κ, 1)<sup>α</sup></Term> <Term>× max(Scr/κ, 1)<sup>−1.200</sup></Term>{" "}
+        <Term>× 0.9938<sup>Age</sup></Term> <Term>× 1.012 [if female]</Term>
+      </Formula>
       <p>{c.formulaBody}</p>
 
       <h3>{c.coefficients}</h3>
@@ -197,12 +216,12 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
         </thead>
         <tbody>
           <tr>
-            <td className="font-mono">κ</td>
+            <td className="font-serif text-[17px] text-ink">κ</td>
             <td className="text-right font-mono tabular-nums">{K.kappa.female}</td>
             <td className="text-right font-mono tabular-nums">{K.kappa.male}</td>
           </tr>
           <tr>
-            <td className="font-mono">α</td>
+            <td className="font-serif text-[17px] text-ink">α</td>
             <td className="text-right font-mono tabular-nums">{String(K.alpha.female).replace("-", "−")}</td>
             <td className="text-right font-mono tabular-nums">{String(K.alpha.male).replace("-", "−")}</td>
           </tr>
@@ -214,16 +233,26 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
         </tbody>
       </table>
 
-      <EgfrCalculator locale={locale} />
+      <ToolPanel>
+        <EgfrCalculator locale={locale} />
+      </ToolPanel>
 
       <h3>{c.cg}</h3>
-      <pre className="mt-4 overflow-x-auto rounded-xl border border-hairline bg-navy-900 px-5 py-4 font-mono text-[13px] leading-relaxed text-white/85">
-        {"CrCl = (140 − Age) × Weight / (72 × Scr)\n       × 0.85 [if female]"}
-      </pre>
+      <Formula
+        plain="CrCl = (140 − Age) × Weight / (72 × Scr) × 0.85 [if female]"
+        caption={
+          <>
+            Cockcroft–Gault
+            <Cite id="cockcroftGault" tone="paper" />
+          </>
+        }
+      >
+        <Term>CrCl = (140 − Age) × Weight</Term> <Term>/ (72 × Scr)</Term> <Term>× 0.85 [if female]</Term>
+      </Formula>
       <p>{c.cgBody}</p>
       <p>{c.cgAbsolute}</p>
 
-      <h2 className="mt-12">{c.loinc}</h2>
+      <h2 id="loinc" className="mt-12">{c.loinc}</h2>
       <p>{c.loincBody}</p>
       <table>
         <thead>
@@ -234,7 +263,7 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
         </thead>
         <tbody>
           <tr>
-            <td className="font-mono text-white">98979-8</td>
+            <td className="font-mono text-ink">98979-8</td>
             <td>{c.loinc2021}</td>
           </tr>
           <tr>
@@ -248,7 +277,7 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
         </tbody>
       </table>
 
-      <h2 className="mt-12">{c.kdigo}</h2>
+      <h2 id="kdigo" className="mt-12">{c.kdigo}</h2>
       <table>
         <thead>
           <tr>
@@ -260,7 +289,7 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
         <tbody>
           {KDIGO.map((k) => (
             <tr key={k.g}>
-              <td className="font-mono text-white">{k.g}</td>
+              <td className="font-mono text-ink">{k.g}</td>
               <td className="font-mono tabular-nums">{k.range}</td>
               <td>{k[locale]}</td>
             </tr>
@@ -269,7 +298,7 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
       </table>
       <p>{c.kdigoNote}</p>
 
-      <h2 className="mt-12">{c.dosing}</h2>
+      <h2 id="doz" className="mt-12">{c.dosing}</h2>
       <p>{c.dosingBody}</p>
       <ul>
         {c.dosingItems.map((item) => (
@@ -277,13 +306,13 @@ export default function CkdEpiView({ locale }: { locale: Locale }) {
         ))}
       </ul>
 
-      <h2 className="mt-12">{c.limits}</h2>
+      <h2 id="sinirlar" className="mt-12">{c.limits}</h2>
       <ul>
         {c.limitsItems.map((item) => (
           <li key={item}>{item}</li>
         ))}
       </ul>
-      <p className="text-[13px]">{c.review}</p>
+      <p className="text-[14px]">{c.review}</p>
     </StandardDoc>
   );
 }

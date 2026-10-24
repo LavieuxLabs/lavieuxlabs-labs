@@ -2,15 +2,68 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Cookie, X } from "lucide-react";
 import { CONSENT_STORAGE_KEY as CONSENT_KEY } from "@/lib/site";
-import { defineContent, localizedPath, type Locale } from "@/i18n/config";
+import { isPaperPath } from "@/lib/surface";
+import { analyticsProvider, type AnalyticsProvider } from "@/lib/analyticsConfig";
+import { defineContent, localizedPath, stripLocale, type Locale } from "@/i18n/config";
+
+// The banner follows the page surface: paper on the home page, the dark ground everywhere else.
+// Literal class strings so Tailwind picks them up at build time.
+const tones = {
+  dark: {
+    panel: "border-white/10 bg-navy-850/85 shadow-2xl shadow-black/50 backdrop-blur-xl",
+    icon: "text-titanium",
+    title: "text-white",
+    close: "text-white/50 hover:bg-white/5 hover:text-white",
+    text: "text-white/60",
+    link: "text-white hover:text-titanium",
+    list: "divide-hairline border-hairline",
+    catTitle: "text-white",
+    catBody: "text-white/50",
+    footer: "border-hairline bg-white/[0.02]",
+    secondary: "border border-white/15 text-white hover:bg-white/5",
+    ghost: "text-white/70 hover:bg-white/5 hover:text-white",
+    primary: "bg-white text-navy-900 hover:bg-titanium",
+    toggleOn: "border-titanium/40 bg-titanium/30",
+    toggleOff: "border-white/15 bg-white/[0.06]",
+    knob: "bg-white",
+  },
+  paper: {
+    panel: "border-rule bg-white shadow-xl shadow-black/10",
+    icon: "text-ink-3",
+    title: "text-ink",
+    close: "text-ink-3 hover:bg-paper hover:text-ink",
+    text: "text-ink-2",
+    link: "text-ink hover:text-ink-2",
+    list: "divide-rule border-rule",
+    catTitle: "text-ink",
+    catBody: "text-ink-3",
+    footer: "border-rule bg-paper",
+    secondary: "border border-ink/25 text-ink hover:border-ink",
+    ghost: "text-ink-2 hover:bg-white hover:text-ink",
+    primary: "bg-ink text-white hover:bg-ink-2",
+    toggleOn: "border-ink bg-ink",
+    toggleOff: "border-ink/25 bg-paper-band",
+    knob: "bg-white shadow-sm shadow-black/20",
+  },
+} as const;
+type BannerTone = (typeof tones)[keyof typeof tones];
 
 // v2 added the `external` category; older records are discarded so visitors are asked again.
 const CONSENT_VERSION = 2;
 const CHANGE_EVENT = "lavieux:consent-change";
 const OPEN_EVENT = "lavieux:open-cookie-settings";
+
+// Optional categories are offered only when something behind them runs. Nothing stores preferences, so that
+// category is never offered (the field stays in the record for compatibility and is saved as false). Analytics is
+// offered only when a provider is configured. The record keeps the analytics tool that was configured when the choice
+// was made: analytics counts as granted only for that same tool, and a newly configured tool asks again, so an
+// earlier "accept" never covers a tool the visitor was not shown. Existing records stay valid; nothing is reset.
+type AnalyticsTool = NonNullable<AnalyticsProvider>["kind"];
+const ANALYTICS_TOOL: AnalyticsTool | null = analyticsProvider()?.kind ?? null;
 
 export type ConsentPreferences = {
   necessary: true;
@@ -21,13 +74,19 @@ export type ConsentPreferences = {
 
 type OptionalPrefs = Omit<ConsentPreferences, "necessary">;
 const NONE: OptionalPrefs = { analytics: false, preferences: false, external: false };
-const ALL: OptionalPrefs = { analytics: true, preferences: true, external: true };
+const ALL: OptionalPrefs = { analytics: ANALYTICS_TOOL !== null, preferences: false, external: true };
 
 type ConsentRecord = ConsentPreferences & {
   decision: "accepted" | "rejected" | "custom";
   version: number;
   updatedAt: string;
+  /** Analytics tool configured when the choice was saved; absent in records saved before this field existed. */
+  analyticsTool?: AnalyticsTool | null;
 };
+
+/** Analytics consent that applies to the tool configured now. */
+const analyticsGranted = (record: ConsentRecord | null) =>
+  Boolean(record?.analytics) && ANALYTICS_TOOL !== null && record?.analyticsTool === ANALYTICS_TOOL;
 
 function readRaw(): string | null {
   try {
@@ -63,6 +122,10 @@ function save(prefs: OptionalPrefs, decision: ConsentRecord["decision"]) {
   const record: ConsentRecord = {
     necessary: true,
     ...prefs,
+    // Only offered categories can be granted.
+    analytics: prefs.analytics && ANALYTICS_TOOL !== null,
+    preferences: false,
+    analyticsTool: ANALYTICS_TOOL,
     decision,
     version: CONSENT_VERSION,
     updatedAt: new Date().toISOString(),
@@ -80,7 +143,7 @@ export function useConsent(): ConsentPreferences | null {
   const raw = useSyncExternalStore(subscribe, readRaw, () => null);
   const record = parse(raw);
   return record
-    ? { necessary: true, analytics: record.analytics, preferences: record.preferences, external: record.external }
+    ? { necessary: true, analytics: analyticsGranted(record), preferences: false, external: record.external }
     : null;
 }
 
@@ -88,7 +151,7 @@ export function useConsent(): ConsentPreferences | null {
 export function grantConsent(key: keyof OptionalPrefs) {
   const current = parse(readRaw());
   const prefs: OptionalPrefs = current
-    ? { analytics: current.analytics, preferences: current.preferences, external: current.external }
+    ? { analytics: analyticsGranted(current), preferences: false, external: current.external }
     : { ...NONE };
   prefs[key] = true;
   save(prefs, "custom");
@@ -111,11 +174,13 @@ function Toggle({
   disabled,
   onChange,
   label,
+  tone,
 }: {
   checked: boolean;
   disabled?: boolean;
   onChange?: (v: boolean) => void;
   label: string;
+  tone: BannerTone;
 }) {
   return (
     <button
@@ -125,12 +190,13 @@ function Toggle({
       aria-label={label}
       disabled={disabled}
       onClick={() => onChange?.(!checked)}
-      className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border transition-colors ${
-        checked ? "border-titanium/40 bg-titanium/30" : "border-white/15 bg-white/[0.06]"
+      // The visible track stays 20 × 36 px; the transparent ::after extends the hit area to 44 × 44 px.
+      className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border transition-colors after:absolute after:-inset-x-1 after:-inset-y-3 ${
+        checked ? tone.toggleOn : tone.toggleOff
       } ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
     >
       <span
-        className={`inline-block h-3.5 w-3.5 rounded-full bg-white transition-transform ${
+        className={`inline-block h-3.5 w-3.5 rounded-full transition-transform ${tone.knob} ${
           checked ? "translate-x-[18px]" : "translate-x-0.5"
         }`}
       />
@@ -145,7 +211,10 @@ const copy = defineContent({
     settings: "Çerez Ayarları",
     title: "Çerez tercihleri",
     close: "Kapat",
-    intro: "Zorunlu çerezler sitenin çalışması için kullanılır. Tercih, harici içerik (ör. harita) ve analitik çerezler yalnızca onayınızla etkinleştirilir. Ayrıntılar için",
+    intro: "Zorunlu çerezler sitenin çalışması için kullanılır. Harici içerik (ör. harita) yalnızca onayınızla yüklenir. Şu an analitik aracı kullanılmıyor. Ayrıntılar için",
+    introAnalytics: "Zorunlu çerezler sitenin çalışması için kullanılır. Harici içerik (ör. harita) ve analitik yalnızca onayınızla etkinleştirilir. Ayrıntılar için",
+    /** Phones: the same rule without the category list, which "Özelleştir" shows in full. */
+    introShort: "Zorunlu çerezler açık, diğerleri onayınızla:",
     cookiePolicy: "Çerez Politikası",
     and: "ve",
     privacy: "KVKK Aydınlatma Metni",
@@ -160,11 +229,6 @@ const copy = defineContent({
         body: "Sitenin çalışması ve çerez tercihinizin hatırlanması için gereklidir. Devre dışı bırakılamaz.",
       },
       {
-        key: "preferences" as CategoryKey,
-        title: "Tercih",
-        body: "Dil ve görünüm gibi seçimlerinizi sonraki ziyaretlerinizde hatırlamamızı sağlar.",
-      },
-      {
         key: "external" as CategoryKey,
         title: "Harici içerik",
         body: "Google Haritalar gibi üçüncü taraf içeriklerin yüklenmesine izin verir. Bu hizmetler kendi çerezlerini kullanabilir.",
@@ -172,15 +236,21 @@ const copy = defineContent({
       {
         key: "analytics" as CategoryKey,
         title: "Analitik",
-        body: "Sitenin nasıl kullanıldığını anonim ve toplu olarak ölçmemize yardımcı olur.",
+        body: "",
       },
     ],
+    analyticsBody: {
+      cookieless: "Sitenin nasıl kullanıldığını, çerez kullanmayacak biçimde yapılandırılmış bir araçla toplu olarak ölçer.",
+      ga4: "Google Analytics 4 ile sitenin nasıl kullanıldığını ölçer. Çerez kullanır ve veriyi Google'a gönderir.",
+    },
   },
   en: {
     settings: "Cookie settings",
     title: "Cookie preferences",
     close: "Close",
-    intro: "Strictly necessary cookies keep the site working. Preference, external content (such as the map) and analytics cookies are only enabled with your consent. For details, see the",
+    intro: "Strictly necessary cookies keep the site working. External content (such as the map) loads only with your consent. No analytics tool is in use at the moment. For details, see the",
+    introAnalytics: "Strictly necessary cookies keep the site working. External content (such as the map) and analytics are only enabled with your consent. For details, see the",
+    introShort: "Necessary cookies on, others with consent. See the",
     cookiePolicy: "Cookie Policy",
     and: "and the",
     privacy: "Privacy Notice (KVKK)",
@@ -195,11 +265,6 @@ const copy = defineContent({
         body: "Needed for the site to work and to remember your cookie choice. Cannot be turned off.",
       },
       {
-        key: "preferences",
-        title: "Preferences",
-        body: "Lets us remember choices such as language and display on your next visit.",
-      },
-      {
         key: "external",
         title: "External content",
         body: "Allows third-party content such as Google Maps to load. These services may set their own cookies.",
@@ -207,14 +272,19 @@ const copy = defineContent({
       {
         key: "analytics",
         title: "Analytics",
-        body: "Helps us measure, anonymously and in aggregate, how the site is used.",
+        body: "",
       },
     ],
+    analyticsBody: {
+      cookieless: "Measures in aggregate how the site is used, with a tool configured not to set cookies.",
+      ga4: "Measures how the site is used with Google Analytics 4. It sets cookies and sends data to Google.",
+    },
   },
 });
 
 export default function CookieBanner({ locale }: { locale: Locale }) {
   const c = copy[locale];
+  const t = tones[isPaperPath(stripLocale(usePathname())) ? "paper" : "dark"];
   const raw = useSyncExternalStore(subscribe, readRaw, () => SERVER_SNAPSHOT);
   const stored = raw === SERVER_SNAPSHOT ? null : parse(raw);
   const [manuallyOpened, setManuallyOpened] = useState(false);
@@ -225,8 +295,8 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
     const onOpen = () => {
       const current = parse(readRaw());
       setDraft({
-        analytics: current?.analytics ?? false,
-        preferences: current?.preferences ?? false,
+        analytics: analyticsGranted(current),
+        preferences: false,
         external: current?.external ?? false,
       });
       setCustomizing(true);
@@ -236,7 +306,9 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
     return () => window.removeEventListener(OPEN_EVENT, onOpen);
   }, []);
 
-  const visible = raw !== SERVER_SNAPSHOT && (stored === null || manuallyOpened);
+  const askAnalytics = stored !== null && ANALYTICS_TOOL !== null && stored.analyticsTool !== ANALYTICS_TOOL;
+  const visible = raw !== SERVER_SNAPSHOT && (stored === null || manuallyOpened || askAnalytics);
+  const categories = c.categories.filter((cat) => cat.key !== "analytics" || ANALYTICS_TOOL !== null);
 
   const close = () => {
     setManuallyOpened(false);
@@ -261,12 +333,13 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           className="fixed inset-x-3 bottom-3 z-[60] print:hidden sm:inset-x-auto sm:right-5 sm:bottom-5 sm:w-[440px]"
         >
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-navy-850/85 shadow-2xl shadow-black/50 backdrop-blur-xl">
-            <div className="p-5 sm:p-6">
+          <div className={`overflow-hidden rounded-2xl border ${t.panel}`}>
+            {/* Compact on phones (≈ a fifth of the screen): tighter padding, the short intro, one row of buttons. */}
+            <div className="px-4 pt-3 pb-3 sm:p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-2.5">
-                  <Cookie className="h-4 w-4 text-titanium" strokeWidth={1.8} />
-                  <h2 id="cookie-title" className="text-sm font-medium text-white">
+                  <Cookie className={`h-4 w-4 ${t.icon}`} strokeWidth={1.8} aria-hidden="true" />
+                  <h2 id="cookie-title" className={`text-sm font-medium ${t.title}`}>
                     {c.title}
                   </h2>
                 </div>
@@ -275,24 +348,26 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
                     type="button"
                     onClick={close}
                     aria-label={c.close}
-                    className="rounded-md p-1 text-white/50 hover:bg-white/5 hover:text-white"
+                    // 24 px visible; ::after makes a 44 × 44 px hit area that grows upwards, not into the intro text below.
+                    className={`relative rounded-md p-1 after:absolute after:-inset-x-2.5 after:-top-3.5 after:-bottom-1.5 ${t.close}`}
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-4 w-4" aria-hidden="true" />
                   </button>
                 )}
               </div>
-              <p className="mt-3 text-[13px] leading-relaxed text-white/60">
-                {c.intro}{" "}
+              <p className={`mt-1.5 text-[13px] leading-normal sm:mt-3 sm:leading-relaxed ${t.text}`}>
+                <span className="sm:hidden">{c.introShort}</span>
+                <span className="hidden sm:inline">{ANALYTICS_TOOL ? c.introAnalytics : c.intro}</span>{" "}
                 <Link
                   href={localizedPath(locale, "/legal/cookies")}
-                  className="text-white underline underline-offset-2 hover:text-titanium"
+                  className={`underline underline-offset-2 ${t.link}`}
                 >
                   {c.cookiePolicy}
                 </Link>{" "}
                 {c.and}{" "}
                 <Link
                   href={localizedPath(locale, "/legal/privacy")}
-                  className="text-white underline underline-offset-2 hover:text-titanium"
+                  className={`underline underline-offset-2 ${t.link}`}
                 >
                   {c.privacy}
                 </Link>
@@ -308,19 +383,22 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
                     transition={{ duration: 0.25 }}
                     className="overflow-hidden"
                   >
-                    <ul className="mt-4 divide-y divide-hairline rounded-xl border border-hairline">
-                      {c.categories.map((cat) => (
+                    <ul className={`mt-4 divide-y rounded-xl border ${t.list}`}>
+                      {categories.map((cat) => (
                         <li key={cat.key} className="flex items-start justify-between gap-4 p-3.5">
                           <div>
-                            <p className="text-[13px] font-medium text-white">{cat.title}</p>
-                            <p className="mt-0.5 text-xs leading-relaxed text-white/50">{cat.body}</p>
+                            <p className={`text-[13px] font-medium ${t.catTitle}`}>{cat.title}</p>
+                            <p className={`mt-0.5 text-xs leading-relaxed ${t.catBody}`}>
+                              {cat.key === "analytics" && ANALYTICS_TOOL ? c.analyticsBody[ANALYTICS_TOOL] : cat.body}
+                            </p>
                           </div>
                           {cat.key === "necessary" ? (
-                            <Toggle checked disabled label={cat.title} />
+                            <Toggle checked disabled label={cat.title} tone={t} />
                           ) : (
                             <Toggle
                               checked={draft[cat.key]}
                               label={cat.title}
+                              tone={t}
                               onChange={(v) => setDraft((d) => ({ ...d, [cat.key]: v }))}
                             />
                           )}
@@ -332,12 +410,13 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
               </AnimatePresence>
             </div>
 
-            <div className="flex flex-col gap-2 border-t border-hairline bg-white/[0.02] p-4 sm:flex-row sm:items-center sm:justify-end">
+            {/* 44 px targets on touch screens at any width; the compact 36 px row only with a mouse or trackpad. */}
+            <div className={`flex flex-wrap items-center justify-end gap-2 border-t px-3 py-2.5 sm:p-4 ${t.footer}`}>
               {customizing ? (
                 <button
                   type="button"
                   onClick={() => decide(draft, "custom")}
-                  className="rounded-lg border border-white/15 px-3.5 py-2 text-[13px] font-medium text-white hover:bg-white/5"
+                  className={`min-h-11 flex-1 rounded-lg px-3.5 py-2 text-[13px] font-medium sm:flex-none sm:pointer-fine:min-h-0 ${t.secondary}`}
                 >
                   {c.save}
                 </button>
@@ -345,7 +424,7 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
                 <button
                   type="button"
                   onClick={() => setCustomizing(true)}
-                  className="rounded-lg px-3.5 py-2 text-[13px] font-medium text-white/70 hover:bg-white/5 hover:text-white"
+                  className={`min-h-11 flex-1 rounded-lg px-3.5 py-2 text-[13px] font-medium sm:flex-none sm:pointer-fine:min-h-0 ${t.ghost}`}
                 >
                   {c.customize}
                 </button>
@@ -353,14 +432,14 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
               <button
                 type="button"
                 onClick={() => decide(NONE, "rejected")}
-                className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-navy-900 hover:bg-titanium"
+                className={`min-h-11 flex-1 rounded-lg px-3.5 py-2 text-[13px] font-medium sm:flex-none sm:pointer-fine:min-h-0 ${t.primary}`}
               >
                 {c.reject}
               </button>
               <button
                 type="button"
                 onClick={() => decide(ALL, "accepted")}
-                className="rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-navy-900 hover:bg-titanium"
+                className={`min-h-11 flex-1 rounded-lg px-3.5 py-2 text-[13px] font-medium sm:flex-none sm:pointer-fine:min-h-0 ${t.primary}`}
               >
                 {c.accept}
               </button>

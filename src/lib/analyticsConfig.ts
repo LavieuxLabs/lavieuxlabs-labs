@@ -7,7 +7,9 @@
 //   NEXT_PUBLIC_GA_ID             Google Analytics 4. Sets cookies (_ga) and sends data to Google: before
 //                                 enabling it, list its cookies in the cookie policy table.
 //
-// Either way the script loads only after the visitor grants the "analytics" consent category.
+// Either way the script loads only after the visitor grants the "analytics" consent category. The consent record
+// stores the tool configured when the choice was made, so configuring a provider (or switching providers) asks every
+// visitor again; an earlier "accept" never covers a tool that was not shown. Update the cookie policy table first.
 
 export type AnalyticsProvider =
   | { kind: "cookieless"; domain: string; src: string }

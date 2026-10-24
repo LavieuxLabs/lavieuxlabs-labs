@@ -1,4 +1,4 @@
-import StandardDoc from "@/components/StandardDoc";
+import StandardDoc, { ToolPanel } from "@/components/StandardDoc";
 import { medicationRequest, qtcObservation, tisdaleObservation } from "@/lib/fhirPayload";
 import { highlightJson } from "@/lib/jsonHighlight";
 import { standardPageJsonLd } from "@/lib/structuredData";
@@ -32,7 +32,7 @@ const REFS = [
 const copy = defineContent({
   tr: {
     crumb: "FHIR R4 entegrasyonu",
-    eyebrow: "Teknik standart · birlikte çalışabilirlik",
+    eyebrow: "Teknik standart: birlikte çalışabilirlik",
     title: "HL7 FHIR R4 entegrasyonu",
     description:
       "Hastane bilgi işlem ekipleri için: PharmaDeux hangi FHIR kaynaklarını okur ve yazar, hangi kod sistemlerini kullanır, kurumunuza nasıl bağlanır.",
@@ -44,11 +44,11 @@ const copy = defineContent({
     fields: "Kullanılan alanlar",
     codes: "Kod sistemi",
     rows: [
-      ["MedicationRequest", "medicationCodeableConcept · dosageInstruction · authoredOn · subject", "WHO ATC · UCUM"],
-      ["Observation (laboratuvar)", "code · valueQuantity · effectiveDateTime · interpretation", "LOINC · UCUM"],
-      ["Observation (QTc)", "code · method · valueQuantity", "LOINC 8636-3 · Fridericia (method)"],
-      ["Observation (Tisdale)", "code.text · valueInteger · component", "metin (standart kod yok)"],
-      ["Patient · Condition · AllergyIntolerance", "Okunur; kimlik bilgisi sisteme girerken anonimleştirilir", "ICD-10"],
+      ["MedicationRequest", "medicationCodeableConcept, dosageInstruction, authoredOn, subject", "WHO ATC, UCUM"],
+      ["Observation (laboratuvar)", "code, valueQuantity, effectiveDateTime, interpretation", "LOINC, UCUM"],
+      ["Observation (QTc)", "code, method, valueQuantity", "LOINC 8636-3, Fridericia (method)"],
+      ["Observation (Tisdale)", "code.text, valueInteger, component", "metin (standart kod yok)"],
+      ["Patient, Condition, AllergyIntolerance", "Okunur; kimlik bilgisi sisteme girerken anonimleştirilir", "ICD-10"],
     ],
     rules: "Kurallar",
     rulesItems: [
@@ -57,31 +57,31 @@ const copy = defineContent({
       "Örnek ve test verisi meta.tag HTEST (v3 ActReason \"test health data\") taşır, gerçek kayıt yerine geçemez.",
     ],
     examples: "Örnek JSON",
-    exRequest: "MedicationRequest · amiodaron 200 mg",
-    exQtc: "Observation · QTc 485 ms (Fridericia)",
-    exScore: "Observation · Tisdale skoru",
-    examplesNote: "Örnekler PharmaDeux'un FHIR yükünü üreten kodla oluşturulur · kurgusal veri.",
+    exRequest: "MedicationRequest: amiodaron 200 mg",
+    exQtc: "Observation: QTc 485 ms (Fridericia)",
+    exScore: "Observation: Tisdale skoru",
+    examplesNote: "Örnekler PharmaDeux'un FHIR yükünü üreten kodla oluşturulur; kurgusal veri.",
     architecture: "Entegrasyon mimarisi",
     arch: [
-      ["FHIR R4", "RESTful API · Subscription (rest-hook)"],
-      ["HL7 v2", "MLLP dinleyici · FHIR R4 dönüştürücü katmanı"],
-      ["Yetkilendirme", "OAuth 2.0 · SMART on FHIR"],
+      ["FHIR R4", "RESTful API, Subscription (rest-hook)"],
+      ["HL7 v2", "MLLP dinleyici, FHIR R4 dönüştürücü katmanı"],
+      ["Yetkilendirme", "OAuth 2.0, SMART on FHIR"],
       ["Taşıma", "mTLS (karşılıklı TLS)"],
-      ["Erişim", "RBAC · en az yetki ilkesi"],
-      ["Kurulum", "Kurum içi (Docker konteyner, izole sanal makine) · kuruma ayrılmış izole VPC · internetsiz ağ desteği"],
-      ["Kayıt", "Syslog (RFC 5424) · yalnızca eklenebilir denetim izi"],
+      ["Erişim", "RBAC, en az yetki ilkesi"],
+      ["Kurulum", "Kurum içi (Docker konteyner, izole sanal makine); kuruma ayrılmış izole VPC; internetsiz ağ desteği"],
+      ["Kayıt", "Syslog (RFC 5424), yalnızca eklenebilir denetim izi"],
     ],
     tisdaleFactors: ["Yaş ≥68", "Kadın", "Loop diüretik", "QTc ≥450 ms", "QT uzatan ilaç", "≥2 QT uzatan ilaç"],
     tabletText: "Amiodaron 200 mg tablet",
     related: [
       { href: "/initiatives/pharmadeux#entegrasyon", label: "Entegrasyon matrisi" },
-      { href: "/initiatives/pharmadeux#simulator", label: "Simülatörden canlı FHIR yükü" },
+      { href: "/initiatives/pharmadeux#fhir-onizleme", label: "Örnek FHIR R4 yükü (kurgusal veri)" },
       { href: "/standartlar/tisdale-score", label: "Tisdale skoru" },
     ],
   },
   en: {
     crumb: "FHIR R4 integration",
-    eyebrow: "Technical standard · interoperability",
+    eyebrow: "Technical standard: interoperability",
     title: "HL7 FHIR R4 integration",
     description:
       "For hospital IT teams: which FHIR resources PharmaDeux reads and writes, which code systems it uses, and how it connects to your institution.",
@@ -93,11 +93,11 @@ const copy = defineContent({
     fields: "Fields used",
     codes: "Code system",
     rows: [
-      ["MedicationRequest", "medicationCodeableConcept · dosageInstruction · authoredOn · subject", "WHO ATC · UCUM"],
-      ["Observation (laboratory)", "code · valueQuantity · effectiveDateTime · interpretation", "LOINC · UCUM"],
-      ["Observation (QTc)", "code · method · valueQuantity", "LOINC 8636-3 · Fridericia (method)"],
-      ["Observation (Tisdale)", "code.text · valueInteger · component", "text (no standard code)"],
-      ["Patient · Condition · AllergyIntolerance", "Read; identifiers are anonymised as data enters the system", "ICD-10"],
+      ["MedicationRequest", "medicationCodeableConcept, dosageInstruction, authoredOn, subject", "WHO ATC, UCUM"],
+      ["Observation (laboratory)", "code, valueQuantity, effectiveDateTime, interpretation", "LOINC, UCUM"],
+      ["Observation (QTc)", "code, method, valueQuantity", "LOINC 8636-3, Fridericia (method)"],
+      ["Observation (Tisdale)", "code.text, valueInteger, component", "text (no standard code)"],
+      ["Patient, Condition, AllergyIntolerance", "Read; identifiers are anonymised as data enters the system", "ICD-10"],
     ],
     rules: "Rules",
     rulesItems: [
@@ -106,25 +106,25 @@ const copy = defineContent({
       "Example and test data carry meta.tag HTEST (v3 ActReason \"test health data\") and cannot pass as a real record.",
     ],
     examples: "Example JSON",
-    exRequest: "MedicationRequest · amiodarone 200 mg",
-    exQtc: "Observation · QTc 485 ms (Fridericia)",
-    exScore: "Observation · Tisdale score",
-    examplesNote: "Examples are generated by the code that builds PharmaDeux's FHIR payloads · fictional data.",
+    exRequest: "MedicationRequest: amiodarone 200 mg",
+    exQtc: "Observation: QTc 485 ms (Fridericia)",
+    exScore: "Observation: Tisdale score",
+    examplesNote: "Examples are generated by the code that builds PharmaDeux's FHIR payloads; fictional data.",
     architecture: "Integration architecture",
     arch: [
-      ["FHIR R4", "RESTful API · Subscription (rest-hook)"],
-      ["HL7 v2", "MLLP listener · FHIR R4 conversion layer"],
-      ["Authorisation", "OAuth 2.0 · SMART on FHIR"],
+      ["FHIR R4", "RESTful API, Subscription (rest-hook)"],
+      ["HL7 v2", "MLLP listener, FHIR R4 conversion layer"],
+      ["Authorisation", "OAuth 2.0, SMART on FHIR"],
       ["Transport", "mTLS (mutual TLS)"],
-      ["Access", "RBAC · least privilege"],
-      ["Deployment", "On-premises (Docker container, isolated virtual machine) · isolated VPC dedicated to the institution · air-gapped network support"],
-      ["Logging", "Syslog (RFC 5424) · append-only audit trail"],
+      ["Access", "RBAC, least privilege"],
+      ["Deployment", "On-premises (Docker container, isolated virtual machine); isolated VPC dedicated to the institution; air-gapped network support"],
+      ["Logging", "Syslog (RFC 5424), append-only audit trail"],
     ],
     tisdaleFactors: ["Age ≥68", "Female", "Loop diuretic", "QTc ≥450 ms", "QT-prolonging drug", "≥2 QT-prolonging drugs"],
     tabletText: "Amiodarone 200 mg tablet",
     related: [
       { href: "/initiatives/pharmadeux#entegrasyon", label: "Integration matrix" },
-      { href: "/initiatives/pharmadeux#simulator", label: "Live FHIR payload from the simulator" },
+      { href: "/initiatives/pharmadeux#fhir-onizleme", label: "Example FHIR R4 payload (fictional data)" },
       { href: "/standartlar/tisdale-score", label: "Tisdale score" },
     ],
   },
@@ -132,12 +132,14 @@ const copy = defineContent({
 
 function JsonBlock({ title, value }: { title: string; value: unknown }) {
   return (
-    <figure className="mt-5 overflow-hidden rounded-xl border border-hairline">
-      <figcaption className="border-b border-hairline px-4 py-2.5 font-mono text-[11.5px] text-white/60">{title}</figcaption>
-      <pre className="max-h-[360px] overflow-auto bg-navy-900 px-4 py-3 font-mono text-[12px] leading-relaxed text-white/50">
-        <code>{highlightJson(JSON.stringify(value, null, 2))}</code>
-      </pre>
-    </figure>
+    <ToolPanel>
+      <figure className="mt-5 overflow-hidden rounded-xl border border-hairline bg-navy-900">
+        <figcaption className="border-b border-hairline px-4 py-2.5 text-[13px] text-white/70">{title}</figcaption>
+        <pre tabIndex={0} className="max-h-[360px] overflow-auto px-4 py-3 font-mono text-[12px] leading-relaxed text-white/55 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white/60">
+          <code>{highlightJson(JSON.stringify(value, null, 2))}</code>
+        </pre>
+      </figure>
+    </ToolPanel>
   );
 }
 
@@ -155,10 +157,17 @@ export default function FhirStandardView({ locale }: { locale: Locale }) {
   return (
     <StandardDoc
       locale={locale}
+      path={PATH}
       crumb={c.crumb}
       eyebrow={c.eyebrow}
       title={c.title}
       description={c.description}
+      toc={[
+        { id: "durum", label: c.status },
+        { id: "fhir-kaynaklari", label: c.resources },
+        { id: "ornekler", label: c.examples },
+        { id: "mimari", label: c.architecture },
+      ]}
       references={REFS}
       related={c.related}
       jsonLd={standardPageJsonLd({
@@ -171,10 +180,10 @@ export default function FhirStandardView({ locale }: { locale: Locale }) {
         citations: REFS,
       })}
     >
-      <h2>{c.status}</h2>
+      <h2 id="durum">{c.status}</h2>
       <p className="note">{c.statusBody}</p>
 
-      <h2 className="mt-12">{c.resources}</h2>
+      <h2 id="fhir-kaynaklari" className="mt-12">{c.resources}</h2>
       <table>
         <thead>
           <tr>
@@ -186,8 +195,8 @@ export default function FhirStandardView({ locale }: { locale: Locale }) {
         <tbody>
           {c.rows.map(([resource, fields, codes]) => (
             <tr key={resource}>
-              <td className="font-mono text-[12.5px] text-white">{resource}</td>
-              <td className="font-mono text-[12px]">{fields}</td>
+              <td className="font-mono text-[13px] text-ink">{resource}</td>
+              <td className="font-mono text-[13px]">{fields}</td>
               <td>{codes}</td>
             </tr>
           ))}
@@ -201,18 +210,18 @@ export default function FhirStandardView({ locale }: { locale: Locale }) {
         ))}
       </ul>
 
-      <h2 className="mt-12">{c.examples}</h2>
+      <h2 id="ornekler" className="mt-12">{c.examples}</h2>
       <JsonBlock title={c.exRequest} value={request} />
       <JsonBlock title={c.exQtc} value={qtc} />
       <JsonBlock title={c.exScore} value={score} />
-      <p className="text-[13px]">{c.examplesNote}</p>
+      <p className="text-[14px]">{c.examplesNote}</p>
 
-      <h2 className="mt-12">{c.architecture}</h2>
+      <h2 id="mimari" className="mt-12">{c.architecture}</h2>
       <table>
         <tbody>
           {c.arch.map(([label, value]) => (
             <tr key={label}>
-              <td className="w-36 text-white/60">{label}</td>
+              <td className="w-36 text-ink-3">{label}</td>
               <td>{value}</td>
             </tr>
           ))}

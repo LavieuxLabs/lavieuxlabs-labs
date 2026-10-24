@@ -5,32 +5,11 @@ import ShareLinkButton from "@/components/ShareLinkButton";
 import { trackEvent } from "@/lib/analytics";
 import Link from "next/link";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
+import { DEFAULT_CHECKS, ITEMS, RULES, THRESHOLD, scoreClaim, type Checks, type ItemId } from "@/lib/claimRules";
 
-// Shield claim check simulator. The rule set is fictional (rule IDs, weights) and labelled as such; it
-// names no SUT article numbers, because invented legal references would read as real. ICD-10 codes are
-// real and used with their real meaning. Score = Σ triggered rule weights (0–100), threshold 40.
+// Shield claim check simulator over the fictional example rule set in src/lib/claimRules.ts.
 // The selection is mirrored to the URL (?item=angio&code=I20.9&pre=0&repeat=0&signed=1) and a shared
 // link opens with the same inputs, hence the same score.
-
-type ItemId = "angio" | "vent" | "ct";
-type Rule = { id: string; weight: number };
-
-const ITEMS: { id: ItemId; icd: string[]; compatible: string[] }[] = [
-  { id: "angio", icd: ["I20.9", "I21.9", "M54.5"], compatible: ["I20.9", "I21.9"] },
-  { id: "vent", icd: ["J96.0", "J18.9", "R51"], compatible: ["J96.0", "J18.9"] },
-  { id: "ct", icd: ["R07.4", "J18.9", "M54.5"], compatible: ["R07.4", "J18.9"] },
-];
-
-const RULES: Record<string, Rule> = {
-  mismatch: { id: "R-112", weight: 34 },
-  preapproval: { id: "R-047", weight: 26 },
-  repeat: { id: "R-203", weight: 18 },
-  unsigned: { id: "R-019", weight: 10 },
-};
-const THRESHOLD = 40;
-
-type Checks = { preapproval: boolean; repeat: boolean; signed: boolean };
-const DEFAULT_CHECKS: Checks = { preapproval: false, repeat: false, signed: true };
 
 function claimFromSearch(search: string): { item: ItemId; icd: string; checks: Checks } | null {
   const q = new URLSearchParams(search);
@@ -83,14 +62,14 @@ const copy = defineContent({
       repeat: "30 gün içinde tekrar eden işlem: aynı kalem kısa aralıkla yeniden faturalanıyor.",
       unsigned: "Epikriz imzasız: dosya kapanmamış.",
     } as Record<string, string>,
-    score: "Red riski (Σ kural katkısı)",
+    score: "Kural skoru (Σ kural katkısı)",
     matches: "Kural eşleşmeleri",
     none: "Kural tetiklenmedi.",
     status: { review: "İncelemede · uzmana gider", below: "Eşik altı · gönderilebilir" },
     threshold: (t: number) => `Eşik ${t}`,
     standard: "Standart",
     standardLink: "SUT fatura denetimi",
-    note: "Kurgusal kural seti · kurgusal veri. Gerçek kurallar SUT, paket tanımları ve kurum sözleşmesinden türetilir; bu örnekte mevzuat madde numarası gösterilmez. ICD-10 kodları gerçektir.",
+    note: "Kurgusal kural seti · kurgusal veri. Gerçek kurallar SUT, paket tanımları ve kurum sözleşmesinden türetilir; bu örnekte mevzuat madde numarası gösterilmez. ICD-10 kodları gerçektir. Skor SGK ret olasılığı ya da finansal kayıp tahmini değildir.",
     savings: "Geçmiş faturalar üzerinde doğrulanmış tasarruf metriği henüz yayımlanmamıştır.",
   },
   en: {
@@ -119,14 +98,14 @@ const copy = defineContent({
       repeat: "Repeated within 30 days: the same item is billed again at a short interval.",
       unsigned: "Discharge summary unsigned: the file is not closed.",
     } as Record<string, string>,
-    score: "Rejection risk (Σ rule contributions)",
+    score: "Rule score (Σ rule contributions)",
     matches: "Rule matches",
     none: "No rule triggered.",
     status: { review: "In review · goes to a specialist", below: "Below threshold · can be submitted" },
     threshold: (t: number) => `Threshold ${t}`,
     standard: "Standard",
     standardLink: "SUT billing audit",
-    note: "Fictional rule set · fictional data. Real rules are derived from SUT (Turkey's reimbursement rules), package definitions and the institution's contract. This example shows no legal article numbers. ICD-10 codes are real.",
+    note: "Fictional rule set · fictional data. Real rules are derived from SUT (Turkey's reimbursement rules), package definitions and the institution's contract. This example shows no legal article numbers. ICD-10 codes are real. The score is not a probability of SGK rejection or an estimate of financial loss.",
     savings: "No savings metric validated on historical claims has been published yet.",
   },
 });
@@ -176,13 +155,7 @@ export default function ClaimSimulator({ locale }: { locale: Locale }) {
     return () => cancelAnimationFrame(frame);
   }, []);
 
-  const triggered = [
-    !item.compatible.includes(icd) && "mismatch",
-    !checks.preapproval && "preapproval",
-    checks.repeat && "repeat",
-    !checks.signed && "unsigned",
-  ].filter((k): k is string => Boolean(k));
-  const score = Math.min(100, triggered.reduce((n, k) => n + RULES[k].weight, 0));
+  const { triggered, score } = scoreClaim(itemId, icd, checks);
   const t = tier(score);
 
   return (
@@ -231,7 +204,7 @@ export default function ClaimSimulator({ locale }: { locale: Locale }) {
         <fieldset className="space-y-2.5 bg-navy-850 px-5 py-4">
           <legend className="sr-only">{c.panel}</legend>
           {(Object.keys(c.checks) as (keyof typeof c.checks)[]).map((key) => (
-            <label key={key} className="flex cursor-pointer items-center gap-2 text-[12.5px] text-white/75">
+            <label key={key} className="flex min-h-8 cursor-pointer items-center gap-2 text-[12.5px] text-white/75">
               <input
                 type="checkbox"
                 checked={checks[key]}

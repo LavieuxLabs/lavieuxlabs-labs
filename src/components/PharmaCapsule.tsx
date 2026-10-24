@@ -66,6 +66,7 @@ const copy = defineContent({
     },
     caption: "Örnek vakalar · gerçek hasta verisi değildir · klinik karar için kullanılmaz",
     customize: "Özelleştir",
+    customTitle: "Özel vaka: eGFR ve antibiyotik",
     customizeAria: "Vakayı özelleştirin",
     azithromycin: "Azitromisin",
     added: "Ekli",
@@ -95,6 +96,7 @@ const copy = defineContent({
     },
     caption: "Example cases · not real patient data · not for clinical decisions",
     customize: "Customise",
+    customTitle: "Custom case: eGFR and antibiotic",
     customizeAria: "Customise the case",
     azithromycin: "Azithromycin",
     added: "Added",
@@ -147,9 +149,15 @@ const norm = (a: V3): V3 => {
   return [a[0] / l, a[1] / l, a[2] / l];
 };
 
-export default function PharmaCapsule({ locale }: { locale: Locale }) {
+/**
+ * `layout="stage"` (default) is the hero scene: the capsule with the readings around it. `layout="workspace"` is the
+ * case review panel used on the editorial product page: no canvas, the case and its readings side by side.
+ * Both share the same state, deep links (`?case=…#vakalar`, `#vaka-N`) and the `pharmadeux:case` event.
+ */
+export default function PharmaCapsule({ locale, layout = "stage" }: { locale: Locale; layout?: "stage" | "workspace" }) {
   const c = copy[locale];
   const cases = CLINICAL_CASES[locale];
+  const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const nodeRefs = useRef<(HTMLLIElement | null)[]>([]);
@@ -164,18 +172,25 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
   const today = useClientValue(() => new Date().toISOString().slice(0, 10), "----------");
 
   useEffect(() => {
-    const open = (n: number) => {
+    const open = (n: number, instant = false) => {
       if (!Number.isInteger(n) || n < 1 || n > cases.length) return;
       setCaseIndex(n - 1);
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      stageRef.current?.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
+      const reduce = instant || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      rootRef.current?.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
     };
     const param = new URLSearchParams(window.location.search).get("case");
     const fromParam = param ? (/^\d$/.test(param) ? Number(param) : cases.findIndex((k) => k.id === param) + 1) : 0;
     const fromHash = /^#vaka-(\d)$/.exec(window.location.hash);
     const target = fromParam || (fromHash ? Number(fromHash[1]) : 0);
+    // Older links sent `?case=…#simulator`, which is the QT simulator further down. The case workspace
+    // is `#vakalar`: rewrite the hash in place (no new history entry) and jump straight to the cases.
+    const legacy = fromParam > 0 && window.location.hash === "#simulator";
+    if (legacy) {
+      const { pathname, search } = window.location;
+      window.history.replaceState(window.history.state, "", `${pathname}${search}#vakalar`);
+    }
     // Deferred a frame: the stage must be laid out before it can be scrolled to.
-    const frame = target ? requestAnimationFrame(() => open(target)) : 0;
+    const frame = target ? requestAnimationFrame(() => open(target, legacy)) : 0;
     const onCase = (e: Event) => open((e as CustomEvent<number>).detail);
     window.addEventListener("pharmadeux:case", onCase);
     return () => {
@@ -412,8 +427,224 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
     document.getElementById(`case-${cases[next].id}`)?.focus();
   };
 
+  // Case selector. In the stage layout it is a row of three segments under the scene; in the workspace it is
+  // the same row on small screens and a column (selection marked on the left edge) next to the case on wide ones.
+  const selector = (column: boolean) => (
+    <div
+      role="radiogroup"
+      aria-label={c.chooseCase}
+      className={column ? "grid grid-cols-3 border-t border-hairline lg:grid-cols-1 lg:divide-y lg:divide-hairline" : "mt-4 grid grid-cols-3 border-t border-hairline"}
+    >
+      {cases.map((item, i) => {
+        const selected = i === caseIndex;
+        return (
+          <button
+            key={item.id}
+            id={`case-${item.id}`}
+            type="button"
+            role="radio"
+            aria-checked={selected}
+            tabIndex={selected || (caseIndex === null && i === 0) ? 0 : -1}
+            onClick={() => setCaseIndex(i)}
+            onKeyDown={onCaseKey}
+            className={`group relative flex flex-col text-left transition-colors duration-150 ease-out hover:bg-white/[0.02] focus-visible:bg-white/[0.04] focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-white/60 ${
+              column ? "min-h-11 px-3 pt-3 pb-2.5 sm:px-4 lg:px-5 lg:py-3.5" : "px-2 pt-3 pb-2 sm:px-3"
+            }`}
+          >
+            <span
+              aria-hidden="true"
+              className={`absolute inset-x-0 -top-px h-px transition-colors duration-150 ease-out ${
+                column ? "lg:inset-x-auto lg:inset-y-0 lg:top-0 lg:left-0 lg:h-auto lg:w-0.5" : ""
+              } ${selected ? "bg-white/70" : "bg-transparent"}`}
+            />
+            <span className="block text-[11px] font-medium tracking-wider text-white/55 uppercase">
+              {c.case} <span className="font-mono tabular-nums">{i + 1}</span>
+            </span>
+            <span
+              className={`mt-1 block text-[12.5px] leading-snug transition-colors duration-150 ease-out sm:text-[13px] ${
+                selected ? "text-white" : "text-white/55 group-hover:text-white/80"
+              } ${column ? "lg:text-[14px]" : ""}`}
+            >
+              {item.title}
+            </span>
+            <span className="mt-0.5 hidden text-[11px] text-white/55 sm:block">{item.meta}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  // Customisable case: one patient, two parameters. In the workspace it lines up with the selector column.
+  const customiser = (column: boolean) => (
+    <div
+      role="group"
+      aria-label={c.customizeAria}
+      className={`relative flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-hairline ${column ? "px-3 py-3 sm:px-4 lg:px-5" : "px-2 py-2.5 sm:px-3"}`}
+    >
+      <span
+        aria-hidden="true"
+        className={`absolute inset-x-0 -top-px h-px transition-colors duration-150 ease-out ${
+          caseIndex === null ? "bg-white/70" : "bg-transparent"
+        }`}
+      />
+      <span
+        className={`text-[11px] font-medium tracking-wider uppercase transition-colors duration-150 ease-out ${
+          caseIndex === null ? "text-white" : "text-white/55"
+        }`}
+      >
+        {c.customize}
+      </span>
+      <Segmented
+        label="eGFR"
+        large={column}
+        active={caseIndex === null}
+        options={EGFR_OPTIONS.map((v) => ({ key: String(v), label: String(v), mono: true }))}
+        value={String(params.egfr)}
+        onSelect={(key) => customise({ egfr: Number(key) as CustomParams["egfr"] })}
+      />
+      <Segmented
+        label={c.azithromycin}
+        large={column}
+        active={caseIndex === null}
+        options={[
+          { key: "on", label: c.added },
+          { key: "off", label: c.removed },
+        ]}
+        value={params.azithromycin ? "on" : "off"}
+        onSelect={(key) => customise({ azithromycin: key === "on" })}
+      />
+    </div>
+  );
+
+  // What the engine reports for the selected case.
+  const details = (large: boolean) => {
+    const row = `grid gap-3 py-2 ${large ? "grid-cols-[72px_1fr] sm:grid-cols-[96px_1fr] sm:py-2.5" : "grid-cols-[64px_1fr]"}`;
+    return (
+      <dl aria-live="polite" className={`divide-y divide-hairline border-y border-hairline ${large ? "text-[13px] sm:text-[14px]" : "text-[12.5px]"}`}>
+        <div className={row}>
+          <dt className="text-white/55">{c.patient}</dt>
+          <dd className="text-white/75">{active.patient}</dd>
+        </div>
+        <div className={row}>
+          <dt className="text-white/55">{c.prescription}</dt>
+          <dd className="text-white/75">{active.prescription}</dd>
+        </div>
+        <div className={row}>
+          <dt className="text-white/55">{c.finding}</dt>
+          <dd className={`leading-relaxed ${large ? "text-white" : "text-white/75"}`}>{active.finding}</dd>
+        </div>
+        {active.tisdale && (
+          <div className={row}>
+            <dt className="text-white/55">Tisdale</dt>
+            <dd className="flex flex-wrap gap-x-3 gap-y-1 text-white/60">
+              {active.tisdale.map((t) => (
+                <span key={t.factor}>
+                  {t.factor} <span className="font-mono text-white/80 tabular-nums">+{t.points}</span>
+                </span>
+              ))}
+              <span>
+                ={" "}
+                <span className="font-mono text-white tabular-nums">
+                  {active.tisdale.reduce((n, t) => n + t.points, 0)}
+                </span>
+              </span>
+            </dd>
+          </div>
+        )}
+        <div className={row}>
+          <dt className="text-white/55">{c.standard}</dt>
+          <dd>
+            <Link href={localizedPath(locale, active.standard)} className="-my-2 inline-block py-2 text-white/80 underline decoration-white/30 underline-offset-2 transition-colors duration-150 ease-out hover:text-white hover:decoration-white/70">
+              {c.standards[active.standard]}
+            </Link>
+          </dd>
+        </div>
+      </dl>
+    );
+  };
+
+  const footer = (
+    <>
+      <div className="mt-2 flex items-center justify-between gap-3">
+        <p aria-label={c.stampAria} className="min-w-0 truncate font-mono text-[10.5px] text-white/55 tabular-nums">
+          {stamp}
+        </p>
+        <CopyPayloadButton
+          locale={locale}
+          ariaLabel={c.copyAria(caseLabel)}
+          getPayload={() => caseToFhirBundle(active, caseRef, new Date().toISOString())}
+        />
+      </div>
+      <p className="mt-2 text-[10.5px] text-white/55">
+        {c.caption}
+      </p>
+    </>
+  );
+
+  // Workspace: no scene. The case is the subject: selector beside it, its three readings as a row of joined
+  // cells, then what the engine reports. The canvas is not rendered, so the animation loop never starts.
+  if (layout === "workspace") {
+    return (
+      <div
+        ref={rootRef}
+        id="vakalar"
+        className="panel-dark scroll-mt-20 overflow-hidden rounded-xl border border-hairline bg-navy-900 text-white [color-scheme:dark]"
+      >
+        <div className="grid lg:grid-cols-[minmax(0,280px)_minmax(0,1fr)]">
+          <div className="border-b border-hairline lg:border-r lg:border-b-0">
+            <p className="px-3 pt-4 pb-3 text-[11px] font-medium tracking-wider text-white/50 uppercase sm:px-4 lg:px-5">
+              {c.chooseCase}
+            </p>
+            {selector(true)}
+            {customiser(true)}
+          </div>
+          <div className="min-w-0 p-4 sm:p-6">
+            <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{caseLabel}</p>
+            <p className="mt-1 text-[17px] font-semibold tracking-[-0.01em] text-white sm:text-[19px]">
+              {caseIndex === null ? c.customTitle : active.title}
+            </p>
+            <ul
+              aria-label={c.telemetry}
+              className="mt-4 grid grid-cols-3 gap-px overflow-hidden rounded-lg border border-hairline bg-hairline"
+            >
+              {TELEMETRY.map((node) => {
+                const reading: Reading = active.readings[node.key];
+                return (
+                  // Three columns at every width: on phones the code sits above the label and the unit wraps under the value.
+                  <li key={node.code} className="min-w-0 bg-navy-850 px-2.5 py-3 sm:px-4">
+                    <span className="flex flex-col-reverse gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-2">
+                      <span className="text-[12px] leading-tight text-white/60">{c.nodes[node.key].label}</span>
+                      <span className="text-[11px] font-semibold tracking-[0.01em] text-titanium">{node.code}</span>
+                    </span>
+                    <span className="mt-1 flex flex-wrap items-baseline gap-x-1">
+                      <span className="font-mono text-[19px] font-semibold tracking-[-0.01em] text-white tabular-nums sm:text-[21px]">
+                        {reading.value}
+                      </span>
+                      <span className="text-[11px] text-white/55">{c.nodes[node.key].unit}</span>
+                    </span>
+                    <span className="mt-2 block h-[3px] overflow-hidden rounded-full bg-white/[0.06]" aria-hidden="true">
+                      <span
+                        className={`block h-full rounded-full transition-[width,background-color] duration-150 ease-out ${toneBar[reading.tone]}`}
+                        style={{ width: `${Math.min(1, Math.max(0.02, reading.level)) * 100}%` }}
+                      />
+                    </span>
+                    <span className={`mt-2 block text-[11.5px] leading-tight transition-colors duration-150 ease-out sm:text-[12px] ${toneText[reading.tone]}`}>
+                      {reading.status}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="mt-5">{details(true)}</div>
+            {footer}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full">
+    <div ref={rootRef} id="vakalar" className="w-full scroll-mt-32">
       <div ref={stageRef} className="relative aspect-[4/5] w-full sm:aspect-square">
         <canvas
           ref={canvasRef}
@@ -457,139 +688,10 @@ export default function PharmaCapsule({ locale }: { locale: Locale }) {
       </div>
 
       {/* Case selector: frameless segments on a hairline */}
-      <div
-        role="radiogroup"
-        aria-label={c.chooseCase}
-        className="mt-4 grid grid-cols-3 border-t border-hairline"
-      >
-        {cases.map((item, i) => {
-          const selected = i === caseIndex;
-          return (
-            <button
-              key={item.id}
-              id={`case-${item.id}`}
-              type="button"
-              role="radio"
-              aria-checked={selected}
-              tabIndex={selected || (caseIndex === null && i === 0) ? 0 : -1}
-              onClick={() => setCaseIndex(i)}
-              onKeyDown={onCaseKey}
-              className="group relative flex flex-col px-2 pt-3 pb-2 text-left transition-colors duration-150 ease-out hover:bg-white/[0.02] focus-visible:bg-white/[0.04] focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-white/60 sm:px-3"
-            >
-              <span
-                aria-hidden="true"
-                className={`absolute inset-x-0 -top-px h-px transition-colors duration-150 ease-out ${
-                  selected ? "bg-white/70" : "bg-transparent"
-                }`}
-              />
-              <span className="block text-[11px] font-medium tracking-wider text-white/55 uppercase">
-                {c.case} <span className="font-mono tabular-nums">{i + 1}</span>
-              </span>
-              <span
-                className={`mt-1 block text-[12.5px] leading-snug transition-colors duration-150 ease-out sm:text-[13px] ${
-                  selected ? "text-white" : "text-white/55 group-hover:text-white/80"
-                }`}
-              >
-                {item.title}
-              </span>
-              <span className="mt-0.5 hidden text-[11px] text-white/55 sm:block">{item.meta}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Customisable case: one patient, two parameters */}
-      <div
-        role="group"
-        aria-label={c.customizeAria}
-        className="relative flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-hairline px-2 py-2.5 sm:px-3"
-      >
-        <span
-          aria-hidden="true"
-          className={`absolute inset-x-0 -top-px h-px transition-colors duration-150 ease-out ${
-            caseIndex === null ? "bg-white/70" : "bg-transparent"
-          }`}
-        />
-        <span
-          className={`text-[11px] font-medium tracking-wider uppercase transition-colors duration-150 ease-out ${
-            caseIndex === null ? "text-white" : "text-white/55"
-          }`}
-        >
-          {c.customize}
-        </span>
-        <Segmented
-          label="eGFR"
-          active={caseIndex === null}
-          options={EGFR_OPTIONS.map((v) => ({ key: String(v), label: String(v), mono: true }))}
-          value={String(params.egfr)}
-          onSelect={(key) => customise({ egfr: Number(key) as CustomParams["egfr"] })}
-        />
-        <Segmented
-          label={c.azithromycin}
-          active={caseIndex === null}
-          options={[
-            { key: "on", label: c.added },
-            { key: "off", label: c.removed },
-          ]}
-          value={params.azithromycin ? "on" : "off"}
-          onSelect={(key) => customise({ azithromycin: key === "on" })}
-        />
-      </div>
-
-      {/* What the engine reports for the selected case */}
-      <dl aria-live="polite" className="divide-y divide-hairline border-y border-hairline text-[12.5px]">
-        <div className="grid grid-cols-[64px_1fr] gap-3 py-2">
-          <dt className="text-white/55">{c.patient}</dt>
-          <dd className="text-white/75">{active.patient}</dd>
-        </div>
-        <div className="grid grid-cols-[64px_1fr] gap-3 py-2">
-          <dt className="text-white/55">{c.prescription}</dt>
-          <dd className="text-white/75">{active.prescription}</dd>
-        </div>
-        <div className="grid grid-cols-[64px_1fr] gap-3 py-2">
-          <dt className="text-white/55">{c.finding}</dt>
-          <dd className="leading-relaxed text-white/75">{active.finding}</dd>
-        </div>
-        {active.tisdale && (
-          <div className="grid grid-cols-[64px_1fr] gap-3 py-2">
-            <dt className="text-white/55">Tisdale</dt>
-            <dd className="flex flex-wrap gap-x-3 gap-y-1 text-white/60">
-              {active.tisdale.map((t) => (
-                <span key={t.factor}>
-                  {t.factor} <span className="font-mono text-white/80 tabular-nums">+{t.points}</span>
-                </span>
-              ))}
-              <span>
-                ={" "}
-                <span className="font-mono text-white tabular-nums">
-                  {active.tisdale.reduce((n, t) => n + t.points, 0)}
-                </span>
-              </span>
-            </dd>
-          </div>
-        )}
-        <div className="grid grid-cols-[64px_1fr] gap-3 py-2">
-          <dt className="text-white/55">{c.standard}</dt>
-          <dd>
-            <Link href={localizedPath(locale, active.standard)} className="text-white/80 underline decoration-white/30 underline-offset-2 transition-colors duration-150 ease-out hover:text-white hover:decoration-white/70">
-              {c.standards[active.standard]}
-            </Link>
-          </dd>
-        </div>
-      </dl>
-      <div className="mt-2 flex items-center justify-between gap-3">
-        <p aria-label={c.stampAria} className="min-w-0 truncate font-mono text-[10.5px] text-white/55 tabular-nums">
-          {stamp}
-        </p>
-        <CopyPayloadButton
-          locale={locale}
-          ariaLabel={c.copyAria(caseLabel)}
-          getPayload={() => caseToFhirBundle(active, caseRef, new Date().toISOString())}
-        />
-      </div>
-      <p className="mt-2 text-[10.5px] text-white/55">
-        {c.caption}
-      </p>
+      {selector(false)}
+      {customiser(false)}
+      {details(false)}
+      {footer}
     </div>
   );
 }
@@ -602,9 +704,12 @@ function Segmented({
   options,
   value,
   active,
+  large = false,
   onSelect,
 }: {
   label: string;
+  /** 44px touch targets (workspace layout). */
+  large?: boolean;
   options: SegmentedOption[];
   value: string;
   active: boolean;
@@ -612,7 +717,7 @@ function Segmented({
 }) {
   return (
     <span className="flex items-center gap-2">
-      <span className="text-[11.5px] text-white/55">{label}</span>
+      <span className={`text-white/55 ${large ? "text-[13px]" : "text-[11.5px]"}`}>{label}</span>
       <span role="group" aria-label={label} className="flex rounded-md border border-hairline bg-white/[0.03] p-0.5">
         {options.map((o) => {
           const selected = o.key === value;
@@ -622,7 +727,7 @@ function Segmented({
               type="button"
               aria-pressed={active && selected}
               onClick={() => onSelect(o.key)}
-              className={`rounded-[5px] px-2 py-0.5 text-[11.5px] transition-colors duration-150 ease-out ${
+              className={`rounded-[5px] text-[11.5px] transition-colors duration-150 ease-out ${large ? "min-h-10 min-w-11 px-3 text-[13px]" : "px-2 py-0.5"} ${
                 o.mono ? "font-mono tabular-nums" : ""
               } ${
                 selected

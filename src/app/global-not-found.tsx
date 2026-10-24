@@ -18,7 +18,7 @@ export default function GlobalNotFound() {
     <html lang="tr" className={`${fontVariables} h-full antialiased`}>
       <body className="relative flex min-h-full flex-col bg-background font-sans text-foreground">
         <SiteBackdrop />
-        <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center px-4 py-24 sm:px-6">
+        <main id="main" className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center px-4 py-24 sm:px-6">
           <Link href="/" className="flex w-fit items-center gap-2.5" aria-label="LavieuxLabs ana sayfa">
             <LogoMark size={28} />
             <span className="text-[15px] font-semibold tracking-[-0.02em] text-white">

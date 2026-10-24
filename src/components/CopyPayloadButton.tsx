@@ -42,7 +42,7 @@ export default function CopyPayloadButton({ locale, getPayload, ariaLabel }: Cop
       type="button"
       onClick={onClick}
       aria-label={ariaLabel}
-      className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-hairline px-2 py-1 text-[11px] text-white/60 transition-colors duration-150 ease-out hover:bg-white/[0.04] hover:text-white print:hidden"
+      className="relative before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] inline-flex shrink-0 items-center gap-1.5 rounded-md border border-hairline px-2 py-1 text-[11px] text-white/60 transition-colors duration-150 ease-out hover:bg-white/[0.04] hover:text-white print:hidden"
     >
       <Icon className="h-3 w-3" strokeWidth={1.8} aria-hidden="true" />
       <span aria-live="polite">{state === "idle" ? t.label : state === "done" ? t.done : t.failed}</span>

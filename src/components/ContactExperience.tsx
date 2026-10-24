@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
-import ContactForm from "@/components/ContactForm";
+import ContactForm, { type ContactTone } from "@/components/ContactForm";
 import CopyEmail from "@/components/CopyEmail";
+import { TEXT_ACTION } from "@/components/paper/Editorial";
 import { type ContactPath, type ProductValue } from "@/lib/site";
 import { contactPaths, contactView } from "@/lib/contactContent";
 import { isContactPath, isProduct } from "@/lib/loi";
@@ -18,7 +19,8 @@ const copy = defineContent({
     step: "Adım",
     protocolLink: "Pilot protokolü ve LOI çerçevesi",
     email: "E-posta",
-    noPatientData: "Lütfen iletişim kanallarımız üzerinden hasta verisi veya özel nitelikli kişisel veri paylaşmayınız.",
+    noPatientData:
+      "Lütfen iletişim kanallarımız üzerinden hasta verisi, gerçek fatura verisi veya özel nitelikli kişisel veri paylaşmayınız.",
   },
   en: {
     pathLegend: "How would you like to start?",
@@ -26,19 +28,30 @@ const copy = defineContent({
     step: "Step",
     protocolLink: "Pilot protocol and LOI framework",
     email: "Email",
-    noPatientData: "Please do not send patient data or other special categories of personal data through our contact channels.",
+    noPatientData:
+      "Please do not send patient data, real claim data or other special categories of personal data through our contact channels.",
   },
 });
 
 const LABEL = "text-[11px] font-medium tracking-wider text-white/50 uppercase";
 
-type ContactExperienceProps = { locale: Locale; initialPath?: ContactPath; initialProduct?: ProductValue };
+type ContactExperienceProps = {
+  locale: Locale;
+  initialPath?: ContactPath;
+  initialProduct?: ProductValue;
+  /** "paper" on the paper contact page; "dark" (default) keeps the dark grid and panel. */
+  tone?: ContactTone;
+  /** Paper only: shown beside the path choice on wide screens and after the process on narrow ones. */
+  aside?: ReactNode;
+};
 
 /** Path cards, process steps and the form share one path and product, so all three follow the choice. */
 export default function ContactExperience({
   locale,
   initialPath = "intro",
   initialProduct = "pharmadeux",
+  tone = "dark",
+  aside,
 }: ContactExperienceProps) {
   const [path, setPath] = useState<ContactPath>(initialPath);
   const [product, setProduct] = useState<ProductValue>(initialProduct);
@@ -59,6 +72,90 @@ export default function ContactExperience({
     setProduct(next);
     sync(path, next);
   };
+
+  if (tone === "paper") {
+    // Paper: one 12-column grid. Wide screens: path choice | summary, then form | process. Narrow screens read
+    // in the order a visitor acts: choose, fill in the form, see what happens next, then the summary.
+    return (
+      <div className="mx-auto grid max-w-7xl gap-x-10 gap-y-12 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
+        <fieldset className="min-w-0 lg:col-span-7">
+          <legend className="font-serif text-[20px] font-medium text-ink">{c.pathLegend}</legend>
+          <div className="mt-3 border-t-2 border-ink">
+            {contactPaths(locale).map(({ value, label, hint, rows }) => {
+              const checked = path === value;
+              return (
+                <label
+                  key={value}
+                  className={`grid cursor-pointer grid-cols-[18px_minmax(0,1fr)] gap-x-3.5 border-b border-l-[3px] border-b-rule py-4 pr-4 pl-3 transition-colors duration-150 ease-out has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-ink sm:pl-4 ${
+                    checked ? "border-l-ink bg-white" : "border-l-transparent hover:bg-white/60"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="contact-path"
+                    value={value}
+                    checked={checked}
+                    onChange={() => choosePath(value)}
+                    className="mt-1 h-[18px] w-[18px] cursor-pointer accent-ink"
+                  />
+                  <span className="min-w-0">
+                    <span className="block text-[17px] leading-snug font-semibold text-ink">{label}</span>
+                    <span className="mt-1 block max-w-[62ch] text-[15px] leading-[1.55] text-ink-2">{hint}</span>
+                    <span className="mt-2 grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-3 gap-y-1 text-[14px] leading-snug sm:grid-cols-[7.5rem_minmax(0,1fr)]">
+                      {rows.map((row) => (
+                        <span key={row.label} className="contents">
+                          <span className="text-ink-3">{row.label}</span>
+                          <span className="text-ink-2">{row.value}</span>
+                        </span>
+                      ))}
+                    </span>
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </fieldset>
+
+        {aside && <div className="order-last lg:order-none lg:col-span-4 lg:col-start-9 lg:row-start-1">{aside}</div>}
+
+        <div className="min-w-0 lg:col-span-7">
+          <ContactForm locale={locale} path={path} product={product} onProductChange={chooseProduct} tone="paper" />
+        </div>
+
+        <div className="space-y-10 lg:col-span-4 lg:col-start-9 lg:row-start-2">
+          <section aria-labelledby="process-title" className="border-t-2 border-ink pt-4">
+            <h2 id="process-title" className="font-serif text-[20px] font-medium text-ink">
+              {c.process}
+            </h2>
+            <ol aria-live="polite" className="mt-3 divide-y divide-rule border-t border-rule">
+              {view.steps.map(({ title, body }, i) => (
+                <li key={title} className="grid grid-cols-[28px_minmax(0,1fr)] gap-3 py-4">
+                  <span className="font-serif text-[20px] leading-none text-ink-3">{i + 1}</span>
+                  <span>
+                    <span className="block text-[16px] font-semibold text-ink">{title}</span>
+                    <span className="mt-1 block text-[15px] leading-[1.6] text-ink-2">{body}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+            {path === "pilot" && (
+              <a href="#pilot-protokolu" className={`mt-2 ${TEXT_ACTION}`}>
+                {c.protocolLink}
+              </a>
+            )}
+          </section>
+
+          <section aria-labelledby="email-title" className="border-t border-rule pt-4">
+            <h2 id="email-title" className="font-serif text-[17px] text-ink-3">
+              {c.email}
+            </h2>
+            <CopyEmail locale={locale} tone="paper" className="mt-2 min-h-11 text-[15px] text-ink" />
+            <p className="mt-2 text-[14px] leading-[1.6] text-ink-2">{c.noPatientData}</p>
+          </section>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -177,7 +274,15 @@ export default function ContactExperience({
  * Reads `?path=intro|academic|pilot&product=pharmadeux|shield`. Older links used `?solution=`:
  * `academic` maps to the academic path, a product name to the pilot path, since those links said LOI.
  */
-export function ContactExperienceFromParams({ locale }: { locale: Locale }) {
+export function ContactExperienceFromParams({
+  locale,
+  tone,
+  aside,
+}: {
+  locale: Locale;
+  tone?: ContactTone;
+  aside?: ReactNode;
+}) {
   const params = useSearchParams();
   const legacy = params.get("solution");
   const rawPath = params.get("path") ?? (legacy === "academic" ? "academic" : isProduct(legacy) ? "pilot" : null);
@@ -187,6 +292,8 @@ export function ContactExperienceFromParams({ locale }: { locale: Locale }) {
       locale={locale}
       initialPath={isContactPath(rawPath) ? rawPath : undefined}
       initialProduct={isProduct(rawProduct) ? rawProduct : undefined}
+      tone={tone}
+      aside={aside}
     />
   );
 }

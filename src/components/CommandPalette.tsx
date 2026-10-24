@@ -64,7 +64,7 @@ const fold = (text: string) =>
     .replace(/[̀-ͯ]/g, "")
     .replace(/[^a-z0-9]/g, "");
 
-export default function CommandPalette({ locale }: { locale: Locale }) {
+export default function CommandPalette({ locale, tone = "dark" }: { locale: Locale; tone?: "dark" | "paper" }) {
   const t = copy[locale];
   const router = useRouter();
   const pathname = stripLocale(usePathname());
@@ -148,6 +148,13 @@ export default function CommandPalette({ locale }: { locale: Locale }) {
       window.dispatchEvent(new CustomEvent("pharmadeux:case", { detail: item.caseNo }));
       return;
     }
+    // A section on the page already open: let the browser follow the fragment, so hashchange fires
+    // (a target inside a closed <details> is revealed) and no client navigation is needed.
+    const [path, hash] = item.href.split("#");
+    if (hash && path === pathname) {
+      window.location.hash = hash;
+      return;
+    }
     router.push(localizedPath(locale, item.href));
   };
 
@@ -181,7 +188,11 @@ export default function CommandPalette({ locale }: { locale: Locale }) {
         onClick={show}
         aria-label={t.open}
         aria-keyshortcuts="Meta+K Control+K"
-        className="hidden items-center gap-2 rounded-lg border border-hairline px-2.5 py-1.5 text-[12px] text-white/60 transition-colors duration-150 ease-out hover:bg-white/[0.04] hover:text-white md:inline-flex"
+        className={`hidden items-center gap-2 rounded-lg border px-2.5 py-1.5 text-[12px] transition-colors duration-150 ease-out lg:inline-flex ${
+          tone === "paper"
+            ? "border-rule bg-white text-ink-3 hover:border-ink/30 hover:text-ink"
+            : "border-hairline text-white/60 hover:bg-white/[0.04] hover:text-white"
+        }`}
       >
         <Search className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
         <kbd className="font-sans tabular-nums">{shortcut}</kbd>

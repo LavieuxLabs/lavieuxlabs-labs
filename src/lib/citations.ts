@@ -93,8 +93,8 @@ export const CITATIONS: Record<CiteKey, Citation> = {
   iec62304: {
     term: { tr: "IEC 62304", en: "IEC 62304" },
     what: {
-      tr: "Tıbbi cihaz yazılımı için yaşam döngüsü süreçleri standardı. LavieuxLabs için durum: mimari uyum, sertifika henüz yok.",
-      en: "Life cycle process standard for medical device software. Status for LavieuxLabs: architecture aligned, not certified yet.",
+      tr: "Tıbbi cihaz yazılımı için yaşam döngüsü süreçleri standardı. PharmaDeux için durum: tasarım girdisi; uygunluk değerlendirmesi ve sertifika yok.",
+      en: "Life cycle process standard for medical device software. Status for PharmaDeux: design input; no conformity assessment or certification.",
     },
     refs: ["IEC 62304:2006+AMD1:2015 — Medical device software — Software life cycle processes."],
   },

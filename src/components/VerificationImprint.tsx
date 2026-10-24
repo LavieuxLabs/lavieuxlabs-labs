@@ -16,9 +16,9 @@ const copy = defineContent({
     title: "Doğrulama künyesi",
     rows: {
       tests: "Otomatik test",
-      testsValue: (n: string) => `${n}+ · kural motoru ve klinik ölçüm protokolleri`,
+      testsValue: (n: string) => `${n}+ · yazılım testi; klinik doğrulama değildir`,
       lifecycle: "IEC 62304",
-      lifecycleValue: "Mimari uyum · sertifika henüz yok",
+      lifecycleValue: "Tasarım girdisi · sertifika yok",
       ce: "CE işareti",
       ceValue: "Henüz yok · MDR Sınıf IIa hedefi",
       audit: "Denetim izi (örnek konsol)",
@@ -33,9 +33,9 @@ const copy = defineContent({
     title: "Verification imprint",
     rows: {
       tests: "Automated tests",
-      testsValue: (n: string) => `${n}+ · rule engine and clinical measurement protocols`,
+      testsValue: (n: string) => `${n}+ · software tests; not clinical validation`,
       lifecycle: "IEC 62304",
-      lifecycleValue: "Architecture aligned · not certified yet",
+      lifecycleValue: "Design input · not certified",
       ce: "CE mark",
       ceValue: "Not yet · MDR Class IIa target",
       audit: "Audit trail (example console)",
@@ -86,9 +86,9 @@ export default function VerificationImprint({ locale }: { locale: Locale }) {
         {c.open}
         <ChevronUp className={`h-3.5 w-3.5 transition-transform duration-150 ease-out ${open ? "" : "rotate-180"}`} aria-hidden="true" />
       </button>
+      <div id={`${uid}-panel`}>
       {open && (
         <div
-          id={`${uid}-panel`}
           role="dialog"
           aria-label={c.title}
           className="absolute right-0 bottom-full z-20 mb-2 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-hairline bg-navy-800 shadow-2xl shadow-black/40"
@@ -104,6 +104,7 @@ export default function VerificationImprint({ locale }: { locale: Locale }) {
           </dl>
         </div>
       )}
+      </div>
     </div>
   );
 }

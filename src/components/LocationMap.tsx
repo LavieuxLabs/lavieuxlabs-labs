@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Building2, MapPin } from "lucide-react";
 import { grantConsent, useConsent } from "@/components/CookieBanner";
+import { BUTTON, BUTTON_OUTLINE, LINK, TEXT_ACTION } from "@/components/paper/Editorial";
 import { OFFICE_MAP_URL, office, officeMapEmbedUrl } from "@/lib/site";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 
@@ -35,12 +36,65 @@ const copy = defineContent({
 // Inverts Google's light tiles into a muted dark map that sits with the site palette.
 const DARK_MAP_FILTER = "invert(0.92) hue-rotate(180deg) grayscale(0.55) brightness(0.88) contrast(0.92)";
 
-export default function LocationMap({ locale }: { locale: Locale }) {
+/** "paper" on paper pages: address as text, the map in a white figure frame without the dark filter. */
+export default function LocationMap({ locale, tone = "dark" }: { locale: Locale; tone?: "dark" | "paper" }) {
   const c = copy[locale];
   const OFFICE = office(locale);
   const consent = useConsent();
   const [loadedOnce, setLoadedOnce] = useState(false);
   const showMap = loadedOnce || consent?.external === true;
+
+  if (tone === "paper") {
+    return (
+      <div className="grid gap-x-10 gap-y-8 lg:grid-cols-12">
+        <div className="border-t-2 border-ink pt-4 lg:col-span-4">
+          <h3 className="font-serif text-[20px] font-medium text-ink">{c.location}</h3>
+          <p className="mt-4 text-[16px] font-semibold text-ink">{OFFICE.institution}</p>
+          <p className="mt-0.5 text-[15px] text-ink-2">{OFFICE.unit}</p>
+          <address className="mt-4 text-[15px] leading-[1.6] text-ink-2 not-italic">
+            {OFFICE.street}
+            <br />
+            {OFFICE.postalCode} {OFFICE.district} / {OFFICE.city}, {OFFICE.country}
+          </address>
+          <a href={OFFICE_MAP_URL} target="_blank" rel="noopener noreferrer" className={`mt-3 ${TEXT_ACTION}`}>
+            {c.directions}
+          </a>
+        </div>
+
+        <div className="relative min-h-[300px] overflow-hidden border border-rule bg-white lg:col-span-8 lg:min-h-[360px]">
+          {showMap ? (
+            <iframe
+              title={`${OFFICE.institution} ${c.mapTitle}`}
+              src={officeMapEmbedUrl(locale)}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="absolute inset-0 h-full w-full border-0"
+            />
+          ) : (
+            <div className="flex min-h-[300px] items-center p-6 sm:p-8 lg:min-h-[360px]">
+              <div className="max-w-md">
+                <p className="text-[16px] font-medium text-ink">{c.provider}</p>
+                <p className="mt-2 text-[15px] leading-[1.6] text-ink-2">
+                  {c.notice}{" "}
+                  <Link href={localizedPath(locale, "/legal/cookies")} className={LINK}>
+                    {c.cookiePolicy}
+                  </Link>
+                </p>
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                  <button type="button" onClick={() => setLoadedOnce(true)} className={BUTTON}>
+                    {c.loadOnce}
+                  </button>
+                  <button type="button" onClick={() => grantConsent("external")} className={BUTTON_OUTLINE}>
+                    {c.loadAlways}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid overflow-hidden rounded-2xl border border-hairline bg-white/[0.02] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">

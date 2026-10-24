@@ -1,7 +1,7 @@
 import Reveal from "@/components/Reveal";
 import SectionHeader from "@/components/SectionHeader";
 import PrintButton from "@/components/PrintButton";
-import { CONTACT_EMAIL, OFFICE_ADDRESS_LINE, SITE_LAST_MODIFIED, SITE_URL, office, organizationProfile } from "@/lib/site";
+import { CONTACT_EMAIL, PILOT_PROTOCOL_REVISION, SITE_URL, office, organizationProfile } from "@/lib/site";
 import { defineContent, type Locale } from "@/i18n/config";
 
 type Row = { term: string; detail: string };
@@ -15,12 +15,12 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
     eyebrow: "Pilot protokolü",
     title: "Pilot uygulama protokolü ve LOI çerçevesi.",
     description:
-      "Hastane yönetimiyle imzalanması planlanan Niyet Mektubu (LOI), pilotun kapsamı, süresi, veri işleme koşulları ve başarı ölçütleri için bu çerçeveyi esas alacaktır. Bu sayfa bağlayıcı değildir.",
+      "Bu çerçeve bir plandır; hiçbir fazı henüz hiçbir kurumda uygulanmadı. Bağlayıcı olmayan bir Niyet Mektubu (LOI), pilotun kapsamı, süresi ve başarı ölçütleri için bu çerçeveyi esas alır. LOI bir sözleşme değildir; LavieuxLabs henüz şirketleşmedi.",
     groups: [
       {
         title: "Amaç ve kapsam",
         rows: [
-          { term: "Amaç", detail: "Ürünün kurumun kendi verisinde, bağımsız bir referansa karşı doğrulanması." },
+          { term: "Amaç", detail: "Projenin kurumun kendi verisinde, bağımsız bir referansa karşı doğrulanması." },
           {
             term: "Faz A · Retrospektif",
             detail:
@@ -29,11 +29,12 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
           {
             term: "Faz B · Gölge mod",
             detail:
-              "Sistem canlı veriyi değerlendirir ama hekime ya da uzmana hiçbir şey göstermez. Bulgular sonradan gerçek kararlarla karşılaştırılır.",
+              "Planlanan, HBYS bağlantısı gerektirir. Sistem güncel veriyi değerlendirir ama hekime ya da uzmana hiçbir şey göstermez. Bulgular sonradan gerçek kararlarla karşılaştırılır.",
           },
           {
-            term: "Faz C · Canlı pilot",
-            detail: "İsteğe bağlı. Etik kurul ve kurum onayıyla, sınırlı bir serviste uyarılar kullanıcıya gösterilir.",
+            term: "Faz C · Planlanan pilot çalışma",
+            detail:
+              "İsteğe bağlı, henüz başlamadı. Yalnızca etik kurul ve kurum onayı alınırsa sınırlı bir serviste uyarılar kullanıcıya gösterilir.",
           },
           { term: "Süre ve servisler", detail: "Kurumla birlikte belirlenir ve LOI'de yazılır." },
         ],
@@ -43,18 +44,18 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
         rows: [
           {
             term: "Çalışma yeri",
-            detail: "Kurum içi sunucu (on-prem) ya da kuruma ayrılmış izole VPC. Pilot mimarisi kurum içi (on-prem) ve izole çalışacak şekilde tasarlanmıştır; pilot süreçlerde veri kurum altyapısından çıkarılmaz.",
+            detail: "Kurum içi sunucu (on-prem). Bugün kod düzeyinde mevcut kurulum Docker konteynerdir; kuruma ayrılmış izole VPC planlanan bir seçenektir. Hedef, verinin kurum altyapısından çıkmamasıdır.",
           },
           {
             term: "Anonimleştirme",
-            detail: "Kimlik bilgileri, veri sisteme girerken gerçek zamanlı olarak anonimleştirilir.",
+            detail: "Kimlik bilgileri veri sisteme verilmeden önce anonimleştirilir; yöntemi protokolde yazılır.",
           },
           { term: "Erişim", detail: "Rol bazlı. LavieuxLabs ekibi kimliği belirlenebilir veriye erişmez." },
           {
             term: "Hukuki zemin",
-            detail: "Etik kurul onayı, veri işleme sözleşmesi ve KVKK md. 12 kapsamındaki tedbirler.",
+            detail: "Etik kurul onayı ve KVKK md. 12 kapsamındaki tedbirler gerekir. Veri işleme koşulları ve imza tarafı, gerekli taraflar ve yetkili hukuk danışmanlarıyla netleştirilir.",
           },
-          { term: "Kayıt", detail: "Her değerlendirme ve erişim yalnızca eklenebilir kayda yazılır." },
+          { term: "Kayıt", detail: "Hedef: her değerlendirme ve erişimin yalnızca eklenebilir kayda yazılması." },
         ],
       },
       {
@@ -74,20 +75,20 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
         ],
       },
     ],
-    note: "Shield pilotlarında advers ilaç olayı yerine red oranı, ön kontrolde yakalanan red nedenleri ve uzman inceleme süresi ölçülür. Hiçbir fazda sistem, kullanıcının yerine karar vermez.",
+    note: "Shield (Tarık Ziya Eren'in bağımsız projesi) için planlanan pilotlarda advers ilaç olayı yerine red oranı, ön kontrolde yakalanan red nedenleri ve uzman inceleme süresi ölçülür. Hiçbir fazda sistem, kullanıcının yerine karar vermez.",
   },
   en: {
     eyebrow: "Pilot protocol",
     title: "Pilot protocol and LOI framework.",
     description:
-      "The Letter of Intent (LOI) planned to be signed with hospital management will use this framework for the pilot's scope, duration, data processing conditions and success criteria. This page is not binding.",
+      "This framework is a plan; none of its phases has been carried out at any institution yet. A non-binding Letter of Intent (LOI) uses it for the pilot's scope, duration and success criteria. An LOI is not an agreement; LavieuxLabs is not incorporated yet.",
     groups: [
       {
         title: "Purpose and scope",
         rows: [
           {
             term: "Purpose",
-            detail: "Validate the product on the institution's own data against an independent reference.",
+            detail: "Validate the project on the institution's own data against an independent reference.",
           },
           {
             term: "Phase A · Retrospective",
@@ -97,12 +98,12 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
           {
             term: "Phase B · Shadow mode",
             detail:
-              "The system assesses live data but shows nothing to physicians or specialists. Its findings are compared with the actual decisions afterwards.",
+              "Planned; needs an HIS connection. The system assesses current data but shows nothing to physicians or specialists. Its findings are compared with the actual decisions afterwards.",
           },
           {
-            term: "Phase C · Live pilot",
+            term: "Phase C · Proposed pilot study",
             detail:
-              "Optional. With ethics committee and institutional approval, alerts are shown to users on a limited ward.",
+              "Optional and not started. Only once ethics committee and institutional approval are in place are alerts shown to users on a limited ward.",
           },
           { term: "Duration and wards", detail: "Agreed with the institution and written into the LOI." },
         ],
@@ -113,19 +114,19 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
           {
             term: "Deployment",
             detail:
-              "On the institution's own servers (on-prem) or in an isolated VPC dedicated to it. The pilot architecture is designed to run on-premises and in isolation. During a pilot, data is not moved outside the institution's infrastructure.",
+              "On the institution's own servers (on-prem). Today the deployment that exists in the code is a Docker container; an isolated VPC dedicated to the institution is a planned option. The aim is that data does not leave the institution's infrastructure.",
           },
           {
             term: "Anonymisation",
-            detail: "Identifiers are anonymised in real time as data enters the system.",
+            detail: "Identifiers are anonymised before data is given to the system; the method is written into the protocol.",
           },
           { term: "Access", detail: "Role-based. The LavieuxLabs team has no access to identifiable data." },
           {
             term: "Legal basis",
             detail:
-              "Ethics committee approval, a data processing agreement and the safeguards required by Article 12 of KVKK (Turkey's data protection law).",
+              "Ethics committee approval and the safeguards required by Article 12 of KVKK (Turkey's data protection law) are needed. The data processing terms and the signing party are settled with the parties involved and their authorised legal advisers.",
           },
-          { term: "Logging", detail: "Every assessment and every access is written to an append-only log." },
+          { term: "Logging", detail: "Aim: every assessment and every access written to an append-only log." },
         ],
       },
       {
@@ -160,40 +161,77 @@ const sheet = defineContent({
     fileName: "LavieuxLabs – Pilot protokolü ve LOI çerçevesi",
     document: "Pilot protokolü ve LOI çerçevesi",
     revision: "Revizyon",
-    imprint: { organization: "Kuruluş", address: "Adres", contact: "İletişim", web: "Web" },
+    imprint: { organization: "Kuruluş", address: "Konum", contact: "İletişim", web: "Web" },
     organization: `LavieuxLabs · ${organizationProfile.tr.short}`,
     footer:
-      "Bu belge bilgilendirme amaçlıdır ve bağlayıcı değildir. Pilotun kapsamı, süresi, veri işleme koşulları ve başarı ölçütleri, hastane yönetimiyle imzalanması planlanan Niyet Mektubu'nda (LOI) yazılacaktır.",
+      "Bu belge bilgilendirme amaçlıdır ve bağlayıcı değildir. LavieuxLabs henüz şirketleşmedi ve bu belge herhangi bir kişiyi yetkili imzacı olarak göstermez. Shield için proje sahibi Tarık Ziya Eren'dir; PharmaDeux ekibin ortak projesidir. Her LOI, imzadan önce gerçek tarafları ve imza yetkisini ayrıca belirlemelidir.",
   },
   en: {
     button: "Print / save as PDF",
     fileName: "LavieuxLabs – Pilot protocol and LOI framework",
     document: "Pilot protocol and LOI framework",
     revision: "Revision",
-    imprint: { organization: "Organisation", address: "Address", contact: "Contact", web: "Web" },
+    imprint: { organization: "Organisation", address: "Location", contact: "Contact", web: "Web" },
     organization: `LavieuxLabs · ${organizationProfile.en.short}`,
     footer:
-      "This document is for information and is not binding. The pilot's scope, duration, data processing conditions and success criteria will be set out in the Letter of Intent (LOI) planned to be signed with hospital management.",
+      "This document is for information and is not binding. LavieuxLabs is not incorporated and this document does not name any person as an authorised signatory. Tarık Ziya Eren owns the Shield project; PharmaDeux is the team's joint project. Each LOI must separately identify the actual parties and signing authority before signature.",
   },
 });
 
-/** Datasheet panel: three columns on hairlines, numbers in mono. Prints as a one-page A4 sheet. */
-export default function PilotProtocol({ locale }: { locale: Locale }) {
+// Classes per surface. Paper: ink on paper, label in the left three columns, the three groups as plain columns
+// under a 2px ink rule (no card frame). Dark: the datasheet panel on hairlines.
+const tones = {
+  dark: {
+    section: "scroll-mt-24 pb-24 sm:pb-32",
+    grid: "grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline lg:grid-cols-3",
+    group: "bg-navy-850 p-5 sm:p-6",
+    groupTitle: "text-[11px] font-medium tracking-wider text-white/50 uppercase",
+    rows: "divide-y divide-hairline",
+    term: "text-[13px] font-medium text-white",
+    detail: "text-[13px] leading-relaxed text-white/55",
+    note: "max-w-3xl text-xs leading-relaxed text-white/55",
+  },
+  paper: {
+    section: "scroll-mt-16 border-t border-rule",
+    grid: "grid gap-x-10 gap-y-10 lg:grid-cols-3",
+    group: "border-t-2 border-ink pt-4",
+    groupTitle: "font-serif text-[20px] font-medium text-ink",
+    rows: "divide-y divide-rule",
+    term: "text-[15px] font-semibold text-ink",
+    detail: "text-[15px] leading-[1.6] text-ink-2",
+    note: "max-w-[64ch] text-[15px] leading-[1.6] text-ink-3",
+  },
+};
+
+/** The pilot plan as a datasheet: three groups of term / detail rows. Prints as a one-page A4 sheet. */
+export default function PilotProtocol({ locale, tone = "dark" }: { locale: Locale; tone?: "dark" | "paper" }) {
   const c = copy[locale];
   const s = sheet[locale];
+  const t = tones[tone];
+  const paper = tone === "paper";
   const place = office(locale);
+  // Paper pages have no entrance motion.
+  const Wrap = paper ? "div" : Reveal;
   const host = SITE_URL.replace(/^https?:\/\//, "");
+  const printButton = (
+    <PrintButton target="protocol" documentTitle={s.fileName} label={s.button} tone={tone} className="self-start lg:self-end" />
+  );
 
   return (
-    <section id="pilot-protokolu" data-print-sheet="protocol" className="scroll-mt-24 pb-24 sm:pb-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section
+      id="pilot-protokolu"
+      data-print-sheet="protocol"
+      aria-labelledby={paper ? "pilot-protokolu-title" : undefined}
+      className={t.section}
+    >
+      <div className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${paper ? "py-12 sm:py-20 lg:py-24" : ""}`}>
         {/* Letterhead: print only */}
         <header className="hidden print:block">
           <div className="flex items-baseline justify-between border-b-2 pb-2" data-print-rule>
             <p className="text-[15pt] font-semibold tracking-[-0.02em]">LavieuxLabs</p>
             <p className="text-[8.5pt]">
               {s.document} · {s.revision}{" "}
-              <span className="font-mono tabular-nums">{SITE_LAST_MODIFIED}</span>
+              <span className="font-mono tabular-nums">{PILOT_PROTOCOL_REVISION}</span>
             </p>
           </div>
           <dl className="mt-2 grid grid-cols-4 gap-3 border-b pb-2 text-[7.5pt] leading-snug">
@@ -203,8 +241,9 @@ export default function PilotProtocol({ locale }: { locale: Locale }) {
             </div>
             <div>
               <dt className="print-muted">{s.imprint.address}</dt>
+              {/* City only: the faculty address on the contact page is where the team studies, not the venture's office. */}
               <dd>
-                {OFFICE_ADDRESS_LINE}, {place.country}
+                {place.city}, {place.country}
               </dd>
             </div>
             <div>
@@ -218,34 +257,40 @@ export default function PilotProtocol({ locale }: { locale: Locale }) {
           </dl>
         </header>
 
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between print:mt-5">
-          <SectionHeader eyebrow={c.eyebrow} title={c.title} description={c.description} />
-          <PrintButton
-            target="protocol"
-            documentTitle={s.fileName}
-            label={s.button}
-            className="self-start lg:self-end"
-          />
-        </div>
-        <Reveal className="mt-12 print:mt-5">
-          <div
-            data-print-rule
-            className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline lg:grid-cols-3 print:grid-cols-3 print:gap-0 print:rounded-none"
-          >
+        {paper ? (
+          <div className="grid gap-x-10 gap-y-3 lg:grid-cols-12 print:mt-5 print:block">
+            <p className="font-serif text-[17px] text-ink-3 lg:col-span-3 lg:pt-2 print:hidden">{c.eyebrow}</p>
+            <div className="lg:col-span-9">
+              <h2
+                id="pilot-protokolu-title"
+                className="max-w-[26ch] font-serif text-[30px] leading-[1.1] font-medium tracking-[-0.015em] text-ink sm:text-[40px]"
+              >
+                {c.title}
+              </h2>
+              <p className="mt-4 max-w-[64ch] text-[17px] leading-[1.65] text-ink-2">{c.description}</p>
+              <div className="mt-6 flex">{printButton}</div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between print:mt-5">
+            <SectionHeader eyebrow={c.eyebrow} title={c.title} description={c.description} />
+            {printButton}
+          </div>
+        )}
+        <Wrap className={`${paper ? "mt-10 sm:mt-14" : "mt-12"} print:mt-5`}>
+          <div data-print-rule className={`${t.grid} print:grid-cols-3 print:gap-0 print:rounded-none`}>
             {c.groups.map((group) => (
               <section
                 key={group.title}
                 aria-label={group.title}
-                className="bg-navy-850 p-5 sm:p-6 print:border-l print:p-3 print:first:border-l-0"
+                className={`${t.group} print:border-t-0 print:border-l print:p-3 print:first:border-l-0`}
               >
-                <h3 className="text-[11px] font-medium tracking-wider text-white/50 uppercase print:text-[7.5pt]">
-                  {group.title}
-                </h3>
-                <dl className="mt-3 divide-y divide-hairline print:mt-1">
+                <h3 className={`${t.groupTitle} print:text-[7.5pt]`}>{group.title}</h3>
+                <dl className={`mt-3 ${t.rows} print:mt-1`}>
                   {group.rows.map((row) => (
                     <div key={row.term} className="py-3 print:py-1.5">
-                      <dt className="text-[13px] font-medium text-white print:text-[8.5pt]">{row.term}</dt>
-                      <dd className="print-muted mt-1 text-[13px] leading-relaxed text-white/55 print:mt-0.5 print:text-[8pt] print:leading-snug">
+                      <dt className={`${t.term} print:text-[8.5pt]`}>{row.term}</dt>
+                      <dd className={`print-muted mt-1 ${t.detail} print:mt-0.5 print:text-[8pt] print:leading-snug`}>
                         {row.detail}
                       </dd>
                     </div>
@@ -254,10 +299,8 @@ export default function PilotProtocol({ locale }: { locale: Locale }) {
               </section>
             ))}
           </div>
-        </Reveal>
-        <p className="mt-4 max-w-3xl text-xs leading-relaxed text-white/55 print:mt-3 print:max-w-none print:text-[8pt]">
-          {c.note}
-        </p>
+        </Wrap>
+        <p className={`${paper ? "mt-8" : "mt-4"} ${t.note} print:mt-3 print:max-w-none print:text-[8pt]`}>{c.note}</p>
 
         {/* Footer line: print only */}
         <p className="print-muted mt-4 hidden border-t pt-2 text-[7.5pt] leading-snug print:block">{s.footer}</p>

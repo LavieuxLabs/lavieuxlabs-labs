@@ -1,131 +1,118 @@
-import {
-  BookOpen,
-  FileCheck2,
-  FlaskConical,
-  GitCompare,
-  GraduationCap,
-  Hospital,
-  Cable,
-  Landmark,
-  Lock,
-  LockKeyhole,
-  Microscope,
-  Network,
-  ReceiptText,
-  Repeat,
-  Route,
-  ShieldAlert,
-  Stethoscope,
-  Target,
-  UserRound,
-  Users,
-  Workflow,
-} from "lucide-react";
+import Link from "next/link";
+import type { ReactNode } from "react";
+import { ChevronRight } from "lucide-react";
 import CopyEmail from "@/components/CopyEmail";
-import DetailCell, { ExternalCell, InternalCell } from "@/components/DetailCell";
-import { TEAM_LEAD, contactHref, organizationProfile } from "@/lib/site";
-import PageHero from "@/components/PageHero";
-import SectionHeader from "@/components/SectionHeader";
-import { RailMarker } from "@/components/TelemetryRails";
-import CtaPanel from "@/components/CtaPanel";
-import Reveal from "@/components/Reveal";
-import SpecCard, { JoinedGrid, type SpecRow } from "@/components/SpecCard";
+import { BUTTON, Disclosure, FOCUS, FactRows, LINK, PaperSection, TEXT_ACTION } from "@/components/paper/Editorial";
+import { contactHref, organizationProfile, type ContactPath, type ProductValue } from "@/lib/site";
+import { TEAM, teamCopy } from "@/lib/team";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
-import { testsLabel } from "@/lib/metrics";
+import { testsLabel, trlLabel } from "@/lib/metrics";
 
 export const metadata = defineMetadata("/about", {
   tr: {
     title: "Hakkımızda",
     description:
-      "LavieuxLabs, Konya Teknik Üniversitesi öğrencileri tarafından geliştirilen, ilaç güvenliği ve hastane faturalaması için karar destek yazılımı üreten bağımsız bir Ar-Ge girişimidir.",
+      "LavieuxLabs, Konya Teknik Üniversitesi öğrencilerinin kurduğu, henüz şirketleşmemiş bağımsız bir Ar-Ge girişimidir. Ekibin ortak projesi PharmaDeux ilaç güvenliği üzerinedir; Shield, Tarık Ziya Eren'in bağımsız projesi olarak sitede tanıtılır.",
   },
   en: {
     title: "About",
     description:
-      "LavieuxLabs is an independent R&D venture built by students of Konya Technical University, developing decision support software for medication safety and hospital billing.",
+      "LavieuxLabs is an independent R&D venture founded by students of Konya Technical University and not yet incorporated. The team's joint project PharmaDeux works on medication safety; Shield is presented on the site as an independent project by Tarık Ziya Eren.",
   },
 });
 
-const pillarIcons = [Target, FlaskConical];
-const focusIcons = [Route, Network, ReceiptText];
-// Decision path → PharmaDeux (physicians), data layer → both products (neutral), revenue → Shield.
-const focusAccents = ["pharma", undefined, "shield"] as const;
-const rndIcons = [BookOpen, GitCompare, Repeat, Lock];
-const collaborationIcons = [Hospital, Microscope, GraduationCap, Users];
-// Partner profiles → the contact path that fits them. Integrators start with the intro call: there is
-// no integration programme yet, only the FHIR R4 bridge to talk about.
-const partnerMeta = [
-  { icon: Hospital, href: contactHref("pilot", "pharmadeux") },
-  { icon: GraduationCap, href: contactHref("academic") },
-  { icon: Landmark, href: contactHref("pilot", "shield") },
-  { icon: Cable, href: contactHref("intro") },
-];
-// Tone drives the card's implementation track (input → prep → live); it must match the status text:
-// Class IIa target and architecture alignment are in preparation, roadmap and control-set target are inputs.
-// Accent follows ownership: MDR, IEC 62304 / ISO 14971 and ISO 13485 concern the PharmaDeux medical-device
-// software; KVKK / ISO 27001 cover both products, so that card stays neutral.
-const regulatoryMeta = [
-  { id: "REG-01", icon: FileCheck2, tone: "prep" as const, accent: "pharma" as const },
-  { id: "REG-02", icon: Workflow, tone: "prep" as const, accent: "pharma" as const },
-  { id: "REG-03", icon: ShieldAlert, tone: "input" as const, accent: "pharma" as const },
-  { id: "REG-04", icon: LockKeyhole, tone: "input" as const, accent: undefined },
-];
+/*
+ * About on the paper surface (Academic Editorial): who we are, the problems we work on, how we work, the two
+ * projects and who owns them, the team, and who we want to work with. Technical detail that the product pages
+ * already cover is linked, not repeated. No entrance motion. Section ids linked from elsewhere are kept:
+ * #ekip (home page), #odaklar (command palette), #isbirligi.
+ */
 
-type Heading = { eyebrow: string; title: string; description: string };
-type Card = { title: string; body: string; rows: SpecRow[] };
-type FocusCard = Card & { outcome: { label: string; body: string } };
+type Row = { label: string; value: string };
+type Step = { title: string; body: string; link?: { label: string; href: string } };
+type Project = { name: string; owner: string; body: string; rows: Row[]; link: string };
+type Partner = { title: string; who: string; body: string; link: string; path: ContactPath; product?: ProductValue };
 
 const copy = defineContent<{
-  crumbs: { home: string; here: string };
-  eyebrow: string;
+  crumbs: { home: string; here: string; aria: string };
   title: string;
-  description: string;
-  pillars: { label: string; title: string; body: string }[];
-  rules: Heading;
+  lead: string;
+  primary: string;
+  secondary: string;
+  summaryTitle: string;
+  summary: Row[];
+  purpose: { label: string; title: string; items: { title: string; owner: string; body: string }[]; principle: string };
+  approach: { label: string; title: string; intro: string; steps: Step[]; whyRules: string; whyRulesMeta: string; regulatory: string; regulatoryLink: string };
   columns: { criterion: string; probabilistic: string; deterministic: string };
-  shortColumns: { probabilistic: string; deterministic: string };
   comparison: { criterion: string; probabilistic: string; deterministic: string }[];
-  focusHeading: Heading;
-  focus: FocusCard[];
-  rndHeading: Heading;
-  rnd: Card[];
-  regulatoryHeading: Heading;
-  regulatory: (Card & { status: string })[];
-  collaborationHeading: Heading;
-  collaboration: Card[];
-  partnersHeading: Heading;
-  partners: { label: string; title: string; body: string; rows: SpecRow[]; link: string }[];
-  teamHeading: Heading;
-  lead: { label: string; role: string; body: string; rows: SpecRow[]; email: string };
-  advisory: { label: string; title: string; body: string; rows: SpecRow[]; link: string };
-  cta: Heading & { label: string };
+  projects: { label: string; title: string; intro: string; pharma: Project; shield: Project };
+  team: { label: string; title: string; intro: string };
+  collab: { label: string; title: string; intro: string; partners: Partner[]; cta: string; email: string; noPatientData: string };
 }>({
   tr: {
-    crumbs: { home: "Ana sayfa", here: "Hakkımızda" },
-    eyebrow: "Hakkımızda",
-    title: "İlaç güvenliği ve faturalama için test edilebilir yazılım yapıyoruz.",
-    description: `${organizationProfile.tr.positioning} ${organizationProfile.tr.stage} Hatanın hastaya ya da kuruma pahalıya mal olduğu işler için, her sonucu yeniden üretilebilen ve kararı insana bırakan sistemler geliştiriyoruz.`,
-    pillars: [
-      {
-        label: "Vizyon",
-        title: "Her klinik ve idari kararın nedeni gösterilebilmeli.",
-        body: "Bir karar destek sistemi sonucunu tekrar üretebilmeli ve nedenini gösterebilmeli. Değerini bununla ölçüyoruz.",
-      },
-      {
-        label: "Misyon",
-        title: "Hata maliyeti yüksek alanlar için test edilebilir yazılım.",
-        body: "İlaç güvenliği ve faturalama gibi alanlarda hekimin ve uzmanın işini kolaylaştıran araçlar yapıyoruz. Karar onlarda kalır.",
-      },
+    crumbs: { home: "Ana sayfa", here: "Hakkımızda", aria: "Sayfa konumu" },
+    title: "Klinik karar desteği üzerinde çalışan bağımsız bir öğrenci girişimi.",
+    lead: `${organizationProfile.tr.positioning} Hatanın hastaya ya da kuruma pahalıya mal olduğu işler için, sonucunu yeniden üretebilen ve kararı insana bırakan yazılım geliştiriyoruz.`,
+    primary: "15 dk tanışma görüşmesi",
+    secondary: "Ekibimiz",
+    summaryTitle: "Kısaca",
+    summary: [
+      { label: "Biz kimiz", value: "Konya Teknik Üniversitesi'nde okuyan öğrencilerden oluşan bir ekip." },
+      { label: "Hukuki durum", value: "Henüz şirketleşmedik." },
+      { label: "Üniversite", value: organizationProfile.tr.independence },
+      { label: "Projeler", value: "PharmaDeux ekibin ortak projesi. Shield, Tarık Ziya Eren'in bağımsız projesi." },
+      { label: "Aşama", value: "İkisi de prototip. Kurum doğrulaması ve hastane pilotu henüz yapılmadı." },
     ],
-    rules: {
-      eyebrow: "Neden kural tabanlı",
-      title: "Karar anında kural tabanlı sistem kullanıyoruz.",
-      description:
-        "Olasılıksal ve üretken modeller araştırma ve analiz için faydalı. Ama hekimin önüne gelen bir uyarının her seferinde aynı sonucu vermesi ve hangi kaynaktan geldiğinin gösterilebilmesi gerekir. Bu yüzden karar anında kural tabanlı sistem kullanıyoruz.",
+    purpose: {
+      label: "Amaç",
+      title: "Hangi sorunlar üzerinde çalışıyoruz.",
+      items: [
+        {
+          title: "Reçete anında ilaç güvenliği",
+          owner: "PharmaDeux, ekibin ortak projesi",
+          body: "Çok ilaç kullanan bir hastada etkileşim, böbrek fonksiyonuna göre doz ve QT uzaması aynı anda kontrol edilmeli. eGFR'si 90 olan hastada güvenli olan bir reçete, eGFR 30'a düştüğünde doz ayarı gerektirebilir. PharmaDeux bu kontrolleri reçete yazılırken yapmayı hedefliyor.",
+        },
+        {
+          title: "Fatura gönderilmeden önce red riski",
+          owner: "Shield, Tarık Ziya Eren'in bağımsız projesi",
+          body: "SUT ve SGK kurallarına takılan bir fatura kalemi çoğu zaman gönderildikten sonra fark edilir. Shield, riskli kalemi gönderimden önce, onu işaretleyen kuralla birlikte uzmanın önüne koymayı hedefliyor.",
+        },
+      ],
+      principle:
+        "İki işte de kararı hekim, eczacı ya da faturalama uzmanı verir. Yazılım bir uyarının nedenini gösterir ve aynı girdide aynı sonucu verir.",
+    },
+    approach: {
+      label: "Çalışma yaklaşımı",
+      title: "Kaynaktan koda, koddan teste, testten doğrulamaya.",
+      intro: "Düzenlemeye tabi bir yazılımın gerektirdiği izlenebilirliği ve değişiklik kontrolünü ilk günden uyguluyoruz.",
+      steps: [
+        {
+          title: "Araştırma",
+          body: "Kurallar resmi ürün bilgilerinden (KÜB/KT), klinik kılavuzlardan ve hakemli literatürden çıkarılır. Her kural kaynağını gösterir.",
+          link: { label: "Standartlar ve referanslar", href: "/standartlar" },
+        },
+        {
+          title: "Geliştirme",
+          body: "Karar anında kural tabanlı bir sistem kullanıyoruz. Aynı girdi ve kural sürümü her zaman aynı sonucu verir; gerekçe, tetiklenen kuralın kendisidir. Kural setleri sürümlenir.",
+        },
+        {
+          title: "Test",
+          body: `Her klinik gereksinim, onu uygulayan kurala ve onu sınayan teste bağlıdır. Hiçbir değişiklik gözden geçirilmeden ve regresyon testinden geçmeden yayına çıkmaz. PharmaDeux'ta ${testsLabel("tr")} otomatik test var; bu yazılım düzeyinde bir ölçüdür, klinik doğrulama değildir.`,
+        },
+        {
+          title: "Doğrulama",
+          body: "Klinik doğrulama henüz yapılmadı. Plan, önce geçmiş vakalarda retrospektif test, sonra gölge modda pilot. Her çalışmadan önce kurumun etik kurul onayı, verinin kurum içinde anonimleştirilmesi ve Veri İşleme Sözleşmesi (DPA) gerekir.",
+          link: { label: "PharmaDeux doğrulama planı", href: "/initiatives/pharmadeux#protokol" },
+        },
+      ],
+      whyRules: "Neden kural tabanlı",
+      whyRulesMeta: "olasılıksal modelle beş ölçütte karşılaştırma",
+      regulatory:
+        "Düzenleyici durum: PharmaDeux için MDR kapsamında Sınıf IIa hedefleniyor; CE işareti henüz yok. IEC 62304 ve ISO 14971, yaşam döngüsü ve risk yönetimi için tasarım girdisi olarak kullanılıyor; uygunluk değerlendirmesi yapılmadı. ISO 13485 kalite yönetim sistemi yol haritasında. Bu bir sertifika beyanı değildir.",
+      regulatoryLink: "Kalite, bilgi güvenliği ve MDR",
     },
     columns: { criterion: "Ölçüt", probabilistic: "Olasılıksal model", deterministic: "Kural tabanlı sistem" },
-    shortColumns: { probabilistic: "Olasılıksal", deterministic: "Kural tabanlı" },
     comparison: [
       {
         criterion: "Tekrarlanabilirlik",
@@ -153,291 +140,144 @@ const copy = defineContent<{
         deterministic: "Kapsam dışı durumlar açıkça “değerlendirilemedi” olarak işaretlenir.",
       },
     ],
-    focusHeading: {
-      eyebrow: "Ar-Ge odakları",
-      title: "Üç Ar-Ge odağı ve kuruma etkisi.",
-      description:
-        "Her odağın teknik kapsamını ve hastanede kimin işini kolaylaştırdığını yazdık. Henüz tamamlanmamış olanı açıkça belirttik.",
-    },
-    focus: [
-      {
-        title: "Deterministik karar yolu",
-        body: "Bulgu üretken bir modelden değil, sürümlenmiş bir kural motorundan gelir. Aynı girdi ve kural sürümü her zaman aynı sonucu verir. Yaşam döngüsü IEC 62304'e göre kurgulanır.",
+    projects: {
+      label: "Projeler",
+      title: "Sitede iki proje var; sahiplikleri farklı.",
+      intro: "PharmaDeux'u ekip birlikte geliştiriyor. Shield, Tarık Ziya Eren'in bağımsız projesi olarak bu sitede tanıtılıyor.",
+      pharma: {
+        name: "PharmaDeux",
+        owner: "LavieuxLabs ekibinin ortak projesi",
+        body: "Reçete yazılırken etkileşim, böbrek fonksiyonuna göre doz ve QT riski gibi kontrolleri tek yerde yapan bir klinik karar destek prototipi.",
         rows: [
-          { label: "Motor", value: "Sürümlenmiş kural seti" },
-          { label: "Yaşam döngüsü", value: "IEC 62304", mono: true, cite: "iec62304" },
-          { label: "Durum", value: "Mimari uyum · sertifika henüz yok" },
+          { label: "Aşama", value: `Prototip, ${trlLabel("tr")} (ekibin öz değerlendirmesi)` },
+          { label: "Otomatik test", value: `${testsLabel("tr")} (yazılım düzeyi)` },
+          { label: "Klinik kanıt", value: "Henüz yok" },
+          { label: "Düzenleyici", value: "MDR Sınıf IIa hedefi; CE işareti yok" },
         ],
-        outcome: {
-          label: "Hekim için",
-          body: "Karar yolunda üretken model yok. Her uyarı, onu tetikleyen kural ve eşik değeriyle gelir; aynı hasta için sonuç tekrar üretilebilir.",
+        link: "PharmaDeux sayfası",
+      },
+      shield: {
+        name: "Shield",
+        owner: "Tarık Ziya Eren'in bağımsız projesi; LavieuxLabs ekibinin ortak projesi değil",
+        body: "SUT ve SGK kurallarını fatura gönderilmeden önce çalışan bir kural setine dönüştüren bir prototip. Riskli kalem, tetiklenen kural ve gerekçesiyle uzmana gider.",
+        rows: [
+          { label: "Aşama", value: "Prototip" },
+          { label: "Doğrulama", value: "Gerçek faturalarda henüz denenmedi" },
+          { label: "Skor", value: "Kural skoru; ret olasılığı veya tasarruf tahmini değildir" },
+        ],
+        link: "Shield sayfası",
+      },
+    },
+    team: {
+      label: "Ekibimiz",
+      title: "PharmaDeux'u geliştiren ekip.",
+      intro:
+        "Ekip, Konya Teknik Üniversitesi'nde okuyan öğrencilerden oluşuyor ve PharmaDeux üzerinde birlikte çalışıyor. Her üyenin üzerinde çalıştığı alanları aşağıya yazdık. Shield, Tarık Ziya Eren'in bağımsız projesidir; ekibin ortak projesi değildir.",
+    },
+    collab: {
+      label: "İş birliği",
+      title: "Kimlerle çalışmak istiyoruz.",
+      intro: "Dört ortak profili arıyoruz. İlk adım 15 dakikalık bir görüşmedir ve taahhüt gerektirmez; her satırdaki bağlantı ilgili formu açar.",
+      partners: [
+        {
+          title: "Klinik doğrulama ortağı",
+          who: "Eğitim ve araştırma, üniversite hastaneleri",
+          body: "PharmaDeux'u geçmiş vakalarda ve gölge modda ölçmek için klinik veri ve bağımsız bir uzman paneli.",
+          link: "Pilot başvurusu (PharmaDeux)",
+          path: "pilot",
+          product: "pharmadeux",
         },
-      },
-      {
-        title: "Sağlık veri katmanı ve birlikte çalışabilirlik",
-        body: "Veri katmanı, klinik veriyi HL7 FHIR R4 kaynakları olarak alacak şekilde tasarlandı. Pilot kurulumunda FHIR'a geçmemiş HBYS'lerin HL7 v2 mesajları FHIR R4'e dönüştürülür. İlaç, tanı ve birimler ATC, ICD-10 ve UCUM ile eşleştirilir.",
-        rows: [
-          { label: "Standart", value: "HL7 FHIR R4", mono: true },
-          { label: "Köprü", value: "HL7 v2 · MLLP → FHIR R4" },
-          { label: "Kodlama", value: "ATC · ICD-10 · UCUM", mono: true },
-          { label: "Pilot kurulumu", value: "Kurum içi (Docker) · izole VPC" },
-        ],
-        outcome: {
-          label: "Bilgi işlem için",
-          body: "Pilot mimarisi kurum içi (on-prem) ve izole çalışacak şekilde tasarlanmıştır; pilot süreçlerde veri kurum altyapısından çıkarılmaz. Sistem, mevcut HBYS akışını değiştirmeden yanına eklenen bir katman olarak çalışacak şekilde tasarlandı.",
+        {
+          title: "Akademik araştırmacı",
+          who: "Tıp ve farmakoloji akademisyenleri",
+          body: "Kural setlerinin ve organ risk protokollerinin kaynağa göre gözden geçirilmesi ve ortak yayın.",
+          link: "Akademik iş birliği",
+          path: "academic",
         },
-      },
-      {
-        title: "Gelir bütünlüğü ve regülasyon modellemesi",
-        body: "SUT ve SGK geri ödeme kuralları, fatura gönderilmeden önce çalışan bir kural setine dönüştürülür. Riskli kalem, tetiklenen kural ve gerekçesiyle uzmanın kuyruğuna düşer. PharmaDeux'nün MDR teknik dosyası aynı izlenebilirlikle hazırlanır.",
-        rows: [
-          { label: "Kurallar", value: "SUT · SGK geri ödeme" },
-          { label: "Kategori", value: "EK-2B hizmet başı · EK-2C paket" },
-          { label: "Teknik dosya", value: "MDR Sınıf IIa hedefi · CE henüz yok" },
-        ],
-        outcome: {
-          label: "Hastane yönetimi için",
-          body: "Red riski fatura gönderilmeden önce, gerekçesiyle görülür. Düzeltme, red kararı gelmeden yapılabilir.",
+        {
+          title: "Gelir döngüsü pilot ortağı",
+          who: "Özel ve vakıf hastaneleri",
+          body: "Tarık Ziya Eren'in bağımsız projesi Shield'ın red yakalama ve yanlış pozitif oranlarının geçmiş faturalarda ölçülmesi.",
+          link: "Pilot başvurusu (Shield)",
+          path: "pilot",
+          product: "shield",
         },
-      },
-    ],
-    rndHeading: {
-      eyebrow: "Çalışma biçimi",
-      title: "Kaynaktan koda, koddan teste.",
-      description:
-        "Düzenlemeye tabi bir ürünün gerektirdiği izlenebilirliği ve değişiklik kontrolünü ilk günden uyguluyoruz.",
-    },
-    rnd: [
-      {
-        title: "Kaynağı belli kurallar",
-        body: "Kurallar resmi ürün bilgilerinden (KÜB/KT), klinik kılavuzlardan ve hakemli literatürden çıkarılır. Her kural kaynağını gösterir.",
-        rows: [
-          { label: "Kaynaklar", value: "KÜB / KT · kılavuzlar · hakemli literatür" },
-          { label: "İzlenebilirlik", value: "Kural → kaynak" },
-          { label: "Örnekler", value: "Standartlar ve referanslar", href: localizedPath("tr", "/standartlar") },
-        ],
-      },
-      {
-        title: "Gereksinimden teste iz",
-        body: "Her klinik gereksinim, onu uygulayan kurala ve onu sınayan teste bağlıdır.",
-        rows: [
-          { label: "Zincir", value: "Gereksinim → kural → test" },
-          { label: "Otomatik test", value: testsLabel("tr"), mono: true },
-        ],
-      },
-      {
-        title: "Kontrollü değişiklik",
-        body: "Kural setleri sürümlenir. Hiçbir değişiklik gözden geçirilmeden ve testten geçmeden yayına çıkmaz.",
-        rows: [
-          { label: "Sürümleme", value: "Kural seti · bilgi tabanı" },
-          { label: "Kapı", value: "Gözden geçirme + regresyon testi" },
-        ],
-      },
-      {
-        title: "Baştan güvenlik ve gizlilik",
-        body: "Az veri toplamak, rol bazlı erişim ve değiştirilemeyen kayıt sonradan eklenmedi; sistem bunlarla başladı.",
-        rows: [
-          { label: "Kontroller", value: "Veri minimizasyonu · RBAC" },
-          { label: "Kayıt", value: "Append-only denetim izi" },
-        ],
-      },
-    ],
-    regulatoryHeading: {
-      eyebrow: "Kalite ve regülasyon",
-      title: "Hangi standarda göre, hangi aşamadayız.",
-      description:
-        "Referans aldığımız standartları ve her birinde nerede olduğumuzu yazdık. Bu bir sertifika beyanı değildir.",
-    },
-    regulatory: [
-      {
-        title: "AB Tıbbi Cihaz Yönetmeliği",
-        body: "PharmaDeux, ilaç tedavisi kararlarına bilgi sağlayan bir yazılım olduğu için MDR kapsamına giriyor.",
-        rows: [
-          { label: "Mevzuat", value: "MDR 2017/745 · Ek VIII Kural 11", cite: "mdrRule11" },
-          { label: "Hedef", value: "SaMD · Sınıf IIa" },
-          { label: "CE işareti", value: "Henüz yok" },
-        ],
-        status: "Sınıf IIa hedefi",
-      },
-      {
-        title: "Yazılım yaşam döngüsü ve risk",
-        body: "Geliştirme ve risk yönetimi süreçleri bu standartlara göre kuruluyor.",
-        rows: [
-          { label: "Yaşam döngüsü", value: "IEC 62304", cite: "iec62304" },
-          { label: "Risk", value: "ISO 14971" },
-        ],
-        status: "Mimari uyum",
-      },
-      {
-        title: "Kalite yönetim sistemi",
-        body: "Kalite yönetim sistemi ve kullanılabilirlik çalışması yol haritasında.",
-        rows: [
-          { label: "KYS", value: "ISO 13485" },
-          { label: "Kullanılabilirlik", value: "IEC 62366-1" },
-        ],
-        status: "Yol haritasında",
-      },
-      {
-        title: "Bilgi güvenliği ve kişisel veri",
-        body: "Kişisel veriler KVKK'ya göre işlenir; güvenlik kontrolleri ISO/IEC 27001'e göre kuruluyor.",
-        rows: [
-          { label: "Mevzuat", value: "6698 sayılı KVKK · md. 12" },
-          { label: "Kontroller", value: "ISO/IEC 27001" },
-        ],
-        status: "Kontrol setine uyum hedefi",
-      },
-    ],
-    collaborationHeading: {
-      eyebrow: "Klinik iş birliği",
-      title: "Klinik doğrulamayı sahadaki hekimlerle yürütmeyi hedefliyoruz.",
-      description:
-        "Klinik karar destek sistemleri sahadaki ekiplerin iş akışına göre tasarlanmalıdır. Danışma kurulu kurulum aşamasında; henüz resmi bir kurul yok. Aşağıdakiler pilot döneminde kuracağımız çalışma biçimidir.",
-    },
-    collaboration: [
-      {
-        title: "Klinik danışma",
-        body: "Pilot döneminde kural setleri ve arayüzler, klinisyenlerin ve klinik eczacıların geri bildirimiyle gözden geçirilecek.",
-        rows: [
-          { label: "Paydaşlar", value: "Klinisyen · klinik eczacı" },
-          { label: "Çıktı", value: "Gözden geçirilmiş kural setleri" },
-        ],
-      },
-      {
-        title: "Etik kurul ve veri protokolü",
-        body: "Pilot çalışmalar öncesinde kurumun yetkili etik kurulundan onay alınması, verilerin kurum içi altyapıda anonimleştirilmesi ve taraflar arasında Veri İşleme Sözleşmesi (DPA) imzalanması zorunlu önkoşuldur.",
-        rows: [
-          { label: "Önkoşul", value: "Kurum etik kurul onayı · DPA" },
-          { label: "Kapsam", value: "Yerinde anonimleştirme · KVKK uyumlu" },
-        ],
-      },
-      {
-        title: "Yayın",
-        body: "Pilot doğrulama sonuçlarının, ortak kurumların klinisyenleri ve araştırmacılarıyla birlikte hakemli tıp dergilerinde duyarlılık, özgüllük ve PPV raporu olarak yayımlanması hedeflenir.",
-        rows: [
-          { label: "Hedef", value: "Hakemli yayın" },
-          { label: "Raporlama", value: "Duyarlılık · özgüllük · PPV" },
-        ],
-      },
-      {
-        title: "Sahadan geri bildirim",
-        body: "Pilot kullanıcıların geri bildirimi düzenli toplanacak ve hangi gereksinime dönüştüğü takip edilecek.",
-        rows: [
-          { label: "Toplama", value: "Yapılandırılmış form" },
-          { label: "İzlenebilirlik", value: "Geri bildirim → gereksinim" },
-        ],
-      },
-    ],
-    partnersHeading: {
-      eyebrow: "Ortaklıklar",
-      title: "Kime, hangi amaçla ihtiyacımız var.",
-      description:
-        "Dört ortak profili arıyoruz. Her birinin hangi işte ve hangi aşamada gerektiğini yazdık; altındaki bağlantı ilgili formu açar.",
-    },
-    partners: [
-      {
-        label: "Klinik doğrulama",
-        title: "Klinik doğrulama ortağı",
-        body: "PharmaDeux'nün geçmiş vakalarda ve gölge modda ölçülmesi için klinik veri ve bağımsız uzman paneli gerekiyor.",
-        rows: [
-          { label: "Kim", value: "Eğitim ve araştırma · üniversite hastaneleri" },
-          { label: "Amaç", value: "Retrospektif vaka testi · gölge mod pilotu" },
-          { label: "Aşama", value: "Şimdi gerekli · hedef: klinik düzeyde ilk kanıt" },
-        ],
-        link: "Pilot başvurusu (PharmaDeux)",
-      },
-      {
-        label: "Akademik",
-        title: "Akademik danışman ve araştırmacı",
-        body: "Kural setlerinin ve organ risk protokollerinin kaynağa göre gözden geçirilmesi ve ortak yayın.",
-        rows: [
-          { label: "Kim", value: "Tıp ve farmakoloji akademisyenleri" },
-          { label: "Amaç", value: "Kural setleri · organ risk protokolleri" },
-          { label: "Aşama", value: "Şimdi gerekli · danışma kurulu kurulum aşamasında, henüz resmi bir kurul yok" },
-        ],
-        link: "Akademik iş birliği",
-      },
-      {
-        label: "Gelir döngüsü",
-        title: "Gelir döngüsü ve hastane pilot ortağı",
-        body: "Shield'ın red yakalama ve yanlış pozitif oranlarının gerçek faturalarda ölçülmesi.",
-        rows: [
-          { label: "Kim", value: "Özel ve vakıf hastaneleri" },
-          { label: "Amaç", value: "Retrospektif fatura analizi" },
-          { label: "Aşama", value: "Şimdi gerekli · hedef: ilk ölçülmüş sonuç" },
-        ],
-        link: "Pilot başvurusu (Shield)",
-      },
-      {
-        label: "Teknoloji",
-        title: "Teknoloji ve HBYS entegratörü",
-        body: "Hastane bilgi sistemleriyle HL7 FHIR R4 köprüsünün gerçek bir sistemde kurulması.",
-        rows: [
-          { label: "Kim", value: "Sağlık bilgi sistemi firmaları" },
-          { label: "Amaç", value: "HL7 FHIR R4 · HL7 v2 köprüsü" },
-          { label: "Aşama", value: "Pilot entegrasyonu sırasında" },
-        ],
-        link: "Tanışma görüşmesi",
-      },
-    ],
-    teamHeading: {
-      eyebrow: "Ekip",
-      title: "Çekirdek kadro ve girişim.",
-      description: `${organizationProfile.tr.stage} ${organizationProfile.tr.independence}`,
-    },
-    lead: {
-      label: "Çekirdek kadro",
-      role: "Proje lideri ve sistem mimarı",
-      body: "Karar motorunun mimarisini ve PharmaDeux'nün farmakolojik kural motorlarını tasarlıyor. FHIR R4 entegrasyonundan kuruluma kadar sistem tasarımını yürütüyor.",
-      rows: [
-        { label: "Odak", value: "Karar motoru mimarisi · farmakolojik kural motorları" },
-        { label: "Entegrasyon", value: "HL7 FHIR R4 · sistem tasarımı" },
-        { label: "Eğitim", value: "Konya Teknik Üniversitesi · Yapay Zeka ve Makine Öğrenmesi" },
+        {
+          title: "HBYS entegratörü",
+          who: "Sağlık bilgi sistemi firmaları",
+          body: "HL7 FHIR R4 köprüsünün gerçek bir hastane bilgi sisteminde kurulması.",
+          link: "Tanışma görüşmesi",
+          path: "intro",
+        },
       ],
-      email: "E-posta",
-    },
-    advisory: {
-      label: "Danışma",
-      title: "Klinik ve Akademik Danışma Kurulu",
-      body: "Danışma kurulu kurulum aşamasında; henüz resmi bir kurul yok. Klinik doğrulama, organ risk protokolleri ve farmakoloji kuralları tıp fakültesi akademisyenleri ve klinik danışmanlarla birlikte yürütülecek. Yeni akademik ortaklıklara açığız.",
-      rows: [
-        { label: "Kapsam", value: "Klinik doğrulama · organ risk protokolleri · farmakoloji kuralları" },
-        { label: "Danışmanlar", value: "Tıp fakültesi akademisyenleri · klinik danışmanlar" },
-        { label: "Durum", value: "Kurulum aşamasında · üyeler onaylarıyla yayımlanacak" },
-      ],
-      link: "Akademik iş birliği için yazın",
-    },
-    cta: {
-      eyebrow: "İletişim",
-      title: "Pilot, doğrulama ya da akademik iş birliği için yazın.",
-      description: "Klinik, kurumsal ya da akademik bir çalışma fikriniz varsa kısa bir mesaj yeterli.",
-      label: "Bize yazın",
+      cta: "Bize yazın",
+      email: "ya da e-posta:",
+      noPatientData: "Hasta verisi ve gerçek fatura verisi göndermeyin.",
     },
   },
   en: {
-    crumbs: { home: "Home", here: "About" },
-    eyebrow: "About",
-    title: "We build testable software for medication safety and billing.",
-    description: `${organizationProfile.en.positioning} ${organizationProfile.en.stage} For work where a mistake is costly to a patient or an institution, we build systems that can reproduce every result and leave the decision to a person.`,
-    pillars: [
-      {
-        label: "Vision",
-        title: "The reason behind every clinical and administrative decision should be visible.",
-        body: "A decision support system should reproduce its result and show the reason for it. That is how we measure its value.",
-      },
-      {
-        label: "Mission",
-        title: "Testable software where errors are expensive.",
-        body: "In medication safety and billing, we build tools that make the physician's and specialist's work easier. The decision stays with them.",
-      },
+    crumbs: { home: "Home", here: "About", aria: "Breadcrumb" },
+    title: "An independent student venture working on clinical decision support.",
+    lead: `${organizationProfile.en.positioning} For work where a mistake is costly to a patient or an institution, we build software that can reproduce its results and leaves the decision to a person.`,
+    primary: "15-minute intro call",
+    secondary: "Our team",
+    summaryTitle: "In brief",
+    summary: [
+      { label: "Who we are", value: "A team of students at Konya Technical University." },
+      { label: "Legal status", value: "Not incorporated yet." },
+      { label: "University", value: organizationProfile.en.independence },
+      { label: "Projects", value: "PharmaDeux is the team's joint project. Shield is an independent project by Tarık Ziya Eren." },
+      { label: "Stage", value: "Both are prototypes. No institutional validation or hospital pilot has been done yet." },
     ],
-    rules: {
-      eyebrow: "Why rule-based",
-      title: "We use a rule-based system at the point of decision.",
-      description:
-        "Probabilistic and generative models are useful for research and analysis. But an alert shown to the physician has to give the same result every time and show where it comes from. That is why we use a rule-based system at the point of decision.",
+    purpose: {
+      label: "Purpose",
+      title: "The problems we work on.",
+      items: [
+        {
+          title: "Medication safety at the moment of prescribing",
+          owner: "PharmaDeux, the team's joint project",
+          body: "For a patient on many drugs, interactions, renal dosing and QT prolongation need to be checked together. A prescription that is safe at an eGFR of 90 may need a dose adjustment at 30. PharmaDeux aims to run these checks while the prescription is written.",
+        },
+        {
+          title: "Claim rejection risk before submission",
+          owner: "Shield, an independent project by Tarık Ziya Eren",
+          body: "A claim line that breaks SUT (the national reimbursement rules) or SGK (Social Security Institution) rules is often noticed only after submission. Shield aims to put the risky line in front of a specialist before submission, together with the rule that flagged it.",
+        },
+      ],
+      principle:
+        "In both, the physician, pharmacist or billing specialist makes the decision. The software shows the reason for an alert and gives the same result for the same input.",
+    },
+    approach: {
+      label: "How we work",
+      title: "From source to code, from code to test, from test to validation.",
+      intro: "From day one, we apply the traceability and change control that regulated software needs.",
+      steps: [
+        {
+          title: "Research",
+          body: "Rules are taken from official product information (SmPC and patient leaflet), clinical guidelines and peer-reviewed literature. Every rule shows its source.",
+          link: { label: "Standards and references", href: "/standartlar" },
+        },
+        {
+          title: "Development",
+          body: "We use a rule-based system at the point of decision. The same input and rule version always give the same result, and the reason is the rule that fired. Rule sets are versioned.",
+        },
+        {
+          title: "Testing",
+          body: `Each clinical requirement is linked to the rule that implements it and the test that checks it. No change is released without review and regression tests. PharmaDeux has ${testsLabel("en")} automated tests; this is a software-level measure, not clinical validation.`,
+        },
+        {
+          title: "Validation",
+          body: "Clinical validation has not been done yet. The plan is a retrospective test on past cases first, then a pilot in shadow mode. Every study needs the institution's ethics committee approval, anonymisation within the institution and a Data Processing Agreement (DPA) first.",
+          link: { label: "PharmaDeux validation plan", href: "/initiatives/pharmadeux#protokol" },
+        },
+      ],
+      whyRules: "Why rule-based",
+      whyRulesMeta: "compared with a probabilistic model on five criteria",
+      regulatory:
+        "Regulatory status: PharmaDeux targets Class IIa under the MDR; it has no CE mark yet. IEC 62304 and ISO 14971 are used as design inputs for the life cycle and risk management; no conformity assessment has been done. An ISO 13485 quality management system is on the roadmap. This is not a certification statement.",
+      regulatoryLink: "Quality, information security and MDR",
     },
     columns: { criterion: "Criterion", probabilistic: "Probabilistic model", deterministic: "Rule-based system" },
-    shortColumns: { probabilistic: "Probabilistic", deterministic: "Rule-based" },
     comparison: [
       {
         criterion: "Reproducibility",
@@ -465,475 +305,347 @@ const copy = defineContent<{
         deterministic: "Cases outside scope are marked plainly as “not assessed”.",
       },
     ],
-    focusHeading: {
-      eyebrow: "R&D focus areas",
-      title: "Three R&D focus areas and what they change for the hospital.",
-      description:
-        "For each area we list the technical scope and whose work it makes easier. Where something is not finished yet, we say so.",
-    },
-    focus: [
-      {
-        title: "Deterministic decision path",
-        body: "Findings come from a versioned rule engine, not from a generative model. The same input and rule version always give the same result. The life cycle is set up according to IEC 62304.",
+    projects: {
+      label: "Projects",
+      title: "Two projects on this site, with different owners.",
+      intro: "The team builds PharmaDeux together. Shield is an independent project by Tarık Ziya Eren, presented on this site.",
+      pharma: {
+        name: "PharmaDeux",
+        owner: "A joint project of the LavieuxLabs team",
+        body: "A clinical decision support prototype that runs checks such as interactions, renal dosing and QT risk in one place while a prescription is written.",
         rows: [
-          { label: "Engine", value: "Versioned rule set" },
-          { label: "Life cycle", value: "IEC 62304", mono: true, cite: "iec62304" },
-          { label: "Status", value: "Architecture aligned · not certified yet" },
+          { label: "Stage", value: `Prototype, ${trlLabel("en")} (the team's own assessment)` },
+          { label: "Automated tests", value: `${testsLabel("en")} (software level)` },
+          { label: "Clinical evidence", value: "None yet" },
+          { label: "Regulatory", value: "MDR Class IIa target; no CE mark" },
         ],
-        outcome: {
-          label: "For physicians",
-          body: "There is no generative model in the decision path. Every alert comes with the rule and threshold that triggered it, and the result can be reproduced for the same patient.",
+        link: "PharmaDeux page",
+      },
+      shield: {
+        name: "Shield",
+        owner: "An independent project by Tarık Ziya Eren; not a joint project of the LavieuxLabs team",
+        body: "A prototype that turns SUT and SGK rules into a rule set that runs before a claim is submitted. A risky line item goes to a specialist with the rule that fired and its reason.",
+        rows: [
+          { label: "Stage", value: "Prototype" },
+          { label: "Validation", value: "Not tried on real claims yet" },
+          { label: "Score", value: "Rule score; not a rejection probability or a savings estimate" },
+        ],
+        link: "Shield page",
+      },
+    },
+    team: {
+      label: "Team",
+      title: "The team building PharmaDeux.",
+      intro:
+        "The team is made up of students at Konya Technical University who work on PharmaDeux together. Below is what each member works on. Shield is an independent project by Tarık Ziya Eren, not a joint project of the team.",
+    },
+    collab: {
+      label: "Collaboration",
+      title: "Who we want to work with.",
+      intro: "We are looking for four partner profiles. The first step is a 15-minute call with no commitment; the link on each row opens the matching form.",
+      partners: [
+        {
+          title: "Clinical validation partner",
+          who: "Training-and-research and university hospitals",
+          body: "Clinical data and an independent expert panel to measure PharmaDeux on past cases and in shadow mode.",
+          link: "Pilot application (PharmaDeux)",
+          path: "pilot",
+          product: "pharmadeux",
         },
-      },
-      {
-        title: "Health data layer and interoperability",
-        body: "The data layer is designed to take in clinical data as HL7 FHIR R4 resources. In a pilot installation, HL7 v2 messages from hospital information systems (HIS) that have not moved to FHIR are converted to FHIR R4. Drugs, diagnoses and units are mapped to ATC, ICD-10 and UCUM.",
-        rows: [
-          { label: "Standard", value: "HL7 FHIR R4", mono: true },
-          { label: "Bridge", value: "HL7 v2 · MLLP → FHIR R4" },
-          { label: "Coding", value: "ATC · ICD-10 · UCUM", mono: true },
-          { label: "Pilot deployment", value: "On-premises (Docker) · isolated VPC" },
-        ],
-        outcome: {
-          label: "For hospital IT",
-          body: "The pilot architecture is designed to run on-premises and in isolation. During a pilot, data is not moved outside the institution's infrastructure. The system is designed to run as a layer next to the existing HIS workflow, without changing it.",
+        {
+          title: "Academic researcher",
+          who: "Medicine and pharmacology academics",
+          body: "Source-based review of the rule sets and organ risk protocols, and joint publication.",
+          link: "Academic collaboration",
+          path: "academic",
         },
-      },
-      {
-        title: "Revenue integrity and regulatory modelling",
-        body: "SUT (the national reimbursement rules) and SGK (Social Security Institution) rules are turned into a rule set that runs before a claim is submitted. A risky line item goes to the specialist's queue with the rule and reason that flagged it. PharmaDeux's MDR technical file is kept with the same traceability.",
-        rows: [
-          { label: "Rules", value: "SUT · SGK reimbursement" },
-          { label: "Category", value: "EK-2B fee-for-service · EK-2C package" },
-          { label: "Technical file", value: "MDR Class IIa target · no CE mark yet" },
-        ],
-        outcome: {
-          label: "For hospital management",
-          body: "Rejection risk is visible, with its reason, before the claim is submitted. Corrections can be made before a rejection arrives.",
+        {
+          title: "Revenue cycle pilot partner",
+          who: "Private and foundation hospitals",
+          body: "Measuring the rejection catch and false positive rates of Shield, an independent project by Tarık Ziya Eren, on past claims.",
+          link: "Pilot application (Shield)",
+          path: "pilot",
+          product: "shield",
         },
-      },
-    ],
-    rndHeading: {
-      eyebrow: "How we work",
-      title: "From source to code, from code to test.",
-      description:
-        "From day one, we apply the traceability and change control that a regulated product needs.",
-    },
-    rnd: [
-      {
-        title: "Rules with a known source",
-        body: "Rules are taken from official product information (SmPC and patient leaflet), clinical guidelines and peer-reviewed literature. Every rule shows its source.",
-        rows: [
-          { label: "Sources", value: "SmPC / PIL · guidelines · peer-reviewed literature" },
-          { label: "Traceability", value: "Rule → source" },
-          { label: "Examples", value: "Standards and references", href: localizedPath("en", "/standartlar") },
-        ],
-      },
-      {
-        title: "Traced from requirement to test",
-        body: "Each clinical requirement is linked to the rule that implements it and the test that checks it.",
-        rows: [
-          { label: "Chain", value: "Requirement → rule → test" },
-          { label: "Automated tests", value: testsLabel("en"), mono: true },
-        ],
-      },
-      {
-        title: "Controlled change",
-        body: "Rule sets are versioned. No change is released without review and passing tests.",
-        rows: [
-          { label: "Versioning", value: "Rule set · knowledge base" },
-          { label: "Gate", value: "Review + regression tests" },
-        ],
-      },
-      {
-        title: "Security and privacy from the start",
-        body: "Data minimisation, role-based access and an immutable log were not added later. The system was built with them from the start.",
-        rows: [
-          { label: "Controls", value: "Data minimisation · RBAC" },
-          { label: "Log", value: "Append-only audit trail" },
-        ],
-      },
-    ],
-    regulatoryHeading: {
-      eyebrow: "Quality and regulation",
-      title: "Which standards, and where we stand.",
-      description:
-        "We list the standards we work against and where we stand on each. This is not a certification statement.",
-    },
-    regulatory: [
-      {
-        title: "EU Medical Device Regulation",
-        body: "PharmaDeux provides information used in drug therapy decisions, so it falls under the MDR.",
-        rows: [
-          { label: "Regulation", value: "MDR 2017/745 · Annex VIII Rule 11", cite: "mdrRule11" },
-          { label: "Target", value: "SaMD · Class IIa" },
-          { label: "CE mark", value: "Not yet" },
-        ],
-        status: "Class IIa target",
-      },
-      {
-        title: "Software life cycle and risk",
-        body: "Development and risk management processes are being set up to these standards.",
-        rows: [
-          { label: "Life cycle", value: "IEC 62304", cite: "iec62304" },
-          { label: "Risk", value: "ISO 14971" },
-        ],
-        status: "Architecture aligned",
-      },
-      {
-        title: "Quality management system",
-        body: "The quality management system and usability work are on the roadmap.",
-        rows: [
-          { label: "QMS", value: "ISO 13485" },
-          { label: "Usability", value: "IEC 62366-1" },
-        ],
-        status: "On the roadmap",
-      },
-      {
-        title: "Information security and personal data",
-        body: "Personal data is processed under KVKK (Turkey's data protection law). Security controls are being set up to ISO/IEC 27001.",
-        rows: [
-          { label: "Law", value: "KVKK No. 6698 · Art. 12" },
-          { label: "Controls", value: "ISO/IEC 27001" },
-        ],
-        status: "Control set target",
-      },
-    ],
-    collaborationHeading: {
-      eyebrow: "Clinical collaboration",
-      title: "We aim to run clinical validation with physicians in the field.",
-      description:
-        "Clinical decision support has to be designed around the workflow of the teams who use it. The advisory board is being set up; no formal board exists yet. What follows is how we will work during the pilots.",
-    },
-    collaboration: [
-      {
-        title: "Clinical advice",
-        body: "During the pilots, rule sets and interfaces will be reviewed with feedback from clinicians and clinical pharmacists.",
-        rows: [
-          { label: "Stakeholders", value: "Clinician · clinical pharmacist" },
-          { label: "Output", value: "Reviewed rule sets" },
-        ],
-      },
-      {
-        title: "Ethics committee and data protocol",
-        body: "Before any pilot study, three prerequisites apply: approval from the institution's ethics committee, anonymisation within the hospital's infrastructure and a signed Data Processing Agreement (DPA).",
-        rows: [
-          { label: "Prerequisite", value: "Institutional IRB/ethics approval · DPA" },
-          { label: "Scope", value: "On-prem anonymisation · data protection compliant" },
-        ],
-      },
-      {
-        title: "Publication",
-        body: "We aim to publish pilot validation findings with partner clinicians and researchers in peer-reviewed journals, as reports of sensitivity, specificity and PPV.",
-        rows: [
-          { label: "Goal", value: "Peer-reviewed publication" },
-          { label: "Reporting", value: "Sensitivity · specificity · PPV" },
-        ],
-      },
-      {
-        title: "Feedback from the field",
-        body: "Feedback from pilot users will be collected regularly, and we will track which requirement it turns into.",
-        rows: [
-          { label: "Collection", value: "Structured form" },
-          { label: "Traceability", value: "Feedback → requirement" },
-        ],
-      },
-    ],
-    partnersHeading: {
-      eyebrow: "Partnerships",
-      title: "Who we need, and for what.",
-      description:
-        "We are looking for four partner profiles. For each, we list the work and the stage at which it is needed. The link below each profile opens the matching form.",
-    },
-    partners: [
-      {
-        label: "Clinical validation",
-        title: "Clinical validation partner",
-        body: "Measuring PharmaDeux on past cases and in shadow mode needs clinical data and an independent expert panel.",
-        rows: [
-          { label: "Who", value: "Training-and-research · university hospitals" },
-          { label: "Purpose", value: "Retrospective case testing · shadow mode pilot" },
-          { label: "Stage", value: "Needed now · goal: first clinical-level evidence" },
-        ],
-        link: "Pilot application (PharmaDeux)",
-      },
-      {
-        label: "Academic",
-        title: "Academic advisor and researcher",
-        body: "Source-based review of the rule sets and organ risk protocols, and joint publication.",
-        rows: [
-          { label: "Who", value: "Medicine and pharmacology academics" },
-          { label: "Purpose", value: "Rule sets · organ risk protocols" },
-          { label: "Stage", value: "Needed now · advisory board being set up, no formal board yet" },
-        ],
-        link: "Academic collaboration",
-      },
-      {
-        label: "Revenue cycle",
-        title: "Revenue cycle and hospital pilot partner",
-        body: "Measuring Shield's rejection catch and false positive rates on real claims.",
-        rows: [
-          { label: "Who", value: "Private and foundation hospitals" },
-          { label: "Purpose", value: "Retrospective claims analysis" },
-          { label: "Stage", value: "Needed now · goal: first measured result" },
-        ],
-        link: "Pilot application (Shield)",
-      },
-      {
-        label: "Technology",
-        title: "Technology and HIS integrator",
-        body: "Setting up the HL7 FHIR R4 bridge with a real hospital information system.",
-        rows: [
-          { label: "Who", value: "Health information system vendors" },
-          { label: "Purpose", value: "HL7 FHIR R4 · HL7 v2 bridge" },
-          { label: "Stage", value: "During pilot integration" },
-        ],
-        link: "Intro call",
-      },
-    ],
-    teamHeading: {
-      eyebrow: "Team",
-      title: "Core team and venture.",
-      description: `${organizationProfile.en.stage} ${organizationProfile.en.independence}`,
-    },
-    lead: {
-      label: "Core team",
-      role: "Project lead and system architect",
-      body: "Designs the decision engine architecture and the PharmaDeux pharmacological rule engines. Leads system design, from FHIR R4 integration to deployment.",
-      rows: [
-        { label: "Focus", value: "Decision engine architecture · pharmacological rule engines" },
-        { label: "Integration", value: "HL7 FHIR R4 · system design" },
-        { label: "Education", value: "Konya Technical University · Artificial Intelligence and Machine Learning" },
+        {
+          title: "HIS integrator",
+          who: "Health information system vendors",
+          body: "Setting up the HL7 FHIR R4 bridge with a real hospital information system (HIS).",
+          link: "Intro call",
+          path: "intro",
+        },
       ],
-      email: "Email",
-    },
-    advisory: {
-      label: "Advisory",
-      title: "Clinical and Academic Advisory Board",
-      body: "The advisory board is being set up; no formal board exists yet. Clinical validation, organ risk protocols and pharmacology rules will be worked out with medical faculty academics and clinical advisors. We are open to new academic partnerships.",
-      rows: [
-        { label: "Scope", value: "Clinical validation · organ risk protocols · pharmacology rules" },
-        { label: "Advisors", value: "Medical faculty academics · clinical advisors" },
-        { label: "Status", value: "Being set up · members published with their consent" },
-      ],
-      link: "Write to us about academic work",
-    },
-    cta: {
-      eyebrow: "Contact",
-      title: "Write to us about a pilot, a validation study or academic work.",
-      description: "If you have an idea for a clinical, institutional or academic study, a short message is enough.",
-      label: "Write to us",
+      cta: "Write to us",
+      email: "or by email:",
+      noPatientData: "Do not send patient data or real claim data.",
     },
   },
 });
 
+// Brand marks for the profile links (Simple Icons paths, CC0), drawn in ink at text size.
+const PROFILE_ICONS: Record<"github" | "linkedin", string> = {
+  github:
+    "M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12",
+  linkedin:
+    "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z",
+};
+const PROFILE_LABELS = { github: "GitHub", linkedin: "LinkedIn" } as const;
+
+/** Icon links to a member's profiles; each has a 44px target and a name such as "Semih Çoban — GitHub". */
+function ProfileLinks({ name, links }: { name: string; links: { kind: "linkedin" | "github"; url: string | null }[] }) {
+  const shown = links.filter((l): l is { kind: "linkedin" | "github"; url: string } => !!l.url);
+  if (!shown.length) return null;
+  return (
+    <ul className="-ml-3 flex items-center print:hidden">
+      {shown.map(({ kind, url }) => (
+        <li key={kind}>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${name} — ${PROFILE_LABELS[kind]}`}
+            className={`inline-flex h-11 w-11 items-center justify-center rounded-md text-ink-3 transition-colors duration-150 ease-out hover:text-ink ${FOCUS}`}
+          >
+            <svg viewBox="0 0 24 24" className="h-[17px] w-[17px]" fill="currentColor" aria-hidden="true" focusable="false">
+              <path d={PROFILE_ICONS[kind]} />
+            </svg>
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Section content in the nine content columns, under PaperSection's heading. */
+function Content({ children }: { children: ReactNode }) {
+  return (
+    <div className="grid gap-x-10 lg:grid-cols-12">
+      <div className="lg:col-span-9 lg:col-start-4">{children}</div>
+    </div>
+  );
+}
+
 export default function AboutView({ locale }: { locale: Locale }) {
   const c = copy[locale];
+  const href = (path: string) => localizedPath(locale, path);
+  const members = teamCopy[locale];
 
   return (
-    <main className="relative isolate flex-1 overflow-x-clip">
-      <PageHero
-        locale={locale}
-        breadcrumbs={[{ href: "/", label: c.crumbs.home }, { label: c.crumbs.here }]}
-        eyebrow={c.eyebrow}
-        title={c.title}
-        description={c.description}
-      />
-
-      {/* Vision & mission */}
-      <section className="py-16 sm:py-24">
-        <div className="mx-auto grid max-w-7xl gap-5 px-4 sm:px-6 md:grid-cols-2 lg:px-8">
-          {c.pillars.map(({ label, title, body }, i) => {
-            const Icon = pillarIcons[i];
-            return (
-              <Reveal
-                key={label}
-                delay={i * 0.08}
-                className="rounded-2xl border border-hairline bg-navy-850 p-7 sm:p-9"
-              >
-                <div className="flex items-center gap-3">
-                  <Icon className="h-5 w-5 text-white/55" strokeWidth={1.6} aria-hidden="true" />
-                  <p className="text-[11px] font-medium tracking-wider text-white/50 uppercase">{label}</p>
-                </div>
-                <h2 className="mt-6 text-xl leading-snug font-semibold tracking-[-0.03em] text-white sm:text-2xl">
-                  {title}
-                </h2>
-                <p className="mt-4 text-sm leading-relaxed text-white/55">{body}</p>
-              </Reveal>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Core team and advisory board */}
-      <section id="ekip" className="relative scroll-mt-24 py-24 sm:py-32">
-        <RailMarker className="top-24 sm:top-32" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.teamHeading} />
-          <JoinedGrid className="mt-14" columns="lg:grid-cols-2">
-            <DetailCell icon={UserRound} label={c.lead.label} title={TEAM_LEAD.name} subtitle={c.lead.role} body={c.lead.body} rows={c.lead.rows}>
-              {TEAM_LEAD.github && <ExternalCell href={TEAM_LEAD.github} label="GitHub" />}
-              {TEAM_LEAD.linkedin && <ExternalCell href={TEAM_LEAD.linkedin} label="LinkedIn" />}
-              <div className="flex items-center gap-3 px-5 py-3.5 text-[13px] text-white/70 sm:px-6">
-                <span className="whitespace-nowrap text-white/55">{c.lead.email}</span>
-                <CopyEmail locale={locale} />
-              </div>
-            </DetailCell>
-            <DetailCell icon={Stethoscope} label={c.advisory.label} title={c.advisory.title} body={c.advisory.body} rows={c.advisory.rows}>
-              <InternalCell href={localizedPath(locale, contactHref("academic"))} label={c.advisory.link} />
-            </DetailCell>
-          </JoinedGrid>
-        </div>
-      </section>
-
-      {/* Rule-based decisions */}
-      <section className="relative py-24 sm:py-32">
-        <RailMarker className="top-24 sm:top-32" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.rules} />
-
-          <Reveal className="mt-14 overflow-hidden rounded-2xl border border-hairline bg-navy-850">
-            <div className="hidden grid-cols-[180px_1fr_1fr] border-b border-hairline text-[11px] font-medium tracking-wider uppercase md:grid">
-              <div className="px-6 py-4 text-white/55">{c.columns.criterion}</div>
-              <div className="px-6 py-4 text-white/55">{c.columns.probabilistic}</div>
-              <div className="px-6 py-4 text-white/70">{c.columns.deterministic}</div>
+    <main id="main" className="surface-paper relative flex-1 bg-paper text-ink">
+      {/* Hero: who we are and where the work stands; the summary sits beside it on wide screens. */}
+      <section aria-labelledby="hero-title" className="pt-16">
+        <div className="mx-auto grid max-w-7xl gap-x-10 gap-y-10 px-4 pt-6 pb-12 sm:px-6 sm:pt-12 sm:pb-20 lg:grid-cols-12 lg:px-8">
+          <div className="lg:col-span-8">
+            <nav aria-label={c.crumbs.aria}>
+              <ol className="flex flex-wrap items-center gap-1 text-[14px] text-ink-3">
+                <li>
+                  <Link href={href("/")} className={`-my-3 inline-block py-3 ${LINK}`}>
+                    {c.crumbs.home}
+                  </Link>
+                </li>
+                <li aria-hidden="true">
+                  <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
+                </li>
+                <li aria-current="page" className="text-ink-2">
+                  {c.crumbs.here}
+                </li>
+              </ol>
+            </nav>
+            <h1
+              id="hero-title"
+              className="mt-6 max-w-[22ch] font-serif text-[34px] leading-[1.08] font-medium tracking-[-0.022em] text-ink sm:mt-8 sm:text-[46px] lg:text-[52px]"
+            >
+              {c.title}
+            </h1>
+            <p className="mt-5 max-w-[60ch] text-[17px] leading-[1.6] text-ink-2">{c.lead}</p>
+            <div className="mt-8 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
+              <Link href={href(contactHref("intro"))} className={`self-start ${BUTTON}`}>
+                {c.primary}
+              </Link>
+              <a href="#ekip" className={`self-start ${TEXT_ACTION}`}>
+                {c.secondary}
+              </a>
             </div>
-            <dl className="divide-y divide-hairline">
-              {c.comparison.map((row) => (
-                <div
-                  key={row.criterion}
-                  className="grid gap-2 px-6 py-5 md:grid-cols-[180px_1fr_1fr] md:gap-0 md:px-0 md:py-0"
-                >
-                  <dt className="text-sm font-medium text-white md:px-6 md:py-5">{row.criterion}</dt>
-                  <dd className="text-sm leading-relaxed text-white/55 md:px-6 md:py-5">
-                    <span className="mr-2 text-[10px] font-medium uppercase tracking-wide text-white/55 md:hidden">
-                      {c.shortColumns.probabilistic}
-                    </span>
-                    {row.probabilistic}
-                  </dd>
-                  <dd className="text-sm leading-relaxed text-white/80 md:border-l md:border-hairline md:bg-white/[0.02] md:px-6 md:py-5">
-                    <span className="mr-2 text-[10px] font-medium uppercase tracking-wide text-white/60 md:hidden">
-                      {c.shortColumns.deterministic}
-                    </span>
-                    {row.deterministic}
-                  </dd>
+          </div>
+
+          <aside aria-labelledby="about-summary" className="self-end border-t-2 border-ink pt-4 lg:col-span-4">
+            <h2 id="about-summary" className="font-serif text-[20px] font-semibold text-ink">
+              {c.summaryTitle}
+            </h2>
+            <dl className="mt-3 divide-y divide-rule border-t border-rule">
+              {c.summary.map((r) => (
+                <div key={r.label} className="grid grid-cols-[110px_minmax(0,1fr)] gap-3 py-2.5 lg:grid-cols-1 lg:gap-0.5">
+                  <dt className="text-[13px] text-ink-3">{r.label}</dt>
+                  <dd className="text-[14px] leading-snug text-ink">{r.value}</dd>
                 </div>
               ))}
             </dl>
-          </Reveal>
+          </aside>
         </div>
       </section>
 
-      {/* R&D focus areas and what they change for the institution */}
-      <section id="odaklar" className="relative scroll-mt-24 py-24 sm:py-32">
-        <RailMarker className="top-24 sm:top-32" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.focusHeading} />
-          <JoinedGrid className="mt-14" columns="lg:grid-cols-3">
-            {c.focus.map(({ title, body, rows, outcome }, i) => (
-              <SpecCard
-                key={title}
-                variant="cell"
-                align={{ rows: Math.max(...c.focus.map((x) => x.rows.length)), outcome: true }}
-                icon={focusIcons[i]}
-                accent={focusAccents[i]}
-                prominent
-                title={title}
-                body={body}
-                rows={rows}
-                outcome={outcome}
-              />
+      {/* Purpose: the two problems, each with the project that works on it and who owns it. */}
+      <PaperSection id="amac" label={c.purpose.label} title={c.purpose.title}>
+        <Content>
+          <div className="grid gap-x-12 gap-y-10 md:grid-cols-2">
+            {c.purpose.items.map((item) => (
+              <div key={item.title} className="border-t-2 border-ink pt-5">
+                <h3 className="text-[20px] leading-snug font-semibold tracking-[-0.01em] text-ink">{item.title}</h3>
+                <p className="mt-1 text-[14px] text-ink-3">{item.owner}</p>
+                <p className="mt-4 text-[16px] leading-[1.65] text-ink-2">{item.body}</p>
+              </div>
             ))}
-          </JoinedGrid>
-        </div>
-      </section>
+          </div>
+          <p className="mt-10 max-w-[64ch] border-t border-rule pt-6 text-[17px] leading-[1.6] text-ink">{c.purpose.principle}</p>
+        </Content>
+      </PaperSection>
 
-      {/* R&D discipline */}
-      <section className="relative py-24 sm:py-32">
-        <RailMarker className="top-24 sm:top-32" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.rndHeading} />
-          <JoinedGrid className="mt-14" columns="sm:grid-cols-2 lg:grid-cols-4">
-            {c.rnd.map(({ title, body, rows }, i) => (
-              <SpecCard
-                key={title}
-                variant="cell"
-                align={{ rows: Math.max(...c.rnd.map((x) => x.rows.length)) }}
-                icon={rndIcons[i]}
-                title={title}
-                body={body}
-                rows={rows}
-              />
-            ))}
-          </JoinedGrid>
-        </div>
-      </section>
-
-      {/* Regulatory and quality framework */}
-      <section className="relative py-24 sm:py-32">
-        <RailMarker className="top-24 sm:top-32" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.regulatoryHeading} />
-          <JoinedGrid className="mt-14" columns="sm:grid-cols-2 xl:grid-cols-4">
-            {c.regulatory.map((r, i) => {
-              const meta = regulatoryMeta[i];
-              return (
-                <SpecCard
-                  key={meta.id}
-                  variant="cell"
-                  align={{ rows: Math.max(...c.regulatory.map((x) => x.rows.length)) }}
-                  id={meta.id}
-                  accent={meta.accent}
-                  icon={meta.icon}
-                  title={r.title}
-                  body={r.body}
-                  rows={r.rows}
-                  status={{ label: r.status, tone: meta.tone }}
-                />
-              );
-            })}
-          </JoinedGrid>
-        </div>
-      </section>
-
-      {/* Partnerships: who we need, for what, at which stage; each opens its contact path */}
-      <section id="isbirligi" className="relative scroll-mt-24 py-24 sm:py-32">
-        <RailMarker className="top-24 sm:top-32" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader {...c.partnersHeading} />
-          <JoinedGrid className="mt-14" columns="sm:grid-cols-2 xl:grid-cols-4">
-            {c.partners.map((p, i) => (
-              <DetailCell key={p.title} icon={partnerMeta[i].icon} label={p.label} title={p.title} body={p.body} rows={p.rows}>
-                <InternalCell href={localizedPath(locale, partnerMeta[i].href)} label={p.link} />
-              </DetailCell>
-            ))}
-          </JoinedGrid>
-        </div>
-      </section>
-
-      {/* Clinical collaboration */}
-      <section className="relative py-24 sm:py-32">
-        <RailMarker className="top-24 sm:top-32" />
-        <div className="mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[1fr_1.4fr] lg:px-8">
-          <SectionHeader {...c.collaborationHeading} />
-          <JoinedGrid as="ul" columns="sm:grid-cols-2">
-            {c.collaboration.map(({ title, body, rows }, i) => (
-              <li key={title}>
-                <SpecCard variant="cell" icon={collaborationIcons[i]} title={title} body={body} rows={rows} />
+      {/* Approach: four steps in order. The rule-based comparison and the regulatory detail open on demand or link out. */}
+      <PaperSection id="yaklasim" label={c.approach.label} title={c.approach.title} intro={<p>{c.approach.intro}</p>} band>
+        <Content>
+          <ol className="divide-y divide-rule border-y border-rule">
+            {c.approach.steps.map((step, i) => (
+              <li key={step.title} className="grid gap-x-8 gap-y-2 py-6 sm:grid-cols-[48px_minmax(0,180px)_minmax(0,1fr)]">
+                <span className="font-serif text-[28px] leading-none text-ink-3" aria-hidden="true">
+                  {i + 1}
+                </span>
+                <h3 className="text-[18px] font-semibold tracking-[-0.01em] text-ink">{step.title}</h3>
+                <div className="max-w-[62ch] text-[15px] leading-[1.65] text-ink-2">
+                  <p>{step.body}</p>
+                  {step.link && (
+                    <Link href={href(step.link.href)} className={`mt-1 ${TEXT_ACTION}`}>
+                      {step.link.label}
+                    </Link>
+                  )}
+                </div>
               </li>
             ))}
-          </JoinedGrid>
-        </div>
-      </section>
+          </ol>
 
-      <CtaPanel
-        locale={locale}
-        eyebrow={c.cta.eyebrow}
-        title={c.cta.title}
-        description={c.cta.description}
-        primaryHref={localizedPath(locale, contactHref("academic"))}
-        primaryLabel={c.cta.label}
-      />
+          <div className="mt-8">
+            <Disclosure summary={c.approach.whyRules} meta={c.approach.whyRulesMeta}>
+              <div className="overflow-hidden border border-rule bg-white">
+                <div className="hidden grid-cols-[170px_1fr_1fr] border-b border-rule text-[13px] text-ink-3 md:grid">
+                  <div className="px-5 py-3">{c.columns.criterion}</div>
+                  <div className="px-5 py-3">{c.columns.probabilistic}</div>
+                  <div className="border-l border-rule px-5 py-3 text-ink">{c.columns.deterministic}</div>
+                </div>
+                <dl className="divide-y divide-rule">
+                  {c.comparison.map((row) => (
+                    <div key={row.criterion} className="grid gap-1.5 px-5 py-4 md:grid-cols-[170px_1fr_1fr] md:gap-0 md:p-0">
+                      <dt className="text-[15px] font-medium text-ink md:px-5 md:py-4">{row.criterion}</dt>
+                      <dd className="text-[14px] leading-[1.55] text-ink-2 md:px-5 md:py-4">
+                        <span className="text-ink-3 md:hidden">{c.columns.probabilistic}: </span>
+                        {row.probabilistic}
+                      </dd>
+                      <dd className="text-[14px] leading-[1.55] text-ink md:border-l md:border-rule md:px-5 md:py-4">
+                        <span className="text-ink-3 md:hidden">{c.columns.deterministic}: </span>
+                        {row.deterministic}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </Disclosure>
+          </div>
+
+          <p className="mt-8 max-w-[70ch] text-[15px] leading-[1.6] text-ink-2">
+            {c.approach.regulatory}{" "}
+            <Link href={href("/legal/quality")} className={LINK}>
+              {c.approach.regulatoryLink}
+            </Link>
+          </p>
+        </Content>
+      </PaperSection>
+
+      {/* Projects: what each one is, who owns it and where it stands. Detail lives on the product pages. */}
+      <PaperSection id="odaklar" label={c.projects.label} title={c.projects.title} intro={<p>{c.projects.intro}</p>}>
+        <Content>
+          <div className="grid gap-x-12 gap-y-12 md:grid-cols-2">
+            {[
+              { p: c.projects.pharma, path: "/initiatives/pharmadeux", tone: "text-teal-700" },
+              { p: c.projects.shield, path: "/initiatives/shield", tone: "text-indigo-700" },
+            ].map(({ p, path, tone }) => (
+              <article key={p.name} className="flex flex-col border-t-2 border-ink pt-5">
+                <h3 className={`font-serif text-[30px] leading-tight font-medium ${tone}`}>{p.name}</h3>
+                <p className="mt-1 text-[14px] leading-snug text-ink-3">{p.owner}</p>
+                <p className="mt-4 text-[16px] leading-[1.65] text-ink-2">{p.body}</p>
+                <div className="mt-5">
+                  <FactRows rows={p.rows} labelWidth="sm:grid-cols-[130px_minmax(0,1fr)]" />
+                </div>
+                <Link href={href(path)} className={`mt-3 self-start md:mt-auto md:pt-3 ${TEXT_ACTION}`}>
+                  {p.link}
+                </Link>
+              </article>
+            ))}
+          </div>
+        </Content>
+      </PaperSection>
+
+      {/* Team: every member with equal weight, from the central team source. No photos, titles or advisors. */}
+      <PaperSection id="ekip" label={c.team.label} title={c.team.title} intro={<p>{c.team.intro}</p>} band>
+        <Content>
+          <ul className="border-t border-ink">
+            {TEAM.map((m) => {
+              const t = members[m.id];
+              return (
+                <li
+                  key={m.id}
+                  className="grid gap-x-10 gap-y-2 border-b border-rule py-6 sm:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] sm:py-7"
+                >
+                  <div className="sm:col-start-1 sm:row-start-1">
+                    <h3 className="font-serif text-[24px] leading-tight font-medium text-ink">{m.name}</h3>
+                    <p className="mt-1 text-[14px] leading-snug text-ink-3">{t.role}</p>
+                  </div>
+                  <p className="max-w-[62ch] text-[15px] leading-[1.65] text-ink-2 sm:col-start-2 sm:row-span-2 sm:row-start-1">
+                    {t.summary}
+                  </p>
+                  <div className="sm:col-start-1 sm:row-start-2">
+                    <ProfileLinks
+                      name={m.name}
+                      links={[
+                        { kind: "linkedin", url: m.linkedin },
+                        { kind: "github", url: m.github },
+                      ]}
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </Content>
+      </PaperSection>
+
+      {/* Collaboration: who we need and for what; each row opens its contact path. */}
+      <PaperSection id="isbirligi" label={c.collab.label} title={c.collab.title} intro={<p>{c.collab.intro}</p>}>
+        <Content>
+          <ul className="divide-y divide-rule border-y border-rule">
+            {c.collab.partners.map((p) => (
+              <li key={p.title} className="grid gap-x-8 gap-y-2 py-5 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)_auto] md:items-baseline">
+                <div>
+                  <h3 className="text-[17px] font-semibold tracking-[-0.01em] text-ink">{p.title}</h3>
+                  <p className="mt-0.5 text-[14px] leading-snug text-ink-3">{p.who}</p>
+                </div>
+                <p className="text-[15px] leading-[1.6] text-ink-2">{p.body}</p>
+                <Link href={href(contactHref(p.path, p.product))} className={`self-start ${TEXT_ACTION}`}>
+                  {p.link}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
+            <Link href={href(contactHref("academic"))} className={`self-start ${BUTTON}`}>
+              {c.collab.cta}
+            </Link>
+            <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink-2">
+              {c.collab.email}
+              <CopyEmail locale={locale} tone="paper" className="min-h-11 text-ink" />
+            </p>
+          </div>
+          <p className="mt-5 text-[14px] text-ink-3">{c.collab.noPatientData}</p>
+        </Content>
+      </PaperSection>
     </main>
   );
 }

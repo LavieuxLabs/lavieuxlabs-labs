@@ -11,7 +11,7 @@ import { useQtState } from "@/lib/qtStore";
 import { trackEvent } from "@/lib/analytics";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 
-// Example FHIR R4 payloads for hospital IT, generated live from the QT simulator above: one
+// Example FHIR R4 payloads for hospital IT, built in the browser from the QT simulator's current selection: one
 // MedicationRequest per selected drug (WHO ATC), the selected measured QTc (Observation, LOINC 8636-3)
 // and the Tisdale score as its own Observation. Fixed timestamp so prerender and hydration match.
 // Highlighting is neutral (weight and opacity), because the data layer carries no product colour.
@@ -134,8 +134,9 @@ export default function FhirPreview({ locale }: { locale: Locale }) {
         <ChevronDown className={`h-4 w-4 text-white/55 transition-transform duration-150 ease-out ${open ? "rotate-180" : ""}`} aria-hidden="true" />
       </button>
 
+      <div id={`${uid}-panel`}>
       {open && (
-        <div id={`${uid}-panel`} className="border-t border-hairline">
+        <div className="border-t border-hairline">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline px-5 py-2.5">
             <div role="tablist" aria-label={c.tabsAria} className="flex flex-wrap rounded-md border border-hairline bg-white/[0.03] p-0.5">
               {payloads.tabs.map(({ key, label }) => (
@@ -178,6 +179,7 @@ export default function FhirPreview({ locale }: { locale: Locale }) {
           <p className="border-t border-hairline px-5 py-2.5 text-[11px] text-white/55">{c.caption}</p>
         </div>
       )}
+      </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-hairline px-5 py-3.5">
         <p className="min-w-0 text-[12.5px] leading-relaxed text-white/60">
@@ -186,7 +188,7 @@ export default function FhirPreview({ locale }: { locale: Locale }) {
         </p>
         <Link
           href={localizedPath(locale, "/contact")}
-          className="inline-flex shrink-0 items-center gap-1.5 text-[12.5px] text-white/80 transition-colors duration-150 ease-out hover:text-white"
+          className="relative inline-flex shrink-0 items-center gap-1.5 text-[12.5px] text-white/80 transition-colors duration-150 ease-out before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] hover:text-white"
         >
           {c.apiCta}
           <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />

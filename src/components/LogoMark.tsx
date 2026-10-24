@@ -3,18 +3,20 @@ import { MARK_BODY, MARK_COLOR, MARK_PLUS, MARK_STROKE, MARK_VIEWBOX } from "@/l
 type LogoMarkProps = {
   /** Rendered width and height in px. */
   size?: number;
+  /** Stroke colour. White on the dark ground (MARK_COLOR); ink on the paper surface. Always one colour. */
+  color?: string;
   className?: string;
 };
 
-// The whole mark is one colour (MARK_COLOR); the plus adds a faint fill of the same colour.
-export default function LogoMark({ size = 28, className = "" }: LogoMarkProps) {
+// The whole mark is one colour; the plus adds a faint fill of the same colour.
+export default function LogoMark({ size = 28, color = MARK_COLOR, className = "" }: LogoMarkProps) {
   return (
     <svg
       width={size}
       height={size}
       viewBox={MARK_VIEWBOX}
       fill="none"
-      stroke={MARK_COLOR}
+      stroke={color}
       strokeWidth={MARK_STROKE}
       strokeLinejoin="miter"
       aria-hidden="true"
@@ -23,7 +25,7 @@ export default function LogoMark({ size = 28, className = "" }: LogoMarkProps) {
       {MARK_BODY.map((d) => (
         <path key={d} d={d} />
       ))}
-      <path d={MARK_PLUS} fill={MARK_COLOR} fillOpacity={0.15} />
+      <path d={MARK_PLUS} fill={color} fillOpacity={0.15} />
     </svg>
   );
 }

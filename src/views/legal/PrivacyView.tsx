@@ -28,7 +28,8 @@ const sectionsTr: LegalSection[] = [
         <p>
           Bu aydınlatma metni, 6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) md. 10 ve Aydınlatma
           Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ uyarınca, veri sorumlusu
-          sıfatıyla LavieuxLabs (“LavieuxLabs”, “biz”) tarafından hazırlanmıştır.
+          sıfatıyla Tarık Ziya Eren tarafından hazırlanmıştır. “LavieuxLabs”, bu sitede kullanılan ekip ve marka
+          adıdır; ayrı bir tüzel kişilik değildir.
         </p>
         <ControllerDetails locale="tr" />
       </>
@@ -44,10 +45,14 @@ const sectionsTr: LegalSection[] = [
           yoluyla iletişime geçen gerçek kişilerin kişisel verilerinin işlenmesine ilişkindir.
         </p>
         <p className="note">
-          <strong>Hasta verisi bu sitede işlenmez.</strong> Pilot ve doğrulama çalışmaları kapsamında işlenebilecek
-          sağlık verileri; bu metinden bağımsız olarak, ilgili kurumla imzalanan veri işleme sözleşmesi, etik kurul
-          onayı ve ayrı bir aydınlatma çerçevesinde ele alınır. Lütfen iletişim kanallarımız üzerinden hasta verisi veya
-          özel nitelikli kişisel veri paylaşmayınız.
+          <strong>Bu site hasta verisi toplamayı amaçlamaz.</strong> Lütfen iletişim formuna ve e-postalarınıza hasta
+          verisi, gerçek fatura verisi veya diğer özel nitelikli kişisel verileri yazmayınız. Formdaki serbest metin
+          alanı, böyle bir verinin yanlışlıkla yazılmasını teknik olarak engelleyemez; bu tür bir veri bize ulaşırsa
+          yalnızca silinmesi için gereken ölçüde incelenir ve silinir.
+        </p>
+        <p>
+          Pilot ve doğrulama çalışmaları kapsamında işlenebilecek sağlık verileri; bu metinden bağımsız olarak, ilgili
+          kurumla imzalanan veri işleme sözleşmesi, etik kurul onayı ve ayrı bir aydınlatma çerçevesinde ele alınır.
         </p>
       </>
     ),
@@ -71,7 +76,7 @@ const sectionsTr: LegalSection[] = [
             </tr>
             <tr>
               <td>İletişim</td>
-              <td>Kurumsal e-posta adresi</td>
+              <td>E-posta adresi (kurumsal adres tercih edilir)</td>
             </tr>
             <tr>
               <td>Mesleki</td>
@@ -118,21 +123,23 @@ const sectionsTr: LegalSection[] = [
       <>
         <p>
           Kişisel verileriniz; iletişim formuna girdiğiniz ve form gönderildiğinde e-posta gönderim hizmeti
-          sağlayıcımız aracılığıyla kurumsal e-posta adresimize iletilen bilgiler, doğrudan gönderdiğiniz e-postalar ve
-          web sitesi altyapısı tarafından otomatik yollarla toplanır. Veriler, KVKK md. 5/2 kapsamında
-          aşağıdaki hukuki sebeplere dayanılarak işlenir:
+          sağlayıcımız aracılığıyla iletişim adresimize (contact@lavieuxlabs.com) iletilen bilgiler, doğrudan gönderdiğiniz e-postalar ve
+          web sitesi altyapısı tarafından otomatik yollarla toplanır. Her işleme faaliyeti için uygulanacak hukuki
+          sebep ayrı değerlendirilir:
         </p>
         <ul>
           <li>
-            <strong>md. 5/2(c):</strong> Bir sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması (pilot, LOI ve
-            iş birliği görüşmeleri),
+            <strong>md. 5/2(c):</strong> İlgili kişinin talebi üzerine bir sözleşmenin kurulmasına yönelik pilot veya
+            iş birliği görüşmelerinin yürütülmesi için doğrudan gerekli olan işlemler,
           </li>
           <li>
-            <strong>md. 5/2(ç):</strong> Veri sorumlusunun hukuki yükümlülüğünü yerine getirebilmesi,
+            <strong>md. 5/2(ç):</strong> Somut olayda uygulanabilir bir kayıt, başvuru yanıtlama veya yetkili merciye
+            bilgi verme yükümlülüğünün yerine getirilmesi,
           </li>
           <li>
             <strong>md. 5/2(f):</strong> İlgili kişinin temel hak ve özgürlüklerine zarar vermemek kaydıyla, veri
-            sorumlusunun meşru menfaati (talep yanıtlama, site güvenliği).
+            sorumlusunun meşru menfaati (ilk temas ve akademik iş birliği taleplerini yanıtlama, kötüye kullanımı
+            önleme ve site güvenliği).
           </li>
         </ul>
         <p>
@@ -148,16 +155,32 @@ const sectionsTr: LegalSection[] = [
     content: (
       <>
         <p>
-          Kişisel verileriniz, yukarıdaki amaçlarla sınırlı olarak; e-posta, form iletimi ve barındırma hizmeti
-          aldığımız tedarikçilere, hukuken yetkili kamu kurum ve kuruluşlarına ve talep edilmesi halinde yetkili mercilere
-          aktarılabilir.
+          Kişisel verileriniz, yukarıdaki amaçlarla sınırlı olarak aşağıdaki hizmet sağlayıcıların sistemlerinden geçer
+          veya bu sistemlerde tutulur. Ayrıca hukuken yetkili kamu kurum ve kuruluşlarına ve talep edilmesi halinde
+          yetkili mercilere aktarılabilir.
         </p>
+        <ul>
+          <li>
+            <strong>Vercel:</strong> web sitesinin ve iletişim formunun barındırılması, formun sunucu tarafında
+            işlenmesi.
+          </li>
+          <li>
+            <strong>Resend:</strong> form içeriğinin e-posta olarak iletişim adresimize gönderilmesi.
+          </li>
+          <li>
+            <strong>Cloudflare:</strong> alan adı (DNS), ağ altyapısı ve contact@lavieuxlabs.com adresine gelen
+            e-postaların yönlendirilmesi.
+          </li>
+          <li>
+            <strong>Google (Gmail):</strong> yönlendirilen e-postaların ve yazışmaların tutulduğu posta kutusu.
+          </li>
+        </ul>
         <p>
           İletişim sayfasındaki konum haritasını yüklemeniz halinde, IP adresiniz ve tarayıcı bilgileriniz gibi veriler
           harita hizmetini sağlayan Google’a doğrudan iletilir; harita yalnızca onayınız veya talebiniz üzerine
-          yüklenir. Hizmet sağlayıcılarımızın sunucularının yurt dışında bulunması halinde aktarım, KVKK md. 9’da
-          öngörülen aktarım mekanizmalarına uygun olarak gerçekleştirilir. Kişisel verileriniz pazarlama amacıyla üçüncü
-          kişilere satılmaz veya kiralanmaz.
+          yüklenir. Bu sağlayıcıların sunucuları Türkiye dışında bulunabilir; bu nedenle verileriniz yurt dışına
+          aktarılabilir. Sağlayıcıların içerik, kayıt ve yedek saklama koşulları kendi politikalarına tabidir. Kişisel
+          verileriniz pazarlama amacıyla üçüncü kişilere satılmaz veya kiralanmaz.
         </p>
       </>
     ),
@@ -168,8 +191,12 @@ const sectionsTr: LegalSection[] = [
     content: (
       <>
         <p>
-          Kişisel verileriniz, işleme amacının gerektirdiği süre ve ilgili mevzuatta öngörülen zamanaşımı süreleri
-          boyunca saklanır. Bu sürelerin sona ermesiyle veriler silinir, yok edilir veya anonim hale getirilir.
+          Sonuçlanmayan iletişim talepleri son yazışmadan itibaren en fazla 12 ay saklanır. Aktif bir pilot, iş birliği
+          veya sözleşme görüşmesine dönüşen yazışmalar, görüşme sona erdikten sonra en fazla 24 ay saklanır; yürürlükteki
+          mevzuatın daha uzun bir süreyi zorunlu kıldığı veya hukuki bir uyuşmazlık için saklamanın gerekli olduğu
+          durumlar saklıdır. Resend, e-posta ve günlük verilerini kendi hizmet koşulları uyarınca 30 gün tutar. Süresi
+          dolan kayıtlar üç ayda bir gözden geçirilir ve silinir; silme kayıtları ilgili mevzuatın gerektirdiği süre
+          boyunca tutulur.
         </p>
         <p>
           Verilerinizin güvenliği için erişimin yetkili ekip üyeleriyle sınırlandırılması, iletim sırasında şifreleme ve
@@ -240,9 +267,10 @@ const sectionsEn: LegalSection[] = [
     content: (
       <>
         <p>
-          This privacy notice is issued by LavieuxLabs (“LavieuxLabs”, “we”) as data controller under Article 10 of
+          This privacy notice is issued by Tarık Ziya Eren as data controller under Article 10 of
           Turkey’s Law No. 6698 on the Protection of Personal Data (“KVKK”) and the Communiqué on the Procedures and
-          Principles for Fulfilling the Obligation to Inform.
+          Principles for Fulfilling the Obligation to Inform. “LavieuxLabs” is the team and brand name used on this
+          site, not a separate legal person.
         </p>
         <ControllerDetails locale="en" />
       </>
@@ -258,10 +286,15 @@ const sectionsEn: LegalSection[] = [
           Letter of Intent (LOI) form, or contact us by email.
         </p>
         <p className="note">
-          <strong>No patient data is processed on this site.</strong> Health data that may be processed in pilot and
-          validation studies is handled separately from this notice, under a data processing agreement signed with the
-          institution, ethics committee approval and a separate information notice. Please do not send patient data or
-          other special categories of personal data through our contact channels.
+          <strong>This site does not aim to collect patient data.</strong> Please do not enter patient data, real claim
+          data or other special categories of personal data in the contact form or in your emails. The free-text field
+          cannot technically prevent such data from being entered by mistake; if it reaches us, it is reviewed only as
+          far as needed to delete it, and then deleted.
+        </p>
+        <p>
+          Health data that may be processed in pilot and validation studies is handled separately from this notice,
+          under a data processing agreement signed with the institution, ethics committee approval and a separate
+          information notice.
         </p>
       </>
     ),
@@ -285,7 +318,7 @@ const sectionsEn: LegalSection[] = [
             </tr>
             <tr>
               <td>Contact</td>
-              <td>Work email address</td>
+              <td>Email address (a work address is preferred)</td>
             </tr>
             <tr>
               <td>Professional</td>
@@ -330,21 +363,23 @@ const sectionsEn: LegalSection[] = [
       <>
         <p>
           Your personal data is collected through the information you enter in the contact form, which is delivered
-          to our email address by our email delivery provider when you submit it, the emails you send us
-          directly, and automatically by the website infrastructure. It is processed on the following legal bases under
-          Article 5(2) of KVKK:
+          to our contact address (contact@lavieuxlabs.com) by our email delivery provider when you submit it, the emails you send us
+          directly, and automatically by the website infrastructure. The applicable legal basis is assessed separately
+          for each processing activity:
         </p>
         <ul>
           <li>
-            <strong>Art. 5(2)(c):</strong> processing is directly related to concluding or performing a contract
-            (pilot, LOI and collaboration discussions);
+            <strong>Art. 5(2)(c):</strong> processing directly necessary, at the individual&apos;s request, to take steps
+            toward a pilot or collaboration agreement;
           </li>
           <li>
-            <strong>Art. 5(2)(ç):</strong> processing is necessary for the data controller to meet a legal obligation;
+            <strong>Art. 5(2)(ç):</strong> processing necessary to meet a record-keeping, application-response or
+            competent-authority obligation that applies in the specific case;
           </li>
           <li>
             <strong>Art. 5(2)(f):</strong> processing is necessary for the data controller’s legitimate interests
-            (answering requests, site security), provided it does not harm your fundamental rights and freedoms.
+            (answering first-contact and academic collaboration requests, preventing abuse and keeping the site
+            secure), provided it does not harm your fundamental rights and freedoms.
           </li>
         </ul>
         <p>
@@ -360,14 +395,32 @@ const sectionsEn: LegalSection[] = [
     content: (
       <>
         <p>
-          Limited to the purposes above, your personal data may be transferred to the providers of our email, form
-          delivery and hosting services, to public institutions legally authorised to receive it, and to competent authorities on request.
+          Limited to the purposes above, your personal data passes through or is held in the systems of the service
+          providers below. It may also be transferred to public institutions legally authorised to receive it, and to
+          competent authorities on request.
         </p>
+        <ul>
+          <li>
+            <strong>Vercel:</strong> hosting of the website and the contact form, and server-side processing of the
+            form.
+          </li>
+          <li>
+            <strong>Resend:</strong> delivery of the form content as an email to our contact address.
+          </li>
+          <li>
+            <strong>Cloudflare:</strong> the domain name (DNS), network infrastructure and forwarding of email sent to
+            contact@lavieuxlabs.com.
+          </li>
+          <li>
+            <strong>Google (Gmail):</strong> the mailbox where forwarded emails and correspondence are kept.
+          </li>
+        </ul>
         <p>
           If you load the location map on the contact page, data such as your IP address and browser information is sent
-          directly to Google, which provides the map. The map loads only with your consent or at your request. Where our
-          service providers’ servers are located outside Türkiye, transfers follow the mechanisms set out in Article 9 of
-          KVKK. Your personal data is not sold or rented to third parties for marketing.
+          directly to Google, which provides the map. The map loads only with your consent or at your request. These providers’
+          servers may be located outside Türkiye, so your personal data may be transferred abroad. The providers’
+          conditions for keeping content, logs and backups follow their own policies. Your personal data is not sold or
+          rented to third parties for marketing.
         </p>
       </>
     ),
@@ -378,8 +431,11 @@ const sectionsEn: LegalSection[] = [
     content: (
       <>
         <p>
-          Your personal data is kept for as long as the purpose of processing requires and for the limitation periods
-          set by law. When these periods end, the data is deleted, destroyed or anonymised.
+          Contact requests that do not proceed are kept for no more than 12 months after the last message. Messages that
+          become part of an active pilot, collaboration or contract discussion are kept for no more than 24 months after
+          that discussion ends, unless applicable law requires a longer period or they must be preserved for a legal
+          dispute. Under its own service terms, Resend keeps email and log data for 30 days. Expired records are reviewed
+          and deleted every three months; deletion records are kept for the period required by applicable law.
         </p>
         <p>
           To keep your data secure, we apply administrative and technical measures such as limiting access to authorised
@@ -444,26 +500,26 @@ const documents: Record<
   { eyebrow: string; title: string; summary: string; facts: LegalFact[]; sections: LegalSection[] }
 > = {
   tr: {
-    eyebrow: "Yasal · KVKK aydınlatma metni",
+    eyebrow: "Yasal: KVKK aydınlatma metni",
     title: "Gizlilik ve KVKK Politikası",
     summary:
       "Hangi kişisel verinizi neden işlediğimizi, hangi hukuki sebebe dayandığımızı ve 6698 sayılı Kanun'daki haklarınızı nasıl kullanacağınızı anlatıyoruz.",
     facts: [
       { label: "Belge türü", value: "Aydınlatma metni ve gizlilik politikası" },
-      { label: "Mevzuat", value: "6698 sayılı KVKK · md. 10–11" },
-      { label: "Veri sorumlusu", value: "LavieuxLabs" },
+      { label: "Mevzuat", value: "6698 sayılı KVKK, md. 10–11" },
+      { label: "Veri sorumlusu", value: "Tarık Ziya Eren" },
     ],
     sections: sectionsTr,
   },
   en: {
-    eyebrow: "Legal · KVKK privacy notice",
+    eyebrow: "Legal: KVKK privacy notice",
     title: "Privacy Policy",
     summary:
       "Which personal data we process and why, the legal basis we rely on, and how to use your rights under Turkey's data protection law (KVKK, Law No. 6698).",
     facts: [
       { label: "Document type", value: "Privacy notice and policy" },
-      { label: "Law", value: "KVKK (Law No. 6698) · Art. 10–11" },
-      { label: "Data controller", value: "LavieuxLabs" },
+      { label: "Law", value: "KVKK (Law No. 6698), Art. 10–11" },
+      { label: "Data controller", value: "Tarık Ziya Eren" },
     ],
     sections: sectionsEn,
   },

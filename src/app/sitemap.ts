@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_LAST_MODIFIED } from "@/lib/site";
+import { PAGE_UPDATED } from "@/lib/site";
 import { ROUTES, locales, type RoutePath } from "@/i18n/config";
 import { absoluteUrl, languageAlternates } from "@/i18n/metadata";
 
@@ -30,7 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     locales.map(
       (locale): Entry => ({
         url: absoluteUrl(locale, path),
-        lastModified: SITE_LAST_MODIFIED,
+        lastModified: PAGE_UPDATED[path],
         ...settings[path],
         alternates: { languages: languageAlternates(path) },
       }),
