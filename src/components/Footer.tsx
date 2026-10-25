@@ -18,7 +18,7 @@ const cellClass = "bg-navy-950 px-4 py-4";
 
 const copy = defineContent({
   tr: {
-    tagline: "İlaç güvenliği üzerine çalışan bağımsız bir öğrenci Ar-Ge girişimi. Shield, Tarık Ziya Eren'in bağımsız projesi olarak burada tanıtılır.",
+    tagline: "İlaç güvenliği ve hastane faturalaması üzerine çalışan bağımsız bir öğrenci Ar-Ge girişimi.",
     legal: "Yasal",
     imprint: "Künye",
     organization: "Girişim",
@@ -26,9 +26,9 @@ const copy = defineContent({
     location: "Konum",
     contact: "İletişim",
     status: "Proje durumu",
-    pharmaStatus: "PharmaDeux CDSS · ekibin ortak projesi · geliştirmede ·",
+    pharmaStatus: "PharmaDeux CDSS · geliştirmede ·",
     noCe: "(öz değerlendirme) · CE işareti yok",
-    shieldStatus: "Shield · Tarık Ziya Eren'in bağımsız projesi · prototip",
+    shieldStatus: "Shield · prototip",
     regulation: "Regülasyon",
     regulationValue: "MDR 2017/745 · Kural 11 · Sınıf IIa hedefi",
     version: "Sürüm",
@@ -39,7 +39,7 @@ const copy = defineContent({
       "PharmaDeux CDSS ve Shield geliştirme aşamasındadır ve henüz piyasaya sunulmamıştır. PharmaDeux için klinik kullanımda gerekli uygunluk değerlendirmesi yapılmadı. Bu sitedeki içerik tıbbi tavsiye değildir; örnek veriler kurgusaldır.",
   },
   en: {
-    tagline: "An independent student R&D venture working on medication safety. Shield is presented here as an independent project by Tarık Ziya Eren.",
+    tagline: "An independent student R&D venture working on medication safety and hospital billing.",
     legal: "Legal",
     imprint: "Imprint",
     organization: "Venture",
@@ -47,9 +47,9 @@ const copy = defineContent({
     location: "Location",
     contact: "Contact",
     status: "Project status",
-    pharmaStatus: "PharmaDeux CDSS · the team's joint project · in development ·",
+    pharmaStatus: "PharmaDeux CDSS · in development ·",
     noCe: "(self-assessed) · no CE mark",
-    shieldStatus: "Shield · independent project by Tarık Ziya Eren · prototype",
+    shieldStatus: "Shield · prototype",
     regulation: "Regulation",
     regulationValue: "MDR 2017/745 · Rule 11 · Class IIa target",
     version: "Version",

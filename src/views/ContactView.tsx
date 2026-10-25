@@ -40,7 +40,7 @@ const copy = defineContent({
         value:
           "Konya Teknik Üniversitesi'nde okuyan öğrencilerin bağımsız girişimi. LavieuxLabs henüz şirketleşmedi ve üniversitenin bir birimi değil.",
       },
-      { label: "Projeler", value: "PharmaDeux ekibin ortak projesi. Shield, Tarık Ziya Eren'in bağımsız projesi." },
+      { label: "Projeler", value: "PharmaDeux ilaç güvenliğine, Shield hastane faturalamasına odaklanır." },
       { label: "Aşama", value: "İkisi de prototip. Hiçbir hastaneye bağlı değil; klinik doğrulama henüz yapılmadı." },
       { label: "Talep", value: "Form bir talep iletir. Randevu onayı, anlaşma veya sözleşme değildir." },
       { label: "Göndermeyin", value: "Hasta verisi ve gerçek fatura verisi." },
@@ -64,7 +64,7 @@ const copy = defineContent({
         value:
           "An independent venture of students at Konya Technical University. LavieuxLabs is not incorporated yet and is not a unit of the university.",
       },
-      { label: "Projects", value: "PharmaDeux is the team's joint project. Shield is an independent project by Tarık Ziya Eren." },
+      { label: "Projects", value: "PharmaDeux focuses on medication safety; Shield focuses on hospital billing." },
       { label: "Stage", value: "Both are prototypes. Neither is connected to a hospital, and no clinical validation has been done yet." },
       { label: "Request", value: "The form sends a request. It is not a confirmed appointment, an agreement or a contract." },
       { label: "Do not send", value: "Patient data or real claim data." },

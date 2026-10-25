@@ -141,9 +141,8 @@ export const navigation = defineContent({
     links: [
       { href: "/standartlar", label: "Standartlar" },
       { href: "/about", label: "Hakkımızda" },
-      { href: "/contact", label: "İletişim" },
     ] as NavLink[],
-    cta: "Görüşme planla",
+    cta: "İletişim",
     homeAria: "LavieuxLabs ana sayfa",
     mainNav: "Ana navigasyon",
     openMenu: "Menüyü aç",
@@ -203,9 +202,8 @@ export const navigation = defineContent({
     links: [
       { href: "/standartlar", label: "Standards" },
       { href: "/about", label: "About" },
-      { href: "/contact", label: "Contact" },
     ],
-    cta: "Book a call",
+    cta: "Contact",
     homeAria: "LavieuxLabs home",
     mainNav: "Main navigation",
     openMenu: "Open menu",

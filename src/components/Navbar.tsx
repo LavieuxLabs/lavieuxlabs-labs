@@ -234,9 +234,7 @@ export default function Navbar({ locale }: { locale: Locale }) {
               <ProductsMenu active={productsActive} locale={locale} tone={tone} />
             </li>
             {nav.links.map((link) => (
-              // Between md and lg the contact CTA is shown instead of the contact link (same target), so
-              // the bar fits on a tablet.
-              <li key={link.href} className={link.href === "/contact" ? "hidden lg:block" : undefined}>
+              <li key={link.href}>
                 <Link
                   href={localizedPath(locale, link.href)}
                   aria-current={isActive(link.href) ? "page" : undefined}

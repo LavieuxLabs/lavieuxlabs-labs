@@ -75,7 +75,7 @@ const copy = defineContent<{ eyebrow: string; title: string; description: string
         ],
       },
     ],
-    note: "Shield (Tarık Ziya Eren'in bağımsız projesi) için planlanan pilotlarda advers ilaç olayı yerine red oranı, ön kontrolde yakalanan red nedenleri ve uzman inceleme süresi ölçülür. Hiçbir fazda sistem, kullanıcının yerine karar vermez.",
+    note: "Shield için planlanan pilotlarda red oranı, ön kontrolde yakalanan red nedenleri ve uzman inceleme süresi ölçülür. Hiçbir fazda sistem, kullanıcının yerine karar vermez.",
   },
   en: {
     eyebrow: "Pilot protocol",
@@ -164,7 +164,7 @@ const sheet = defineContent({
     imprint: { organization: "Kuruluş", address: "Konum", contact: "İletişim", web: "Web" },
     organization: `LavieuxLabs · ${organizationProfile.tr.short}`,
     footer:
-      "Bu belge bilgilendirme amaçlıdır ve bağlayıcı değildir. LavieuxLabs henüz şirketleşmedi ve bu belge herhangi bir kişiyi yetkili imzacı olarak göstermez. Shield için proje sahibi Tarık Ziya Eren'dir; PharmaDeux ekibin ortak projesidir. Her LOI, imzadan önce gerçek tarafları ve imza yetkisini ayrıca belirlemelidir.",
+      "Bu belge bilgilendirme amaçlıdır ve bağlayıcı değildir. LavieuxLabs henüz şirketleşmedi ve bu belge herhangi bir kişiyi yetkili imzacı olarak göstermez. Her LOI, imzadan önce gerçek tarafları ve imza yetkisini ayrıca belirlemelidir.",
   },
   en: {
     button: "Print / save as PDF",
@@ -174,7 +174,7 @@ const sheet = defineContent({
     imprint: { organization: "Organisation", address: "Location", contact: "Contact", web: "Web" },
     organization: `LavieuxLabs · ${organizationProfile.en.short}`,
     footer:
-      "This document is for information and is not binding. LavieuxLabs is not incorporated and this document does not name any person as an authorised signatory. Tarık Ziya Eren owns the Shield project; PharmaDeux is the team's joint project. Each LOI must separately identify the actual parties and signing authority before signature.",
+      "This document is for information and is not binding. LavieuxLabs is not incorporated and this document does not name any person as an authorised signatory. Each LOI must separately identify the actual parties and signing authority before signature.",
   },
 });
 

@@ -58,8 +58,7 @@ const sectionsTr: LegalSection[] = [
           gösterir; bir sertifikasyon beyanı değildir. LavieuxLabs’ın işleyen bir kalite yönetim sistemi henüz yoktur.
         </p>
         <p>
-          Shield, Tarık Ziya Eren’in bağımsız prototip projesidir ve bu sayfadaki çerçevenin parçası değildir.
-          Düzenleyici değerlendirmesi aşağıda ayrıca anlatılır.
+          Shield bu sayfadaki kalite çerçevesinin parçası değildir. Düzenleyici değerlendirmesi aşağıda ayrıca anlatılır.
         </p>
       </>
     ),
@@ -119,7 +118,7 @@ const sectionsTr: LegalSection[] = [
           <li>Piyasaya arz sonrası gözetim (PMS) ve olay bildirim süreçleri ürünle birlikte planlanır.</li>
         </ul>
         <p>
-          Shield, Tarık Ziya Eren’in bağımsız projesidir. Klinik tanı veya tedavi kararı üretmeyen; geri ödeme ve
+          Shield, klinik tanı veya tedavi kararı üretmeyen; geri ödeme ve
           provizyon süreçlerini destekleyen operasyonel bir prototip olarak tasarlanmıştır. Düzenleyici
           sınıflandırması, nihai kullanım amacına göre değerlendirilir.
         </p>
@@ -221,8 +220,7 @@ const sectionsEn: LegalSection[] = [
           system yet.
         </p>
         <p>
-          Shield is an independent prototype by Tarık Ziya Eren and is not part of the framework on this page. Its
-          regulatory assessment is described separately below.
+          Shield is not part of the quality framework on this page. Its regulatory assessment is described separately below.
         </p>
       </>
     ),
@@ -283,7 +281,7 @@ const sectionsEn: LegalSection[] = [
           <li>Post-market surveillance (PMS) and incident reporting are planned together with the product.</li>
         </ul>
         <p>
-          Shield is an independent project by Tarık Ziya Eren. It is designed as an operational prototype that supports
+          Shield is designed as an operational prototype that supports
           reimbursement and pre-authorisation processes and does not produce clinical diagnoses or treatment decisions.
           Its regulatory classification is assessed against its final intended use.
         </p>

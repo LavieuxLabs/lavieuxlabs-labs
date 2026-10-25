@@ -2,14 +2,11 @@ import Link from "next/link";
 import { ChevronRight, Pill } from "lucide-react";
 import PharmaCapsule from "@/components/PharmaCapsule";
 import JsonLd from "@/components/JsonLd";
-import FhirPreview from "@/components/FhirPreview";
 import QtSimulator from "@/components/QtSimulator";
 import CopyEmail from "@/components/CopyEmail";
-import { PairwiseFigure } from "@/components/home/HomeFigures";
-import { BUTTON, BUTTON_OUTLINE, Disclosure, FactRows, LINK, PaperSection, TEXT_ACTION } from "@/components/paper/Editorial";
+import { BUTTON, Disclosure, FactRows, LINK, PaperSection } from "@/components/paper/Editorial";
 import { pharmaDeuxJsonLd } from "@/lib/structuredData";
 import { contactHref } from "@/lib/site";
-import { safetyPlaneGroups } from "@/lib/safetyPlanes";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
 import { metrics, testsLabel, testsNote, trlLabel } from "@/lib/metrics";
@@ -41,21 +38,13 @@ type Status = "code" | "design" | "planned";
 type Capability = { name: string; detail: string; status: Status };
 type Level = { title: string; status: string; body: string; rows: { label: string; value: string }[] };
 
-const statusTone: Record<Status, string> = {
-  code: "font-medium text-ink",
-  design: "text-ink-2",
-  planned: "text-ink-3",
-};
-
 const copy = defineContent<{
   crumbs: { home: string; products: string; here: string; aria: string };
   hero: {
     name: string;
     title: string;
     lead: string;
-    primary: string;
     secondary: string;
-    academic: string;
     summaryTitle: string;
     summary: { label: string; value: string }[];
     onPage: string;
@@ -112,7 +101,8 @@ const copy = defineContent<{
     label: string;
     title: string;
     intro: string;
-    modes: { title: string; body: string; link: string }[];
+    modes: { title: string; body: string }[];
+    cta: string;
     audiencesTitle: string;
     audiences: string[];
     legal: string;
@@ -126,9 +116,7 @@ const copy = defineContent<{
       name: "PharmaDeux CDSS",
       title: "Reçete yazılırken ilaç güvenliğini kontrol eden klinik karar destek yazılımı.",
       lead: "PharmaDeux reçeteyi hastanın böbrek ve karaciğer değerleri, QTc ölçümü ve kullandığı diğer ilaçlarla birlikte kontrol eder. Her uyarı onu tetikleyen kural ve eşikle gelir. Son karar hekimindir: uyarıyı gerekçe yazarak geçebilir ve bu karar kayda yazılır.",
-      primary: "15 dk tanışma görüşmesi",
       secondary: "Örnek vakayı inceleyin",
-      academic: "Klinik araştırma ortaklığı için yazın",
       summaryTitle: "Kısaca",
       summary: [
         { label: "Sahiplik", value: "LavieuxLabs ekibinin ortak projesi" },
@@ -426,10 +414,11 @@ const copy = defineContent<{
       intro:
         "Geçmiş vakalarla doğrulama çalışmasına katılabilecek klinik eczacılık ekipleri, hekimler ve araştırma hastaneleriyle görüşmek istiyoruz. İlk adım 15 dakikalık bir tanışma görüşmesidir ve bir taahhüt istemez.",
       modes: [
-        { title: "Tanışma görüşmesi", body: "15 dakika. Kurumunuzun sorusunu ve PharmaDeux'un bugünkü durumunu konuşuruz.", link: "15 dk tanışma görüşmesi" },
-        { title: "Akademik ve klinik ortaklık", body: "Protokol yazımı, referans paneli ve ortak yayın için araştırma iş birliği.", link: "Ortaklık için yazın" },
-        { title: "Pilot ve geçmiş vaka doğrulaması", body: "Kapsam ve veri koşulları bağlayıcı olmayan bir Niyet Mektubu (LOI) ile yazılır.", link: "Pilot başvurusu (LOI)" },
+        { title: "Tanışma görüşmesi", body: "15 dakika. Kurumunuzun sorusunu ve PharmaDeux'un bugünkü durumunu konuşuruz." },
+        { title: "Akademik ve klinik ortaklık", body: "Protokol yazımı, referans paneli ve ortak yayın için araştırma iş birliği." },
+        { title: "Pilot ve geçmiş vaka doğrulaması", body: "Kapsam ve veri koşulları bağlayıcı olmayan bir Niyet Mektubu (LOI) ile yazılır." },
       ],
+      cta: "İletişime geçin",
       audiencesTitle: "Kimlerle çalışmak istiyoruz",
       audiences: [
         "Klinik eczacılık ve ilaç güvenliği ekipleri",
@@ -447,9 +436,7 @@ const copy = defineContent<{
       name: "PharmaDeux CDSS",
       title: "Clinical decision support software that checks medication safety while the prescription is written.",
       lead: "PharmaDeux checks a prescription against the patient's kidney and liver values, measured QTc and other medicines. Each alert comes with the rule and threshold that triggered it. The physician makes the final decision and can override an alert with a reason, which is written to the record.",
-      primary: "15-minute intro call",
       secondary: "Review an example case",
-      academic: "Write to us about a clinical research partnership",
       summaryTitle: "At a glance",
       summary: [
         { label: "Ownership", value: "A joint project of the LavieuxLabs team" },
@@ -747,10 +734,11 @@ const copy = defineContent<{
       intro:
         "We would like to talk with clinical pharmacy teams, physicians and research hospitals that could take part in a validation study on past cases. The first step is a 15-minute intro call, with no commitment.",
       modes: [
-        { title: "Intro call", body: "15 minutes. We talk about your institution's question and where PharmaDeux stands today.", link: "15-minute intro call" },
-        { title: "Academic and clinical partnership", body: "Research collaboration on protocol writing, the reference panel and joint publication.", link: "Write about a partnership" },
-        { title: "Pilot and validation on past cases", body: "Scope and data conditions are written in a non-binding Letter of Intent (LOI).", link: "Apply for a pilot (LOI)" },
+        { title: "Intro call", body: "15 minutes. We talk about your institution's question and where PharmaDeux stands today." },
+        { title: "Academic and clinical partnership", body: "Research collaboration on protocol writing, the reference panel and joint publication." },
+        { title: "Pilot and validation on past cases", body: "Scope and data conditions are written in a non-binding Letter of Intent (LOI)." },
       ],
+      cta: "Contact us",
       audiencesTitle: "Who we would like to work with",
       audiences: [
         "Clinical pharmacy and medication safety teams",
@@ -764,14 +752,9 @@ const copy = defineContent<{
   },
 });
 
-const STATUSES: Status[] = ["code", "design", "planned"];
-
 export default function PharmaDeuxView({ locale }: { locale: Locale }) {
   const c = copy[locale];
   const href = (path: string) => localizedPath(locale, path);
-  const groups = safetyPlaneGroups(locale);
-  const offsets = groups.map((_, gi) => groups.slice(0, gi).reduce((n, g) => n + g.planes.length, 0));
-
   return (
     <main id="main" className="surface-paper relative flex-1 bg-paper text-ink">
       <JsonLd data={pharmaDeuxJsonLd(locale)} />
@@ -817,17 +800,11 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
               {c.hero.title}
             </h1>
             <p className="mt-5 max-w-[62ch] text-[17px] leading-[1.6] text-ink-2">{c.hero.lead}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center print:hidden">
-              <Link href={href(contactHref("intro", "pharmadeux"))} className={BUTTON}>
-                {c.hero.primary}
-              </Link>
-              <a href="#vakalar" className={BUTTON_OUTLINE}>
+            <div className="mt-8 print:hidden">
+              <a href="#vakalar" className={BUTTON}>
                 {c.hero.secondary}
               </a>
             </div>
-            <Link href={href(contactHref("academic"))} className={`mt-2 print:hidden ${TEXT_ACTION}`}>
-              {c.hero.academic}
-            </Link>
           </div>
 
           <aside aria-labelledby="hero-summary" className="self-end border-t-2 border-ink pt-4 lg:col-span-4">
@@ -847,7 +824,7 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
           <nav aria-label={c.hero.onPage} className="border-t border-rule pt-4 lg:col-span-12 print:hidden">
             <p className="font-serif text-[15px] text-ink-3">{c.hero.onPage}</p>
             <ul className="mt-1 flex flex-wrap gap-x-6">
-              {c.sections.map((s) => (
+              {c.sections.filter((s) => ["vakalar", "simulator", "dogrulama", "is-birligi"].includes(s.id)).map((s) => (
                 <li key={s.id}>
                   <a href={`#${s.id}`} className={`inline-flex min-h-11 items-center text-[15px] text-ink-2 hover:text-ink ${LINK}`}>
                     {s.label}
@@ -858,26 +835,6 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
           </nav>
         </div>
       </section>
-
-      {/* Problem: four problems in prose next to the pairwise figure. */}
-      <PaperSection id="problem" label={c.problem.label} title={c.problem.title} intro={<p>{c.problem.intro}</p>}>
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
-          <div className="lg:col-span-7">
-            <dl className="grid gap-x-10 gap-y-7 sm:grid-cols-2">
-              {c.problem.items.map((p) => (
-                <div key={p.title} className="border-t border-ink pt-4">
-                  <dt className="text-[17px] font-semibold text-ink">{p.title}</dt>
-                  <dd className="mt-2 text-[15px] leading-[1.6] text-ink-2">{p.body}</dd>
-                </div>
-              ))}
-            </dl>
-            <p className="mt-8 max-w-[62ch] text-[14px] leading-relaxed text-ink-3">{c.problem.source}</p>
-          </div>
-          <div className="min-w-0 lg:col-span-5">
-            <PairwiseFigure locale={locale} />
-          </div>
-        </div>
-      </PaperSection>
 
       {/* Example case: one case at the centre, on a dark workspace. #vakalar is the workspace itself (deep links). */}
       <section aria-labelledby="cases-title" className="border-t border-rule bg-paper-band">
@@ -900,62 +857,6 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
           </div>
         </div>
       </section>
-
-      {/* Decision logic: the six steps (a real sequence, so numbered) and the safety planes, grouped. */}
-      <PaperSection id="mimari" label={c.logic.label} title={c.logic.title} intro={<p>{c.logic.intro}</p>}>
-        <div className="grid gap-12 lg:grid-cols-12">
-          <ol className="space-y-6 lg:col-span-5">
-            {c.logic.steps.map((step, i) => (
-              <li key={step.title} className="grid grid-cols-[32px_minmax(0,1fr)] gap-4">
-                <span aria-hidden="true" className="font-serif text-[30px] leading-none text-ink-3 tabular-nums">
-                  {i + 1}
-                </span>
-                <div>
-                  <h3 className="text-[17px] font-semibold text-ink">{step.title}</h3>
-                  <p className="mt-1 text-[15px] leading-[1.6] text-ink-2">{step.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-
-          <div className="min-w-0 lg:col-span-7">
-            <h3 className="font-serif text-[24px] leading-tight font-medium text-ink">{c.logic.planesTitle}</h3>
-            <p className="mt-2 max-w-[60ch] text-[15px] leading-[1.6] text-ink-2">{c.logic.planesBody}</p>
-            <div className="mt-6 grid gap-x-8 sm:grid-cols-2">
-              {groups.map((group, gi) => (
-                <div key={group.title} className="border-t border-ink pt-4 pb-6">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <h4 className="text-[17px] font-semibold text-ink">{group.title}</h4>
-                    <span className="font-mono text-[14px] text-ink-3 tabular-nums">{group.planes.length}</span>
-                  </div>
-                  <p className="mt-1.5 text-[14px] leading-[1.55] text-ink-2">{group.summary}</p>
-                  <div className="mt-2">
-                  <Disclosure summary={c.logic.show(group.planes.length)}>
-                    <ul className="divide-y divide-rule border-y border-rule">
-                      {group.planes.map((plane, pi) => {
-                        const name = typeof plane === "string" ? plane : plane.name;
-                        return (
-                          <li key={name} className="grid grid-cols-[40px_minmax(0,1fr)] items-baseline gap-2 py-2">
-                            <span className="font-mono text-[12px] text-ink-3 tabular-nums">P{String(offsets[gi] + pi + 1).padStart(2, "0")}</span>
-                            {typeof plane === "string" ? (
-                              <span className="text-[14px] text-ink">{name}</span>
-                            ) : (
-                              <Link href={href(plane.href)} className={`-my-2 inline-block py-2 text-[14px] text-ink ${LINK}`}>
-                                {name}
-                              </Link>
-                            )}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </Disclosure>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </PaperSection>
 
       {/* QT/Tisdale simulator: one check, separated from the case panel above in words, not only in place. */}
       <PaperSection id="simulator" label={c.qt.label} title={c.qt.title} intro={<p>{c.qt.intro}</p>} band>
@@ -1069,111 +970,19 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
         </div>
       </PaperSection>
 
-      {/* Integration, for IT teams: the status scale and the code/hospital gap stay visible; each group's
-          capabilities open on demand, with their status counts shown on the closed summary. */}
-      <PaperSection id="entegrasyon" label={c.integration.label} title={c.integration.title} intro={<p>{c.integration.intro}</p>} band>
-        <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-          <dl className="grid content-start gap-4 lg:col-span-4">
-            {STATUSES.map((s) => (
-              <div key={s} className="border-t border-ink pt-3">
-                <dt className={`text-[15px] ${statusTone[s]}`}>{c.integration.statusLabels[s]}</dt>
-                <dd className="mt-1 text-[14px] leading-[1.55] text-ink-2">{c.integration.statusMeaning[s]}</dd>
-              </div>
-            ))}
-          </dl>
-          <div className="lg:col-span-8">
-            <p className="border-l-2 border-ink pl-4 text-[17px] leading-[1.6] text-ink">{c.integration.gap}</p>
-            <ul className="mt-8 border-t border-ink">
-              {c.integration.groups.map((g) => (
-                <li key={g.title} className="border-b border-rule py-1">
-                  <Disclosure
-                    summary={g.title}
-                    meta={STATUSES.filter((s) => g.items.some((i) => i.status === s))
-                      .map((s) => `${g.items.filter((i) => i.status === s).length} ${c.integration.statusLabels[s].toLocaleLowerCase(locale)}`)
-                      .join(", ")}
-                  >
-                    <table className="mb-3 hidden w-full border-collapse text-left text-[15px] md:table">
-                      <thead className="sr-only">
-                        <tr>
-                          <th scope="col">{c.integration.columns.capability}</th>
-                          <th scope="col">{c.integration.columns.detail}</th>
-                          <th scope="col">{c.integration.columns.status}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {g.items.map((item) => (
-                          <tr key={item.name} className="border-t border-rule align-top">
-                            <th scope="row" className="w-[30%] py-3 pr-4 text-left font-medium text-ink">{item.name}</th>
-                            <td className="py-3 pr-4 leading-snug text-ink-2">{item.detail}</td>
-                            <td className={`w-[24%] py-3 ${statusTone[item.status]}`}>{c.integration.statusLabels[item.status]}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                    <ul className="mb-3 divide-y divide-rule border-t border-rule md:hidden">
-                      {g.items.map((item) => (
-                        <li key={item.name} className="py-3">
-                          <p className="text-[15px] font-medium text-ink">{item.name}</p>
-                          <p className={`mt-0.5 text-[14px] ${statusTone[item.status]}`}>{c.integration.statusLabels[item.status]}</p>
-                          <p className="mt-1 text-[14px] leading-snug text-ink-2">{item.detail}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  </Disclosure>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 text-[15px] leading-[1.6] text-ink-2">{c.integration.note}</p>
-            <Link href={href("/standartlar/fhir-r4-entegrasyonu")} className={`mt-1 ${TEXT_ACTION}`}>
-              {c.integration.standardLink}
-            </Link>
-          </div>
-        </div>
-
-        <div id="fhir-onizleme" className="mt-12 grid scroll-mt-20 gap-6 lg:grid-cols-12 lg:gap-12">
-          <div className="lg:col-span-4">
-            <h3 className="font-serif text-[20px] font-medium text-ink">{c.integration.fhirTitle}</h3>
-            <p className="mt-2 text-[15px] leading-[1.6] text-ink-2">{c.integration.fhirBody}</p>
-          </div>
-          <div className="panel-dark min-w-0 [color-scheme:dark] lg:col-span-8">
-            <FhirPreview locale={locale} />
-          </div>
-        </div>
-      </PaperSection>
-
-      {/* Clinical validation plan: a plan, written as one; no phase is described as done. */}
-      <PaperSection id="protokol" label={c.protocol.label} title={c.protocol.title} intro={<p>{c.protocol.intro}</p>}>
-        <ol className="divide-y divide-rule border-y border-rule">
-          {c.protocol.phases.map((p) => (
-            <li key={p.phase} className="grid gap-1 py-4 sm:grid-cols-[120px_minmax(0,1fr)_140px] sm:items-baseline sm:gap-6">
-              <span className="font-serif text-[17px] text-ink-3">{p.phase}</span>
-              <div>
-                <h3 className="text-[17px] font-semibold text-ink">{p.title}</h3>
-                <p className="mt-1 text-[15px] leading-[1.6] text-ink-2">{p.body}</p>
-              </div>
-              <span className="text-[14px] text-ink-2 sm:text-right">{p.status}</span>
-            </li>
-          ))}
-        </ol>
-        <p className="mt-6 max-w-[70ch] text-[15px] leading-[1.6] text-ink-2">{c.protocol.note}</p>
-      </PaperSection>
-
-      {/* Collaboration: three ways in; the intro call is the default first step. */}
+      {/* Collaboration: three possible paths, one clear contact action. */}
       <PaperSection id="is-birligi" label={c.collab.label} title={c.collab.title} intro={<p>{c.collab.intro}</p>} band>
         <div className="grid gap-8 md:grid-cols-3">
-          {c.collab.modes.map((mode, i) => (
+          {c.collab.modes.map((mode) => (
             <div key={mode.title} className="flex flex-col border-t-2 border-ink pt-5">
               <h3 className="font-serif text-[24px] leading-tight font-medium text-ink">{mode.title}</h3>
               <p className="mt-3 text-[15px] leading-[1.6] text-ink-2">{mode.body}</p>
-              <Link
-                href={href(i === 0 ? contactHref("intro", "pharmadeux") : i === 1 ? contactHref("academic") : contactHref("pilot", "pharmadeux"))}
-                className={`mt-3 self-start md:mt-auto md:pt-3 ${TEXT_ACTION}`}
-              >
-                {mode.link}
-              </Link>
             </div>
           ))}
         </div>
+        <Link href={href(contactHref("intro", "pharmadeux"))} className={`mt-8 ${BUTTON}`}>
+          {c.collab.cta}
+        </Link>
         <p className="mt-8 max-w-[70ch] border-l-2 border-ink pl-4 text-[15px] leading-[1.6] text-ink">{c.collab.legal}</p>
         <div className="mt-10 grid gap-8 border-t border-rule pt-8 md:mt-14 md:grid-cols-2 md:gap-12 md:pt-10">
           <div>

@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { ChevronRight, ShieldCheck } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
-import ShieldConsole from "@/components/ShieldConsole";
 import ClaimSimulator from "@/components/ClaimSimulator";
 import CopyEmail from "@/components/CopyEmail";
 import RevealHashTarget from "@/components/paper/RevealHashTarget";
-import { ClaimPathFigure, Figure } from "@/components/home/HomeFigures";
-import { BUTTON, BUTTON_OUTLINE, Disclosure, FactRows, LINK, PaperSection, TEXT_ACTION } from "@/components/paper/Editorial";
+import { Figure } from "@/components/home/HomeFigures";
+import { BUTTON, LINK, PaperSection } from "@/components/paper/Editorial";
 import { shieldJsonLd } from "@/lib/structuredData";
 import { contactHref } from "@/lib/site";
 import { RULES, THRESHOLD, scoreClaim, type RuleKey } from "@/lib/claimRules";
@@ -17,12 +16,12 @@ export const metadata = defineMetadata("/initiatives/shield", {
   tr: {
     title: "Shield",
     description:
-      "Tarık Ziya Eren'in bağımsız prototip projesi. Hastane fatura ve provizyon kalemlerini gönderimden önce SUT ve SGK provizyon kurallarına göre denetler; riskli kalem gerekçesiyle uzmanın kuyruğuna düşer. Gerçek faturalarda doğrulanmadı.",
+      "Hastane fatura ve provizyon kalemlerini gönderimden önce SUT ve SGK kurallarına göre denetleyen prototip. Gerçek faturalarda doğrulanmadı.",
   },
   en: {
     title: "Shield",
     description:
-      "An independent prototype by Tarık Ziya Eren. Checks hospital billing and provision line items before submission against SUT (Turkey's reimbursement rulebook) and SGK (Social Security Institution) provision rules; a risky line item goes to the specialist's queue with the reason. Not validated on real claims.",
+      "A prototype that checks hospital billing items against SUT and SGK rules before submission. Not validated on real claims.",
   },
 });
 
@@ -32,7 +31,7 @@ export const metadata = defineMetadata("/initiatives/shield", {
  * through Shield (a ruled four-column figure computed from the example rule set); the claim simulator on a
  * dark workspace as the main interactive tool; rule coverage with honest status; traceability and access
  * with prototype behaviour kept apart from design goals (the review console opens on demand); the
- * retrospective validation plan; and ways to talk. Shield is Tarık Ziya Eren's independent project,
+ * retrospective validation plan; and ways to talk. Shield is presented as a hospital-billing prototype,
  * presented on this site; it is not a LavieuxLabs team product. Section ids are linked from elsewhere and
  * kept: #problem, #mimari, #simulator, #kapsam, #denetim, #izolasyon, #konsol, #retrospektif, #is-birligi.
  */
@@ -46,16 +45,12 @@ type PlaneStatus = "built" | "missing";
 const EXAMPLE = { item: "angio", icd: "M54.5", checks: { preapproval: false, repeat: false, signed: true } } as const;
 const EXAMPLE_QUERY = `?item=${EXAMPLE.item}&code=${EXAMPLE.icd}&pre=0&repeat=0&signed=1#simulator`;
 
-const traceTone: Record<Trace, string> = { shown: "font-medium text-ink", goal: "text-ink-2" };
-const planeTone: Record<PlaneStatus, string> = { built: "font-medium text-ink", missing: "text-ink-3" };
-
 const copy = defineContent<{
   crumbs: { home: string; products: string; aria: string };
   hero: {
     title: string;
     lead: string;
     owner: string;
-    primary: string;
     secondary: string;
     summaryTitle: string;
     summary: { label: string; value: string }[];
@@ -124,7 +119,8 @@ const copy = defineContent<{
     label: string;
     title: string;
     intro: string;
-    modes: { title: string; body: string; link: string }[];
+    modes: { title: string; body: string }[];
+    cta: string;
     legal: string;
     audiencesTitle: string;
     audiences: string[];
@@ -137,8 +133,7 @@ const copy = defineContent<{
     hero: {
       title: "Hastane faturasındaki red riskini gönderimden önce gösteren denetim yazılımı.",
       lead: "Shield fatura ve provizyon kalemlerini gönderimden önce SUT ve SGK kurallarına göre kontrol eder. Riskli kalem, tetiklenen kuralla birlikte fatura uzmanının kuyruğuna düşer; gönderim kararını uzman verir.",
-      owner: "Tarık Ziya Eren’in bağımsız projesi; LavieuxLabs sitesinde tanıtılıyor. Henüz prototip aşamasında.",
-      primary: "15 dk tanışma görüşmesi",
+      owner: "Hastane faturalaması için geliştirilen bir prototip.",
       secondary: "Örnek faturayı inceleyin",
       summaryTitle: "Kısaca",
       summary: [
@@ -305,12 +300,13 @@ const copy = defineContent<{
       intro:
         "Hastane faturalama ve gelir döngüsü birimleri, provizyon ekipleri ve bu alanda çalışan araştırmacılarla tanışmak istiyoruz. İlk adım 15 dakikalık bir görüşmedir ve bir taahhüt istemez.",
       modes: [
-        { title: "Tanışma ve demo", body: "15 dakika. Ekibinizin red nedenlerini ve Shield'ın bugünkü durumunu konuşuruz.", link: "15 dk tanışma görüşmesi" },
-        { title: "Araştırma iş birliği", body: "Fatura reddi, kural yönetimi ve değerlendirme yöntemi üzerine akademik çalışma.", link: "Araştırma için yazın" },
-        { title: "Retrospektif pilot", body: "Kapsam ve veri koşulları bağlayıcı olmayan bir Niyet Mektubu (LOI) ile yazılır.", link: "Pilot başvurusu (LOI)" },
+        { title: "Tanışma ve demo", body: "15 dakika. Ekibinizin red nedenlerini ve Shield'ın bugünkü durumunu konuşuruz." },
+        { title: "Araştırma iş birliği", body: "Fatura reddi, kural yönetimi ve değerlendirme yöntemi üzerine akademik çalışma." },
+        { title: "Retrospektif pilot", body: "Kapsam ve veri koşulları bağlayıcı olmayan bir Niyet Mektubu (LOI) ile yazılır." },
       ],
+      cta: "İletişime geçin",
       legal:
-        "Shield, Tarık Ziya Eren'in bağımsız projesidir. LavieuxLabs henüz şirketleşmedi. Niyet Mektubu (LOI) bağlayıcı değildir ve bir sözleşme yerine geçmez. Bir doğrulama çalışmasında sözleşmeyi hangi tarafın imzalayacağı ve veri işleme koşulları, gerekli taraflar ve yetkili hukuk danışmanlarıyla netleştirilir.",
+        "LavieuxLabs henüz şirketleşmedi. Niyet Mektubu (LOI) bağlayıcı değildir ve bir sözleşme yerine geçmez. Bir doğrulama çalışmasında sözleşmeyi hangi tarafın imzalayacağı ve veri işleme koşulları, gerekli taraflar ve yetkili hukuk danışmanlarıyla netleştirilir.",
       audiencesTitle: "Kimlerle çalışmak istiyoruz",
       audiences: [
         "Hastane faturalama ve gelir döngüsü birimleri",
@@ -326,8 +322,7 @@ const copy = defineContent<{
     hero: {
       title: "Claim audit software that shows rejection risk on a hospital claim before it is submitted.",
       lead: "Shield checks claim and provision line items before submission against SUT (Turkey's reimbursement rulebook) and SGK (Social Security Institution) rules. A risky item goes to the billing specialist with the rule it triggered; the specialist decides.",
-      owner: "An independent project by Tarık Ziya Eren, presented on the LavieuxLabs website. It is still a prototype.",
-      primary: "15-minute intro call",
+      owner: "A prototype for hospital billing.",
       secondary: "Review an example claim",
       summaryTitle: "At a glance",
       summary: [
@@ -494,12 +489,13 @@ const copy = defineContent<{
       intro:
         "We would like to meet hospital billing and revenue cycle units, pre-authorisation teams and researchers working in this area. The first step is a 15-minute call, with no commitment.",
       modes: [
-        { title: "Intro and demo", body: "15 minutes. We talk about your team's rejection reasons and where Shield stands today.", link: "15-minute intro call" },
-        { title: "Research collaboration", body: "Academic work on claim rejection, rule management and evaluation method.", link: "Write about research" },
-        { title: "Retrospective pilot", body: "Scope and data conditions are written in a non-binding Letter of Intent (LOI).", link: "Apply for a pilot (LOI)" },
+        { title: "Intro and demo", body: "15 minutes. We talk about your team's rejection reasons and where Shield stands today." },
+        { title: "Research collaboration", body: "Academic work on claim rejection, rule management and evaluation method." },
+        { title: "Retrospective pilot", body: "Scope and data conditions are written in a non-binding Letter of Intent (LOI)." },
       ],
+      cta: "Contact us",
       legal:
-        "Shield is an independent project by Tarık Ziya Eren. LavieuxLabs is not incorporated yet. A Letter of Intent (LOI) is non-binding and does not replace an agreement. For a validation study, which party signs the agreement and the data processing terms are settled with the parties involved and their authorised legal advisers.",
+        "LavieuxLabs is not incorporated yet. A Letter of Intent (LOI) is non-binding and does not replace an agreement. For a validation study, which party signs the agreement and the data processing terms are settled with the parties involved and their authorised legal advisers.",
       audiencesTitle: "Who we would like to work with",
       audiences: [
         "Hospital billing and revenue cycle units",
@@ -511,8 +507,6 @@ const copy = defineContent<{
     },
   },
 });
-
-const TRACES: Trace[] = ["shown", "goal"];
 
 export default function ShieldView({ locale }: { locale: Locale }) {
   const c = copy[locale];
@@ -567,11 +561,8 @@ export default function ShieldView({ locale }: { locale: Locale }) {
               {c.hero.title}
             </h1>
             <p className="mt-4 max-w-[62ch] text-[16px] leading-[1.6] text-ink-2 sm:mt-5 sm:text-[17px]">{c.hero.lead}</p>
-            <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center print:hidden">
-              <Link href={href(contactHref("intro", "shield"))} className={BUTTON}>
-                {c.hero.primary}
-              </Link>
-              <a href="#simulator" className={BUTTON_OUTLINE}>
+            <div className="mt-6 sm:mt-8 print:hidden">
+              <a href="#simulator" className={BUTTON}>
                 {c.hero.secondary}
               </a>
             </div>
@@ -594,7 +585,7 @@ export default function ShieldView({ locale }: { locale: Locale }) {
           <nav aria-label={c.hero.onPage} className="border-t border-rule pt-4 lg:col-span-12 print:hidden">
             <p className="font-serif text-[15px] text-ink-3">{c.hero.onPage}</p>
             <ul className="mt-1 flex flex-wrap gap-x-6">
-              {c.sections.map((s) => (
+              {c.sections.filter((s) => ["mimari", "simulator", "retrospektif", "is-birligi"].includes(s.id)).map((s) => (
                 <li key={s.id}>
                   <a href={`#${s.id}`} className={`inline-flex min-h-11 items-center text-[15px] text-ink-2 hover:text-ink ${LINK}`}>
                     {s.label}
@@ -605,23 +596,6 @@ export default function ShieldView({ locale }: { locale: Locale }) {
           </nav>
         </div>
       </section>
-
-      {/* Problem: three problems in prose next to a claim's path today. */}
-      <PaperSection id="problem" label={c.problem.label} title={c.problem.title} intro={<p>{c.problem.intro}</p>}>
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
-          <dl className="space-y-6 lg:col-span-6">
-            {c.problem.items.map((p) => (
-              <div key={p.title} className="border-t border-ink pt-4">
-                <dt className="text-[17px] font-semibold text-ink">{p.title}</dt>
-                <dd className="mt-2 text-[15px] leading-[1.6] text-ink-2">{p.body}</dd>
-              </div>
-            ))}
-          </dl>
-          <div className="min-w-0 lg:col-span-6">
-            <ClaimPathFigure locale={locale} />
-          </div>
-        </div>
-      </PaperSection>
 
       {/* How it works: one line item's path as a ruled four-column ledger, computed from the example rule set. */}
       <PaperSection id="mimari" label={c.flow.label} title={c.flow.title} intro={<p>{c.flow.intro}</p>} band>
@@ -710,103 +684,6 @@ export default function ShieldView({ locale }: { locale: Locale }) {
         </div>
       </PaperSection>
 
-      {/* Rule coverage: four planes with their real status; regulation sources on demand. */}
-      <PaperSection id="kapsam" label={c.scope.label} title={c.scope.title} intro={<p>{c.scope.intro}</p>} band>
-        <table className="hidden w-full border-collapse text-left text-[15px] md:table">
-          <thead>
-            <tr className="border-b border-ink text-[13px] text-ink-3">
-              <th scope="col" className="w-[30%] py-2.5 pr-4 font-medium">{c.scope.columns.plane}</th>
-              <th scope="col" className="py-2.5 pr-4 font-medium">{c.scope.columns.checks}</th>
-              <th scope="col" className="w-[26%] py-2.5 font-medium">{c.scope.columns.status}</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-rule border-b border-rule">
-            {c.scope.planes.map((p) => (
-              <tr key={p.title} className="align-top">
-                <th scope="row" className="py-3.5 pr-4 text-left font-medium text-ink">{p.title}</th>
-                <td className="py-3.5 pr-4 leading-snug text-ink-2">{p.checks}</td>
-                <td className={`py-3.5 leading-snug ${planeTone[p.status]}`}>{c.scope.statusLabels[p.status]}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <ul className="divide-y divide-rule border-y border-rule md:hidden">
-          {c.scope.planes.map((p) => (
-            <li key={p.title} className="py-3">
-              <p className="text-[15px] font-medium text-ink">{p.title}</p>
-              <p className={`mt-0.5 text-[14px] ${planeTone[p.status]}`}>{c.scope.statusLabels[p.status]}</p>
-              <p className="mt-1 text-[14px] leading-snug text-ink-2">{p.checks}</p>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-6">
-          <Disclosure summary={c.scope.rulebookLabel} meta={c.scope.rulebookMeta}>
-            <FactRows rows={c.scope.rulebook} />
-          </Disclosure>
-        </div>
-        <p className="mt-4 text-[15px] leading-[1.6] text-ink-2">
-          {c.scope.note.before}{" "}
-          <Link href={href("/standartlar/sut-fatura-denetimi")} className={`text-ink ${LINK}`}>
-            {c.scope.note.link}
-          </Link>{" "}
-          {c.scope.note.after}
-        </p>
-      </PaperSection>
-
-      {/* Traceability and access: prototype behaviour apart from design goals; roles and the console on demand. */}
-      <PaperSection id="denetim" label={c.trace.label} title={c.trace.title} intro={<p>{c.trace.intro}</p>}>
-        <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-          <dl className="grid content-start gap-4 lg:col-span-4">
-            {TRACES.map((s) => (
-              <div key={s} className="border-t border-ink pt-3">
-                <dt className={`text-[15px] ${traceTone[s]}`}>{c.trace.statusLabels[s]}</dt>
-                <dd className="mt-1 text-[14px] leading-[1.55] text-ink-2">{c.trace.statusMeaning[s]}</dd>
-              </div>
-            ))}
-          </dl>
-          <div className="min-w-0 lg:col-span-8">
-            <ul className="divide-y divide-rule border-y border-ink">
-              {c.trace.rows.map((r) => (
-                <li key={r.name} id={r.id} className="grid scroll-mt-20 gap-1 py-3 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)_minmax(0,0.7fr)] sm:gap-4">
-                  <p className="text-[15px] font-medium text-ink">{r.name}</p>
-                  <p className="text-[14px] leading-snug text-ink-2">{r.detail}</p>
-                  <p className={`text-[14px] sm:text-right ${traceTone[r.status]}`}>{c.trace.statusLabels[r.status]}</p>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-6 space-y-2">
-              <Disclosure summary={c.trace.rolesLabel} meta={c.trace.rolesMeta}>
-                <dl className="divide-y divide-rule border-y border-rule">
-                  {c.trace.roles.map((r) => (
-                    <div key={r.role} className="grid gap-1 py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-6">
-                      <dt>
-                        <span className="block text-[15px] font-medium text-ink">{r.role}</span>
-                        <span className="block text-[13px] leading-snug text-ink-3">{r.scope}</span>
-                      </dt>
-                      <dd className="text-[14px] text-ink-2 sm:text-right">{r.access}</dd>
-                    </div>
-                  ))}
-                </dl>
-                <p className="mt-3 text-[14px] leading-snug text-ink-2">{c.trace.rolesNote}</p>
-              </Disclosure>
-              <Disclosure summary={c.trace.consoleLabel} meta={c.trace.consoleMeta}>
-                {/* #konsol sits inside the disclosure, so a link to it opens the disclosure (browser fragment navigation). */}
-                <div id="konsol" className="scroll-mt-20">
-                  <ol className="mb-4 list-decimal space-y-1 pl-5 text-[14px] leading-snug text-ink-2 marker:text-ink-3">
-                    {c.trace.consoleSteps.map((s) => (
-                      <li key={s}>{s}</li>
-                    ))}
-                  </ol>
-                  <div className="panel-dark min-w-0 [color-scheme:dark]">
-                    <ShieldConsole locale={locale} />
-                  </div>
-                </div>
-              </Disclosure>
-            </div>
-          </div>
-        </div>
-      </PaperSection>
-
       {/* Validation plan: written as a plan; nothing here has been measured. */}
       <PaperSection id="retrospektif" label={c.retro.label} title={c.retro.title} intro={<p>{c.retro.intro}</p>} band>
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
@@ -838,22 +715,19 @@ export default function ShieldView({ locale }: { locale: Locale }) {
         </div>
       </PaperSection>
 
-      {/* Collaboration: three ways in, with the legal position stated plainly. */}
+      {/* Collaboration: three possible paths, one clear contact action. */}
       <PaperSection id="is-birligi" label={c.collab.label} title={c.collab.title} intro={<p>{c.collab.intro}</p>}>
         <div className="grid gap-8 md:grid-cols-3">
-          {c.collab.modes.map((mode, i) => (
+          {c.collab.modes.map((mode) => (
             <div key={mode.title} className="flex flex-col border-t-2 border-ink pt-5">
               <h3 className="font-serif text-[24px] leading-tight font-medium text-ink">{mode.title}</h3>
               <p className="mt-3 text-[15px] leading-[1.6] text-ink-2">{mode.body}</p>
-              <Link
-                href={href(i === 0 ? contactHref("intro", "shield") : i === 1 ? contactHref("academic") : contactHref("pilot", "shield"))}
-                className={`mt-3 self-start md:mt-auto md:pt-3 ${TEXT_ACTION}`}
-              >
-                {mode.link}
-              </Link>
             </div>
           ))}
         </div>
+        <Link href={href(contactHref("intro", "shield"))} className={`mt-8 ${BUTTON}`}>
+          {c.collab.cta}
+        </Link>
         <p className="mt-8 max-w-[70ch] border-l-2 border-ink pl-4 text-[15px] leading-[1.6] text-ink">{c.collab.legal}</p>
         <div className="mt-10 grid gap-8 border-t border-rule pt-8 md:grid-cols-2 md:gap-12">
           <div>

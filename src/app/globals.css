@@ -1,16 +1,8 @@
 @import "tailwindcss";
 
 /*
- * Palette · Swiss Editorial (Chinese Red + clinical mustard on matte titanium panels).
- * Graphite obsidian ground (#080A0F) with matte titanium panels (#151922, elevated #1E2430); Cool Gray
- * 5 C (#9E9FA5) is the neutral backbone shared by both products (logo, navigation, guides and the
- * whole data layer: `titanium`). Each product keeps one accent, used only for its navigation focus
- * and its hero icon: PharmaDeux = Pantone Chinese Red (teal-* / pharma, 400 = #C82A35), Shield =
- * clinical mustard (indigo-* / shield, 400 = #D99B26). Status is not branding: rose (high risk),
- * amber (caution) and emerald (low risk) are Tailwind's own scales and belong only to clinical
- * states; amber is kept pale and bright (#FCD34D / #FDE68A) so it never reads as the mustard brand.
- * The surface token names stay navy-* and the accent scales stay teal-* / indigo-* so components
- * need no change; only their values carry the palette.
+ * Palette · monochrome editorial. Product identity comes from names, icons and examples.
+ * Clinical status colours remain semantic; they are not product branding.
  */
 :root {
   --background: #080a0f;
@@ -39,19 +31,14 @@
   --color-navy-700: #2a3140;
 
   /* Product accents. Academic (research collaborations) uses the neutral backbone. */
-  --color-pharma: #db3b44;
-  --color-shield: #d99b26;
+  --color-pharma: #9e9fa5;
+  --color-shield: #9e9fa5;
   --color-academic: #9e9fa5;
   --color-academic-soft: #ececee;
   /* Neutral backbone shared by both products: logo, navigation, cookie banner, data layer (Cool Gray 5 C). */
   --color-titanium: #9e9fa5;
 
-  /*
-   * Paper surface (home page, Academic Editorial): neutral paper, not cream, with ink text. Contrast on
-   * paper: ink 16.8:1, ink-2 8.8:1, ink-3 5.6:1 (5.1:1 on the band). Product names on paper use the dark
-   * steps of the accent scales (teal-700 10.9:1, indigo-700 6.5:1); clinical states use Tailwind's own
-   * rose-700 / amber-700 / emerald-700, so status never borrows a brand colour.
-   */
+  /* Paper surface: neutral paper with ink text and quiet rules. */
   --color-paper: #f7f7f4;
   --color-paper-band: #eeefea;
   --color-ink: #16181c;
@@ -59,36 +46,30 @@
   --color-ink-3: #5f6570;
   --color-rule: #d5d7d3;
 
-  /*
-   * Accent scales. teal → PharmaDeux Chinese Red: 400 = #C82A35 for fills (3.2:1 on panels, not for
-   * text), 200 / 300 = #E8605F for text and links (AA on the elevated panel too), 100 = #EC7A82 for link
-   * hover only, 500 = #A8222D hover fill; the `pharma` icon colour is #DB3B44 so icons keep 3:1 on the
-   * elevated panel. indigo → Shield clinical mustard: 400 = #D99B26, 200 / 300 = #E8B455 for text,
-   * 500 = #B8821C hover. Emerald stays calm clinical green for low-risk readings.
-   */
-  --color-teal-50: #fdf2f3;
-  --color-teal-100: #ec7a82;
-  --color-teal-200: #e8605f;
-  --color-teal-300: #e8605f;
-  --color-teal-400: #c82a35;
-  --color-teal-500: #a8222d;
-  --color-teal-600: #8a1c25;
-  --color-teal-700: #6e171e;
-  --color-teal-800: #561218;
-  --color-teal-900: #3f0d12;
-  --color-teal-950: #26070a;
+  /* Legacy teal/indigo utility names now resolve to the same neutral scale. */
+  --color-teal-50: #f7f7f4;
+  --color-teal-100: #d5d7d3;
+  --color-teal-200: #b8bbc0;
+  --color-teal-300: #9e9fa5;
+  --color-teal-400: #737881;
+  --color-teal-500: #5f6570;
+  --color-teal-600: #41464f;
+  --color-teal-700: #16181c;
+  --color-teal-800: #101216;
+  --color-teal-900: #080a0f;
+  --color-teal-950: #050609;
 
-  --color-indigo-50: #fdf6e7;
-  --color-indigo-100: #f2cd85;
-  --color-indigo-200: #e8b455;
-  --color-indigo-300: #e8b455;
-  --color-indigo-400: #d99b26;
-  --color-indigo-500: #b8821c;
-  --color-indigo-600: #966916;
-  --color-indigo-700: #765212;
-  --color-indigo-800: #5a3f0f;
-  --color-indigo-900: #43300c;
-  --color-indigo-950: #261b06;
+  --color-indigo-50: #f7f7f4;
+  --color-indigo-100: #d5d7d3;
+  --color-indigo-200: #b8bbc0;
+  --color-indigo-300: #9e9fa5;
+  --color-indigo-400: #737881;
+  --color-indigo-500: #5f6570;
+  --color-indigo-600: #41464f;
+  --color-indigo-700: #16181c;
+  --color-indigo-800: #101216;
+  --color-indigo-900: #080a0f;
+  --color-indigo-950: #050609;
 
   --color-emerald-50: #eef9f3;
   --color-emerald-100: #dcf5e7;
@@ -103,16 +84,12 @@
   --color-emerald-950: #0f2a1e;
 }
 
-/*
- * Product ambient light: a very wide radial wash in the product accent, ≈6–8%, behind a product hero.
- * Radial gradient only: no blur filter, no coloured shadow, no animation.
- */
+/* Product hero washes are deliberately neutral. */
 @utility ambient-pharma {
-  background-image: radial-gradient(70% 65% at 74% 34%, rgb(200 42 53 / 0.07), transparent 72%);
+  background-image: radial-gradient(70% 65% at 74% 34%, rgb(158 159 165 / 0.07), transparent 72%);
 }
 @utility ambient-shield {
-  /* Mustard reads weaker than red on the dark ground, so it needs more opacity and spread for the same warmth. */
-  background-image: radial-gradient(80% 75% at 74% 34%, rgb(217 155 38 / 0.11), transparent 74%);
+  background-image: radial-gradient(70% 65% at 74% 34%, rgb(158 159 165 / 0.07), transparent 72%);
 }
 /*
  * Page-level atmosphere on the dark ground (BackdropTint): about / legal = deep surgical steel from above
