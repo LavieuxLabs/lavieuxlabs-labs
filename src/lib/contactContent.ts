@@ -137,7 +137,7 @@ const copy = defineContent<ContactCopy>({
     },
     products: {
       pharmadeux: { label: "PharmaDeux CDSS", hint: "İlaç güvenliği · hekim ve eczacı" },
-      shield: { label: "Shield", hint: "Tarık Ziya Eren'in bağımsız projesi · gelir döngüsü ekipleri" },
+      shield: { label: "Shield", hint: "Hastane faturalaması · gelir döngüsü ekipleri" },
     },
     steps: {
       intro: {
@@ -246,7 +246,7 @@ const copy = defineContent<ContactCopy>({
     },
     products: {
       pharmadeux: { label: "PharmaDeux CDSS", hint: "Medication safety · physicians and pharmacists" },
-      shield: { label: "Shield", hint: "Independent project by Tarık Ziya Eren · revenue cycle teams" },
+      shield: { label: "Shield", hint: "Hospital billing · revenue cycle teams" },
     },
     steps: {
       intro: {

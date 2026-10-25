@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import CopyEmail from "@/components/CopyEmail";
 import { BUTTON, Disclosure, FOCUS, FactRows, LINK, PaperSection, TEXT_ACTION } from "@/components/paper/Editorial";
-import { contactHref, organizationProfile, type ContactPath, type ProductValue } from "@/lib/site";
+import { organizationProfile } from "@/lib/site";
 import { TEAM, teamCopy } from "@/lib/team";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
@@ -13,18 +13,18 @@ export const metadata = defineMetadata("/about", {
   tr: {
     title: "Hakkımızda",
     description:
-      "LavieuxLabs, Konya Teknik Üniversitesi öğrencilerinin kurduğu, henüz şirketleşmemiş bağımsız bir Ar-Ge girişimidir. Ekibin ortak projesi PharmaDeux ilaç güvenliği üzerinedir; Shield, Tarık Ziya Eren'in bağımsız projesi olarak sitede tanıtılır.",
+      "LavieuxLabs, Konya Teknik Üniversitesi öğrencilerinin kurduğu, henüz şirketleşmemiş bağımsız bir Ar-Ge girişimidir. PharmaDeux ilaç güvenliğine, Shield hastane faturalamasına odaklanır.",
   },
   en: {
     title: "About",
     description:
-      "LavieuxLabs is an independent R&D venture founded by students of Konya Technical University and not yet incorporated. The team's joint project PharmaDeux works on medication safety; Shield is presented on the site as an independent project by Tarık Ziya Eren.",
+      "LavieuxLabs is an independent R&D venture founded by students of Konya Technical University and not yet incorporated. PharmaDeux focuses on medication safety and Shield on hospital billing.",
   },
 });
 
 /*
  * About on the paper surface (Academic Editorial): who we are, the problems we work on, how we work, the two
- * projects and who owns them, the team, and who we want to work with. Technical detail that the product pages
+ * projects, the team, and who we want to work with. Technical detail that the product pages
  * already cover is linked, not repeated. No entrance motion. Section ids linked from elsewhere are kept:
  * #ekip (home page), #odaklar (command palette), #isbirligi.
  */
@@ -32,13 +32,12 @@ export const metadata = defineMetadata("/about", {
 type Row = { label: string; value: string };
 type Step = { title: string; body: string; link?: { label: string; href: string } };
 type Project = { name: string; owner: string; body: string; rows: Row[]; link: string };
-type Partner = { title: string; who: string; body: string; link: string; path: ContactPath; product?: ProductValue };
+type Partner = { title: string; who: string; body: string };
 
 const copy = defineContent<{
   crumbs: { home: string; here: string; aria: string };
   title: string;
   lead: string;
-  primary: string;
   secondary: string;
   summaryTitle: string;
   summary: Row[];
@@ -54,14 +53,13 @@ const copy = defineContent<{
     crumbs: { home: "Ana sayfa", here: "Hakkımızda", aria: "Sayfa konumu" },
     title: "Klinik karar desteği üzerinde çalışan bağımsız bir öğrenci girişimi.",
     lead: `${organizationProfile.tr.positioning} Hatanın hastaya ya da kuruma pahalıya mal olduğu işler için, sonucunu yeniden üretebilen ve kararı insana bırakan yazılım geliştiriyoruz.`,
-    primary: "15 dk tanışma görüşmesi",
-    secondary: "Ekibimiz",
+    secondary: "Ekibimizi tanıyın",
     summaryTitle: "Kısaca",
     summary: [
       { label: "Biz kimiz", value: "Konya Teknik Üniversitesi'nde okuyan öğrencilerden oluşan bir ekip." },
       { label: "Hukuki durum", value: "Henüz şirketleşmedik." },
       { label: "Üniversite", value: organizationProfile.tr.independence },
-      { label: "Projeler", value: "PharmaDeux ekibin ortak projesi. Shield, Tarık Ziya Eren'in bağımsız projesi." },
+      { label: "Projeler", value: "PharmaDeux ilaç güvenliğine, Shield hastane faturalamasına odaklanır." },
       { label: "Aşama", value: "İkisi de prototip. Kurum doğrulaması ve hastane pilotu henüz yapılmadı." },
     ],
     purpose: {
@@ -70,12 +68,12 @@ const copy = defineContent<{
       items: [
         {
           title: "Reçete anında ilaç güvenliği",
-          owner: "PharmaDeux, ekibin ortak projesi",
+          owner: "PharmaDeux · ilaç güvenliği",
           body: "Çok ilaç kullanan bir hastada etkileşim, böbrek fonksiyonuna göre doz ve QT uzaması aynı anda kontrol edilmeli. eGFR'si 90 olan hastada güvenli olan bir reçete, eGFR 30'a düştüğünde doz ayarı gerektirebilir. PharmaDeux bu kontrolleri reçete yazılırken yapmayı hedefliyor.",
         },
         {
           title: "Fatura gönderilmeden önce red riski",
-          owner: "Shield, Tarık Ziya Eren'in bağımsız projesi",
+          owner: "Shield · hastane faturalaması",
           body: "SUT ve SGK kurallarına takılan bir fatura kalemi çoğu zaman gönderildikten sonra fark edilir. Shield, riskli kalemi gönderimden önce, onu işaretleyen kuralla birlikte uzmanın önüne koymayı hedefliyor.",
         },
       ],
@@ -142,11 +140,11 @@ const copy = defineContent<{
     ],
     projects: {
       label: "Projeler",
-      title: "Sitede iki proje var; sahiplikleri farklı.",
-      intro: "PharmaDeux'u ekip birlikte geliştiriyor. Shield, Tarık Ziya Eren'in bağımsız projesi olarak bu sitede tanıtılıyor.",
+      title: "İki proje, iki ayrı problem alanı.",
+      intro: "PharmaDeux ilaç güvenliğine, Shield hastane faturalamasına odaklanıyor.",
       pharma: {
         name: "PharmaDeux",
-        owner: "LavieuxLabs ekibinin ortak projesi",
+        owner: "İlaç güvenliği projesi",
         body: "Reçete yazılırken etkileşim, böbrek fonksiyonuna göre doz ve QT riski gibi kontrolleri tek yerde yapan bir klinik karar destek prototipi.",
         rows: [
           { label: "Aşama", value: `Prototip, ${trlLabel("tr")} (ekibin öz değerlendirmesi)` },
@@ -158,7 +156,7 @@ const copy = defineContent<{
       },
       shield: {
         name: "Shield",
-        owner: "Tarık Ziya Eren'in bağımsız projesi; LavieuxLabs ekibinin ortak projesi değil",
+        owner: "Hastane faturalaması projesi",
         body: "SUT ve SGK kurallarını fatura gönderilmeden önce çalışan bir kural setine dönüştüren bir prototip. Riskli kalem, tetiklenen kural ve gerekçesiyle uzmana gider.",
         rows: [
           { label: "Aşama", value: "Prototip" },
@@ -172,45 +170,31 @@ const copy = defineContent<{
       label: "Ekibimiz",
       title: "PharmaDeux'u geliştiren ekip.",
       intro:
-        "Ekip, Konya Teknik Üniversitesi'nde okuyan öğrencilerden oluşuyor ve PharmaDeux üzerinde birlikte çalışıyor. Her üyenin üzerinde çalıştığı alanları aşağıya yazdık. Shield, Tarık Ziya Eren'in bağımsız projesidir; ekibin ortak projesi değildir.",
+        "Ekip, Konya Teknik Üniversitesi'nde okuyan öğrencilerden oluşuyor. Her üyenin üzerinde çalıştığı alanları aşağıya yazdık.",
     },
     collab: {
       label: "İş birliği",
       title: "Kimlerle çalışmak istiyoruz.",
-      intro: "Dört ortak profili arıyoruz. İlk adım 15 dakikalık bir görüşmedir ve taahhüt gerektirmez; her satırdaki bağlantı ilgili formu açar.",
+      intro: "Dört ortak profili arıyoruz. İhtiyacınıza uygun yolu iletişim sayfasında seçebilirsiniz.",
       partners: [
         {
           title: "Klinik doğrulama ortağı",
           who: "Eğitim ve araştırma, üniversite hastaneleri",
-          body: "PharmaDeux'u geçmiş vakalarda ve gölge modda ölçmek için klinik veri ve bağımsız bir uzman paneli.",
-          link: "Pilot başvurusu (PharmaDeux)",
-          path: "pilot",
-          product: "pharmadeux",
-        },
+          body: "PharmaDeux'u geçmiş vakalarda ve gölge modda ölçmek için klinik veri ve bağımsız bir uzman paneli.",        },
         {
           title: "Akademik araştırmacı",
           who: "Tıp ve farmakoloji akademisyenleri",
-          body: "Kural setlerinin ve organ risk protokollerinin kaynağa göre gözden geçirilmesi ve ortak yayın.",
-          link: "Akademik iş birliği",
-          path: "academic",
-        },
+          body: "Kural setlerinin ve organ risk protokollerinin kaynağa göre gözden geçirilmesi ve ortak yayın.",        },
         {
           title: "Gelir döngüsü pilot ortağı",
           who: "Özel ve vakıf hastaneleri",
-          body: "Tarık Ziya Eren'in bağımsız projesi Shield'ın red yakalama ve yanlış pozitif oranlarının geçmiş faturalarda ölçülmesi.",
-          link: "Pilot başvurusu (Shield)",
-          path: "pilot",
-          product: "shield",
-        },
+          body: "Shield'ın red yakalama ve yanlış pozitif oranlarının geçmiş faturalarda ölçülmesi.",        },
         {
           title: "HBYS entegratörü",
           who: "Sağlık bilgi sistemi firmaları",
-          body: "HL7 FHIR R4 köprüsünün gerçek bir hastane bilgi sisteminde kurulması.",
-          link: "Tanışma görüşmesi",
-          path: "intro",
-        },
+          body: "HL7 FHIR R4 köprüsünün gerçek bir hastane bilgi sisteminde kurulması.",        },
       ],
-      cta: "Bize yazın",
+      cta: "İletişime geçin",
       email: "ya da e-posta:",
       noPatientData: "Hasta verisi ve gerçek fatura verisi göndermeyin.",
     },
@@ -219,14 +203,13 @@ const copy = defineContent<{
     crumbs: { home: "Home", here: "About", aria: "Breadcrumb" },
     title: "An independent student venture working on clinical decision support.",
     lead: `${organizationProfile.en.positioning} For work where a mistake is costly to a patient or an institution, we build software that can reproduce its results and leaves the decision to a person.`,
-    primary: "15-minute intro call",
-    secondary: "Our team",
+    secondary: "Meet the team",
     summaryTitle: "In brief",
     summary: [
       { label: "Who we are", value: "A team of students at Konya Technical University." },
       { label: "Legal status", value: "Not incorporated yet." },
       { label: "University", value: organizationProfile.en.independence },
-      { label: "Projects", value: "PharmaDeux is the team's joint project. Shield is an independent project by Tarık Ziya Eren." },
+      { label: "Projects", value: "PharmaDeux focuses on medication safety; Shield focuses on hospital billing." },
       { label: "Stage", value: "Both are prototypes. No institutional validation or hospital pilot has been done yet." },
     ],
     purpose: {
@@ -235,12 +218,12 @@ const copy = defineContent<{
       items: [
         {
           title: "Medication safety at the moment of prescribing",
-          owner: "PharmaDeux, the team's joint project",
+          owner: "PharmaDeux · medication safety",
           body: "For a patient on many drugs, interactions, renal dosing and QT prolongation need to be checked together. A prescription that is safe at an eGFR of 90 may need a dose adjustment at 30. PharmaDeux aims to run these checks while the prescription is written.",
         },
         {
           title: "Claim rejection risk before submission",
-          owner: "Shield, an independent project by Tarık Ziya Eren",
+          owner: "Shield · hospital billing",
           body: "A claim line that breaks SUT (the national reimbursement rules) or SGK (Social Security Institution) rules is often noticed only after submission. Shield aims to put the risky line in front of a specialist before submission, together with the rule that flagged it.",
         },
       ],
@@ -307,11 +290,11 @@ const copy = defineContent<{
     ],
     projects: {
       label: "Projects",
-      title: "Two projects on this site, with different owners.",
-      intro: "The team builds PharmaDeux together. Shield is an independent project by Tarık Ziya Eren, presented on this site.",
+      title: "Two projects, two distinct problem areas.",
+      intro: "The two projects address different problems: medication safety and hospital billing.",
       pharma: {
         name: "PharmaDeux",
-        owner: "A joint project of the LavieuxLabs team",
+        owner: "Medication-safety project",
         body: "A clinical decision support prototype that runs checks such as interactions, renal dosing and QT risk in one place while a prescription is written.",
         rows: [
           { label: "Stage", value: `Prototype, ${trlLabel("en")} (the team's own assessment)` },
@@ -323,7 +306,7 @@ const copy = defineContent<{
       },
       shield: {
         name: "Shield",
-        owner: "An independent project by Tarık Ziya Eren; not a joint project of the LavieuxLabs team",
+        owner: "Hospital-billing project",
         body: "A prototype that turns SUT and SGK rules into a rule set that runs before a claim is submitted. A risky line item goes to a specialist with the rule that fired and its reason.",
         rows: [
           { label: "Stage", value: "Prototype" },
@@ -337,45 +320,31 @@ const copy = defineContent<{
       label: "Team",
       title: "The team building PharmaDeux.",
       intro:
-        "The team is made up of students at Konya Technical University who work on PharmaDeux together. Below is what each member works on. Shield is an independent project by Tarık Ziya Eren, not a joint project of the team.",
+        "The team is made up of students at Konya Technical University. Below is what each member works on.",
     },
     collab: {
       label: "Collaboration",
       title: "Who we want to work with.",
-      intro: "We are looking for four partner profiles. The first step is a 15-minute call with no commitment; the link on each row opens the matching form.",
+      intro: "We are looking for four partner profiles. You can choose the relevant path on the contact page.",
       partners: [
         {
           title: "Clinical validation partner",
           who: "Training-and-research and university hospitals",
-          body: "Clinical data and an independent expert panel to measure PharmaDeux on past cases and in shadow mode.",
-          link: "Pilot application (PharmaDeux)",
-          path: "pilot",
-          product: "pharmadeux",
-        },
+          body: "Clinical data and an independent expert panel to measure PharmaDeux on past cases and in shadow mode.",        },
         {
           title: "Academic researcher",
           who: "Medicine and pharmacology academics",
-          body: "Source-based review of the rule sets and organ risk protocols, and joint publication.",
-          link: "Academic collaboration",
-          path: "academic",
-        },
+          body: "Source-based review of the rule sets and organ risk protocols, and joint publication.",        },
         {
           title: "Revenue cycle pilot partner",
           who: "Private and foundation hospitals",
-          body: "Measuring the rejection catch and false positive rates of Shield, an independent project by Tarık Ziya Eren, on past claims.",
-          link: "Pilot application (Shield)",
-          path: "pilot",
-          product: "shield",
-        },
+          body: "Measuring rejection catch and false positive rates of Shield on past claims.",        },
         {
           title: "HIS integrator",
           who: "Health information system vendors",
-          body: "Setting up the HL7 FHIR R4 bridge with a real hospital information system (HIS).",
-          link: "Intro call",
-          path: "intro",
-        },
+          body: "Setting up the HL7 FHIR R4 bridge with a real hospital information system (HIS).",        },
       ],
-      cta: "Write to us",
+      cta: "Contact us",
       email: "or by email:",
       noPatientData: "Do not send patient data or real claim data.",
     },
@@ -458,11 +427,8 @@ export default function AboutView({ locale }: { locale: Locale }) {
               {c.title}
             </h1>
             <p className="mt-5 max-w-[60ch] text-[17px] leading-[1.6] text-ink-2">{c.lead}</p>
-            <div className="mt-8 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
-              <Link href={href(contactHref("intro"))} className={`self-start ${BUTTON}`}>
-                {c.primary}
-              </Link>
-              <a href="#ekip" className={`self-start ${TEXT_ACTION}`}>
+            <div className="mt-8">
+              <a href="#ekip" className={BUTTON}>
                 {c.secondary}
               </a>
             </div>
@@ -484,7 +450,7 @@ export default function AboutView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* Purpose: the two problems, each with the project that works on it and who owns it. */}
+      {/* Purpose: the two problems and the project that works on each one. */}
       <PaperSection id="amac" label={c.purpose.label} title={c.purpose.title}>
         <Content>
           <div className="grid gap-x-12 gap-y-10 md:grid-cols-2">
@@ -558,7 +524,7 @@ export default function AboutView({ locale }: { locale: Locale }) {
         </Content>
       </PaperSection>
 
-      {/* Projects: what each one is, who owns it and where it stands. Detail lives on the product pages. */}
+      {/* Projects: what each one is and where it stands. Detail lives on the product pages. */}
       <PaperSection id="odaklar" label={c.projects.label} title={c.projects.title} intro={<p>{c.projects.intro}</p>}>
         <Content>
           <div className="grid gap-x-12 gap-y-12 md:grid-cols-2">
@@ -616,26 +582,23 @@ export default function AboutView({ locale }: { locale: Locale }) {
         </Content>
       </PaperSection>
 
-      {/* Collaboration: who we need and for what; each row opens its contact path. */}
+      {/* Collaboration profiles, followed by one clear contact action. */}
       <PaperSection id="isbirligi" label={c.collab.label} title={c.collab.title} intro={<p>{c.collab.intro}</p>}>
         <Content>
           <ul className="divide-y divide-rule border-y border-rule">
             {c.collab.partners.map((p) => (
-              <li key={p.title} className="grid gap-x-8 gap-y-2 py-5 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)_auto] md:items-baseline">
+              <li key={p.title} className="grid gap-x-8 gap-y-2 py-5 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)] md:items-baseline">
                 <div>
                   <h3 className="text-[17px] font-semibold tracking-[-0.01em] text-ink">{p.title}</h3>
                   <p className="mt-0.5 text-[14px] leading-snug text-ink-3">{p.who}</p>
                 </div>
                 <p className="text-[15px] leading-[1.6] text-ink-2">{p.body}</p>
-                <Link href={href(contactHref(p.path, p.product))} className={`self-start ${TEXT_ACTION}`}>
-                  {p.link}
-                </Link>
               </li>
             ))}
           </ul>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
-            <Link href={href(contactHref("academic"))} className={`self-start ${BUTTON}`}>
+            <Link href={href("/contact")} className={`self-start ${BUTTON}`}>
               {c.collab.cta}
             </Link>
             <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink-2">

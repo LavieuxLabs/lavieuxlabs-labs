@@ -1,19 +1,13 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ChevronRight, Pill, ShieldCheck, type LucideIcon } from "lucide-react";
-import CopyEmail from "@/components/CopyEmail";
+import { Pill, ShieldCheck, type LucideIcon } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
 import {
-  ClaimPathFigure,
   ClaimScoreFigure,
   DecisionTraceFigure,
-  EvidenceLevelsFigure,
-  PairwiseFigure,
   PrescriptionCheckFigure,
 } from "@/components/home/HomeFigures";
 import { homeJsonLd } from "@/lib/structuredData";
-import { contactHref, organizationProfile } from "@/lib/site";
-import { TEAM, teamCopy } from "@/lib/team";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
 import { trlLabel } from "@/lib/metrics";
@@ -22,23 +16,22 @@ import { trlLabel } from "@/lib/metrics";
 export const metadata = defineMetadata("/", {
   tr: {
     description:
-      "LavieuxLabs, Konya Teknik Üniversitesi öğrencilerinin kurduğu bağımsız bir Ar-Ge girişimi. Ekibin ortak projesi PharmaDeux reçete anında ilaç güvenliğini kontrol eder. Sitede ayrıca Tarık Ziya Eren'in bağımsız projesi Shield tanıtılır.",
+      "LavieuxLabs, ilaç güvenliği ve hastane faturalaması için iki prototip geliştiren bağımsız bir öğrenci Ar-Ge girişimidir.",
   },
   en: {
     description:
-      "LavieuxLabs is an independent R&D venture founded by students of Konya Technical University. The team's joint project PharmaDeux checks medication safety at the moment of prescription. The site also presents Shield, an independent project by Tarık Ziya Eren.",
+      "LavieuxLabs is an independent student R&D venture developing two prototypes for medication safety and hospital billing.",
   },
 });
 
 /*
  * Home page on the paper surface (Academic Editorial). Communication order: problem → approach → the two
- * projects → potential benefit → team → collaboration, with a short call to talk after the projects.
+ * projects, with one clear contact action after the projects.
  * Type roles: Newsreader for the page title, section titles, project and person names and step numerals;
  * IBM Plex Sans for all running text, labels and tables; IBM Plex Mono only for numbers that are data.
  * Type scale: 13 caption · 14 small · 15 secondary · 17 body · 20 sub-heading · serif 30/40 section · 36/58 page.
  * Colour: ink on paper; a product's accent (its dark step) appears only on its own name; clinical and review
- * states keep their own colours inside figures. Ownership: PharmaDeux is the LavieuxLabs team's joint
- * project; Shield is Tarık Ziya Eren's independent project, presented here.
+ * states keep their own colours inside figures.
  */
 
 const LINK =
@@ -47,13 +40,10 @@ const LINK =
 const TEXT_ACTION = `inline-flex min-h-11 items-center text-[15px] font-medium text-ink ${LINK}`;
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink";
 const BUTTON = `inline-flex min-h-11 items-center justify-center rounded-md bg-ink px-5 py-3 text-[15px] font-medium text-white transition-colors duration-150 ease-out hover:bg-ink-2 ${FOCUS}`;
-const BUTTON_OUTLINE = `inline-flex min-h-11 items-center justify-center rounded-md border border-ink/30 bg-white px-5 py-3 text-[15px] font-medium text-ink transition-colors duration-150 ease-out hover:border-ink ${FOCUS}`;
 
 type Row = { label: string; value: string };
 type Project = {
-  name: string;
-  owner: string;
-  purpose: string;
+  name: string;  purpose: string;
   body: string;
   rows: Row[];
   link: string;
@@ -66,9 +56,7 @@ const copy = defineContent<{
     kicker: string;
     title: string;
     lead: string;
-    primary: string;
     secondary: string;
-    academic: string;
     workflowsLabel: string;
     workflows: [Workflow, Workflow];
     summaryTitle: string;
@@ -77,7 +65,7 @@ const copy = defineContent<{
   problem: { label: string; title: string; pharma: { title: string; body: string[] }; shield: { title: string; body: string[] } };
   approach: { label: string; title: string; intro: string; steps: { title: string; body: string }[] };
   projects: { label: string; title: string; intro: string; pharma: Project; shield: Project };
-  bridge: { title: string; body: string; primary: string; secondary: string };
+  bridge: { title: string; body: string; primary: string };
   benefit: {
     label: string;
     title: string;
@@ -107,10 +95,8 @@ const copy = defineContent<{
     hero: {
       kicker: "Bağımsız öğrenci Ar-Ge girişimi, Konya",
       title: "İlaç güvenliği ve hastane faturalaması için iki yazılım projesi.",
-      lead: "LavieuxLabs ekibi ilaç güvenliği için PharmaDeux'u geliştiriyor. Bu sitede ayrıca Tarık Ziya Eren'in hastane faturalaması için geliştirdiği bağımsız proje Shield tanıtılıyor. İkisi de prototip ve klinik veya kurumsal ortamda henüz doğrulanmadı.",
-      primary: "15 dk tanışma görüşmesi",
+      lead: "PharmaDeux ilaç güvenliğine, Shield hastane faturalamasına odaklanır. İkisi de prototiptir ve henüz gerçek ortamda doğrulanmamıştır.",
       secondary: "Projeleri inceleyin",
-      academic: "Araştırma iş birliği önerin",
       workflowsLabel: "İki iş akışı",
       workflows: [
         { name: "PharmaDeux", area: "İlaç güvenliği", steps: ["Reçete", "Risk kontrolü", "Hekim veya eczacı değerlendirir"] },
@@ -122,7 +108,7 @@ const copy = defineContent<{
           label: "Kim",
           value: "Konya Teknik Üniversitesi öğrencilerinin kurduğu bağımsız bir girişim. Üniversitenin birimi değil; henüz şirketleşmedi.",
         },
-        { label: "Projeler", value: "PharmaDeux: ekibin ortak projesi. Shield: Tarık Ziya Eren'in bağımsız projesi, burada tanıtılıyor." },
+        { label: "Projeler", value: "PharmaDeux ilaç güvenliğine, Shield hastane faturalamasına odaklanır." },
         {
           label: "Aşama",
           value: `PharmaDeux: ${trlLabel("tr")} (teknoloji hazırlık seviyesi, 1–9 ölçeği), ekibin kendi değerlendirmesi; bağımsız bir değerlendirme yapılmadı. Shield: prototip.`,
@@ -154,7 +140,7 @@ const copy = defineContent<{
       label: "Çözüm yaklaşımı",
       title: "Her uyarı, onu tetikleyen kuralla birlikte gelir.",
       intro:
-        "Karar anında olasılıksal ya da üretken bir model kullanmıyoruz. Kontrolleri kaynağı belli ve sürümlenmiş kurallarla yapıyoruz. Kurallar aynı girdiye her zaman aynı sonucu verecek biçimde tasarlandı, böylece bir uyarının nedeni gösterilebilir.",
+        "Kaynağı belli kurallar aynı girdiye aynı sonucu verir. Uyarının nedeni görünür, son karar uzmanda kalır.",
       steps: [
         {
           title: "Veriyi ortak bir biçime çeviriyoruz",
@@ -179,10 +165,8 @@ const copy = defineContent<{
       title: "İki proje, iki farklı kullanıcı için.",
       intro: "Biri reçeteyi yazan hekime, diğeri faturayı hazırlayan birime yöneliktir. İkisi de geliştirme aşamasında ve henüz piyasaya sunulmadı.",
       pharma: {
-        name: "PharmaDeux",
-        owner: "LavieuxLabs ekibinin ortak projesi",
-        purpose: "İlaç güvenliği ve klinik karar desteği",
-        body: "Hekim reçeteyi yazarken, reçetedeki ilaçları hastanın böbrek ve karaciğer değerleriyle birlikte kontrol eder: etkileşim, aynı organa binen toplam yük ve doz uygunluğu. Tedavi kararı vermez; riski ve nedenini hekime gösterir.",
+        name: "PharmaDeux",        purpose: "İlaç güvenliği ve klinik karar desteği",
+        body: "Reçetedeki etkileşim, organ yükü ve doz risklerini kontrol eder. Tedavi kararı vermez; nedeni hekime gösterir.",
         rows: [
           { label: "Kimin için", value: "Klinik eczacı, servis hekimi, ilaç güvenliği ekipleri" },
           { label: "Bugün", value: "Kurallar sentetik hasta profilleriyle test ediliyor" },
@@ -192,10 +176,8 @@ const copy = defineContent<{
         link: "PharmaDeux'u ayrıntılı inceleyin",
       },
       shield: {
-        name: "Shield",
-        owner: "Tarık Ziya Eren'in bağımsız projesi; burada tanıtılıyor",
-        purpose: "Hastane faturalaması, SUT uygunluğu ve gelir bütünlüğü",
-        body: "Fatura MEDULA'ya gönderilmeden önce kalemleri SUT ve SGK provizyon kurallarına göre kontrol eder. Riskli kalemi nedeniyle birlikte fatura uzmanının kuyruğuna koyar. İdari bir araçtır; tanı koymaz, tedavi kararı vermez.",
+        name: "Shield",        purpose: "Hastane faturalaması, SUT uygunluğu ve gelir bütünlüğü",
+        body: "Fatura kalemlerini gönderimden önce SUT ve SGK kurallarıyla kontrol eder. Riskli kalemi nedeni ile birlikte uzmana iletir.",
         rows: [
           { label: "Kimin için", value: "Faturalama, provizyon ve gelir döngüsü ekipleri" },
           { label: "Bugün", value: "Dört denetim düzleminden üçü uygulandı ve sentetik faturalarla test ediliyor" },
@@ -207,9 +189,8 @@ const copy = defineContent<{
     },
     bridge: {
       title: "Kurumunuzda benzer bir sorun varsa konuşalım.",
-      body: "İlk adım 15 dakikalık bir görüşme ve taahhüt gerektirmiyor. Bir araştırma fikriniz varsa onu da konuşabiliriz.",
-      primary: "15 dk tanışma görüşmesi",
-      secondary: "Araştırma iş birliği önerin",
+      body: "İlk görüşmede kurumunuzun ihtiyacını ve projelerin bugünkü durumunu netleştiririz.",
+      primary: "İletişime geçin",
     },
     benefit: {
       label: "Potansiyel fayda",
@@ -284,10 +265,8 @@ const copy = defineContent<{
     hero: {
       kicker: "Independent student R&D venture, Konya",
       title: "Two software projects for medication safety and hospital billing.",
-      lead: "The LavieuxLabs team is building PharmaDeux for medication safety. This site also presents Shield, an independent project by Tarık Ziya Eren for hospital billing. Both are prototypes and neither has been validated in a clinical or institutional setting yet.",
-      primary: "15-minute intro call",
+      lead: "PharmaDeux focuses on medication safety; Shield focuses on hospital billing. Both are prototypes and have not yet been validated in real settings.",
       secondary: "See the projects",
-      academic: "Propose a research collaboration",
       workflowsLabel: "Two workflows",
       workflows: [
         { name: "PharmaDeux", area: "Medication safety", steps: ["Prescription", "Risk check", "Physician or pharmacist reviews"] },
@@ -299,7 +278,7 @@ const copy = defineContent<{
           label: "Who",
           value: "An independent venture founded by students of Konya Technical University. Not a university unit; not incorporated yet.",
         },
-        { label: "Projects", value: "PharmaDeux: the team's joint project. Shield: an independent project by Tarık Ziya Eren, presented here." },
+        { label: "Projects", value: "PharmaDeux focuses on medication safety; Shield focuses on hospital billing." },
         {
           label: "Stage",
           value: `PharmaDeux: ${trlLabel("en")} (technology readiness level, 1–9 scale), the team's own assessment; no independent assessment has been made. Shield: prototype.`,
@@ -331,7 +310,7 @@ const copy = defineContent<{
       label: "Approach",
       title: "Every alert comes with the rule that raised it.",
       intro:
-        "We do not use a probabilistic or generative model at the point of decision. The checks are rules with a known source and a version number. The rules are designed to give the same result for the same input every time, so the reason for an alert can be shown.",
+        "Sourced rules give the same result for the same input. The reason stays visible and the final decision stays with the specialist.",
       steps: [
         {
           title: "We put the data into a shared format",
@@ -356,10 +335,8 @@ const copy = defineContent<{
       title: "Two projects, for two different users.",
       intro: "One is for the physician who writes the prescription, the other for the unit that prepares the claim. Both are in development and not yet on the market.",
       pharma: {
-        name: "PharmaDeux",
-        owner: "A joint project of the LavieuxLabs team",
-        purpose: "Medication safety and clinical decision support",
-        body: "While the physician writes a prescription, it checks the drugs together with the patient's kidney and liver values: interactions, the total burden on one organ and dose suitability. It does not make treatment decisions; it shows the physician the risk and its reason.",
+        name: "PharmaDeux",        purpose: "Medication safety and clinical decision support",
+        body: "Checks prescriptions for interaction, organ burden and dose risks. It does not make treatment decisions; it shows the reason to the physician.",
         rows: [
           { label: "For", value: "Clinical pharmacists, ward physicians, medication safety teams" },
           { label: "Today", value: "Rules are tested on synthetic patient profiles" },
@@ -369,10 +346,8 @@ const copy = defineContent<{
         link: "Read more about PharmaDeux",
       },
       shield: {
-        name: "Shield",
-        owner: "An independent project by Tarık Ziya Eren, presented here",
-        purpose: "Hospital billing, SUT compliance and revenue integrity",
-        body: "Before a claim is sent to MEDULA, it checks claim lines against SUT (Turkey's reimbursement rules) and SGK pre-authorisation rules. A risky line goes to the billing specialist's queue with its reason. It is an administrative tool; it does not diagnose or make treatment decisions.",
+        name: "Shield",        purpose: "Hospital billing, SUT compliance and revenue integrity",
+        body: "Checks claim items against SUT and SGK rules before submission, then sends risky items to a specialist with the reason.",
         rows: [
           { label: "For", value: "Billing, pre-authorisation and revenue cycle teams" },
           { label: "Today", value: "Three of four audit planes implemented and tested on synthetic claims" },
@@ -384,9 +359,8 @@ const copy = defineContent<{
     },
     bridge: {
       title: "If your institution has a similar problem, let us talk.",
-      body: "The first step is a 15-minute call with no commitment. If you have a research idea, we can talk about that too.",
-      primary: "15-minute intro call",
-      secondary: "Propose a research collaboration",
+      body: "In the first conversation, we clarify your institution's need and the projects' current status.",
+      primary: "Contact us",
     },
     benefit: {
       label: "Potential benefit",
@@ -508,47 +482,6 @@ function RecordRows({ rows }: { rows: Row[] }) {
 }
 
 /**
- * The two products' workflows, right under the hero's calls to action: where each product sits and who
- * decides. Three steps each; the last step is a person, set in full ink.
- */
-function Workflows({ label, workflows, locale }: { label: string; workflows: [Workflow, Workflow]; locale: Locale }) {
-  const meta = [
-    { href: "/initiatives/pharmadeux", nameClass: "text-teal-700", icon: Pill },
-    { href: "/initiatives/shield", nameClass: "text-indigo-700", icon: ShieldCheck },
-  ];
-  return (
-    <div aria-label={label} role="group" className="grid gap-x-10 gap-y-5 border-t border-rule pt-5 lg:grid-cols-2">
-      {workflows.map((w, i) => {
-        const Icon = meta[i].icon;
-        return (
-          <div key={w.name} className="min-w-0">
-            <p className="flex flex-wrap items-baseline gap-x-3">
-              <Link
-                href={localizedPath(locale, meta[i].href)}
-                lang="en"
-                className={`inline-flex min-h-11 items-center gap-2 font-serif text-[22px] font-medium ${meta[i].nameClass} ${LINK}`}
-              >
-                <Icon className="h-[18px] w-[18px] shrink-0 text-ink" strokeWidth={1.6} aria-hidden="true" />
-                {w.name}
-              </Link>
-              <span className="text-[14px] text-ink-3">{w.area}</span>
-            </p>
-            <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[15px] leading-snug">
-              {w.steps.map((step, s) => (
-                <li key={step} className="flex items-center gap-1.5">
-                  <span className={s === 2 ? "font-medium text-ink" : "text-ink-2"}>{step}</span>
-                  {s < 2 && <ChevronRight className="h-4 w-4 shrink-0 text-ink-3" strokeWidth={1.8} aria-hidden="true" />}
-                </li>
-              ))}
-            </ol>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-/**
  * One project. The two projects mirror each other on wide screens (text left / right) and each opens with
  * its owner, so they differ in more than the colour of their names; each has its own figure.
  */
@@ -577,10 +510,9 @@ function ProjectRecord({
           </h3>
         </div>
         <p className="mt-3 text-[15px] font-medium text-ink">{project.purpose}</p>
-        <p className="mt-1 text-[14px] text-ink-3">{project.owner}</p>
         <p className="mt-4 text-[17px] leading-[1.65] text-ink-2">{project.body}</p>
         <div className="mt-6">
-          <RecordRows rows={project.rows} />
+          <RecordRows rows={project.rows.slice(0, 3)} />
         </div>
         <Link href={href} className={`mt-4 ${TEXT_ACTION}`}>
           {project.link}
@@ -593,9 +525,7 @@ function ProjectRecord({
 
 export default function HomeView({ locale }: { locale: Locale }) {
   const c = copy[locale];
-  const org = organizationProfile[locale];
   const href = (path: string) => localizedPath(locale, path);
-  const members = teamCopy[locale];
 
   return (
     <main id="main" className="surface-paper relative flex-1 bg-paper text-ink">
@@ -613,30 +543,18 @@ export default function HomeView({ locale }: { locale: Locale }) {
               {c.hero.title}
             </h1>
             <p className="mt-5 max-w-[60ch] text-[17px] leading-[1.6] text-ink-2">{c.hero.lead}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <Link href={href(contactHref("intro"))} className={BUTTON}>
-                {c.hero.primary}
-              </Link>
-              <a href="#platformlar" className={BUTTON_OUTLINE}>
+            <div className="mt-8">
+              <a href="#platformlar" className={BUTTON}>
                 {c.hero.secondary}
               </a>
             </div>
-            <Link href={href(contactHref("academic"))} className={`mt-2 ${TEXT_ACTION}`}>
-              {c.hero.academic}
-            </Link>
           </div>
-
-          {/* Second in reading order on phones (right after the calls to action), full width under both columns on wide screens. */}
-          <div className="lg:order-last lg:col-span-12">
-            <Workflows label={c.hero.workflowsLabel} workflows={c.hero.workflows} locale={locale} />
-          </div>
-
           <aside aria-labelledby="hero-summary" className="self-end border-t-2 border-ink pt-4 lg:col-span-4">
             <h2 id="hero-summary" className="font-serif text-[20px] font-semibold text-ink">
               {c.hero.summaryTitle}
             </h2>
             <dl className="mt-3 divide-y divide-rule border-t border-rule">
-              {c.hero.summary.map((r) => (
+              {c.hero.summary.slice(0, 4).map((r) => (
                 <div key={r.label} className="grid grid-cols-[120px_minmax(0,1fr)] gap-3 py-2.5 lg:grid-cols-1 lg:gap-0.5">
                   <dt className="text-[13px] text-ink-3">{r.label}</dt>
                   <dd className="text-[14px] leading-snug text-ink">{r.value}</dd>
@@ -647,33 +565,11 @@ export default function HomeView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* Problem: text for both problems first, then both figures on one row, so the figures align at the top. */}
-      <Section id="sorun" label={c.problem.label} title={c.problem.title}>
-        <div className="grid gap-x-12 gap-y-8 lg:grid-cols-2">
-          {[
-            { block: c.problem.pharma, figure: <PairwiseFigure locale={locale} />, order: ["lg:order-1", "lg:order-3"] },
-            { block: c.problem.shield, figure: <ClaimPathFigure locale={locale} />, order: ["lg:order-2", "lg:order-4"] },
-          ].map(({ block, figure, order }) => [
-            <div key={`${block.title}-text`} className={`min-w-0 ${order[0]}`}>
-              <h3 className="text-[20px] font-semibold tracking-[-0.01em] text-ink">{block.title}</h3>
-              <div className="mt-3 space-y-3 text-[17px] leading-[1.65] text-ink-2">
-                {block.body.map((p) => (
-                  <p key={p}>{p}</p>
-                ))}
-              </div>
-            </div>,
-            <div key={`${block.title}-figure`} className={`min-w-0 ${order[1]}`}>
-              {figure}
-            </div>,
-          ])}
-        </div>
-      </Section>
-
-      {/* Approach: the four steps in plain language next to one alert traced end to end (the main figure). */}
+      {/* Approach: three steps in plain language next to one alert traced end to end (the main figure). */}
       <Section id="yaklasim" label={c.approach.label} title={c.approach.title} intro={c.approach.intro} band>
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
           <ol className="space-y-6 lg:col-span-5">
-            {c.approach.steps.map((step, i) => (
+            {c.approach.steps.slice(0, 3).map((step, i) => (
               <li key={step.title} className="grid grid-cols-[32px_minmax(0,1fr)] gap-4">
                 <span aria-hidden="true" className="font-serif text-[30px] leading-none text-ink-3 tabular-nums">
                   {i + 1}
@@ -723,128 +619,11 @@ export default function HomeView({ locale }: { locale: Locale }) {
             </h2>
             <p className="mt-2 text-[17px] leading-[1.6] text-ink-2">{c.bridge.body}</p>
           </div>
-          <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
-            <Link href={href(contactHref("intro"))} className={BUTTON}>
-              {c.bridge.primary}
-            </Link>
-            <Link href={href(contactHref("academic"))} className={BUTTON_OUTLINE}>
-              {c.bridge.secondary}
-            </Link>
-          </div>
+          <Link href={href("/contact")} className={BUTTON}>
+            {c.bridge.primary}
+          </Link>
         </div>
       </section>
-
-      {/* Potential benefit: what is measured (software level, once) kept apart from what is targeted (not measured). */}
-      <Section id="fayda" label={c.benefit.label} title={c.benefit.title} intro={c.benefit.intro} band>
-        <EvidenceLevelsFigure locale={locale} />
-        <h3 className="mt-12 text-[20px] font-semibold text-ink">{c.benefit.targetTitle}</h3>
-        {/* Wide screens: a table. Small screens: one block per hypothesis, so the status is never off-screen. */}
-        <table className="mt-4 hidden w-full border-collapse text-left text-[15px] sm:table">
-          <thead>
-            <tr className="border-b border-ink text-[13px] text-ink-3">
-              <th scope="col" className="py-2.5 pr-4 font-medium">{c.benefit.columns.hypothesis}</th>
-              <th scope="col" className="py-2.5 pr-4 font-medium">{c.benefit.columns.measure}</th>
-              <th scope="col" className="py-2.5 font-medium">{c.benefit.columns.status}</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-rule border-b border-rule">
-            {c.benefit.targets.map((t) => (
-              <tr key={t.hypothesis} className="align-top">
-                <td className="py-3.5 pr-4 leading-snug text-ink">{t.hypothesis}</td>
-                <td className="py-3.5 pr-4 leading-snug text-ink-2">{t.measure}</td>
-                <td className="py-3.5 font-medium whitespace-nowrap text-ink">{c.benefit.notMeasured}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <ul className="mt-4 divide-y divide-rule border-y border-rule sm:hidden">
-          {c.benefit.targets.map((t) => (
-            <li key={t.hypothesis} className="py-4">
-              <p className="text-[13px] text-ink-3">
-                {c.benefit.columns.status}: <span className="font-medium text-ink">{c.benefit.notMeasured}</span>
-              </p>
-              <p className="mt-1 text-[15px] leading-snug text-ink">{t.hypothesis}</p>
-              <p className="mt-2 text-[13px] text-ink-3">{c.benefit.columns.measure}</p>
-              <p className="text-[14px] leading-snug text-ink-2">{t.measure}</p>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      {/* Team: the venture as it is and all five members, name and role only, from the central team source
-          (src/lib/team.ts). Descriptions and profile links are on /about#ekip. No advisors or boards are listed. */}
-      <Section id="ekip" label={c.team.label} title={c.team.title}>
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-12">
-          <div className="max-w-[62ch] space-y-4 text-[17px] leading-[1.65] text-ink-2 lg:col-span-6 lg:col-start-4">
-            <p>{org.positioning}</p>
-            <p>
-              {org.stage} {org.independence}
-            </p>
-          </div>
-        </div>
-        <div className="mt-12 grid gap-x-12 lg:grid-cols-12">
-          <div className="border-t border-ink pt-5 lg:col-span-9 lg:col-start-4">
-            <ul aria-label={c.team.listLabel} className="divide-y divide-rule border-b border-rule">
-              {TEAM.map((m) => (
-                <li key={m.id} className="grid gap-x-10 gap-y-0.5 py-3.5 first:pt-0 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] sm:items-baseline">
-                  <p className="font-serif text-[22px] leading-tight font-medium text-ink">{m.name}</p>
-                  <p className="text-[15px] leading-snug text-ink-2">{members[m.id].role}</p>
-                </li>
-              ))}
-            </ul>
-            <Link href={href("/about#ekip")} className={`mt-4 ${TEXT_ACTION}`}>
-              {c.team.more}
-            </Link>
-          </div>
-        </div>
-      </Section>
-
-      {/* Collaboration: three ways in, what a study gives and needs, the legal status, and one clear first step. */}
-      <Section id="iletisim" label={c.collab.label} title={c.collab.title} intro={c.collab.intro} band>
-        <div className="grid gap-8 md:grid-cols-3 md:gap-8">
-          {c.collab.modes.map((mode, i) => (
-            <div key={mode.title} className="flex flex-col border-t-2 border-ink pt-5">
-              <h3 className="font-serif text-[24px] leading-tight font-medium text-ink">{mode.title}</h3>
-              <p className="mt-3 text-[15px] leading-[1.6] text-ink-2">{mode.body}</p>
-              <p className="mt-3 text-[14px] text-ink-3">{mode.meta}</p>
-              <Link
-                href={href(contactHref((["intro", "academic", "pilot"] as const)[i]))}
-                className={`mt-3 self-start md:mt-auto md:pt-3 ${TEXT_ACTION}`}
-              >
-                {mode.link}
-              </Link>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-10 grid gap-8 border-t border-rule pt-8 md:mt-14 md:grid-cols-2 md:gap-12 md:pt-10">
-          {[
-            { title: c.collab.giveTitle, items: c.collab.give },
-            { title: c.collab.askTitle, items: c.collab.ask },
-          ].map((list) => (
-            <div key={list.title}>
-              <h3 className="text-[17px] font-semibold text-ink">{list.title}</h3>
-              <ul className="mt-3 list-disc space-y-2 pl-5 text-[15px] leading-[1.55] text-ink-2 marker:text-ink-3">
-                {list.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <p className="mt-8 max-w-[70ch] text-[15px] leading-[1.6] text-ink-2">{c.collab.legal}</p>
-
-        <div className="mt-10 flex flex-col gap-4 border-t border-rule pt-8 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
-          <Link href={href(contactHref("intro"))} className={BUTTON}>
-            {c.collab.cta}
-          </Link>
-          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink-2">
-            {c.collab.email}
-            <CopyEmail locale={locale} tone="paper" className="min-h-11 text-ink" />
-          </p>
-        </div>
-        <p className="mt-5 text-[14px] text-ink-3">{c.collab.noPatientData}</p>
-      </Section>
     </main>
   );
 }

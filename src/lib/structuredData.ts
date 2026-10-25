@@ -19,7 +19,7 @@ const inLanguage: Record<Locale, string> = { tr: "tr-TR", en: "en" };
 const copy = defineContent({
   tr: {
     orgDescription:
-      "Konya Teknik Üniversitesi öğrencilerinin kurduğu, henüz şirketleşmemiş bağımsız öğrenci Ar-Ge girişimi. Üniversitenin resmî birimi veya ortağı değildir. Ekibin ortak projesi PharmaDeux ilaç güvenliği ve klinik karar desteği üzerinedir; sitede ayrıca Tarık Ziya Eren'in bağımsız projesi Shield tanıtılır.",
+      "Konya Teknik Üniversitesi öğrencilerinin kurduğu, henüz şirketleşmemiş bağımsız öğrenci Ar-Ge girişimi. İlaç güvenliği için PharmaDeux ve hastane faturalaması için Shield prototiplerini geliştirir.",
     knowsAbout: [
       "Klinik karar destek sistemleri",
       "İlaç güvenliği",
@@ -42,7 +42,7 @@ const copy = defineContent({
     shield: {
       subCategory: "Hastane gelir bütünlüğü ve provizyon denetimi",
       description:
-        "Tarık Ziya Eren'in bağımsız prototip projesi; LavieuxLabs sitesinde tanıtılır. Hastane fatura ve provizyon kalemlerindeki SUT/SGK red riskini gönderim öncesinde gösterir ve riskli kalemi gerekçesiyle uzman incelemesine yönlendirir. Gerçek faturalarda doğrulanmadı; tanı koymaz ve tedavi kararı vermez.",
+        "Hastane fatura ve provizyon kalemlerindeki SUT/SGK red riskini gönderim öncesinde gösteren prototip. Riskli kalemi gerekçesiyle uzman incelemesine yönlendirir. Gerçek faturalarda doğrulanmadı; tanı koymaz ve tedavi kararı vermez.",
       features: [
         "Gönderim öncesi red riski kontrolü",
         "Kural katkılarından oluşan 0–100 kural skoru (ret olasılığı değil)",
@@ -54,7 +54,7 @@ const copy = defineContent({
   },
   en: {
     orgDescription:
-      "An independent student R&D venture founded by students of Konya Technical University and not yet incorporated. It is not an official unit or partner of the university. The team's joint project PharmaDeux works on medication safety and clinical decision support; the site also presents Shield, an independent project by Tarık Ziya Eren.",
+      "An independent student R&D venture founded by students of Konya Technical University and not yet incorporated. It develops the PharmaDeux medication-safety and Shield hospital-billing prototypes.",
     knowsAbout: [
       "Clinical decision support systems",
       "Medication safety",
