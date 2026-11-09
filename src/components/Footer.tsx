@@ -67,7 +67,7 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className={cellClass}>
       <dt className={labelClass}>{label}</dt>
-      <dd className="mt-1.5 text-[13px] leading-relaxed text-white/70">{children}</dd>
+      <dd className="mt-1.5 text-[12.5px] leading-relaxed text-white/70">{children}</dd>
     </div>
   );
 }
