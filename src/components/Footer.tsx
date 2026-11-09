@@ -61,7 +61,13 @@ const copy = defineContent({
   },
 });
 
-const trl: Record<Locale, string> = { tr: trlLabel("tr"), en: trlLabel("en") };
+// "THS 4" / "TRL 4": only the number is set in mono, so the space between them stays a sans-width space.
+const trlParts = (locale: Locale) => {
+  const label = trlLabel(locale);
+  const split = label.lastIndexOf(" ");
+  return { name: label.slice(0, split), value: label.slice(split + 1) };
+};
+const trl: Record<Locale, { name: string; value: string }> = { tr: trlParts("tr"), en: trlParts("en") };
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -141,7 +147,8 @@ export default function Footer({ locale }: { locale: Locale }) {
             <CopyEmail locale={locale} />
           </Field>
           <Field label={c.status}>
-            {c.pharmaStatus} <span className="font-mono tabular-nums">{trl[locale]}</span> {c.noCe}
+            {c.pharmaStatus} {trl[locale].name} <span className="font-mono tabular-nums">{trl[locale].value}</span>{" "}
+            {c.noCe}
             <br />
             {c.shieldStatus}
           </Field>
