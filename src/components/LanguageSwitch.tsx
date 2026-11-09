@@ -63,7 +63,7 @@ export default function LanguageSwitch({
             lang={target}
             aria-current="true"
             title={labels[target].name}
-            className={`rounded-[5px] px-2 py-0.5 ${t.current}`}
+            className={`rounded-sm px-2 py-0.5 ${t.current}`}
           >
             {labels[target].short}
           </span>
@@ -76,7 +76,7 @@ export default function LanguageSwitch({
             title={labels[target].name}
             aria-label={labels[target].name}
             onClick={carryOver}
-            className={`rounded-[5px] px-2 py-0.5 transition-colors duration-150 ease-out ${t.other}`}
+            className={`rounded-sm px-2 py-0.5 transition-colors duration-150 ease-out ${t.other}`}
           >
             {labels[target].short}
           </a>
