@@ -335,7 +335,7 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
         >
           <div className={`overflow-hidden rounded-2xl border ${t.panel}`}>
             {/* Compact on phones (≈ a fifth of the screen): tighter padding, the short intro, one row of buttons. */}
-            <div className="px-4 pt-3 pb-3 sm:p-6">
+            <div className="px-4 pt-3 pb-3 sm:px-6 sm:py-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-2.5">
                   <Cookie className={`h-4 w-4 ${t.icon}`} strokeWidth={1.8} aria-hidden="true" />
@@ -355,7 +355,7 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
                   </button>
                 )}
               </div>
-              <p className={`mt-1.5 text-[13px] leading-normal sm:mt-3 sm:leading-relaxed ${t.text}`}>
+              <p className={`mt-1.5 text-[13px] leading-normal sm:mt-2 sm:leading-relaxed ${t.text}`}>
                 <span className="sm:hidden">{c.introShort}</span>
                 <span className="hidden sm:inline">{ANALYTICS_TOOL ? c.introAnalytics : c.intro}</span>{" "}
                 <Link
@@ -411,7 +411,7 @@ export default function CookieBanner({ locale }: { locale: Locale }) {
             </div>
 
             {/* 44 px targets on touch screens at any width; the compact 36 px row only with a mouse or trackpad. */}
-            <div className={`flex flex-wrap items-center justify-end gap-2 border-t px-3 py-2.5 sm:p-4 ${t.footer}`}>
+            <div className={`flex flex-wrap items-center justify-end gap-2 border-t px-3 py-2.5 sm:px-4 sm:py-3 ${t.footer}`}>
               {customizing ? (
                 <button
                   type="button"
