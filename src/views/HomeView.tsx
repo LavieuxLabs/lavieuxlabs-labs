@@ -4,7 +4,6 @@ import { Pill, ShieldCheck, type LucideIcon } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
 import {
   ClaimScoreFigure,
-  DecisionTraceFigure,
   PrescriptionCheckFigure,
 } from "@/components/home/HomeFigures";
 import { homeJsonLd } from "@/lib/structuredData";
@@ -25,7 +24,7 @@ export const metadata = defineMetadata("/", {
 });
 
 /*
- * Home page on the paper surface (Academic Editorial). Communication order: problem → approach → the two
+ * Home page on the paper surface (Academic Editorial). Communication order: problem → the two
  * projects, with one clear contact action after the projects.
  * Type roles: Newsreader for the page title, section titles, project and person names and step numerals;
  * IBM Plex Sans for all running text, labels and tables; IBM Plex Mono only for numbers that are data.
@@ -63,7 +62,6 @@ const copy = defineContent<{
     summary: Row[];
   };
   problem: { label: string; title: string; pharma: { title: string; body: string[] }; shield: { title: string; body: string[] } };
-  approach: { label: string; title: string; intro: string; steps: { title: string; body: string }[] };
   projects: { label: string; title: string; intro: string; pharma: Project; shield: Project };
   bridge: { title: string; body: string; primary: string };
   benefit: {
@@ -135,30 +133,6 @@ const copy = defineContent<{
           "Red nedenlerinin bir kısmı eksik belge, kod uyumsuzluğu ya da limit aşımı gibi önlenebilir hatalardır.",
         ],
       },
-    },
-    approach: {
-      label: "Çözüm yaklaşımı",
-      title: "Her uyarı, onu tetikleyen kuralla birlikte gelir.",
-      intro:
-        "Kaynağı belli kurallar aynı girdiye aynı sonucu verir. Uyarının nedeni görünür, son karar uzmanda kalır.",
-      steps: [
-        {
-          title: "Veriyi ortak bir biçime çeviriyoruz",
-          body: "Reçete, laboratuvar sonucu ya da fatura kalemi sağlık sistemleri arasında kullanılan uluslararası bir standarda (HL7 FHIR R4) çevrilir. Eksik bilgi atlanmaz, işaretlenir.",
-        },
-        {
-          title: "Kurallar kontrol ediyor",
-          body: "Her kural bir kılavuza, ürün bilgisine ya da mevzuata dayanır ve bir sürüm numarası taşır.",
-        },
-        {
-          title: "Kararı uzman veriyor",
-          body: "Hekim, eczacı ya da fatura uzmanı bulguyu nedeniyle görür; kabul eder, düzeltir ya da gerekçe yazarak geçer.",
-        },
-        {
-          title: "Her adım kayda geçiyor",
-          body: "Girdi, kural sürümü ve karar yalnızca eklenebilen bir kayda yazılır; bir karar sonradan aynı hâliyle gösterilebilir.",
-        },
-      ],
     },
     projects: {
       label: "Shield ve PharmaDeux",
@@ -305,30 +279,6 @@ const copy = defineContent<{
           "Some rejections come from preventable errors such as a missing document, a code mismatch or an exceeded limit.",
         ],
       },
-    },
-    approach: {
-      label: "Approach",
-      title: "Every alert comes with the rule that raised it.",
-      intro:
-        "Sourced rules give the same result for the same input. The reason stays visible and the final decision stays with the specialist.",
-      steps: [
-        {
-          title: "We put the data into a shared format",
-          body: "A prescription, lab result or claim line is converted to an international standard used between health systems (HL7 FHIR R4). Missing information is flagged, not skipped.",
-        },
-        {
-          title: "Rules check it",
-          body: "Each rule rests on a guideline, product information or regulation, and carries a version number.",
-        },
-        {
-          title: "A specialist decides",
-          body: "The physician, pharmacist or billing specialist sees the finding with its reason, then accepts it, corrects the order or overrides it with a reason.",
-        },
-        {
-          title: "Every step is recorded",
-          body: "The input, rule version and decision are written to an append-only log, so a decision can be shown later exactly as it was made.",
-        },
-      ],
     },
     projects: {
       label: "Shield and PharmaDeux",
@@ -564,28 +514,6 @@ export default function HomeView({ locale }: { locale: Locale }) {
           </aside>
         </div>
       </section>
-
-      {/* Approach: three steps in plain language next to one alert traced end to end (the main figure). */}
-      <Section id="yaklasim" label={c.approach.label} title={c.approach.title} intro={c.approach.intro} band>
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
-          <ol className="space-y-6 lg:col-span-5">
-            {c.approach.steps.slice(0, 3).map((step, i) => (
-              <li key={step.title} className="grid grid-cols-[32px_minmax(0,1fr)] gap-4">
-                <span aria-hidden="true" className="font-serif text-[30px] leading-none text-ink-3 tabular-nums">
-                  {i + 1}
-                </span>
-                <div>
-                  <h3 className="text-[17px] font-semibold text-ink">{step.title}</h3>
-                  <p className="mt-1 text-[15px] leading-[1.6] text-ink-2">{step.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-          <div className="min-w-0 lg:col-span-7">
-            <DecisionTraceFigure locale={locale} />
-          </div>
-        </div>
-      </Section>
 
       {/* The two projects, mirrored. Id kept: footer, navigation and breadcrumbs link to /#platformlar. */}
       <Section id="platformlar" label={c.projects.label} title={c.projects.title} intro={c.projects.intro}>

@@ -9,8 +9,7 @@ import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 // Home page figures on the paper surface. Each one draws a real model already used on the site (the
 // pairwise formula, a claim's path, the QTc and polypharmacy example cases, the safety planes, Shield's
 // example rule set, the evidence levels), so no figure is decoration. Each has its own visual form, so the
-// page does not repeat one diagram: bars, a numbered track, the decision trace (the one dot-and-line
-// drawing), an input → checks → result flow, a score scale and stacked level blocks. Data is ink; colour
+// page does not repeat one diagram: bars, a numbered track, an input → checks → result flow, a score scale and stacked level blocks. Data is ink; colour
 // appears only where a value is a clinical or review state. No motion: every figure is complete at rest.
 // Type scale: 13 caption · 14 figure text · 15 emphasis.
 
@@ -96,91 +95,6 @@ export function ClaimPathFigure({ locale }: { locale: Locale }) {
         })}
       </ol>
       <p className="mt-5 text-[14px] leading-snug text-ink">{c.note}</p>
-    </Figure>
-  );
-}
-
-// ── Decision trace (QTc example case): the page's main explanatory figure ────
-
-const traceCopy = defineContent({
-  tr: {
-    rows: { patient: "Hasta", order: "İstem", measured: "Ölçüm", score: "Risk skoru", rule: "Kural", shown: "Hekime sunulan", record: "Kayıt" },
-    score: (total: number, factors: number) => (
-      <>
-        Tisdale <span className="font-mono tabular-nums">{total}</span> puan, <span className="font-mono tabular-nums">{factors}</span> risk faktöründen
-      </>
-    ),
-    rule: "Tisdale 11 ve üzeri yüksek risktir. Kural tetiklendi.",
-    record: "Girdi, kural sürümü ve hekimin kararı yalnızca eklenebilen kayda yazılır.",
-    caption: "Bir uyarının izi, örnek vaka. Kurgusal hasta. QTc bir ölçüm, Tisdale bir risk skorudur; ikisi ayrı tutulur.",
-    open: "Vakayı ve puanların dökümünü simülatörde açın",
-  },
-  en: {
-    rows: { patient: "Patient", order: "Order", measured: "Measurement", score: "Risk score", rule: "Rule", shown: "Shown to the physician", record: "Record" },
-    score: (total: number, factors: number) => (
-      <>
-        Tisdale <span className="font-mono tabular-nums">{total}</span> points, from <span className="font-mono tabular-nums">{factors}</span> risk factors
-      </>
-    ),
-    rule: "A Tisdale score of 11 or more is high risk. The rule fired.",
-    record: "The input, rule version and the physician's decision are written to an append-only log.",
-    caption: "One alert, traced. Example case with a fictional patient. QTc is a measurement and Tisdale is a risk score; they are kept apart.",
-    open: "Open the case and its point breakdown in the simulator",
-  },
-});
-
-export function DecisionTraceFigure({ locale }: { locale: Locale }) {
-  const c = traceCopy[locale];
-  const qtCase = CLINICAL_CASES[locale].find((x) => x.id === "qtc")!;
-  const factors = qtCase.tisdale ?? [];
-  const total = factors.reduce((n, f) => n + f.points, 0);
-  // The case finding ends with what is put to the physician; the earlier sentences repeat the reading.
-  const shown = qtCase.finding.split(/(?<=\.)\s+/).at(-1);
-
-  const rows: { key: string; label: string; value: ReactNode; alert?: boolean }[] = [
-    { key: "patient", label: c.rows.patient, value: qtCase.patient },
-    { key: "order", label: c.rows.order, value: qtCase.prescription },
-    {
-      key: "measured",
-      label: c.rows.measured,
-      value: (
-        <>
-          QTc (Fridericia) <span className="font-mono tabular-nums">{qtCase.readings.qtc.value}</span> ms
-        </>
-      ),
-    },
-    { key: "score", label: c.rows.score, value: c.score(total, factors.length) },
-    { key: "rule", label: c.rows.rule, value: c.rule, alert: total >= 11 },
-    { key: "shown", label: c.rows.shown, value: shown },
-    { key: "record", label: c.rows.record, value: c.record },
-  ];
-
-  return (
-    <Figure
-      caption={
-        <>
-          {c.caption}{" "}
-          <Link href={localizedPath(locale, "/initiatives/pharmadeux?case=qtc#vakalar")} className={`text-ink-2 ${LINK}`}>
-            {c.open}
-          </Link>
-        </>
-      }
-    >
-      <dl>
-        {rows.map((row, i) => (
-          <div key={row.key} className="relative grid grid-cols-[92px_minmax(0,1fr)] gap-3 pb-3.5 pl-7 sm:grid-cols-[136px_minmax(0,1fr)] sm:gap-4 sm:pb-4">
-            {i < rows.length - 1 && <span aria-hidden="true" className="absolute top-4 bottom-0 left-[6.5px] w-px bg-ink/25" />}
-            <span
-              aria-hidden="true"
-              className={`absolute top-[5px] left-0 h-[14px] w-[14px] rounded-full border-[1.5px] ${
-                row.alert ? "border-rose-700 bg-rose-700" : "border-ink bg-white"
-              }`}
-            />
-            <dt className="text-[13px] text-ink-3">{row.label}</dt>
-            <dd className={`text-[15px] leading-snug ${row.alert ? "font-medium text-rose-700" : "text-ink"}`}>{row.value}</dd>
-          </div>
-        ))}
-      </dl>
     </Figure>
   );
 }
