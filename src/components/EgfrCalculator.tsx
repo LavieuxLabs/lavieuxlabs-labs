@@ -137,7 +137,7 @@ export default function EgfrCalculator({ locale }: { locale: Locale }) {
                 type="button"
                 aria-pressed={sex === s}
                 onClick={() => setSex(s)}
-                className={`flex-1 rounded-[5px] px-2 py-1.5 text-[12.5px] transition-colors duration-150 ease-out ${
+                className={`flex-1 rounded-sm px-2 py-1.5 text-[12.5px] transition-colors duration-150 ease-out ${
                   sex === s ? "bg-white/[0.1] text-white print:font-semibold print:underline" : "text-white/55 hover:text-white"
                 }`}
               >
