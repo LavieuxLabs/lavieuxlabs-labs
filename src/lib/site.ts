@@ -48,7 +48,7 @@ export const PILOT_PROTOCOL_REVISION = "2026-10-24";
 // sources above; the other pages carry the date of the last commit that changed their text.
 export const PAGE_UPDATED: Record<RoutePath, string> = {
   "/": "2026-10-24",
-  "/initiatives/pharmadeux": "2026-10-24",
+  "/initiatives/pharmadeux": "2026-11-11",
   "/initiatives/shield": "2026-10-24",
   "/about": "2026-10-24",
   "/contact": "2026-10-24",

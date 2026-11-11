@@ -8,6 +8,10 @@ import { defineContent, type Locale } from "@/i18n/config";
 
 export type Tone = "normal" | "caution" | "high";
 
+/** Tisdale QT risk band from the total score (points): ≤6 low, 7–10 moderate, ≥11 high. */
+export type TisdaleTier = "low" | "moderate" | "high";
+export const tisdaleTier = (score: number): TisdaleTier => (score >= 11 ? "high" : score >= 7 ? "moderate" : "low");
+
 type ReadingKey = "liver" | "qtc" | "renal";
 
 export type Reading = {

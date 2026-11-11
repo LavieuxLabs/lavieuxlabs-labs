@@ -10,6 +10,7 @@ import { contactHref } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
 import { metrics, testsLabel, testsNote, trlLabel } from "@/lib/metrics";
+import { CLINICAL_CASES, tisdaleTier, type TisdaleTier } from "@/lib/clinicalCases";
 
 export const metadata = defineMetadata("/initiatives/pharmadeux", {
   tr: {
@@ -44,6 +45,8 @@ const copy = defineContent<{
     name: string;
     title: string;
     lead: string;
+    /** One-line example alert under the lead; values come from the `qtc` case in CLINICAL_CASES. */
+    example: { label: string; tiers: Record<TisdaleTier, string>; note: string };
     secondary: string;
     summaryTitle: string;
     summary: { label: string; value: string }[];
@@ -116,6 +119,11 @@ const copy = defineContent<{
       name: "PharmaDeux CDSS",
       title: "Reçete yazılırken ilaç güvenliğini kontrol eden klinik karar destek yazılımı.",
       lead: "PharmaDeux reçeteyi hastanın böbrek ve karaciğer değerleri, QTc ölçümü ve kullandığı diğer ilaçlarla birlikte kontrol eder. Her uyarı onu tetikleyen kural ve eşikle gelir. Son karar hekimindir: uyarıyı gerekçe yazarak geçebilir ve bu karar kayda yazılır.",
+      example: {
+        label: "Örnek (kurgusal hasta):",
+        tiers: { low: "düşük risk", moderate: "orta risk", high: "yüksek risk" },
+        note: "QTc bir ölçüm, Tisdale bir risk skorudur.",
+      },
       secondary: "Örnek vakayı inceleyin",
       summaryTitle: "Kısaca",
       summary: [
@@ -436,6 +444,11 @@ const copy = defineContent<{
       name: "PharmaDeux CDSS",
       title: "Clinical decision support software that checks medication safety while the prescription is written.",
       lead: "PharmaDeux checks a prescription against the patient's kidney and liver values, measured QTc and other medicines. Each alert comes with the rule and threshold that triggered it. The physician makes the final decision and can override an alert with a reason, which is written to the record.",
+      example: {
+        label: "Example (fictional patient):",
+        tiers: { low: "low risk", moderate: "moderate risk", high: "high risk" },
+        note: "QTc is a measurement; Tisdale is a risk score.",
+      },
       secondary: "Review an example case",
       summaryTitle: "At a glance",
       summary: [
@@ -752,8 +765,20 @@ const copy = defineContent<{
   },
 });
 
+// Clinical state colours on paper (-700 step); the colour belongs to the risk band, not the product.
+const TIER_CLASS: Record<TisdaleTier, string> = { low: "text-emerald-700", moderate: "text-amber-700", high: "text-rose-700" };
+
+/** The hero example reads the same case the workspace panel shows, so the numbers cannot drift. */
+function heroExample(locale: Locale) {
+  const qtCase = CLINICAL_CASES[locale].find((k) => k.id === "qtc");
+  if (!qtCase?.tisdale) throw new Error("PharmaDeux hero example: the qtc case with Tisdale points is missing");
+  const score = qtCase.tisdale.reduce((sum, f) => sum + f.points, 0);
+  return { qtc: qtCase.readings.qtc.value, tier: tisdaleTier(score) };
+}
+
 export default function PharmaDeuxView({ locale }: { locale: Locale }) {
   const c = copy[locale];
+  const example = heroExample(locale);
   const href = (path: string) => localizedPath(locale, path);
   return (
     <main id="main" className="surface-paper relative flex-1 bg-paper text-ink">
@@ -800,6 +825,20 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
               {c.hero.title}
             </h1>
             <p className="mt-5 max-w-[62ch] text-[17px] leading-[1.6] text-ink-2">{c.hero.lead}</p>
+            <div className="mt-5">
+              <p className="text-[15px] leading-[1.5] text-ink-2">
+                {c.hero.example.label}{" "}
+                <span className="whitespace-nowrap">
+                  QTc <span className="font-mono tabular-nums">{example.qtc}</span> ms
+                </span>
+                <span aria-hidden="true"> · </span>
+                <span className="sr-only">, </span>
+                <span className="whitespace-nowrap">
+                  Tisdale: <span className={TIER_CLASS[example.tier]}>{c.hero.example.tiers[example.tier]}</span>
+                </span>
+              </p>
+              <p className="mt-1 text-[13px] leading-[1.5] text-ink-3">{c.hero.example.note}</p>
+            </div>
             <div className="mt-8 print:hidden">
               <a href="#vakalar" className={BUTTON}>
                 {c.hero.secondary}
