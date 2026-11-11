@@ -826,15 +826,22 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
             </h1>
             <p className="mt-5 max-w-[62ch] text-[17px] leading-[1.6] text-ink-2">{c.hero.lead}</p>
             <div className="mt-5">
-              <p className="text-[15px] leading-[1.5] text-ink-2">
-                {c.hero.example.label}{" "}
-                <span className="whitespace-nowrap">
-                  QTc <span className="font-mono tabular-nums">{example.qtc}</span> ms
-                </span>
-                <span aria-hidden="true"> · </span>
-                <span className="sr-only">, </span>
-                <span className="whitespace-nowrap">
-                  Tisdale: <span className={TIER_CLASS[example.tier]}>{c.hero.example.tiers[example.tier]}</span>
+              {/* The separator opens the Tisdale group. The inner block is shifted 0.55em left (the first line is indented
+                  back), so when the line wraps the dot sits outside the clipped paragraph and the second line starts
+                  with "Tisdale". On one line it stays between the two values. Screen readers hear a comma instead. */}
+              <p className="overflow-hidden text-[15px] leading-[1.5] text-ink-2">
+                <span className="-ml-[0.55em] block indent-[0.55em]">
+                  {c.hero.example.label}{" "}
+                  <span className="whitespace-nowrap">
+                    QTc <span className="font-mono tabular-nums">{example.qtc}</span> ms
+                  </span>
+                  <span className="sr-only">,</span>{" "}
+                  <span className="whitespace-nowrap">
+                    <span aria-hidden="true" className="inline-block w-[0.55em] indent-0">
+                      ·
+                    </span>
+                    Tisdale: <span className={TIER_CLASS[example.tier]}>{c.hero.example.tiers[example.tier]}</span>
+                  </span>
                 </span>
               </p>
               <p className="mt-1 text-[13px] leading-[1.5] text-ink-3">{c.hero.example.note}</p>

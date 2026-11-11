@@ -40,6 +40,7 @@ export default function LanguageSwitch({
   tone?: keyof typeof tones;
 }) {
   const t = tones[tone];
+  const current = locales.indexOf(locale);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -76,7 +77,12 @@ export default function LanguageSwitch({
             title={labels[target].name}
             aria-label={labels[target].name}
             onClick={carryOver}
-            className={`rounded-sm px-2 py-0.5 transition-colors duration-150 ease-out ${t.other}`}
+            // The visible link stays ≈ 30 × 21 px; the transparent ::after makes a 44 × 44 px hit area. It grows 12 px
+            // into the navbar's gap-3 on the outer side and 2 px towards the current-language label, so it covers
+            // neither that label nor the neighbouring control (search, Contact).
+            className={`relative rounded-sm px-2 py-0.5 transition-colors duration-150 ease-out after:absolute after:-inset-y-3 ${
+              locales.indexOf(target) > current ? "after:-right-3 after:-left-0.5" : "after:-right-0.5 after:-left-3"
+            } ${t.other}`}
           >
             {labels[target].short}
           </a>
