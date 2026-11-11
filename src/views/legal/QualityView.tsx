@@ -82,7 +82,7 @@ const sectionsTr: LegalSection[] = [
                 <tr key={code}>
                   <td data-label="Standart / mevzuat" className="font-mono text-[13px] text-ink">
                     {code}
-                    {FRAMEWORK_CITE[code] && <Cite id={FRAMEWORK_CITE[code]} tone="paper" />}
+                    {FRAMEWORK_CITE[code] && <Cite id={FRAMEWORK_CITE[code]} tone="paper" tight />}
                   </td>
                   <td data-label="Kapsam">{scope}</td>
                   <td data-label="Durum">{status}</td>
@@ -244,7 +244,7 @@ const sectionsEn: LegalSection[] = [
                 <tr key={code}>
                   <td data-label="Standard / regulation" className="font-mono text-[13px] text-ink">
                     {code}
-                    {FRAMEWORK_CITE[code] && <Cite id={FRAMEWORK_CITE[code]} tone="paper" />}
+                    {FRAMEWORK_CITE[code] && <Cite id={FRAMEWORK_CITE[code]} tone="paper" tight />}
                   </td>
                   <td data-label="Scope">{scope}</td>
                   <td data-label="Status">{status}</td>

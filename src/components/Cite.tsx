@@ -42,7 +42,24 @@ const tones = {
   },
 };
 
-export default function Cite({ id, tone = "dark" }: { id: CiteKey; tone?: keyof typeof tones }) {
+// The marker stays 16 × 16 px; a transparent ::before makes the hit area. Default 44 × 44 px, growing 17 px up and
+// 11 px down so it stops short of a control placed just below the label (QT simulator). `tight` is for table rows
+// closer than 44 px apart: 44 × 40 px, so the areas of neighbouring rows never overlap.
+const HIT = {
+  default: "before:-inset-x-[14px] before:-top-[17px] before:-bottom-[11px]",
+  tight: "before:-inset-x-[14px] before:-inset-y-3",
+};
+
+export default function Cite({
+  id,
+  tone = "dark",
+  tight = false,
+}: {
+  id: CiteKey;
+  tone?: keyof typeof tones;
+  /** Rows closer than 44 px apart: limit the hit area's height to 40 px. */
+  tight?: boolean;
+}) {
   const s = tones[tone];
   const locale = localeFromPathname(usePathname());
   const cite = CITATIONS[id];
@@ -94,7 +111,7 @@ export default function Cite({ id, tone = "dark" }: { id: CiteKey; tone?: keyof 
         aria-label={t.aria(cite.term[locale])}
         aria-expanded={Boolean(pos)}
         aria-controls={pos ? uid : undefined}
-        className={`relative ml-1 inline-flex h-4 w-4 translate-y-[2px] items-center justify-center rounded-sm before:absolute before:-inset-1 before:content-[''] transition-colors duration-150 ease-out print:hidden ${s.button}`}
+        className={`relative ml-1 inline-flex h-4 w-4 translate-y-[2px] items-center justify-center rounded-sm before:absolute ${HIT[tight ? "tight" : "default"]} before:content-[''] transition-colors duration-150 ease-out print:hidden ${s.button}`}
       >
         <BookOpen className="h-3 w-3" strokeWidth={1.8} aria-hidden="true" />
       </button>
