@@ -23,8 +23,8 @@ const tones = {
     other: "text-white/55 hover:text-white",
   },
   paper: {
-    group: "border-rule bg-white",
-    current: "bg-ink text-white",
+    group: "border-rule bg-paper",
+    current: "bg-ink text-paper",
     other: "text-ink-3 hover:text-ink",
   },
 } as const;
@@ -55,7 +55,7 @@ export default function LanguageSwitch({
     <div
       role="group"
       aria-label={groupLabel[locale]}
-      className={`flex w-max items-center rounded-md border p-0.5 text-[11px] font-medium ${t.group} ${className}`}
+      className={`flex w-max items-center rounded-lg border p-0.5 text-[12px] font-medium ${t.group} ${className}`}
     >
       {locales.map((target) =>
         target === locale ? (
@@ -64,7 +64,7 @@ export default function LanguageSwitch({
             lang={target}
             aria-current="true"
             title={labels[target].name}
-            className={`rounded-sm px-2 py-0.5 ${t.current}`}
+            className={`rounded-md px-2.5 py-1 ${t.current}`}
           >
             {labels[target].short}
           </span>
@@ -77,10 +77,10 @@ export default function LanguageSwitch({
             title={labels[target].name}
             aria-label={labels[target].name}
             onClick={carryOver}
-            // The visible link stays ≈ 30 × 21 px; the transparent ::after makes a 44 × 44 px hit area. It grows 12 px
+            // The visible link stays ≈ 34 × 24 px; the transparent ::after makes a 44 × 44 px hit area. It grows 12 px
             // into the navbar's gap-3 on the outer side and 2 px towards the current-language label, so it covers
             // neither that label nor the neighbouring control (search, Contact).
-            className={`relative rounded-sm px-2 py-0.5 transition-colors duration-150 ease-out after:absolute after:-inset-y-3 ${
+            className={`relative rounded-md px-2.5 py-1 transition-colors duration-150 ease-out after:absolute after:-inset-y-3 ${
               locales.indexOf(target) > current ? "after:-right-3 after:-left-0.5" : "after:-right-0.5 after:-left-3"
             } ${t.other}`}
           >

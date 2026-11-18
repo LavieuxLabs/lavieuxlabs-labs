@@ -3,14 +3,12 @@ import { ChevronRight, Pill } from "lucide-react";
 import PharmaCapsule from "@/components/PharmaCapsule";
 import JsonLd from "@/components/JsonLd";
 import QtSimulator from "@/components/QtSimulator";
-import CopyEmail from "@/components/CopyEmail";
-import { BUTTON, Disclosure, FactRows, LINK, PaperSection } from "@/components/paper/Editorial";
+import { BUTTON, Disclosure, FactRows, CRUMB_LINK, LINK, PaperSection } from "@/components/paper/Editorial";
 import { pharmaDeuxJsonLd } from "@/lib/structuredData";
-import { contactHref } from "@/lib/site";
-import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
+import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
 import { metrics, testsLabel, testsNote, trlLabel } from "@/lib/metrics";
-import { CLINICAL_CASES, tisdaleTier, type TisdaleTier } from "@/lib/clinicalCases";
+import { ENGINE_BRANCHES } from "@/lib/safetyPlanes";
 
 export const metadata = defineMetadata("/initiatives/pharmadeux", {
   tr: {
@@ -45,11 +43,7 @@ const copy = defineContent<{
     name: string;
     title: string;
     lead: string;
-    /** One-line example alert under the lead; values come from the `qtc` case in CLINICAL_CASES. */
-    example: { label: string; tiers: Record<TisdaleTier, string>; note: string };
     secondary: string;
-    summaryTitle: string;
-    summary: { label: string; value: string }[];
     onPage: string;
   };
   sections: { id: string; label: string }[];
@@ -100,18 +94,6 @@ const copy = defineContent<{
     fhirBody: string;
   };
   protocol: { label: string; title: string; intro: string; phases: { phase: string; title: string; body: string; status: string }[]; note: string };
-  collab: {
-    label: string;
-    title: string;
-    intro: string;
-    modes: { title: string; body: string }[];
-    cta: string;
-    audiencesTitle: string;
-    audiences: string[];
-    legal: string;
-    email: string;
-    noPatientData: string;
-  };
 }>({
   tr: {
     crumbs: { home: "Ana sayfa", products: "Projeler", here: "PharmaDeux CDSS", aria: "Sayfa konumu" },
@@ -119,24 +101,7 @@ const copy = defineContent<{
       name: "PharmaDeux CDSS",
       title: "Reçete yazılırken ilaç güvenliğini kontrol eden klinik karar destek yazılımı.",
       lead: "PharmaDeux reçeteyi hastanın böbrek ve karaciğer değerleri, QTc ölçümü ve kullandığı diğer ilaçlarla birlikte kontrol eder. Her uyarı onu tetikleyen kural ve eşikle gelir. Son karar hekimindir: uyarıyı gerekçe yazarak geçebilir ve bu karar kayda yazılır.",
-      example: {
-        label: "Örnek (kurgusal hasta):",
-        tiers: { low: "düşük risk", moderate: "orta risk", high: "yüksek risk" },
-        note: "QTc bir ölçüm, Tisdale bir risk skorudur.",
-      },
       secondary: "Örnek vakayı inceleyin",
-      summaryTitle: "Kısaca",
-      summary: [
-        { label: "Sahiplik", value: "LavieuxLabs ekibinin ortak projesi" },
-        { label: "Aşama", value: `Prototip. ${trlLabel("tr")}, ekibin öz değerlendirmesi; bağımsız değerlendirme yapılmadı.` },
-        { label: "Yazılım", value: `${testsLabel("tr")} otomatik test; ${metrics.verifiedRules} kural sentetik hasta profillerinde doğrulandı.` },
-        { label: "Klinik kanıt", value: "Henüz yok. Geçmiş vakalarla doğrulama planlandı, başlamadı." },
-        { label: "Düzenleyici durum", value: "MDR Sınıf IIa hedefi. CE işareti yok." },
-        {
-          label: "Geliştirme",
-          value: `Adım ${metrics.currentPhase}/${metrics.totalPhases}, sürüm ${metrics.version}, ${formatDate("tr", metrics.lastUpdated)} güncellemesi`,
-        },
-      ],
       onPage: "Bu sayfada",
     },
     sections: [
@@ -147,7 +112,6 @@ const copy = defineContent<{
       { id: "dogrulama", label: "Kanıt" },
       { id: "entegrasyon", label: "Entegrasyon" },
       { id: "protokol", label: "Klinik doğrulama" },
-      { id: "is-birligi", label: "İş birliği" },
     ],
     problem: {
       label: "Sorun",
@@ -198,7 +162,7 @@ const copy = defineContent<{
         },
         {
           title: "Kural değerlendirmesi",
-          body: `Reçete ${metrics.safetyPlanes} güvenlik düzleminde sürümlü kurallarla kontrol edilir. Tasarım hedefi: aynı girdi ve aynı kural sürümü her zaman aynı sonucu verir.`,
+          body: `Reçete, motorun ${ENGINE_BRANCHES} branş güvenlik ağında ve çekirdek katmanlarında sürümlü kurallarla kontrol edilir. Tasarım hedefi: aynı girdi ve aynı kural sürümü her zaman aynı sonucu verir.`,
         },
         {
           title: "Bulgu ve gerekçe",
@@ -215,7 +179,7 @@ const copy = defineContent<{
       ],
       planesTitle: `Dört başlık altında ${metrics.safetyPlanes} kontrol`,
       planesBody:
-        "Her kontrolün kendi sürümü ve testi var. Eşik değerleri kurumun politikasına göre ayarlanabilir. Bağlantılı kontrollerin formülü ve kaynağı standart sayfasındadır.",
+        `Bu ${metrics.safetyPlanes} başlık motorun kontrollerini dört eksende özetler, her branşı tek tek saymaz. Motorun tamamı ${ENGINE_BRANCHES} branş güvenlik ağı ve çekirdek katmanlardan oluşur. Bütün kural ve eşik tabloları tek bir kural seti sürümü taşır; tabloların SHA-256 parmak izi bu sürüme kilitlidir. Eşikler kılavuzlardan ve ürün bilgisinden (KÜB, FDA etiketi) alınır. Bağlantılı kontrollerin formülü ve kaynağı standart sayfasındadır.`,
       show: (n) => `${n} kontrolü göster`,
     },
     qt: {
@@ -270,7 +234,7 @@ const copy = defineContent<{
         {
           value: String(metrics.safetyPlanes),
           label: "Güvenlik düzlemi",
-          shows: "Kural motorundaki kontrol kategorisi sayısı.",
+          shows: `Motorun kontrollerini dört eksende özetleyen başlık sayısı. Motorun kendisi ${ENGINE_BRANCHES} branş güvenlik ağı taşır.`,
           notShows: "Her düzlemin hastada doğru sonuç verdiği.",
         },
         {
@@ -416,27 +380,6 @@ const copy = defineContent<{
       ],
       note: "Ortak kurumlar protokolün yazımına katılabilir. Veri ancak etik kurul onayı alındıktan ve veri işleme koşulları yazılı hâle getirildikten sonra kullanılabilir. Bugün onaylanmış bir etik kurul başvurusu veya imzalanmış bir klinik iş birliği yok.",
     },
-    collab: {
-      label: "İş birliği",
-      title: "Klinik araştırma ve pilot için bize yazın.",
-      intro:
-        "Geçmiş vakalarla doğrulama çalışmasına katılabilecek klinik eczacılık ekipleri, hekimler ve araştırma hastaneleriyle görüşmek istiyoruz. İlk adım 15 dakikalık bir tanışma görüşmesidir ve bir taahhüt istemez.",
-      modes: [
-        { title: "Tanışma görüşmesi", body: "15 dakika. Kurumunuzun sorusunu ve PharmaDeux'un bugünkü durumunu konuşuruz." },
-        { title: "Akademik ve klinik ortaklık", body: "Protokol yazımı, referans paneli ve ortak yayın için araştırma iş birliği." },
-        { title: "Pilot ve geçmiş vaka doğrulaması", body: "Kapsam ve veri koşulları bağlayıcı olmayan bir Niyet Mektubu (LOI) ile yazılır." },
-      ],
-      cta: "İletişime geçin",
-      audiencesTitle: "Kimlerle çalışmak istiyoruz",
-      audiences: [
-        "Klinik eczacılık ve ilaç güvenliği ekipleri",
-        "Üniversite ve eğitim-araştırma hastaneleri",
-        "Geçmiş veriyle doğrulama çalışması yapabilecek kurumlar",
-      ],
-      legal: "LavieuxLabs henüz şirketleşmedi. Niyet Mektubu (LOI) bağlayıcı değildir ve bir sözleşme yerine geçmez. Bir doğrulama çalışmasında sözleşmeyi hangi tarafın imzalayacağı ve veri işleme koşulları, gerekli taraflar ve yetkili hukuk danışmanlarıyla netleştirilir.",
-      email: "E-posta:",
-      noPatientData: "İlk görüşmede hasta verisi paylaşmanız gerekmez.",
-    },
   },
   en: {
     crumbs: { home: "Home", products: "Projects", here: "PharmaDeux CDSS", aria: "Breadcrumb" },
@@ -444,24 +387,7 @@ const copy = defineContent<{
       name: "PharmaDeux CDSS",
       title: "Clinical decision support software that checks medication safety while the prescription is written.",
       lead: "PharmaDeux checks a prescription against the patient's kidney and liver values, measured QTc and other medicines. Each alert comes with the rule and threshold that triggered it. The physician makes the final decision and can override an alert with a reason, which is written to the record.",
-      example: {
-        label: "Example (fictional patient):",
-        tiers: { low: "low risk", moderate: "moderate risk", high: "high risk" },
-        note: "QTc is a measurement; Tisdale is a risk score.",
-      },
       secondary: "Review an example case",
-      summaryTitle: "At a glance",
-      summary: [
-        { label: "Ownership", value: "A joint project of the LavieuxLabs team" },
-        { label: "Stage", value: `Prototype. ${trlLabel("en")}, the team's self-assessment; no independent assessment.` },
-        { label: "Software", value: `${testsLabel("en")} automated tests; ${metrics.verifiedRules} rules verified on synthetic patient profiles.` },
-        { label: "Clinical evidence", value: "None yet. Validation on past cases is planned and has not started." },
-        { label: "Regulatory status", value: "Targeting MDR Class IIa. No CE mark." },
-        {
-          label: "Development",
-          value: `Step ${metrics.currentPhase}/${metrics.totalPhases}, version ${metrics.version}, updated ${formatDate("en", metrics.lastUpdated)}`,
-        },
-      ],
       onPage: "On this page",
     },
     sections: [
@@ -472,7 +398,6 @@ const copy = defineContent<{
       { id: "dogrulama", label: "Evidence" },
       { id: "entegrasyon", label: "Integration" },
       { id: "protokol", label: "Clinical validation" },
-      { id: "is-birligi", label: "Collaboration" },
     ],
     problem: {
       label: "Problem",
@@ -523,7 +448,7 @@ const copy = defineContent<{
         },
         {
           title: "Rule assessment",
-          body: `The prescription is checked against versioned rules across ${metrics.safetyPlanes} safety planes. Design goal: the same input and the same rule version always give the same result.`,
+          body: `The prescription is checked against versioned rules in the engine's ${ENGINE_BRANCHES} branch safety nets and its core layers. Design goal: the same input and the same rule version always give the same result.`,
         },
         {
           title: "Finding and reason",
@@ -540,7 +465,7 @@ const copy = defineContent<{
       ],
       planesTitle: `${metrics.safetyPlanes} checks under four headings`,
       planesBody:
-        "Each check has its own version and tests. Thresholds can be set to match the institution's policy. Linked checks have a reference page with the formula and source.",
+        `These ${metrics.safetyPlanes} headings summarise the engine's checks under four domains and do not list every branch. The full engine runs ${ENGINE_BRANCHES} branch safety nets plus core layers. All rule and threshold tables carry one rule set version, and a SHA-256 fingerprint of the tables is locked to that version. Thresholds come from guidelines and product information (SmPC, FDA label). Linked checks have a reference page with the formula and source.`,
       show: (n) => `Show ${n} checks`,
     },
     qt: {
@@ -595,7 +520,7 @@ const copy = defineContent<{
         {
           value: String(metrics.safetyPlanes),
           label: "Safety planes",
-          shows: "The number of check categories in the rule engine.",
+          shows: `The headings that summarise the engine's checks under four domains. The engine itself has ${ENGINE_BRANCHES} branch safety nets.`,
           notShows: "That each plane gives the right result for a patient.",
         },
         {
@@ -741,44 +666,11 @@ const copy = defineContent<{
       ],
       note: "Partner institutions can take part in writing the protocol. Data can be used only after ethics committee approval and once the data processing terms are in writing. Today there is no approved ethics application and no signed clinical collaboration.",
     },
-    collab: {
-      label: "Collaboration",
-      title: "Write to us about clinical research and pilots.",
-      intro:
-        "We would like to talk with clinical pharmacy teams, physicians and research hospitals that could take part in a validation study on past cases. The first step is a 15-minute intro call, with no commitment.",
-      modes: [
-        { title: "Intro call", body: "15 minutes. We talk about your institution's question and where PharmaDeux stands today." },
-        { title: "Academic and clinical partnership", body: "Research collaboration on protocol writing, the reference panel and joint publication." },
-        { title: "Pilot and validation on past cases", body: "Scope and data conditions are written in a non-binding Letter of Intent (LOI)." },
-      ],
-      cta: "Contact us",
-      audiencesTitle: "Who we would like to work with",
-      audiences: [
-        "Clinical pharmacy and medication safety teams",
-        "University and training-and-research hospitals",
-        "Institutions able to run a validation study on historical data",
-      ],
-      legal: "LavieuxLabs is not incorporated yet. A Letter of Intent (LOI) is non-binding and does not replace an agreement. For a validation study, which party signs the agreement and the data processing terms are settled with the parties involved and their authorised legal advisers.",
-      email: "Email:",
-      noPatientData: "You do not need to share patient data in the first conversation.",
-    },
   },
 });
 
-// Clinical state colours on paper (-700 step); the colour belongs to the risk band, not the product.
-const TIER_CLASS: Record<TisdaleTier, string> = { low: "text-emerald-700", moderate: "text-amber-700", high: "text-rose-700" };
-
-/** The hero example reads the same case the workspace panel shows, so the numbers cannot drift. */
-function heroExample(locale: Locale) {
-  const qtCase = CLINICAL_CASES[locale].find((k) => k.id === "qtc");
-  if (!qtCase?.tisdale) throw new Error("PharmaDeux hero example: the qtc case with Tisdale points is missing");
-  const score = qtCase.tisdale.reduce((sum, f) => sum + f.points, 0);
-  return { qtc: qtCase.readings.qtc.value, tier: tisdaleTier(score) };
-}
-
 export default function PharmaDeuxView({ locale }: { locale: Locale }) {
   const c = copy[locale];
-  const example = heroExample(locale);
   const href = (path: string) => localizedPath(locale, path);
   return (
     <main id="main" className="surface-paper relative flex-1 bg-paper text-ink">
@@ -787,10 +679,10 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
       {/* Hero: what it is, who builds it, where it stands, and the first two ways in. */}
       <section aria-labelledby="hero-title" className="pt-16">
         <div className="mx-auto grid max-w-7xl gap-x-10 gap-y-8 px-4 pt-6 pb-12 sm:px-6 sm:pt-14 sm:pb-16 lg:grid-cols-12 lg:gap-y-10 lg:px-8">
-          <nav aria-label={c.crumbs.aria} className="lg:col-span-12">
+          <nav aria-label={c.crumbs.aria} className="lg:col-span-5">
             <ol className="flex flex-wrap items-center gap-1 text-[14px] text-ink-3">
               <li>
-                <Link href={href("/")} className={`-my-3 inline-block py-3 ${LINK}`}>
+                <Link href={href("/")} className={`-my-3 inline-block py-3 ${CRUMB_LINK}`}>
                   {c.crumbs.home}
                 </Link>
               </li>
@@ -798,79 +690,25 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
                 <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
               </li>
               <li>
-                <Link href={href("/#platformlar")} className={`-my-3 inline-block py-3 ${LINK}`}>
+                <Link href={href("/#platformlar")} className={`-my-3 inline-block py-3 ${CRUMB_LINK}`}>
                   {c.crumbs.products}
                 </Link>
               </li>
               <li aria-hidden="true">
                 <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
               </li>
-              <li aria-current="page" className="text-ink-2" lang="en">
-                {c.crumbs.here}
+              <li>
+                <Link href={href("/initiatives/pharmadeux")} aria-current="page" lang="en" className={`-my-3 inline-block py-3 text-ink-2 ${CRUMB_LINK}`}>
+                  {c.crumbs.here}
+                </Link>
               </li>
             </ol>
           </nav>
 
-          <div className="lg:col-span-8">
-            <p className="flex items-center gap-2.5">
-              <Pill className="h-5 w-5 shrink-0 text-ink" strokeWidth={1.6} aria-hidden="true" />
-              <span className="font-serif text-[20px] font-medium text-teal-700" lang="en">
-                {c.hero.name}
-              </span>
-            </p>
-            <h1
-              id="hero-title"
-              className="mt-3 max-w-[22ch] font-serif text-[34px] leading-[1.08] font-medium tracking-[-0.022em] text-ink sm:mt-4 sm:text-[46px] lg:text-[54px]"
-            >
-              {c.hero.title}
-            </h1>
-            <p className="mt-5 max-w-[62ch] text-[17px] leading-[1.6] text-ink-2">{c.hero.lead}</p>
-            <div className="mt-5">
-              {/* The separator opens the Tisdale group. The inner block is shifted 0.55em left (the first line is indented
-                  back), so when the line wraps the dot sits outside the clipped paragraph and the second line starts
-                  with "Tisdale". On one line it stays between the two values. Screen readers hear a comma instead. */}
-              <p className="overflow-hidden text-[15px] leading-[1.5] text-ink-2">
-                <span className="-ml-[0.55em] block indent-[0.55em]">
-                  {c.hero.example.label}{" "}
-                  <span className="whitespace-nowrap">
-                    QTc <span className="font-mono tabular-nums">{example.qtc}</span> ms
-                  </span>
-                  <span className="sr-only">,</span>{" "}
-                  <span className="whitespace-nowrap">
-                    <span aria-hidden="true" className="inline-block w-[0.55em] indent-0">
-                      ·
-                    </span>
-                    Tisdale: <span className={TIER_CLASS[example.tier]}>{c.hero.example.tiers[example.tier]}</span>
-                  </span>
-                </span>
-              </p>
-              <p className="mt-1 text-[13px] leading-[1.5] text-ink-3">{c.hero.example.note}</p>
-            </div>
-            <div className="mt-8 print:hidden">
-              <a href="#vakalar" className={BUTTON}>
-                {c.hero.secondary}
-              </a>
-            </div>
-          </div>
-
-          <aside aria-labelledby="hero-summary" className="self-end border-t-2 border-ink pt-4 lg:col-span-4">
-            <h2 id="hero-summary" className="font-serif text-[20px] font-semibold text-ink">
-              {c.hero.summaryTitle}
-            </h2>
-            <dl className="mt-3 divide-y divide-rule border-t border-rule">
-              {c.hero.summary.map((r) => (
-                <div key={r.label} className="grid grid-cols-[120px_minmax(0,1fr)] gap-3 py-2.5 lg:grid-cols-1 lg:gap-0.5">
-                  <dt className="text-[13px] text-ink-3">{r.label}</dt>
-                  <dd className="text-[14px] leading-snug text-ink">{r.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </aside>
-
-          <nav aria-label={c.hero.onPage} className="border-t border-rule pt-4 lg:col-span-12 print:hidden">
+          <nav aria-label={c.hero.onPage} className="flex flex-wrap items-center gap-x-5 lg:col-span-7 lg:justify-end print:hidden">
             <p className="font-serif text-[15px] text-ink-3">{c.hero.onPage}</p>
-            <ul className="mt-1 flex flex-wrap gap-x-6">
-              {c.sections.filter((s) => ["vakalar", "simulator", "dogrulama", "is-birligi"].includes(s.id)).map((s) => (
+            <ul className="flex flex-wrap gap-x-6">
+              {c.sections.filter((s) => ["vakalar", "simulator", "dogrulama"].includes(s.id)).map((s) => (
                 <li key={s.id}>
                   <a href={`#${s.id}`} className={`inline-flex min-h-11 items-center text-[15px] text-ink-2 hover:text-ink ${LINK}`}>
                     {s.label}
@@ -879,6 +717,28 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
               ))}
             </ul>
           </nav>
+
+          <div className="text-center lg:col-span-12">
+            <p className="flex items-center justify-center gap-2.5">
+              <Pill className="h-5 w-5 shrink-0 text-ink" strokeWidth={1.6} aria-hidden="true" />
+              <span className="font-serif text-[20px] font-medium text-teal-700" lang="en">
+                {c.hero.name}
+              </span>
+            </p>
+            <h1
+              id="hero-title"
+              className="mx-auto mt-3 max-w-[26ch] text-balance font-serif text-[34px] leading-[1.08] font-medium tracking-[-0.022em] text-ink sm:mt-4 sm:text-[46px] lg:text-[54px]"
+            >
+              {c.hero.title}
+            </h1>
+            <p className="mx-auto mt-5 max-w-[62ch] text-pretty text-[17px] leading-[1.6] text-ink-2">{c.hero.lead}</p>
+            <div className="mt-8 flex justify-center print:hidden">
+              <a href="#vakalar" className={BUTTON}>
+                {c.hero.secondary}
+              </a>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -1016,38 +876,6 @@ export default function PharmaDeuxView({ locale }: { locale: Locale }) {
         </div>
       </PaperSection>
 
-      {/* Collaboration: three possible paths, one clear contact action. */}
-      <PaperSection id="is-birligi" label={c.collab.label} title={c.collab.title} intro={<p>{c.collab.intro}</p>} band>
-        <div className="grid gap-8 md:grid-cols-3">
-          {c.collab.modes.map((mode) => (
-            <div key={mode.title} className="flex flex-col border-t-2 border-ink pt-5">
-              <h3 className="font-serif text-[24px] leading-tight font-medium text-ink">{mode.title}</h3>
-              <p className="mt-3 text-[15px] leading-[1.6] text-ink-2">{mode.body}</p>
-            </div>
-          ))}
-        </div>
-        <Link href={href(contactHref("intro", "pharmadeux"))} className={`mt-8 ${BUTTON}`}>
-          {c.collab.cta}
-        </Link>
-        <p className="mt-8 max-w-[70ch] border-l-2 border-ink pl-4 text-[15px] leading-[1.6] text-ink">{c.collab.legal}</p>
-        <div className="mt-10 grid gap-8 border-t border-rule pt-8 md:mt-14 md:grid-cols-2 md:gap-12 md:pt-10">
-          <div>
-            <h3 className="text-[17px] font-semibold text-ink">{c.collab.audiencesTitle}</h3>
-            <ul className="mt-3 list-disc space-y-2 pl-5 text-[15px] leading-[1.55] text-ink-2 marker:text-ink-3">
-              {c.collab.audiences.map((a) => (
-                <li key={a}>{a}</li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col gap-3">
-            <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink-2">
-              {c.collab.email}
-              <CopyEmail locale={locale} tone="paper" className="min-h-11 text-ink" />
-            </p>
-            <p className="text-[14px] text-ink-3">{c.collab.noPatientData}</p>
-          </div>
-        </div>
-      </PaperSection>
     </main>
   );
 }

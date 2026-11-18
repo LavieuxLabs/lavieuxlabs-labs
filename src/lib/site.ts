@@ -20,8 +20,8 @@ export const DATA_CONTROLLER = {
 // history (last commit that changed the page) and from the dated, uncommitted edits after it. Each page shows its own
 // date; the footer shows the latest. Update a page's date whenever its text changes.
 export const LEGAL_UPDATED = {
-  "/legal/privacy": "2026-10-24",
-  "/legal/cookies": "2026-10-24",
+  "/legal/privacy": "2026-11-18",
+  "/legal/cookies": "2026-11-18",
   "/legal/terms": "2026-10-24",
   "/legal/quality": "2026-10-24",
 } as const;
@@ -33,9 +33,9 @@ export const LEGAL_LAST_UPDATED: string = Object.values(LEGAL_UPDATED).sort().re
 // date (metrics.lastUpdated), which tracks product progress. Update a page's date whenever its text changes.
 export const STANDARDS_UPDATED = {
   "/standartlar": "2026-10-24",
-  "/standartlar/tisdale-score": "2026-10-24",
-  "/standartlar/ckd-epi-2021": "2026-10-24",
-  "/standartlar/kumulatif-organ-yuku": "2026-10-24",
+  "/standartlar/tisdale-score": "2026-11-18",
+  "/standartlar/ckd-epi-2021": "2026-11-18",
+  "/standartlar/kumulatif-organ-yuku": "2026-11-18",
   "/standartlar/fhir-r4-entegrasyonu": "2026-10-24",
   "/standartlar/sut-fatura-denetimi": "2026-10-24",
 } as const;
@@ -48,7 +48,7 @@ export const PILOT_PROTOCOL_REVISION = "2026-10-24";
 // sources above; the other pages carry the date of the last commit that changed their text.
 export const PAGE_UPDATED: Record<RoutePath, string> = {
   "/": "2026-10-24",
-  "/initiatives/pharmadeux": "2026-11-11",
+  "/initiatives/pharmadeux": "2026-11-17",
   "/initiatives/shield": "2026-10-24",
   "/about": "2026-10-24",
   "/contact": "2026-10-24",
@@ -139,8 +139,8 @@ export const navigation = defineContent({
     productsLabel: "Projeler",
     allProducts: "Tüm projeler",
     links: [
-      { href: "/standartlar", label: "Standartlar" },
       { href: "/about", label: "Hakkımızda" },
+      { href: "/standartlar", label: "Standartlar" },
     ] as NavLink[],
     cta: "İletişim",
     homeAria: "LavieuxLabs ana sayfa",
@@ -199,8 +199,8 @@ export const navigation = defineContent({
     productsLabel: "Projects",
     allProducts: "All projects",
     links: [
-      { href: "/standartlar", label: "Standards" },
       { href: "/about", label: "About" },
+      { href: "/standartlar", label: "Standards" },
     ],
     cta: "Contact",
     homeAria: "LavieuxLabs home",

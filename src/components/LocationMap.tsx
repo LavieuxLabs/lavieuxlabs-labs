@@ -61,7 +61,7 @@ export default function LocationMap({ locale, tone = "dark" }: { locale: Locale;
           </a>
         </div>
 
-        <div className="relative min-h-[300px] overflow-hidden border border-rule bg-white lg:col-span-8 lg:min-h-[360px]">
+        <div className="relative min-h-[300px] overflow-hidden border border-rule bg-paper lg:col-span-8 lg:min-h-[360px]">
           {showMap ? (
             <iframe
               title={`${OFFICE.institution} ${c.mapTitle}`}

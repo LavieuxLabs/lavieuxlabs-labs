@@ -101,7 +101,7 @@ export default function StandardsIndex({ locale, entries }: { locale: Locale; en
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t.search}
-            className="min-h-11 w-full rounded-md border border-ink/30 bg-white py-2.5 pr-3 pl-9 text-[15px] text-ink placeholder:text-ink-3 focus:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="min-h-11 w-full rounded-md border border-ink/30 bg-paper py-2.5 pr-3 pl-9 text-[15px] text-ink placeholder:text-ink-3 focus:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           />
         </label>
         {/* Plain text tabs: the active one is ink with an underline; aria-pressed carries the state. */}

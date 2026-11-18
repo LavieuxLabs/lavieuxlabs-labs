@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, ChevronDown, Menu, Pill, ShieldCheck, X } from "lucide-react";
 import LanguageSwitch from "@/components/LanguageSwitch";
+import ThemeToggle from "@/components/ThemeToggle";
 import CommandPalette from "@/components/CommandPalette";
 import { navigation } from "@/lib/site";
 import { isPaperPath } from "@/lib/surface";
@@ -45,24 +46,24 @@ const tones = {
     bar: "material-paper border-rule",
     brand: "text-ink",
     brandSoft: "text-ink-3",
-    mark: "#16181C",
+    mark: "var(--color-ink)",
     link: "text-ink-2 hover:text-ink",
     linkActive: "text-ink",
-    cta: "border border-ink bg-ink text-white hover:bg-ink-2",
-    menuButton: "border-rule text-ink hover:bg-white",
-    panel: "border-rule bg-white shadow-lg shadow-black/10",
+    cta: "border border-ink bg-ink text-paper hover:bg-ink-2",
+    menuButton: "border-rule text-ink hover:bg-paper-band",
+    panel: "border-rule bg-paper shadow-lg shadow-black/10",
     panelItem: "hover:bg-paper",
     panelTitle: "text-ink",
     panelText: "text-ink-3",
     panelFoot: "border-rule bg-paper text-ink-2 hover:text-ink",
     label: "text-ink-3",
-    mobileItem: "hover:bg-white",
-    mobileText: "text-ink-2 hover:bg-white hover:text-ink",
+    mobileItem: "hover:bg-paper-band",
+    mobileText: "text-ink-2 hover:bg-paper-band hover:text-ink",
     mobileSub: "text-ink-3",
     divider: "border-rule",
     product: {
-      pill: "border-teal-700/25 bg-white text-teal-700",
-      shield: "border-indigo-700/25 bg-white text-indigo-700",
+      pill: "border-teal-700/25 bg-paper text-teal-700",
+      shield: "border-indigo-700/25 bg-paper text-indigo-700",
     },
   },
 } as const;
@@ -250,11 +251,12 @@ export default function Navbar({ locale }: { locale: Locale }) {
 
           <div className="flex items-center gap-3">
             <CommandPalette locale={locale} tone={surface} />
+            <ThemeToggle locale={locale} tone={surface} />
             <LanguageSwitch locale={locale} tone={surface} className="hidden md:flex" />
 
             <Link
               href={localizedPath(locale, "/contact")}
-              className={`hidden items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium whitespace-nowrap transition-colors duration-150 ease-out md:inline-flex ${tone.cta}`}
+              className={`hidden items-center gap-1.5 rounded-lg px-4 py-2.5 text-[15px] font-medium whitespace-nowrap transition-colors duration-150 ease-out md:inline-flex ${tone.cta}`}
             >
               {nav.cta}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />

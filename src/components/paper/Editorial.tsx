@@ -7,11 +7,14 @@ import { ChevronRight } from "lucide-react";
 
 export const LINK =
   "underline decoration-ink/30 underline-offset-4 transition-colors duration-150 ease-out hover:decoration-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink";
+// Breadcrumb links: no underline; on hover they grow very slightly (the "is this the one?" cue). Static for reduced motion.
+export const CRUMB_LINK =
+  "origin-left no-underline transition-[transform,color] duration-150 ease-out hover:scale-[1.04] hover:text-ink motion-reduce:transition-none motion-reduce:hover:scale-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink";
 export const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink";
 // Standalone text links get a 44px touch target; inline links inside sentences do not need one.
 export const TEXT_ACTION = `inline-flex min-h-11 items-center text-[15px] font-medium text-ink ${LINK}`;
-export const BUTTON = `inline-flex min-h-11 items-center justify-center rounded-md bg-ink px-5 py-3 text-[15px] font-medium text-white transition-colors duration-150 ease-out hover:bg-ink-2 ${FOCUS}`;
-export const BUTTON_OUTLINE = `inline-flex min-h-11 items-center justify-center rounded-md border border-ink/30 bg-white px-5 py-3 text-[15px] font-medium text-ink transition-colors duration-150 ease-out hover:border-ink ${FOCUS}`;
+export const BUTTON = `inline-flex min-h-11 items-center justify-center rounded-md bg-ink px-5 py-3 text-[15px] font-medium text-paper transition-colors duration-150 ease-out hover:bg-ink-2 ${FOCUS}`;
+export const BUTTON_OUTLINE = `inline-flex min-h-11 items-center justify-center rounded-md border border-ink/30 bg-paper px-5 py-3 text-[15px] font-medium text-ink transition-colors duration-150 ease-out hover:border-ink ${FOCUS}`;
 
 /** A page section: label in the left three columns, heading and intro in the other nine, content below. */
 export function PaperSection({

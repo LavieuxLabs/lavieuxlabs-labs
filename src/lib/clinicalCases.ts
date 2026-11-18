@@ -103,7 +103,7 @@ const text = defineContent<CaseText[]>({
       patient: "71 yaş, erkek · tip 2 diyabet",
       prescription: "Metformin 1000 mg 2×1 · Siprofloksasin 500 mg 2×1",
       finding:
-        "eGFR 30–45 aralığında. Metformin günlük dozu (2000 mg) bu aralık için tanımlı üst sınırın (1000 mg) üzerinde; siprofloksasin için renal doz eşiği hekimin değerlendirmesine sunulur. Florokinolon ve metformin birlikteliğinde kan şekeri klinik izlem parametresi olarak sunulur.",
+        "eGFR 30–44 aralığında. Metformin günlük dozu (2000 mg) bu aralık için tanımlı üst sınırın (1000 mg/gün) üzerinde. Dozun yarıya indirilmesi ve eGFR'nin üç ayda bir izlenmesi hekimin değerlendirmesine sunulur.",
       status: { liver: "Stabil", qtc: "Tisdale 4 · düşük risk", renal: "Renal doz ayarı gerekli" },
     },
     {
@@ -133,7 +133,7 @@ const text = defineContent<CaseText[]>({
       patient: "71 years, male · type 2 diabetes",
       prescription: "Metformin 1000 mg twice daily · Ciprofloxacin 500 mg twice daily",
       finding:
-        "eGFR in the 30–45 range. The daily metformin dose (2000 mg) is above the limit defined for this range (1000 mg). The ciprofloxacin renal dose threshold is presented for the physician's assessment. Blood glucose is presented as a clinical monitoring parameter while a fluoroquinolone is given with metformin.",
+        "eGFR in the 30–44 range. The daily metformin dose (2000 mg) is above the limit defined for this range (1000 mg/day). Halving the dose and checking eGFR every three months are presented for the physician's assessment.",
       status: { liver: "Stable", qtc: "Tisdale 4 · low risk", renal: "Renal dose adjustment needed" },
     },
     {

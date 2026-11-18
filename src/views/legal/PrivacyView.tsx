@@ -176,7 +176,7 @@ const sectionsTr: LegalSection[] = [
           </li>
         </ul>
         <p>
-          İletişim sayfasındaki konum haritasını yüklemeniz halinde, IP adresiniz ve tarayıcı bilgileriniz gibi veriler
+          Hakkımızda sayfasındaki konum haritasını yüklemeniz halinde, IP adresiniz ve tarayıcı bilgileriniz gibi veriler
           harita hizmetini sağlayan Google’a doğrudan iletilir; harita yalnızca onayınız veya talebiniz üzerine
           yüklenir. Bu sağlayıcıların sunucuları Türkiye dışında bulunabilir; bu nedenle verileriniz yurt dışına
           aktarılabilir. Sağlayıcıların içerik, kayıt ve yedek saklama koşulları kendi politikalarına tabidir. Kişisel
@@ -416,7 +416,7 @@ const sectionsEn: LegalSection[] = [
           </li>
         </ul>
         <p>
-          If you load the location map on the contact page, data such as your IP address and browser information is sent
+          If you load the location map on the About page, data such as your IP address and browser information is sent
           directly to Google, which provides the map. The map loads only with your consent or at your request. These providers’
           servers may be located outside Türkiye, so your personal data may be transferred abroad. The providers’
           conditions for keeping content, logs and backups follow their own policies. Your personal data is not sold or
