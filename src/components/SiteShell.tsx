@@ -25,11 +25,11 @@ export default function SiteShell({ locale, children }: { locale: Locale; childr
       className={`${fontVariables} h-full antialiased`}
     >
       <body className="relative flex min-h-full flex-col bg-background font-sans text-foreground">
-        {/* Applies the stored (or system) theme before the page paints. */}
+        {/* Applies the stored theme (light unless the visitor chose dark) before the page paints. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{var t=localStorage.getItem('theme');if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t}catch(e){}",
+              "try{var t=localStorage.getItem('theme');if(t!=='dark')t='light';document.documentElement.dataset.theme=t}catch(e){}",
           }}
         />
         <SkipLink locale={locale} />
