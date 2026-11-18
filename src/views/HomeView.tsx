@@ -99,7 +99,7 @@ const copy = defineContent<{
     activities: {
       label: "Neler yapıyoruz",
       both: "İki proje",
-      title: "Prototiplerin bugün yaptığı altı iş.",
+      title: "Prototiplerin bugün yaptığı işler.",
       intro: "Her iki işte de kararı hekim, eczacı ya da faturalama uzmanı verir. Yazılım bir uyarının nedenini gösterir ve aynı girdide aynı sonucu verir. Hepsi sentetik veriyle test ediliyor; hiçbiri gerçek hasta ya da fatura verisiyle doğrulanmadı.",
       items: [
         { owner: "pharma", title: "İlaç etkileşimi", body: "Çok ilaç kullanan hastada etkileşimleri elle taramak gerçekçi değil. Reçetedeki ilaç-ilaç etkileşimini ve aynı gruptan tekrarlanan ilacı (terapötik duplikasyon) reçete yazılırken kontrol eder." },
@@ -207,7 +207,7 @@ const copy = defineContent<{
     activities: {
       label: "What we do",
       both: "Both projects",
-      title: "Six things the prototypes do today.",
+      title: "What the prototypes do today.",
       intro: "In both, the physician, pharmacist or billing specialist makes the decision. The software shows the reason for an alert and gives the same result for the same input. All of it is tested on synthetic data; none of it has been validated with real patient or billing data.",
       items: [
         { owner: "pharma", title: "Drug interactions", body: "Scanning a patient on many drugs for interactions by hand is not realistic. PharmaDeux checks a prescription for drug-drug interactions and for duplicate therapy within the same drug class while the prescription is written." },
