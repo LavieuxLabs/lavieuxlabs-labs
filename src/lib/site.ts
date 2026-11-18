@@ -65,14 +65,14 @@ export const organizationProfile = defineContent({
   tr: {
     short: "Bağımsız sağlık teknolojileri Ar-Ge girişimi",
     positioning:
-      "LavieuxLabs, Konya Teknik Üniversitesi öğrencileri tarafından geliştirilen, bağımsız bir klinik karar destek ve sağlık teknolojileri Ar-Ge girişimidir.",
+      "LavieuxLabs, bağımsız bir klinik karar destek ve sağlık teknolojileri Ar-Ge girişimidir.",
     stage: "Henüz şirketleşmedik; projeler Ar-Ge ve prototip aşamasında.",
     independence: "Üniversitenin resmi bir birimi, ortağı veya teknokent firması değiliz.",
   },
   en: {
     short: "Independent health technology R&D venture",
     positioning:
-      "LavieuxLabs is an independent clinical decision support and health technology R&D venture built by students of Konya Technical University.",
+      "LavieuxLabs is an independent clinical decision support and health technology R&D venture.",
     stage: "We are not incorporated yet. The projects are at the R&D and prototype stage.",
     independence: "We are not an official unit, partner or technopark company of the university.",
   },
