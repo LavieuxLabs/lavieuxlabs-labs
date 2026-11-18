@@ -36,7 +36,7 @@ export default function ThemeToggle({ locale, tone = "dark", className = "" }: {
   };
 
   const t = labels[locale];
-  const Icon = theme === "dark" ? Sun : Moon;
+  const Icon = theme === "dark" ? Moon : Sun;
   return (
     <button
       type="button"
