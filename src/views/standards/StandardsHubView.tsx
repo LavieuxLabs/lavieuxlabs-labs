@@ -2,9 +2,9 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
-import { LINK, PaperSection, TEXT_ACTION } from "@/components/paper/Editorial";
+import { CRUMB_LINK, LINK, PaperSection, TEXT_ACTION } from "@/components/paper/Editorial";
 import StandardsIndex, { type StandardEntry } from "@/components/StandardsIndex";
-import StandardsGrid, { PRINCIPLE_COUNT } from "@/components/StandardsGrid";
+import StandardsGrid from "@/components/StandardsGrid";
 import { standardsHubJsonLd } from "@/lib/structuredData";
 import { STANDARDS_UPDATED } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
@@ -29,15 +29,12 @@ export const metadata = defineMetadata("/standartlar", {
  * the eight design principles follow. The reference pages use the paper StandardDoc shell. Section
  * ids are linked from the footer and kept: #referanslar, #ilkeler.
  */
-type Row = { label: string; value: ReactNode };
 
 const copy = defineContent<{
   crumbs: { home: string; here: string; aria: string };
   title: string;
   description: string;
   jumps: { href: string; label: string }[];
-  summaryTitle: string;
-  summary: (counts: { pages: number; clinical: number; technical: number; administrative: number; principles: number }) => Row[];
   index: { label: string; title: string; intro: string };
   rules: { label: string; title: string; intro: string[] };
   entries: StandardEntry[];
@@ -54,13 +51,6 @@ const copy = defineContent<{
     jumps: [
       { href: "#referanslar", label: "Referans sayfaları" },
       { href: "#ilkeler", label: "Sekiz ilke" },
-    ],
-    summaryTitle: "Kısaca",
-    summary: (n) => [
-      { label: "Referans sayfaları", value: `${n.pages} sayfa: ${n.clinical} klinik, ${n.technical} teknik, ${n.administrative} idari` },
-      { label: "Tasarım ilkeleri", value: `${n.principles} ilke; her birinin referans aldığı standart yanında yazılı` },
-      { label: "Aşama", value: "PharmaDeux ve Shield prototip. Klinik doğrulama, CE işareti ve sertifika yok." },
-      { label: "Shield", value: "0–100 değeri kural skorudur, ret olasılığı değildir." },
     ],
     index: {
       label: "Referans sayfaları",
@@ -142,13 +132,6 @@ const copy = defineContent<{
       { href: "#referanslar", label: "Reference pages" },
       { href: "#ilkeler", label: "Eight principles" },
     ],
-    summaryTitle: "In brief",
-    summary: (n) => [
-      { label: "Reference pages", value: `${n.pages} pages: ${n.clinical} clinical, ${n.technical} technical, ${n.administrative} administrative` },
-      { label: "Design principles", value: `${n.principles} principles, each with the standard it is designed against` },
-      { label: "Stage", value: "PharmaDeux and Shield are prototypes. No clinical validation, CE mark or certification." },
-      { label: "Shield", value: "The 0–100 value is a rule score, not a rejection probability." },
-    ],
     index: {
       label: "Reference pages",
       title: "Scores, formulas and data models.",
@@ -225,14 +208,6 @@ const copy = defineContent<{
 export default function StandardsHubView({ locale }: { locale: Locale }) {
   const c = copy[locale];
   const href = (path: string) => localizedPath(locale, path);
-  const count = (cat: StandardEntry["category"]) => c.entries.filter((e) => e.category === cat).length;
-  const summary = c.summary({
-    pages: c.entries.length,
-    clinical: count("clinical"),
-    technical: count("technical"),
-    administrative: count("administrative"),
-    principles: PRINCIPLE_COUNT,
-  });
 
   return (
     <main id="main" className="surface-paper relative flex-1 bg-paper text-ink">
@@ -241,30 +216,32 @@ export default function StandardsHubView({ locale }: { locale: Locale }) {
       {/* Hero: what the page holds, two jump links, and where the work stands. */}
       <section aria-labelledby="hero-title" className="pt-16">
         <div className="mx-auto grid max-w-7xl gap-x-10 gap-y-10 px-4 pt-6 pb-12 sm:px-6 sm:pt-12 sm:pb-20 lg:grid-cols-12 lg:px-8">
-          <div className="lg:col-span-8">
-            <nav aria-label={c.crumbs.aria}>
+          <div className="text-center lg:col-span-12">
+            <nav aria-label={c.crumbs.aria} className="text-left">
               <ol className="flex flex-wrap items-center gap-1 text-[14px] text-ink-3">
                 <li>
-                  <Link href={href("/")} className={`-my-3 inline-block py-3 ${LINK}`}>
+                  <Link href={href("/")} className={`-my-3 inline-block py-3 ${CRUMB_LINK}`}>
                     {c.crumbs.home}
                   </Link>
                 </li>
                 <li aria-hidden="true">
                   <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
                 </li>
-                <li aria-current="page" className="text-ink-2">
-                  {c.crumbs.here}
+                <li>
+                  <Link href={href("/standartlar")} aria-current="page" className={`-my-3 inline-block py-3 text-ink-2 ${CRUMB_LINK}`}>
+                    {c.crumbs.here}
+                  </Link>
                 </li>
               </ol>
             </nav>
             <h1
               id="hero-title"
-              className="mt-6 max-w-[20ch] font-serif text-[34px] leading-[1.08] font-medium tracking-[-0.022em] text-ink sm:mt-8 sm:text-[46px] lg:text-[52px]"
+              className="mx-auto mt-6 max-w-[26ch] text-balance font-serif text-[34px] leading-[1.08] font-medium tracking-[-0.022em] text-ink sm:mt-8 sm:text-[46px] lg:text-[52px]"
             >
               {c.title}
             </h1>
-            <p className="mt-5 max-w-[60ch] text-[17px] leading-[1.6] text-ink-2">{c.description}</p>
-            <ul className="mt-6 flex flex-wrap gap-x-8">
+            <p className="mx-auto mt-5 max-w-[60ch] text-pretty text-[17px] leading-[1.6] text-ink-2">{c.description}</p>
+            <ul className="mt-6 flex flex-wrap justify-center gap-x-8">
               {c.jumps.map((j) => (
                 <li key={j.href}>
                   <a href={j.href} className={TEXT_ACTION}>
@@ -275,19 +252,6 @@ export default function StandardsHubView({ locale }: { locale: Locale }) {
             </ul>
           </div>
 
-          <aside aria-labelledby="standards-summary" className="self-end border-t-2 border-ink pt-4 lg:col-span-4">
-            <h2 id="standards-summary" className="font-serif text-[20px] font-semibold text-ink">
-              {c.summaryTitle}
-            </h2>
-            <dl className="mt-3 divide-y divide-rule border-t border-rule">
-              {summary.map((r) => (
-                <div key={r.label} className="grid grid-cols-[120px_minmax(0,1fr)] gap-3 py-2.5 lg:grid-cols-1 lg:gap-0.5">
-                  <dt className="text-[13px] text-ink-3">{r.label}</dt>
-                  <dd className="text-[14px] leading-snug text-ink">{r.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </aside>
         </div>
       </section>
 

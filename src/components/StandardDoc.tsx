@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
-import { LINK } from "@/components/paper/Editorial";
+import { CRUMB_LINK, LINK } from "@/components/paper/Editorial";
 import { STANDARDS_UPDATED, type StandardPath } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 
@@ -88,7 +88,7 @@ export default function StandardDoc({ locale, path, crumb, eyebrow, title, descr
           <nav aria-label={c.crumbs}>
             <ol className="flex flex-wrap items-center gap-1 text-[14px] text-ink-3">
               <li>
-                <Link href={href("/")} className={`-my-3 inline-block py-3 ${LINK}`}>
+                <Link href={href("/")} className={`-my-3 inline-block py-3 ${CRUMB_LINK}`}>
                   {c.home}
                 </Link>
               </li>
@@ -96,15 +96,17 @@ export default function StandardDoc({ locale, path, crumb, eyebrow, title, descr
                 <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
               </li>
               <li>
-                <Link href={href("/standartlar")} className={`-my-3 inline-block py-3 ${LINK}`}>
+                <Link href={href("/standartlar")} className={`-my-3 inline-block py-3 ${CRUMB_LINK}`}>
                   {c.hub}
                 </Link>
               </li>
               <li aria-hidden="true">
                 <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
               </li>
-              <li aria-current="page" className="text-ink-2">
-                {crumb}
+              <li>
+                <Link href={href(path)} aria-current="page" className={`-my-3 inline-block py-3 text-ink-2 ${CRUMB_LINK}`}>
+                  {crumb}
+                </Link>
               </li>
             </ol>
           </nav>
@@ -199,7 +201,7 @@ export default function StandardDoc({ locale, path, crumb, eyebrow, title, descr
  */
 export function Formula({ plain, caption, children }: { plain: string; caption?: ReactNode; children: ReactNode }) {
   return (
-    <figure className="mt-4 max-w-[68ch] border border-rule bg-white px-5 py-4">
+    <figure className="mt-4 max-w-[68ch] border border-rule bg-paper px-5 py-4">
       <p role="math" aria-label={plain} className="font-serif text-[19px] leading-[1.8] text-ink sm:text-[21px]">
         {children}
       </p>

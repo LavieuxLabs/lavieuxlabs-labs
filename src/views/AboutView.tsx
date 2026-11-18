@@ -2,7 +2,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import CopyEmail from "@/components/CopyEmail";
-import { BUTTON, Disclosure, FOCUS, FactRows, LINK, PaperSection, TEXT_ACTION } from "@/components/paper/Editorial";
+import LocationMap from "@/components/LocationMap";
+import { BUTTON, Disclosure, FOCUS, FactRows, CRUMB_LINK, LINK, PaperSection, TEXT_ACTION } from "@/components/paper/Editorial";
 import { organizationProfile } from "@/lib/site";
 import { TEAM, teamCopy } from "@/lib/team";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
@@ -39,14 +40,12 @@ const copy = defineContent<{
   title: string;
   lead: string;
   secondary: string;
-  summaryTitle: string;
-  summary: Row[];
-  purpose: { label: string; title: string; items: { title: string; owner: string; body: string }[]; principle: string };
   approach: { label: string; title: string; intro: string; steps: Step[]; whyRules: string; whyRulesMeta: string; regulatory: string; regulatoryLink: string };
   columns: { criterion: string; probabilistic: string; deterministic: string };
   comparison: { criterion: string; probabilistic: string; deterministic: string }[];
   projects: { label: string; title: string; intro: string; pharma: Project; shield: Project };
   team: { label: string; title: string; intro: string };
+  location: { label: string; title: string; description: string };
   collab: { label: string; title: string; intro: string; partners: Partner[]; cta: string; email: string; noPatientData: string };
 }>({
   tr: {
@@ -54,32 +53,6 @@ const copy = defineContent<{
     title: "Klinik karar desteği üzerinde çalışan bağımsız bir öğrenci girişimi.",
     lead: `${organizationProfile.tr.positioning} Hatanın hastaya ya da kuruma pahalıya mal olduğu işler için, sonucunu yeniden üretebilen ve kararı insana bırakan yazılım geliştiriyoruz.`,
     secondary: "Ekibimizi tanıyın",
-    summaryTitle: "Kısaca",
-    summary: [
-      { label: "Biz kimiz", value: "Konya Teknik Üniversitesi'nde okuyan öğrencilerden oluşan bir ekip." },
-      { label: "Hukuki durum", value: "Henüz şirketleşmedik." },
-      { label: "Üniversite", value: organizationProfile.tr.independence },
-      { label: "Projeler", value: "PharmaDeux ilaç güvenliğine, Shield hastane faturalamasına odaklanır." },
-      { label: "Aşama", value: "İkisi de prototip. Kurum doğrulaması ve hastane pilotu henüz yapılmadı." },
-    ],
-    purpose: {
-      label: "Amaç",
-      title: "Hangi sorunlar üzerinde çalışıyoruz.",
-      items: [
-        {
-          title: "Reçete anında ilaç güvenliği",
-          owner: "PharmaDeux · ilaç güvenliği",
-          body: "Çok ilaç kullanan bir hastada etkileşim, böbrek fonksiyonuna göre doz ve QT uzaması aynı anda kontrol edilmeli. eGFR'si 90 olan hastada güvenli olan bir reçete, eGFR 30'a düştüğünde doz ayarı gerektirebilir. PharmaDeux bu kontrolleri reçete yazılırken yapmayı hedefliyor.",
-        },
-        {
-          title: "Fatura gönderilmeden önce red riski",
-          owner: "Shield · hastane faturalaması",
-          body: "SUT ve SGK kurallarına takılan bir fatura kalemi çoğu zaman gönderildikten sonra fark edilir. Shield, riskli kalemi gönderimden önce, onu işaretleyen kuralla birlikte uzmanın önüne koymayı hedefliyor.",
-        },
-      ],
-      principle:
-        "İki işte de kararı hekim, eczacı ya da faturalama uzmanı verir. Yazılım bir uyarının nedenini gösterir ve aynı girdide aynı sonucu verir.",
-    },
     approach: {
       label: "Çalışma yaklaşımı",
       title: "Kaynaktan koda, koddan teste, testten doğrulamaya.",
@@ -172,6 +145,12 @@ const copy = defineContent<{
       intro:
         "Ekip, Konya Teknik Üniversitesi'nde okuyan öğrencilerden oluşuyor. Her üyenin üzerinde çalıştığı alanları aşağıya yazdık.",
     },
+    location: {
+      label: "Konum",
+      title: "Ekip Konya'da çalışıyor.",
+      description:
+        "Ekip Konya Teknik Üniversitesi'nde öğrenci; aşağıdaki adres öğrenim gördüğümüz fakültedir. LavieuxLabs üniversitenin resmi bir birimi veya ortağı değildir. Görüşmek isterseniz önceden e-postayla randevu alın.",
+    },
     collab: {
       label: "İş birliği",
       title: "Kimlerle çalışmak istiyoruz.",
@@ -204,32 +183,6 @@ const copy = defineContent<{
     title: "An independent student venture working on clinical decision support.",
     lead: `${organizationProfile.en.positioning} For work where a mistake is costly to a patient or an institution, we build software that can reproduce its results and leaves the decision to a person.`,
     secondary: "Meet the team",
-    summaryTitle: "In brief",
-    summary: [
-      { label: "Who we are", value: "A team of students at Konya Technical University." },
-      { label: "Legal status", value: "Not incorporated yet." },
-      { label: "University", value: organizationProfile.en.independence },
-      { label: "Projects", value: "PharmaDeux focuses on medication safety; Shield focuses on hospital billing." },
-      { label: "Stage", value: "Both are prototypes. No institutional validation or hospital pilot has been done yet." },
-    ],
-    purpose: {
-      label: "Purpose",
-      title: "The problems we work on.",
-      items: [
-        {
-          title: "Medication safety at the moment of prescribing",
-          owner: "PharmaDeux · medication safety",
-          body: "For a patient on many drugs, interactions, renal dosing and QT prolongation need to be checked together. A prescription that is safe at an eGFR of 90 may need a dose adjustment at 30. PharmaDeux aims to run these checks while the prescription is written.",
-        },
-        {
-          title: "Claim rejection risk before submission",
-          owner: "Shield · hospital billing",
-          body: "A claim line that breaks SUT (the national reimbursement rules) or SGK (Social Security Institution) rules is often noticed only after submission. Shield aims to put the risky line in front of a specialist before submission, together with the rule that flagged it.",
-        },
-      ],
-      principle:
-        "In both, the physician, pharmacist or billing specialist makes the decision. The software shows the reason for an alert and gives the same result for the same input.",
-    },
     approach: {
       label: "How we work",
       title: "From source to code, from code to test, from test to validation.",
@@ -322,6 +275,12 @@ const copy = defineContent<{
       intro:
         "The team is made up of students at Konya Technical University. Below is what each member works on.",
     },
+    location: {
+      label: "Location",
+      title: "The team works in Konya.",
+      description:
+        "The team members are students at Konya Technical University. The address below is the faculty where we study. LavieuxLabs is not an official unit or partner of the university. If you would like to meet, please book an appointment by email first.",
+    },
     collab: {
       label: "Collaboration",
       title: "Who we want to work with.",
@@ -404,67 +363,41 @@ export default function AboutView({ locale }: { locale: Locale }) {
       {/* Hero: who we are and where the work stands; the summary sits beside it on wide screens. */}
       <section aria-labelledby="hero-title" className="pt-16">
         <div className="mx-auto grid max-w-7xl gap-x-10 gap-y-10 px-4 pt-6 pb-12 sm:px-6 sm:pt-12 sm:pb-20 lg:grid-cols-12 lg:px-8">
-          <div className="lg:col-span-8">
-            <nav aria-label={c.crumbs.aria}>
+          <div className="text-center lg:col-span-12">
+            <nav aria-label={c.crumbs.aria} className="text-left">
               <ol className="flex flex-wrap items-center gap-1 text-[14px] text-ink-3">
                 <li>
-                  <Link href={href("/")} className={`-my-3 inline-block py-3 ${LINK}`}>
+                  <Link href={href("/")} className={`-my-3 inline-block py-3 ${CRUMB_LINK}`}>
                     {c.crumbs.home}
                   </Link>
                 </li>
                 <li aria-hidden="true">
                   <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
                 </li>
-                <li aria-current="page" className="text-ink-2">
-                  {c.crumbs.here}
+                <li>
+                  <Link href={href("/about")} aria-current="page" className={`-my-3 inline-block py-3 text-ink-2 ${CRUMB_LINK}`}>
+                    {c.crumbs.here}
+                  </Link>
                 </li>
               </ol>
             </nav>
             <h1
               id="hero-title"
-              className="mt-6 max-w-[22ch] font-serif text-[34px] leading-[1.08] font-medium tracking-[-0.022em] text-ink sm:mt-8 sm:text-[46px] lg:text-[52px]"
+              className="mx-auto mt-6 max-w-[26ch] text-balance font-serif text-[34px] leading-[1.08] font-medium tracking-[-0.022em] text-ink sm:mt-8 sm:text-[46px] lg:text-[52px]"
             >
               {c.title}
             </h1>
-            <p className="mt-5 max-w-[60ch] text-[17px] leading-[1.6] text-ink-2">{c.lead}</p>
-            <div className="mt-8">
+            <p className="mx-auto mt-5 max-w-[60ch] text-pretty text-[17px] leading-[1.6] text-ink-2">{c.lead}</p>
+            <div className="mt-8 flex justify-center">
               <a href="#ekip" className={BUTTON}>
                 {c.secondary}
               </a>
             </div>
           </div>
 
-          <aside aria-labelledby="about-summary" className="self-end border-t-2 border-ink pt-4 lg:col-span-4">
-            <h2 id="about-summary" className="font-serif text-[20px] font-semibold text-ink">
-              {c.summaryTitle}
-            </h2>
-            <dl className="mt-3 divide-y divide-rule border-t border-rule">
-              {c.summary.map((r) => (
-                <div key={r.label} className="grid grid-cols-[110px_minmax(0,1fr)] gap-3 py-2.5 lg:grid-cols-1 lg:gap-0.5">
-                  <dt className="text-[13px] text-ink-3">{r.label}</dt>
-                  <dd className="text-[14px] leading-snug text-ink">{r.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </aside>
         </div>
       </section>
 
-      {/* Purpose: the two problems and the project that works on each one. */}
-      <PaperSection id="amac" label={c.purpose.label} title={c.purpose.title}>
-        <Content>
-          <div className="grid gap-x-12 gap-y-10 md:grid-cols-2">
-            {c.purpose.items.map((item) => (
-              <div key={item.title} className="border-t-2 border-ink pt-5">
-                <h3 className="text-[20px] leading-snug font-semibold tracking-[-0.01em] text-ink">{item.title}</h3>
-                <p className="mt-1 text-[14px] text-ink-3">{item.owner}</p>
-                <p className="mt-4 text-[16px] leading-[1.65] text-ink-2">{item.body}</p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-10 max-w-[64ch] border-t border-rule pt-6 text-[17px] leading-[1.6] text-ink">{c.purpose.principle}</p>
-        </Content>
-      </PaperSection>
 
       {/* Approach: four steps in order. The rule-based comparison and the regulatory detail open on demand or link out. */}
       <PaperSection id="yaklasim" label={c.approach.label} title={c.approach.title} intro={<p>{c.approach.intro}</p>} band>
@@ -490,7 +423,7 @@ export default function AboutView({ locale }: { locale: Locale }) {
 
           <div className="mt-8">
             <Disclosure summary={c.approach.whyRules} meta={c.approach.whyRulesMeta}>
-              <div className="overflow-hidden border border-rule bg-white">
+              <div className="overflow-hidden border border-rule bg-paper">
                 <div className="hidden grid-cols-[170px_1fr_1fr] border-b border-rule text-[13px] text-ink-3 md:grid">
                   <div className="px-5 py-3">{c.columns.criterion}</div>
                   <div className="px-5 py-3">{c.columns.probabilistic}</div>
@@ -608,6 +541,10 @@ export default function AboutView({ locale }: { locale: Locale }) {
           </div>
           <p className="mt-5 text-[14px] text-ink-3">{c.collab.noPatientData}</p>
         </Content>
+      </PaperSection>
+
+      <PaperSection id="konum" label={c.location.label} title={c.location.title} intro={<p>{c.location.description}</p>} band>
+        <LocationMap locale={locale} tone="paper" />
       </PaperSection>
     </main>
   );

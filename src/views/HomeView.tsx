@@ -1,15 +1,8 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
-import { Pill, ShieldCheck, type LucideIcon } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
-import {
-  ClaimScoreFigure,
-  PrescriptionCheckFigure,
-} from "@/components/home/HomeFigures";
 import { homeJsonLd } from "@/lib/structuredData";
-import { defineContent, localizedPath, type Locale } from "@/i18n/config";
+import { defineContent, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
-import { trlLabel } from "@/lib/metrics";
 
 // The home page keeps the layout's default title; only description and hreflang are set here.
 export const metadata = defineMetadata("/", {
@@ -24,8 +17,8 @@ export const metadata = defineMetadata("/", {
 });
 
 /*
- * Home page on the paper surface (Academic Editorial). Communication order: problem → the two
- * projects, with one clear contact action after the projects.
+ * Home page on the paper surface (Academic Editorial). Communication order: hero → what we do.
+ * The two project sections were removed from the home page at the user's request.
  * Type roles: Newsreader for the page title, section titles, project and person names and step numerals;
  * IBM Plex Sans for all running text, labels and tables; IBM Plex Mono only for numbers that are data.
  * Type scale: 13 caption · 14 small · 15 secondary · 17 body · 20 sub-heading · serif 30/40 section · 36/58 page.
@@ -33,22 +26,10 @@ export const metadata = defineMetadata("/", {
  * states keep their own colours inside figures.
  */
 
-const LINK =
-  "underline decoration-ink/30 underline-offset-4 transition-colors duration-150 ease-out hover:decoration-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink";
-// Standalone text links get a 44px touch target; inline links inside sentences do not need one.
-const TEXT_ACTION = `inline-flex min-h-11 items-center text-[15px] font-medium text-ink ${LINK}`;
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink";
-const BUTTON = `inline-flex min-h-11 items-center justify-center rounded-md bg-ink px-5 py-3 text-[15px] font-medium text-white transition-colors duration-150 ease-out hover:bg-ink-2 ${FOCUS}`;
+const BUTTON = `inline-flex min-h-11 items-center justify-center rounded-md bg-ink px-5 py-3 text-[15px] font-medium text-paper transition-colors duration-150 ease-out hover:bg-ink-2 ${FOCUS}`;
 
-type Row = { label: string; value: string };
-type Project = {
-  name: string;  purpose: string;
-  body: string;
-  rows: Row[];
-  link: string;
-};
-/** One product's workflow in three steps; the last step is the person who decides. */
-type Workflow = { name: string; area: string; steps: [string, string, string] };
+type Activity = { owner: "pharma" | "shield" | "both"; title: string; body: string };
 
 const copy = defineContent<{
   hero: {
@@ -56,14 +37,15 @@ const copy = defineContent<{
     title: string;
     lead: string;
     secondary: string;
-    workflowsLabel: string;
-    workflows: [Workflow, Workflow];
-    summaryTitle: string;
-    summary: Row[];
   };
   problem: { label: string; title: string; pharma: { title: string; body: string[] }; shield: { title: string; body: string[] } };
-  projects: { label: string; title: string; intro: string; pharma: Project; shield: Project };
-  bridge: { title: string; body: string; primary: string };
+  activities: {
+    label: string;
+    title: string;
+    intro: string;
+    both: string;
+    items: Activity[];
+  };
   benefit: {
     label: string;
     title: string;
@@ -95,26 +77,6 @@ const copy = defineContent<{
       title: "İlaç güvenliği ve hastane faturalaması için iki yazılım projesi.",
       lead: "PharmaDeux ilaç güvenliğine, Shield hastane faturalamasına odaklanır. İkisi de prototiptir ve henüz gerçek ortamda doğrulanmamıştır.",
       secondary: "Projeleri inceleyin",
-      workflowsLabel: "İki iş akışı",
-      workflows: [
-        { name: "PharmaDeux", area: "İlaç güvenliği", steps: ["Reçete", "Risk kontrolü", "Hekim veya eczacı değerlendirir"] },
-        { name: "Shield", area: "Hastane faturalaması", steps: ["Fatura kalemi", "Uygunluk kontrolü (SUT, SGK)", "Fatura uzmanı inceler"] },
-      ],
-      summaryTitle: "Kısaca",
-      summary: [
-        {
-          label: "Kim",
-          value: "Konya Teknik Üniversitesi öğrencilerinin kurduğu bağımsız bir girişim. Üniversitenin birimi değil; henüz şirketleşmedi.",
-        },
-        { label: "Projeler", value: "PharmaDeux ilaç güvenliğine, Shield hastane faturalamasına odaklanır." },
-        {
-          label: "Aşama",
-          value: `PharmaDeux: ${trlLabel("tr")} (teknoloji hazırlık seviyesi, 1–9 ölçeği), ekibin kendi değerlendirmesi; bağımsız bir değerlendirme yapılmadı. Shield: prototip.`,
-        },
-        { label: "Klinik ve kurumsal doğrulama", value: "Henüz yapılmadı" },
-        { label: "Düzenleyici durum", value: "PharmaDeux için MDR Sınıf IIa hedefi, CE işareti yok" },
-        { label: "Aradığımız", value: "Araştırma ve geçmiş verilerle doğrulama ortakları" },
-      ],
     },
     problem: {
       label: "Sorun",
@@ -134,37 +96,19 @@ const copy = defineContent<{
         ],
       },
     },
-    projects: {
-      label: "Shield ve PharmaDeux",
-      title: "İki proje, iki farklı kullanıcı için.",
-      intro: "Biri reçeteyi yazan hekime, diğeri faturayı hazırlayan birime yöneliktir. İkisi de geliştirme aşamasında ve henüz piyasaya sunulmadı.",
-      pharma: {
-        name: "PharmaDeux",        purpose: "İlaç güvenliği ve klinik karar desteği",
-        body: "Reçetedeki etkileşim, organ yükü ve doz risklerini kontrol eder. Tedavi kararı vermez; nedeni hekime gösterir.",
-        rows: [
-          { label: "Kimin için", value: "Klinik eczacı, servis hekimi, ilaç güvenliği ekipleri" },
-          { label: "Bugün", value: "Kurallar sentetik hasta profilleriyle test ediliyor" },
-          { label: "Sıradaki adım", value: "Geçmiş vakalarla retrospektif doğrulama" },
-          { label: "Düzenleyici durum", value: "MDR Sınıf IIa hedefi, CE işareti yok" },
-        ],
-        link: "PharmaDeux'u ayrıntılı inceleyin",
-      },
-      shield: {
-        name: "Shield",        purpose: "Hastane faturalaması, SUT uygunluğu ve gelir bütünlüğü",
-        body: "Fatura kalemlerini gönderimden önce SUT ve SGK kurallarıyla kontrol eder. Riskli kalemi nedeni ile birlikte uzmana iletir.",
-        rows: [
-          { label: "Kimin için", value: "Faturalama, provizyon ve gelir döngüsü ekipleri" },
-          { label: "Bugün", value: "Dört denetim düzleminden üçü uygulandı ve sentetik faturalarla test ediliyor" },
-          { label: "Sıradaki adım", value: "Geçmiş faturalarda red yakalama ve yanlış pozitif oranının ölçülmesi" },
-          { label: "Gerçek fatura", value: "Henüz doğrulanmadı" },
-        ],
-        link: "Shield'ı ayrıntılı inceleyin",
-      },
-    },
-    bridge: {
-      title: "Kurumunuzda benzer bir sorun varsa konuşalım.",
-      body: "İlk görüşmede kurumunuzun ihtiyacını ve projelerin bugünkü durumunu netleştiririz.",
-      primary: "İletişime geçin",
+    activities: {
+      label: "Neler yapıyoruz",
+      both: "İki proje",
+      title: "Prototiplerin bugün yaptığı altı iş.",
+      intro: "Her iki işte de kararı hekim, eczacı ya da faturalama uzmanı verir. Yazılım bir uyarının nedenini gösterir ve aynı girdide aynı sonucu verir. Hepsi sentetik veriyle test ediliyor; hiçbiri gerçek hasta ya da fatura verisiyle doğrulanmadı.",
+      items: [
+        { owner: "pharma", title: "İlaç etkileşimi", body: "Çok ilaç kullanan hastada etkileşimleri elle taramak gerçekçi değil. Reçetedeki ilaç-ilaç etkileşimini ve aynı gruptan tekrarlanan ilacı (terapötik duplikasyon) reçete yazılırken kontrol eder." },
+        { owner: "pharma", title: "Organ yükü", body: "Risk çoğu zaman tek bir ilaç çiftinden gelmez. Böbrek ve karaciğere binen toksik yükü, antikolinerjik ve serotonerjik kümülatif yükü birlikte değerlendirir." },
+        { owner: "pharma", title: "Doz ve böbrek fonksiyonu", body: "eGFR'si 90 olan hastada güvenli olan reçete, 30'da doz ayarı gerektirebilir. Doz aralığına bakar ve renal doz ayarı gerekip gerekmediğini gösterir." },
+        { owner: "shield", title: "Fatura kalemi denetimi", body: "SUT ve SGK kurallarına takılan kalem çoğu zaman gönderildikten sonra fark edilir. Shield kalemleri gönderimden önce kontrol eder; riskli kalemi nedeniyle birlikte uzmana iletir." },
+        { owner: "both", title: "Referans standartlar", body: "Kuralların dayandığı ürün bilgisini, risk skorlarını ve kılavuzları kaynaklarıyla Standartlar sayfasında yayımlar." },
+        { owner: "both", title: "Sentetik veriyle test", body: "Kurallar sentetik hasta profilleri ve sentetik faturalarla otomatik olarak test edilir." },
+      ],
     },
     benefit: {
       label: "Potansiyel fayda",
@@ -241,26 +185,6 @@ const copy = defineContent<{
       title: "Two software projects for medication safety and hospital billing.",
       lead: "PharmaDeux focuses on medication safety; Shield focuses on hospital billing. Both are prototypes and have not yet been validated in real settings.",
       secondary: "See the projects",
-      workflowsLabel: "Two workflows",
-      workflows: [
-        { name: "PharmaDeux", area: "Medication safety", steps: ["Prescription", "Risk check", "Physician or pharmacist reviews"] },
-        { name: "Shield", area: "Hospital billing", steps: ["Claim line", "Compliance check (SUT, SGK)", "Billing specialist reviews"] },
-      ],
-      summaryTitle: "In brief",
-      summary: [
-        {
-          label: "Who",
-          value: "An independent venture founded by students of Konya Technical University. Not a university unit; not incorporated yet.",
-        },
-        { label: "Projects", value: "PharmaDeux focuses on medication safety; Shield focuses on hospital billing." },
-        {
-          label: "Stage",
-          value: `PharmaDeux: ${trlLabel("en")} (technology readiness level, 1–9 scale), the team's own assessment; no independent assessment has been made. Shield: prototype.`,
-        },
-        { label: "Clinical and institutional validation", value: "Not done yet" },
-        { label: "Regulatory status", value: "MDR Class IIa target for PharmaDeux, no CE mark" },
-        { label: "Looking for", value: "Research partners and institutions to validate on historical data" },
-      ],
     },
     problem: {
       label: "Problem",
@@ -280,37 +204,19 @@ const copy = defineContent<{
         ],
       },
     },
-    projects: {
-      label: "Shield and PharmaDeux",
-      title: "Two projects, for two different users.",
-      intro: "One is for the physician who writes the prescription, the other for the unit that prepares the claim. Both are in development and not yet on the market.",
-      pharma: {
-        name: "PharmaDeux",        purpose: "Medication safety and clinical decision support",
-        body: "Checks prescriptions for interaction, organ burden and dose risks. It does not make treatment decisions; it shows the reason to the physician.",
-        rows: [
-          { label: "For", value: "Clinical pharmacists, ward physicians, medication safety teams" },
-          { label: "Today", value: "Rules are tested on synthetic patient profiles" },
-          { label: "Next step", value: "Retrospective validation on past cases" },
-          { label: "Regulatory status", value: "MDR Class IIa target, no CE mark" },
-        ],
-        link: "Read more about PharmaDeux",
-      },
-      shield: {
-        name: "Shield",        purpose: "Hospital billing, SUT compliance and revenue integrity",
-        body: "Checks claim items against SUT and SGK rules before submission, then sends risky items to a specialist with the reason.",
-        rows: [
-          { label: "For", value: "Billing, pre-authorisation and revenue cycle teams" },
-          { label: "Today", value: "Three of four audit planes implemented and tested on synthetic claims" },
-          { label: "Next step", value: "Measuring rejection catch and false positive rates on past claims" },
-          { label: "Real claims", value: "Not validated yet" },
-        ],
-        link: "Read more about Shield",
-      },
-    },
-    bridge: {
-      title: "If your institution has a similar problem, let us talk.",
-      body: "In the first conversation, we clarify your institution's need and the projects' current status.",
-      primary: "Contact us",
+    activities: {
+      label: "What we do",
+      both: "Both projects",
+      title: "Six things the prototypes do today.",
+      intro: "In both, the physician, pharmacist or billing specialist makes the decision. The software shows the reason for an alert and gives the same result for the same input. All of it is tested on synthetic data; none of it has been validated with real patient or billing data.",
+      items: [
+        { owner: "pharma", title: "Drug interactions", body: "Scanning a patient on many drugs for interactions by hand is not realistic. PharmaDeux checks a prescription for drug-drug interactions and for duplicate therapy within the same drug class while the prescription is written." },
+        { owner: "pharma", title: "Organ burden", body: "Risk rarely comes from a single drug pair. PharmaDeux looks at toxic load on the kidneys and liver, and at cumulative anticholinergic and serotonergic load, together." },
+        { owner: "pharma", title: "Dose and kidney function", body: "A prescription that is safe at an eGFR of 90 may need a dose adjustment at 30. PharmaDeux checks the dose range and shows whether a renal dose adjustment is needed." },
+        { owner: "shield", title: "Claim item review", body: "A claim line that breaks SUT (Turkey's reimbursement tariff) or SGK (social security) rules is often noticed only after submission. Shield checks lines before submission and passes risky ones to a specialist with the reason." },
+        { owner: "both", title: "Reference standards", body: "Publishes the product information, risk scores and guidelines the rules rely on, with sources, on the Standards pages." },
+        { owner: "both", title: "Testing on synthetic data", body: "The rules are tested automatically on synthetic patient profiles and synthetic claims." },
+      ],
     },
     benefit: {
       label: "Potential benefit",
@@ -418,140 +324,57 @@ function Section({
   );
 }
 
-function RecordRows({ rows }: { rows: Row[] }) {
-  return (
-    <dl className="divide-y divide-rule border-y border-rule">
-      {rows.map((r) => (
-        <div key={r.label} className="grid gap-1 py-3 sm:grid-cols-[140px_minmax(0,1fr)] sm:gap-4">
-          <dt className="text-[14px] text-ink-3">{r.label}</dt>
-          <dd className="text-[15px] leading-snug text-ink">{r.value}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
-/**
- * One project. The two projects mirror each other on wide screens (text left / right) and each opens with
- * its owner, so they differ in more than the colour of their names; each has its own figure.
- */
-function ProjectRecord({
-  project,
-  icon: Icon,
-  nameClass,
-  href,
-  figure,
-  mirrored = false,
-}: {
-  project: Project;
-  icon: LucideIcon;
-  nameClass: string;
-  href: string;
-  figure: ReactNode;
-  mirrored?: boolean;
-}) {
-  return (
-    <article className="grid gap-10 lg:grid-cols-12 lg:gap-12">
-      <div className={`lg:col-span-5 ${mirrored ? "lg:order-2" : ""}`}>
-        <div className="flex items-center gap-3">
-          <Icon className="h-6 w-6 shrink-0 text-ink" strokeWidth={1.6} aria-hidden="true" />
-          <h3 className={`font-serif text-[36px] leading-none font-medium tracking-[-0.02em] sm:text-[44px] ${nameClass}`} lang="en">
-            {project.name}
-          </h3>
-        </div>
-        <p className="mt-3 text-[15px] font-medium text-ink">{project.purpose}</p>
-        <p className="mt-4 text-[17px] leading-[1.65] text-ink-2">{project.body}</p>
-        <div className="mt-6">
-          <RecordRows rows={project.rows.slice(0, 3)} />
-        </div>
-        <Link href={href} className={`mt-4 ${TEXT_ACTION}`}>
-          {project.link}
-        </Link>
-      </div>
-      <div className={`min-w-0 lg:col-span-7 ${mirrored ? "lg:order-1" : ""}`}>{figure}</div>
-    </article>
-  );
-}
-
 export default function HomeView({ locale }: { locale: Locale }) {
   const c = copy[locale];
-  const href = (path: string) => localizedPath(locale, path);
 
   return (
     <main id="main" className="surface-paper relative flex-1 bg-paper text-ink">
       <JsonLd data={homeJsonLd(locale)} />
 
-      {/* Hero: what we build, the two projects, where the work stands and how to start a conversation. */}
+      {/* Hero: what we build and the way into the two projects. */}
       <section aria-labelledby="hero-title" className="pt-16">
-        <div className="mx-auto grid max-w-7xl gap-x-10 gap-y-8 px-4 pt-6 pb-12 sm:px-6 sm:pt-20 sm:pb-20 lg:grid-cols-12 lg:gap-y-12 lg:px-8 lg:pb-20">
-          <div className="lg:col-span-8">
-            <p className="font-serif text-[17px] text-ink-3">{c.hero.kicker}</p>
-            <h1
-              id="hero-title"
-              className="mt-3 max-w-[20ch] font-serif text-[36px] leading-[1.06] font-medium tracking-[-0.022em] text-ink sm:mt-4 sm:text-[48px] lg:text-[58px]"
-            >
-              {c.hero.title}
-            </h1>
-            <p className="mt-5 max-w-[60ch] text-[17px] leading-[1.6] text-ink-2">{c.hero.lead}</p>
-            <div className="mt-8">
-              <a href="#platformlar" className={BUTTON}>
-                {c.hero.secondary}
-              </a>
-            </div>
+        <div className="mx-auto flex max-w-7xl flex-col items-center px-4 pt-6 pb-12 text-center sm:px-6 sm:pt-20 sm:pb-20 lg:px-8 lg:pb-20">
+          <p className="font-serif text-[17px] text-ink-3">{c.hero.kicker}</p>
+          <h1
+            id="hero-title"
+            className="mx-auto mt-3 max-w-[26ch] text-balance font-serif text-[36px] leading-[1.06] font-medium tracking-[-0.022em] text-ink sm:mt-4 sm:text-[48px] lg:text-[58px]"
+          >
+            {c.hero.title}
+          </h1>
+          <p className="mx-auto mt-5 max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-ink-2">{c.hero.lead}</p>
+          <div className="mt-8 flex justify-center">
+            <a href="#platformlar" className={BUTTON}>
+              {c.hero.secondary}
+            </a>
           </div>
-          <aside aria-labelledby="hero-summary" className="self-end border-t-2 border-ink pt-4 lg:col-span-4">
-            <h2 id="hero-summary" className="font-serif text-[20px] font-semibold text-ink">
-              {c.hero.summaryTitle}
-            </h2>
-            <dl className="mt-3 divide-y divide-rule border-t border-rule">
-              {c.hero.summary.slice(0, 4).map((r) => (
-                <div key={r.label} className="grid grid-cols-[120px_minmax(0,1fr)] gap-3 py-2.5 lg:grid-cols-1 lg:gap-0.5">
-                  <dt className="text-[13px] text-ink-3">{r.label}</dt>
-                  <dd className="text-[14px] leading-snug text-ink">{r.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </aside>
         </div>
       </section>
 
-      {/* The two projects, mirrored. Id kept: footer, navigation and breadcrumbs link to /#platformlar. */}
-      <Section id="platformlar" label={c.projects.label} title={c.projects.title} intro={c.projects.intro}>
-        <div className="space-y-12 sm:space-y-20">
-          <ProjectRecord
-            project={c.projects.pharma}
-            icon={Pill}
-            nameClass="text-teal-700"
-            href={href("/initiatives/pharmadeux")}
-            figure={<PrescriptionCheckFigure locale={locale} />}
-          />
-          <div className="border-t border-rule pt-12 sm:pt-20">
-            <ProjectRecord
-              project={c.projects.shield}
-              icon={ShieldCheck}
-              nameClass="text-indigo-700"
-              href={href("/initiatives/shield")}
-              figure={<ClaimScoreFigure locale={locale} />}
-              mirrored
-            />
-          </div>
-        </div>
+      {/* What the two prototypes do today: a ruled grid, no boxes. Product names carry their accent colour. */}
+      <Section id="platformlar" label={c.activities.label} title={c.activities.title} intro={c.activities.intro}>
+        <ul className="grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+          {c.activities.items.map((item) => (
+            <li key={item.title} className="border-t border-rule pt-5 pb-8">
+              <p className="text-[14px] text-ink-3">
+                {item.owner === "pharma" && (
+                  <span className="text-teal-700" lang="en">
+                    PharmaDeux
+                  </span>
+                )}
+                {item.owner === "shield" && (
+                  <span className="text-indigo-700" lang="en">
+                    Shield
+                  </span>
+                )}
+                {item.owner === "both" && c.activities.both}
+              </p>
+              <h3 className="mt-2 text-[17px] leading-snug font-medium text-ink">{item.title}</h3>
+              <p className="mt-2 text-[15px] leading-[1.6] text-ink-2">{item.body}</p>
+            </li>
+          ))}
+        </ul>
       </Section>
 
-      {/* A short, quiet call to talk after the projects; no label column, no figure. */}
-      <section aria-labelledby="bridge-title" className="border-t border-rule bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-12 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          <div className="max-w-[60ch]">
-            <h2 id="bridge-title" className="font-serif text-[26px] leading-tight font-medium tracking-[-0.01em] text-ink sm:text-[30px]">
-              {c.bridge.title}
-            </h2>
-            <p className="mt-2 text-[17px] leading-[1.6] text-ink-2">{c.bridge.body}</p>
-          </div>
-          <Link href={href("/contact")} className={BUTTON}>
-            {c.bridge.primary}
-          </Link>
-        </div>
-      </section>
     </main>
   );
 }

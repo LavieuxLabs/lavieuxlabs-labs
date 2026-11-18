@@ -33,7 +33,7 @@ const tones = {
   },
   paper: {
     button: "text-ink-3 hover:text-ink focus-visible:text-ink focus-visible:outline-2 focus-visible:outline-ink",
-    panel: "rounded-md border border-rule bg-white shadow-lg shadow-black/10",
+    panel: "rounded-md border border-rule bg-paper shadow-lg shadow-black/10",
     rule: "border-rule",
     term: "text-ink",
     what: "text-ink-2",

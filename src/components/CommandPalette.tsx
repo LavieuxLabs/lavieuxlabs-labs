@@ -190,7 +190,7 @@ export default function CommandPalette({ locale, tone = "dark" }: { locale: Loca
         aria-keyshortcuts="Meta+K Control+K"
         className={`hidden items-center gap-2 rounded-lg border px-2.5 py-1.5 text-[12px] transition-colors duration-150 ease-out lg:inline-flex ${
           tone === "paper"
-            ? "border-rule bg-white text-ink-3 hover:border-ink/30 hover:text-ink"
+            ? "border-rule bg-paper text-ink-3 hover:border-ink/30 hover:text-ink"
             : "border-hairline text-white/60 hover:bg-white/[0.04] hover:text-white"
         }`}
       >

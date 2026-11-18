@@ -137,7 +137,7 @@ export default function Footer({ locale }: { locale: Locale }) {
         <dl aria-label={c.imprint} className={`mt-4 sm:grid-cols-2 lg:grid-cols-3 ${plateClass}`}>
           <Field label={c.organization}>{c.organizationValue}</Field>
           <Field label={c.location}>
-            <Link href={href("/contact#konum")} className="transition-colors duration-150 ease-out hover:text-white">
+            <Link href={href("/about#konum")} className="transition-colors duration-150 ease-out hover:text-white">
               <address className="not-italic">
                 {place.district} / {place.city}, {place.country}
               </address>

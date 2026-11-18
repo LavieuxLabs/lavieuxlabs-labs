@@ -20,7 +20,7 @@ type PrintButtonProps = {
 const tones = {
   dark: "rounded-lg border border-white/15 bg-white/[0.06] px-4 py-2.5 text-sm text-white hover:bg-white/[0.1]",
   paper:
-    "min-h-11 rounded-md border border-ink/30 bg-white px-4 py-2.5 text-[15px] text-ink hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink",
+    "min-h-11 rounded-md border border-ink/30 bg-paper px-4 py-2.5 text-[15px] text-ink hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink",
 };
 
 export default function PrintButton({ target, documentTitle, label, tone = "dark", className = "" }: PrintButtonProps) {

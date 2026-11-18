@@ -70,7 +70,7 @@ const copy = defineContent({
     label: "Tanım",
     dosing: "Renal doz kontrolünde temel ilkeler",
     kdigoNote:
-      "Doz eşiği ilaca özgüdür ve ürün bilgisinden gelir. Bu yüzden PharmaDeux'ta kategori başına sabit bir davranış tanımlanmaz: aynı G3b hastada bir ilaç doz ayarı gerektirirken diğeri gerektirmeyebilir. Kural çıktıları kurumun klinik politikasına göre ayarlanır ve son karar hekimindir.",
+      "Doz eşiği ilaca özgüdür ve ürün bilgisinden gelir. Bu yüzden PharmaDeux'ta kategori başına sabit bir davranış tanımlanmaz: aynı G3b hastada bir ilaç doz ayarı gerektirirken diğeri gerektirmeyebilir. Eşikler ürün bilgisine (KÜB) ve klinik kılavuzlara göre tanımlanır. Kurallar merkezi bir kural seti sürümüyle çalışır; bu sürüm SHA-256 parmak iziyle kilitlenir. Son karar hekimindir.",
     dosingBody: "Böbrek fonksiyonuna göre doz kontrolünde gözetilen ilkeler:",
     dosingItems: [
       "Doz eşiği ürün bilgisinden (KÜB) gelir ve ürün bilgisinin kullandığı ölçüte göre uygulanır. Ürün bilgisi kreatinin klirensi (Cockcroft–Gault, mL/dk) veriyorsa eGFR (mL/dk/1,73 m²) onun yerine konmaz.",
@@ -127,7 +127,7 @@ const copy = defineContent({
     label: "Description",
     dosing: "Core principles of renal dose checks",
     kdigoNote:
-      "Dose thresholds are drug-specific and come from the product information. PharmaDeux therefore defines no fixed behaviour per category: in the same G3b patient, one drug may need a dose adjustment and another may not. Rule outputs are configured to the institution's clinical policy, and the physician makes the final decision.",
+      "Dose thresholds are drug-specific and come from the product information. PharmaDeux therefore defines no fixed behaviour per category: in the same G3b patient, one drug may need a dose adjustment and another may not. Thresholds are defined from the product information (SmPC) and clinical guidelines. Rules run under a central rule set version locked by a SHA-256 fingerprint. The physician makes the final decision.",
     dosingBody: "Principles that apply when checking doses against kidney function:",
     dosingItems: [
       "The dose threshold comes from the product information (SmPC) and is applied on the measure the label uses. If the label gives creatinine clearance (Cockcroft–Gault, mL/min), eGFR (mL/min/1.73 m²) is not substituted for it.",

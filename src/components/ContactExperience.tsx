@@ -78,8 +78,8 @@ export default function ContactExperience({
     // in the order a visitor acts: choose, fill in the form, see what happens next, then the summary.
     return (
       <div className="mx-auto grid max-w-7xl gap-x-10 gap-y-12 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
-        <fieldset className="min-w-0 lg:col-span-7">
-          <legend className="font-serif text-[20px] font-medium text-ink">{c.pathLegend}</legend>
+        <fieldset className="mx-auto w-full min-w-0 max-w-3xl lg:col-span-12">
+          <legend className="font-serif text-[22px] font-medium text-ink">{c.pathLegend}</legend>
           <div className="mt-3 border-t-2 border-ink">
             {contactPaths(locale).map(({ value, label, hint, rows }) => {
               const checked = path === value;
@@ -87,7 +87,7 @@ export default function ContactExperience({
                 <label
                   key={value}
                   className={`grid cursor-pointer grid-cols-[18px_minmax(0,1fr)] gap-x-3.5 border-b border-l-[3px] border-b-rule py-4 pr-4 pl-3 transition-colors duration-150 ease-out has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-ink sm:pl-4 ${
-                    checked ? "border-l-ink bg-white" : "border-l-transparent hover:bg-white/60"
+                    checked ? "border-l-ink bg-paper-raised" : "border-l-transparent hover:bg-paper-raised/60"
                   }`}
                 >
                   <input
@@ -99,9 +99,9 @@ export default function ContactExperience({
                     className="mt-1 h-[18px] w-[18px] cursor-pointer accent-ink"
                   />
                   <span className="min-w-0">
-                    <span className="block text-[17px] leading-snug font-semibold text-ink">{label}</span>
-                    <span className="mt-1 block max-w-[62ch] text-[15px] leading-[1.55] text-ink-2">{hint}</span>
-                    <span className="mt-2 grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-3 gap-y-1 text-[14px] leading-snug sm:grid-cols-[7.5rem_minmax(0,1fr)]">
+                    <span className="block text-[19px] leading-snug font-semibold text-ink">{label}</span>
+                    <span className="mt-1 block max-w-[62ch] text-[16px] leading-[1.55] text-ink-2">{hint}</span>
+                    <span className="mt-2 grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-3 gap-y-1 text-[15px] leading-snug sm:grid-cols-[7.5rem_minmax(0,1fr)]">
                       {rows.map((row) => (
                         <span key={row.label} className="contents">
                           <span className="text-ink-3">{row.label}</span>

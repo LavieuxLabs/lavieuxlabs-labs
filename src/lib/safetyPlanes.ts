@@ -2,7 +2,9 @@ import { defineContent, type Locale } from "@/i18n/config";
 import type { StandardPath } from "@/lib/clinicalCases";
 import { metrics } from "@/lib/metrics";
 
-// PharmaDeux safety planes grouped by clinical domain. Keep in sync with the engine's plane registry.
+// PharmaDeux safety planes: 18 check headings grouped by clinical domain. They summarise the engine's checks
+// for the reader and are not an engine registry: the engine runs ENGINE_BRANCHES branch safety nets plus its
+// core layers (pharmadeux CLINICAL_BENCHMARK_SCOPE.md §1).
 // Read by the PharmaDeux page (grouped summary with the full list on demand) and the home page figure.
 // Plane numbers (P01…) follow this order; the case workspace's readings use the same codes (P05 renal,
 // P06 liver, P07 QT).
@@ -96,3 +98,9 @@ for (const lang of ["tr", "en"] as const) {
 }
 
 export const safetyPlaneGroups = (locale: Locale) => groups[locale].groups;
+
+/**
+ * Branch safety nets in the PharmaDeux engine: the 35 `BranchSafetyKey` values, frozen as the V1 ceiling
+ * (pharmadeux CLINICAL_BENCHMARK_SCOPE.md §1). Not a roadmap metric, so it is not in projectMetrics.json.
+ */
+export const ENGINE_BRANCHES = 35;

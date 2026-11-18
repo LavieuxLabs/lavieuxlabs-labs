@@ -18,7 +18,7 @@ const LINK =
 
 export function Figure({ caption, children, className = "" }: { caption: ReactNode; children: ReactNode; className?: string }) {
   return (
-    <figure className={`min-w-0 rounded-lg border border-rule bg-white p-5 sm:p-6 ${className}`}>
+    <figure className={`min-w-0 rounded-lg border border-rule bg-paper p-5 sm:p-6 ${className}`}>
       {children}
       <figcaption className="mt-5 border-t border-rule pt-3 text-[13px] leading-relaxed text-ink-3">{caption}</figcaption>
     </figure>
@@ -146,7 +146,7 @@ export function PrescriptionCheckFigure({ locale }: { locale: Locale }) {
           {/* Wraps side by side on phones, stacks in its own column on wider screens. */}
           <ul className="mt-2 flex flex-wrap gap-1.5 md:flex-col">
             {drugs.map((d) => (
-              <li key={d} className="rounded-[3px] border border-rule bg-paper px-2 py-1 text-[14px] leading-snug text-ink">
+              <li key={d} className="rounded-[3px] border border-chip-rule bg-chip px-2 py-1 text-[14px] leading-snug text-ink">
                 {d}
               </li>
             ))}
@@ -343,9 +343,9 @@ const levelsCopy = defineContent<{ levels: Level[]; caption: string; here: strin
 });
 
 const levelBlock = {
-  done: "bg-ink text-white border-ink",
-  current: "border-ink text-ink bg-[repeating-linear-gradient(135deg,var(--color-paper-band)_0_6px,white_6px_12px)]",
-  none: "border-dashed border-ink/40 text-ink-2 bg-white",
+  done: "bg-ink text-paper border-ink",
+  current: "border-ink text-ink bg-[repeating-linear-gradient(135deg,var(--color-paper-band)_0_6px,var(--color-paper)_6px_12px)]",
+  none: "border-dashed border-ink/40 text-ink-2 bg-paper",
 } as const;
 
 export function EvidenceLevelsFigure({ locale }: { locale: Locale }) {

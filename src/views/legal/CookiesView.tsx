@@ -89,7 +89,7 @@ const sectionsTr: LegalSection[] = [
         </p>
         <h3>Harici içerik</h3>
         <p>
-          İletişim sayfasındaki Google Haritalar gibi üçüncü taraf içeriklerin yüklenmesine izin verir. Bu içerikler
+          Hakkımızda sayfasındaki Google Haritalar gibi üçüncü taraf içeriklerin yüklenmesine izin verir. Bu içerikler
           yüklendiğinde ilgili sağlayıcı kendi çerezlerini kullanabilir. Açık rızanıza tabidir; rıza vermediğiniz sürece
           harita yalnızca siz “Haritayı yükle” düğmesine tıkladığınızda, o sayfa görüntülemesi için yüklenir.
         </p>
@@ -127,7 +127,7 @@ const sectionsTr: LegalSection[] = [
                 <td data-label="Tür">Üçüncü taraf çerezleri (Google)</td>
                 <td data-label="Kategori">Harici içerik</td>
                 <td data-label="Amaç">
-                  İletişim sayfasındaki konum haritasının gösterilmesi. Yalnızca onayınız veya talebiniz üzerine
+                  Hakkımızda sayfasındaki konum haritasının gösterilmesi. Yalnızca onayınız veya talebiniz üzerine
                   yüklenir.
                 </td>
                 <td data-label="Süre">
@@ -206,7 +206,7 @@ const sectionsEn: LegalSection[] = [
         </p>
         <h3>External content</h3>
         <p>
-          Allows third-party content such as Google Maps on the contact page to load. When it loads, the provider may set
+          Allows third-party content such as Google Maps on the About page to load. When it loads, the provider may set
           its own cookies. Requires your explicit consent. Without it, the map loads only when you press “Load map” and
           only for that page view.
         </p>
@@ -243,7 +243,7 @@ const sectionsEn: LegalSection[] = [
                 <td data-label="Name">Google Maps</td>
                 <td data-label="Type">Third-party cookies (Google)</td>
                 <td data-label="Category">External content</td>
-                <td data-label="Purpose">Shows the location map on the contact page. Loads only with your consent or at your request.</td>
+                <td data-label="Purpose">Shows the location map on the About page. Loads only with your consent or at your request.</td>
                 <td data-label="Duration">
                   Set by Google. See the{" "}
                   <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer">

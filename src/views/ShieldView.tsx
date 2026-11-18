@@ -2,12 +2,10 @@ import Link from "next/link";
 import { ChevronRight, ShieldCheck } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
 import ClaimSimulator from "@/components/ClaimSimulator";
-import CopyEmail from "@/components/CopyEmail";
 import RevealHashTarget from "@/components/paper/RevealHashTarget";
 import { Figure } from "@/components/home/HomeFigures";
-import { BUTTON, LINK, PaperSection } from "@/components/paper/Editorial";
+import { BUTTON, CRUMB_LINK, LINK, PaperSection } from "@/components/paper/Editorial";
 import { shieldJsonLd } from "@/lib/structuredData";
-import { contactHref } from "@/lib/site";
 import { RULES, THRESHOLD, scoreClaim, type RuleKey } from "@/lib/claimRules";
 import { defineContent, localizedPath, type Locale } from "@/i18n/config";
 import { defineMetadata } from "@/i18n/metadata";
@@ -33,7 +31,7 @@ export const metadata = defineMetadata("/initiatives/shield", {
  * with prototype behaviour kept apart from design goals (the review console opens on demand); the
  * retrospective validation plan; and ways to talk. Shield is presented as a hospital-billing prototype,
  * presented on this site; it is not a LavieuxLabs team product. Section ids are linked from elsewhere and
- * kept: #problem, #mimari, #simulator, #kapsam, #denetim, #izolasyon, #konsol, #retrospektif, #is-birligi.
+ * kept: #problem, #mimari, #simulator, #kapsam, #denetim, #izolasyon, #konsol, #retrospektif .
  */
 
 /** "shown": works in the browser prototype on fictional data. "goal": defined in the design, not built. */
@@ -115,18 +113,6 @@ const copy = defineContent<{
     metrics: { name: string; definition: string }[];
     note: string;
   };
-  collab: {
-    label: string;
-    title: string;
-    intro: string;
-    modes: { title: string; body: string }[];
-    cta: string;
-    legal: string;
-    audiencesTitle: string;
-    audiences: string[];
-    email: string;
-    noData: string;
-  };
 }>({
   tr: {
     crumbs: { home: "Ana sayfa", products: "Projeler", aria: "Sayfa konumu" },
@@ -152,7 +138,6 @@ const copy = defineContent<{
       { id: "kapsam", label: "Kural kapsamı" },
       { id: "denetim", label: "İzlenebilirlik ve erişim" },
       { id: "retrospektif", label: "Doğrulama planı" },
-      { id: "is-birligi", label: "İş birliği" },
     ],
     problem: {
       label: "Sorun",
@@ -294,28 +279,6 @@ const copy = defineContent<{
       ],
       note: "İlk değerler bir kurumun geçmiş faturalarında ölçüldüğünde, kurumun onayıyla yayımlanır.",
     },
-    collab: {
-      label: "İş birliği",
-      title: "Faturalama ekipleri ve araştırmacılarla görüşmek istiyoruz.",
-      intro:
-        "Hastane faturalama ve gelir döngüsü birimleri, provizyon ekipleri ve bu alanda çalışan araştırmacılarla tanışmak istiyoruz. İlk adım 15 dakikalık bir görüşmedir ve bir taahhüt istemez.",
-      modes: [
-        { title: "Tanışma ve demo", body: "15 dakika. Ekibinizin red nedenlerini ve Shield'ın bugünkü durumunu konuşuruz." },
-        { title: "Araştırma iş birliği", body: "Fatura reddi, kural yönetimi ve değerlendirme yöntemi üzerine akademik çalışma." },
-        { title: "Retrospektif pilot", body: "Kapsam ve veri koşulları bağlayıcı olmayan bir Niyet Mektubu (LOI) ile yazılır." },
-      ],
-      cta: "İletişime geçin",
-      legal:
-        "LavieuxLabs henüz şirketleşmedi. Niyet Mektubu (LOI) bağlayıcı değildir ve bir sözleşme yerine geçmez. Bir doğrulama çalışmasında sözleşmeyi hangi tarafın imzalayacağı ve veri işleme koşulları, gerekli taraflar ve yetkili hukuk danışmanlarıyla netleştirilir.",
-      audiencesTitle: "Kimlerle çalışmak istiyoruz",
-      audiences: [
-        "Hastane faturalama ve gelir döngüsü birimleri",
-        "Provizyon ve SGK geri ödeme ekipleri",
-        "Sağlık finansmanı ve faturalama üzerine çalışan araştırmacılar",
-      ],
-      email: "E-posta:",
-      noData: "İlk görüşmede fatura veya hasta verisi paylaşmanız gerekmez.",
-    },
   },
   en: {
     crumbs: { home: "Home", products: "Projects", aria: "Breadcrumb" },
@@ -341,7 +304,6 @@ const copy = defineContent<{
       { id: "kapsam", label: "Rule coverage" },
       { id: "denetim", label: "Traceability and access" },
       { id: "retrospektif", label: "Validation plan" },
-      { id: "is-birligi", label: "Collaboration" },
     ],
     problem: {
       label: "Problem",
@@ -483,28 +445,6 @@ const copy = defineContent<{
       ],
       note: "The first values will be published with the institution's consent once they have been measured on its historical claims.",
     },
-    collab: {
-      label: "Collaboration",
-      title: "We would like to talk with billing teams and researchers.",
-      intro:
-        "We would like to meet hospital billing and revenue cycle units, pre-authorisation teams and researchers working in this area. The first step is a 15-minute call, with no commitment.",
-      modes: [
-        { title: "Intro and demo", body: "15 minutes. We talk about your team's rejection reasons and where Shield stands today." },
-        { title: "Research collaboration", body: "Academic work on claim rejection, rule management and evaluation method." },
-        { title: "Retrospective pilot", body: "Scope and data conditions are written in a non-binding Letter of Intent (LOI)." },
-      ],
-      cta: "Contact us",
-      legal:
-        "LavieuxLabs is not incorporated yet. A Letter of Intent (LOI) is non-binding and does not replace an agreement. For a validation study, which party signs the agreement and the data processing terms are settled with the parties involved and their authorised legal advisers.",
-      audiencesTitle: "Who we would like to work with",
-      audiences: [
-        "Hospital billing and revenue cycle units",
-        "Pre-authorisation and SGK reimbursement teams",
-        "Researchers working on healthcare financing and billing",
-      ],
-      email: "Email:",
-      noData: "You do not need to share claim or patient data in the first conversation.",
-    },
   },
 });
 
@@ -525,7 +465,7 @@ export default function ShieldView({ locale }: { locale: Locale }) {
           <nav aria-label={c.crumbs.aria} className="lg:col-span-12">
             <ol className="flex flex-wrap items-center gap-1 text-[14px] text-ink-3">
               <li>
-                <Link href={href("/")} className={`-my-3 inline-block py-3 ${LINK}`}>
+                <Link href={href("/")} className={`-my-3 inline-block py-3 ${CRUMB_LINK}`}>
                   {c.crumbs.home}
                 </Link>
               </li>
@@ -533,15 +473,17 @@ export default function ShieldView({ locale }: { locale: Locale }) {
                 <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
               </li>
               <li>
-                <Link href={href("/#platformlar")} className={`-my-3 inline-block py-3 ${LINK}`}>
+                <Link href={href("/#platformlar")} className={`-my-3 inline-block py-3 ${CRUMB_LINK}`}>
                   {c.crumbs.products}
                 </Link>
               </li>
               <li aria-hidden="true">
                 <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
               </li>
-              <li aria-current="page" className="text-ink-2" lang="en">
-                Shield
+              <li>
+                <Link href={href("/initiatives/shield")} aria-current="page" lang="en" className={`-my-3 inline-block py-3 text-ink-2 ${CRUMB_LINK}`}>
+                  Shield
+                </Link>
               </li>
             </ol>
           </nav>
@@ -585,7 +527,7 @@ export default function ShieldView({ locale }: { locale: Locale }) {
           <nav aria-label={c.hero.onPage} className="border-t border-rule pt-4 lg:col-span-12 print:hidden">
             <p className="font-serif text-[15px] text-ink-3">{c.hero.onPage}</p>
             <ul className="mt-1 flex flex-wrap gap-x-6">
-              {c.sections.filter((s) => ["mimari", "simulator", "retrospektif", "is-birligi"].includes(s.id)).map((s) => (
+              {c.sections.filter((s) => ["mimari", "simulator", "retrospektif"].includes(s.id)).map((s) => (
                 <li key={s.id}>
                   <a href={`#${s.id}`} className={`inline-flex min-h-11 items-center text-[15px] text-ink-2 hover:text-ink ${LINK}`}>
                     {s.label}
@@ -715,38 +657,6 @@ export default function ShieldView({ locale }: { locale: Locale }) {
         </div>
       </PaperSection>
 
-      {/* Collaboration: three possible paths, one clear contact action. */}
-      <PaperSection id="is-birligi" label={c.collab.label} title={c.collab.title} intro={<p>{c.collab.intro}</p>}>
-        <div className="grid gap-8 md:grid-cols-3">
-          {c.collab.modes.map((mode) => (
-            <div key={mode.title} className="flex flex-col border-t-2 border-ink pt-5">
-              <h3 className="font-serif text-[24px] leading-tight font-medium text-ink">{mode.title}</h3>
-              <p className="mt-3 text-[15px] leading-[1.6] text-ink-2">{mode.body}</p>
-            </div>
-          ))}
-        </div>
-        <Link href={href(contactHref("intro", "shield"))} className={`mt-8 ${BUTTON}`}>
-          {c.collab.cta}
-        </Link>
-        <p className="mt-8 max-w-[70ch] border-l-2 border-ink pl-4 text-[15px] leading-[1.6] text-ink">{c.collab.legal}</p>
-        <div className="mt-10 grid gap-8 border-t border-rule pt-8 md:grid-cols-2 md:gap-12">
-          <div>
-            <h3 className="text-[17px] font-semibold text-ink">{c.collab.audiencesTitle}</h3>
-            <ul className="mt-3 list-disc space-y-2 pl-5 text-[15px] leading-[1.55] text-ink-2 marker:text-ink-3">
-              {c.collab.audiences.map((a) => (
-                <li key={a}>{a}</li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col gap-3">
-            <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink-2">
-              {c.collab.email}
-              <CopyEmail locale={locale} tone="paper" className="min-h-11 text-ink" />
-            </p>
-            <p className="text-[14px] text-ink-3">{c.collab.noData}</p>
-          </div>
-        </div>
-      </PaperSection>
     </main>
   );
 }

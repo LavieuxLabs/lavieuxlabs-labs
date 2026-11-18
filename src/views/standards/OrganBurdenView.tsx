@@ -70,7 +70,7 @@ const copy = defineContent({
     engine: "PharmaDeux bu yükle ne yapar",
     engineBody: [
       `PharmaDeux reçeteyi ${metrics.safetyPlanes} güvenlik düzleminde kontrol eder. Organ toksisitesi ve kümülatif yük başlıklarındaki düzlemler ilaçları tek tek değil, birlikte değerlendirir.`,
-      "Her bulgu tetikleyen kural, değer ve eşikle gösterilir. Eşikler kurumun klinik politikasına göre ayarlanır.",
+      "Her bulgu tetikleyen kural, değer ve eşikle gösterilir. Eşikler ürün bilgisine (KÜB) ve klinik kılavuzlara göre tanımlanır. Kurallar merkezi bir kural seti sürümüyle çalışır; bu sürüm SHA-256 parmak iziyle kilitlenir.",
       "Tasarım hedefi bağlama bakan uyarıdır: aynı organa binen bulguları birlikte göstermek ve uyarı yorgunluğunu azaltmak. Bu hedefin klinik etkisi henüz bir kurumda ölçülmedi.",
       "Son karar hekimindir. Hekim uyarıyı gerekçe yazarak geçerse bu karar denetim izine yazılır.",
     ],
@@ -135,7 +135,7 @@ const copy = defineContent({
     engine: "What PharmaDeux does with this burden",
     engineBody: [
       `PharmaDeux checks an order across ${metrics.safetyPlanes} safety planes. The planes under organ toxicity and cumulative burden assess drugs together, not one at a time.`,
-      "Each finding is shown with the rule, value and threshold that triggered it. Thresholds are configured to the institution's clinical policy.",
+      "Each finding is shown with the rule, value and threshold that triggered it. Thresholds are defined from the product information (SmPC) and clinical guidelines. Rules run under a central rule set version locked by a SHA-256 fingerprint.",
       "The design goal is context-aware alerting: showing findings that load the same organ together and reducing alert fatigue. The clinical effect of this goal has not yet been measured in an institution.",
       "The physician makes the final decision. When the physician overrides an alert with a reason, the decision is written to the audit trail.",
     ],

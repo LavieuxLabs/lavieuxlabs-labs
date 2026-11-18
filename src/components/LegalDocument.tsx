@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import CopyEmail from "@/components/CopyEmail";
-import { LINK } from "@/components/paper/Editorial";
+import { CRUMB_LINK, LINK } from "@/components/paper/Editorial";
 import { DATA_CONTROLLER, LEGAL_UPDATED, navigation, type LegalPath } from "@/lib/site";
 import { defineContent, formatDate, localizedPath, type Locale } from "@/i18n/config";
 
@@ -86,19 +86,25 @@ export default function LegalDocument({ locale, eyebrow, title, summary, facts, 
           <nav aria-label={c.breadcrumb}>
             <ol className="flex flex-wrap items-center gap-1 text-[14px] text-ink-3">
               <li>
-                <Link href={href("/")} className={`-my-3 inline-block py-3 ${LINK}`}>
+                <Link href={href("/")} className={`-my-3 inline-block py-3 ${CRUMB_LINK}`}>
                   {c.home}
                 </Link>
               </li>
               <li aria-hidden="true">
                 <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
               </li>
-              <li>{c.legal}</li>
+              <li>
+                <Link href={href(docs[0].href)} className={`-my-3 inline-block py-3 ${CRUMB_LINK}`}>
+                  {c.legal}
+                </Link>
+              </li>
               <li aria-hidden="true">
                 <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
               </li>
-              <li aria-current="page" className="text-ink-2">
-                {title}
+              <li>
+                <Link href={href(currentHref)} aria-current="page" className={`-my-3 inline-block py-3 text-ink-2 ${CRUMB_LINK}`}>
+                  {title}
+                </Link>
               </li>
             </ol>
           </nav>

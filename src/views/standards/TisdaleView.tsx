@@ -65,7 +65,7 @@ const copy = defineContent({
     high: "Yüksek risk",
     engine: "PharmaDeux bu eşiklerle ne yapar",
     engineBody:
-      "Kural motoru skoru her reçetede yeniden hesaplar ve her puanın hangi faktörden geldiğini gösterir. Aşağıdaki çıktılar örnek kural davranışıdır; kurumun klinik politikasına göre ayarlanır ve son karar hekimindir.",
+      "Kural motoru skoru her reçetede yeniden hesaplar ve her puanın hangi faktörden geldiğini gösterir. Aşağıdaki çıktılar örnek kural davranışıdır. Eşikler yayımlanmış risk skorundan (Tisdale ve ark.) ve klinik kılavuzlardan alınır. Kurallar merkezi bir kural seti sürümüyle çalışır; bu sürüm SHA-256 parmak iziyle kilitlenir. Son karar hekimindir.",
     engineRows: [
       ["≥11", "EKG izlemi ve QT uzatmayan bir alternatif hekimin değerlendirmesine sunulur."],
       ["7–10", "EKG izlemi ve elektrolit kontrolü klinik izlem parametresi olarak sunulur."],
@@ -114,7 +114,7 @@ const copy = defineContent({
     high: "High risk",
     engine: "What PharmaDeux does with these thresholds",
     engineBody:
-      "The rule engine recalculates the score on every order and shows which factor each point comes from. The outputs below show example rule behaviour. They are configured to the institution's clinical policy, and the physician makes the final decision.",
+      "The rule engine recalculates the score on every order and shows which factor each point comes from. The outputs below show example rule behaviour. Thresholds come from the published risk score (Tisdale et al.) and clinical guidelines. Rules run under a central rule set version locked by a SHA-256 fingerprint. The physician makes the final decision.",
     engineRows: [
       ["≥11", "ECG monitoring and a non-QT-prolonging alternative are presented for the physician's assessment."],
       ["7–10", "ECG monitoring and an electrolyte check are presented as clinical monitoring parameters."],

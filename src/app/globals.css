@@ -39,16 +39,20 @@
   --color-titanium: #9e9fa5;
 
   /* Paper surface: neutral paper with ink text and quiet rules. */
-  --color-paper: #f7f7f4;
-  --color-paper-band: #eeefea;
+  --color-paper: #e7e3da;
+  --color-paper-band: #e7e3da;
   --color-ink: #16181c;
   --color-ink-2: #41464f;
   --color-ink-3: #5f6570;
-  --color-rule: #d5d7d3;
+  --color-rule: #d3cec2;
+  /* Raised rows and small chips on paper (selected option, drug chips). */
+  --color-paper-raised: #f2eee6;
+  --color-chip: #ebe0d3;
+  --color-chip-rule: #dbcbb8;
 
   /* Legacy teal/indigo utility names now resolve to the same neutral scale. */
-  --color-teal-50: #f7f7f4;
-  --color-teal-100: #d5d7d3;
+  --color-teal-50: #e7e3da;
+  --color-teal-100: #d3cec2;
   --color-teal-200: #b8bbc0;
   --color-teal-300: #9e9fa5;
   --color-teal-400: #737881;
@@ -59,8 +63,8 @@
   --color-teal-900: #080a0f;
   --color-teal-950: #050609;
 
-  --color-indigo-50: #f7f7f4;
-  --color-indigo-100: #d5d7d3;
+  --color-indigo-50: #e7e3da;
+  --color-indigo-100: #d3cec2;
   --color-indigo-200: #b8bbc0;
   --color-indigo-300: #9e9fa5;
   --color-indigo-400: #737881;
@@ -175,10 +179,10 @@ body {
 
 /* Frosted navigation over the paper surface. Solid when the user asks for reduced transparency. */
 @utility material-paper {
-  background-color: rgb(247 247 244 / 0.86);
+  background-color: rgb(var(--paper-rgb) / 0.86);
   backdrop-filter: blur(16px) saturate(140%);
   @media (prefers-reduced-transparency: reduce) {
-    background-color: rgb(247 247 244);
+    background-color: rgb(var(--paper-rgb));
     backdrop-filter: none;
   }
 }
@@ -190,7 +194,40 @@ body {
  */
 html:has(main.surface-paper) {
   color-scheme: light;
-  --background: #f7f7f4;
+  --background: #e7e3da;
+}
+
+/* Light/dark choice on paper pages. The theme script in <head> sets data-theme before first paint. */
+:root {
+  --paper-rgb: 231 227 218;
+  --paper-ink-rgb: 22 24 28;
+}
+
+html[data-theme="dark"]:has(main.surface-paper) {
+  color-scheme: dark;
+  --background: #1b1916;
+  --paper-rgb: 27 25 22;
+  --paper-ink-rgb: 237 232 221;
+  --color-paper: #1b1916;
+  --color-paper-band: #1b1916;
+  --color-ink: #ede8dd;
+  --color-ink-2: #c9c3b6;
+  --color-ink-3: #a19b8f;
+  --color-rule: #3a362f;
+  --color-paper-raised: #26231f;
+  --color-chip: #2b2722;
+  --color-chip-rule: #3f3a32;
+  --color-teal-50: #1b1916;
+  --color-teal-100: #3a362f;
+  --color-teal-600: #c9c3b6;
+  --color-teal-700: #ede8dd;
+  --color-indigo-50: #1b1916;
+  --color-indigo-100: #3a362f;
+  --color-indigo-600: #c9c3b6;
+  --color-indigo-700: #ede8dd;
+  --color-emerald-700: #5cc28a;
+  --color-rose-700: #f28ba0;
+  --color-amber-700: #e3b15c;
 }
 
 /* The skip link moves focus to <main> (tabindex -1); the whole page needs no focus outline. */
@@ -200,7 +237,7 @@ main[tabindex="-1"]:focus {
 
 /* Paper pages select in ink, not in white (white selection disappears on paper). */
 .surface-paper ::selection {
-  background: rgb(22 24 28 / 0.16);
+  background: rgb(var(--paper-ink-rgb) / 0.16);
   color: inherit;
 }
 

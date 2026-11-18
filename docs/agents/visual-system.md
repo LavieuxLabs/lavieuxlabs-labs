@@ -43,10 +43,10 @@ CLAUDE.md'den taşındı; metin değiştirilmedi. Renk, token, logo, ikon, kart,
 
 | Rol | Token | Değer |
 | --- | --- | --- |
-| Kağıt zemini (ana sayfa, PharmaDeux, Shield, İletişim, Hakkımızda, Standartlar ve referans sayfaları, yasal sayfalar) | `paper` | `#F7F7F4` |
-| Kağıt bölüm bandı | `paper-band` | `#EEEFEA` |
+| Kağıt zemini (ana sayfa, PharmaDeux, Shield, İletişim, Hakkımızda, Standartlar ve referans sayfaları, yasal sayfalar) | `paper` | `#E7E3DA` |
+| Kağıt bölüm bandı | `paper-band` | `#E7E3DA` |
 | Mürekkep: başlık ve gövde / ikincil / üçüncül metin (kağıt) | `ink` / `ink-2` / `ink-3` | `#16181C` / `#41464F` / `#5F6570` |
-| Kağıt saç çizgisi | `rule` | `#D5D7D3` |
+| Kağıt saç çizgisi | `rule` | `#D3CEC2` |
 | Ürün adı kağıtta (PharmaDeux / Shield) | `teal-700` / `indigo-700` | `#6E171E` / `#765212` |
 | Optik odak (yalnızca `bg-optic`) | — | `#0E1016` |
 | Base zemin (grafit obsidyen) | `navy-900` | `#080A0F` |

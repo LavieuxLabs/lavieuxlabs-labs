@@ -226,7 +226,7 @@ const skins = {
     optional: "text-[13px] font-normal text-ink-3",
     error: "text-[14px] text-rose-700",
     hint: "text-[14px] text-ink-3",
-    input: `${FIELD_SCROLL} w-full rounded-md border bg-white px-3.5 py-3 text-[16px] text-ink placeholder:text-ink-3 outline-none transition-colors duration-150 ease-out focus:border-ink focus:ring-2 focus:ring-ink/25`,
+    input: `${FIELD_SCROLL} w-full rounded-md border bg-paper px-3.5 py-3 text-[16px] text-ink placeholder:text-ink-3 outline-none transition-colors duration-150 ease-out focus:border-ink focus:ring-2 focus:ring-ink/25`,
     border: "border-ink-3",
     borderError: "border-rose-700",
     select: "",
@@ -239,7 +239,7 @@ const skins = {
     consentBox: `${FIELD_SCROLL} mt-1 h-[18px] w-[18px] shrink-0 cursor-pointer accent-ink`,
     consentLink: LINK,
     consentError: "pl-[30px]",
-    alert: "border border-rose-700/60 bg-white px-4 py-3 text-[15px] leading-[1.6] text-ink",
+    alert: "border border-rose-700/60 bg-paper px-4 py-3 text-[15px] leading-[1.6] text-ink",
     alertEmail: "text-ink",
     submitRow: "border-t border-rule pt-6",
     submitNote: "text-[14px] leading-[1.6] text-ink-3",
@@ -552,7 +552,7 @@ export default function ContactForm({ locale, path, product, onProductChange, to
                     return paper ? (
                       <label
                         key={value}
-                        className={`flex min-h-11 cursor-pointer items-start gap-3 rounded-md border bg-white p-3.5 transition-colors duration-150 ease-out has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink ${
+                        className={`flex min-h-11 cursor-pointer items-start gap-3 rounded-md border bg-paper p-3.5 transition-colors duration-150 ease-out has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink ${
                           checked ? "border-ink ring-1 ring-ink ring-inset" : "border-rule hover:border-ink-3"
                         }`}
                       >
