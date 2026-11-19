@@ -74,8 +74,7 @@ const copy = defineContent({
     tisdaleFactors: ["Yaş ≥68", "Kadın", "Loop diüretik", "QTc ≥450 ms", "QT uzatan ilaç", "≥2 QT uzatan ilaç"],
     tabletText: "Amiodaron 200 mg tablet",
     related: [
-      { href: "/initiatives/pharmadeux#entegrasyon", label: "Entegrasyon matrisi" },
-      { href: "/initiatives/pharmadeux#fhir-onizleme", label: "Örnek FHIR R4 yükü (kurgusal veri)" },
+      { href: "/initiatives/pharmadeux", label: "PharmaDeux CDSS" },
       { href: "/standartlar/tisdale-score", label: "Tisdale skoru" },
     ],
   },
@@ -123,8 +122,7 @@ const copy = defineContent({
     tisdaleFactors: ["Age ≥68", "Female", "Loop diuretic", "QTc ≥450 ms", "QT-prolonging drug", "≥2 QT-prolonging drugs"],
     tabletText: "Amiodarone 200 mg tablet",
     related: [
-      { href: "/initiatives/pharmadeux#entegrasyon", label: "Integration matrix" },
-      { href: "/initiatives/pharmadeux#fhir-onizleme", label: "Example FHIR R4 payload (fictional data)" },
+      { href: "/initiatives/pharmadeux", label: "PharmaDeux CDSS" },
       { href: "/standartlar/tisdale-score", label: "Tisdale score" },
     ],
   },

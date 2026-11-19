@@ -83,7 +83,7 @@ export default function CommandPalette({ locale, tone = "dark" }: { locale: Loca
     const pages: Item[] = [
       { id: "home", group: "pages", label: t.pages.home, hint: "/", href: "/" },
       { id: "pharmadeux", group: "pages", label: t.pages.pharmadeux, hint: "/initiatives/pharmadeux", href: "/initiatives/pharmadeux" },
-      { id: "shield", group: "pages", label: t.pages.shield, hint: "/initiatives/shield#konsol", href: "/initiatives/shield#konsol" },
+      { id: "shield", group: "pages", label: t.pages.shield, hint: "/initiatives/shield", href: "/initiatives/shield" },
       { id: "qt-sim", group: "pages", label: t.pages.qtSim, hint: "/initiatives/pharmadeux#simulator", href: "/initiatives/pharmadeux#simulator" },
       { id: "claim-sim", group: "pages", label: t.pages.claimSim, hint: "/initiatives/shield#simulator", href: "/initiatives/shield#simulator" },
       { id: "focus", group: "pages", label: t.pages.focus, hint: "/about#odaklar", href: "/about#odaklar" },

@@ -12,6 +12,8 @@ import { trlLabel } from "@/lib/metrics";
 
 const linkClass = "text-[13px] text-white/60 transition-colors duration-150 ease-out hover:text-white";
 const labelClass = "text-[11px] font-medium tracking-wider text-white/55 uppercase";
+// Column headings link to the page the column belongs to; same type as the label, brighter on hover.
+const headingLinkClass = `${labelClass} rounded-sm transition-colors duration-150 ease-out hover:text-white focus-visible:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60`;
 // Both plates share one construction: hairline frame, 1px gaps as rules, deep cells.
 const plateClass = "grid gap-px overflow-hidden rounded-xl border border-hairline bg-hairline";
 const cellClass = "bg-navy-950 px-4 py-4";
@@ -104,7 +106,11 @@ export default function Footer({ locale }: { locale: Locale }) {
         <div className={`mt-8 grid-cols-2 lg:grid-cols-4 ${plateClass}`}>
           {nav.footerColumns.map((col) => (
             <nav key={col.title} aria-label={col.title} className={cellClass}>
-              <h2 className={labelClass}>{col.title}</h2>
+              <h2>
+                <Link href={href(col.href)} className={headingLinkClass}>
+                  {col.title}
+                </Link>
+              </h2>
               <ul className="mt-3 space-y-2">
                 {col.links.map((l) => (
                   <li key={l.href}>
@@ -117,7 +123,12 @@ export default function Footer({ locale }: { locale: Locale }) {
             </nav>
           ))}
           <nav aria-label={c.legal} className={cellClass}>
-            <h2 className={labelClass}>{c.legal}</h2>
+            {/* There is no /legal index page; the heading opens the first legal document. */}
+            <h2>
+              <Link href={href("/legal/privacy")} className={headingLinkClass}>
+                {c.legal}
+              </Link>
+            </h2>
             <ul className="mt-3 space-y-2">
               {nav.legal.map((l) => (
                 <li key={l.href}>
