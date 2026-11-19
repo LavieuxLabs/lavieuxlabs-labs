@@ -111,10 +111,8 @@ const copy = defineContent({
     ],
     try: "Kuralları örnek bir faturada denemek için",
     trySim: "fatura simülatörü",
-    tryConsole: "inceleme konsolu",
     related: [
       { href: "/initiatives/shield#simulator", label: "Fatura simülatörü" },
-      { href: "/initiatives/shield#konsol", label: "İnceleme konsolu" },
       { href: "/standartlar/fhir-r4-entegrasyonu", label: "FHIR R4 entegrasyonu" },
     ],
   },
@@ -199,10 +197,8 @@ const copy = defineContent({
     ],
     try: "To try the rules on an example claim, open the",
     trySim: "claim simulator",
-    tryConsole: "review console",
     related: [
       { href: "/initiatives/shield#simulator", label: "Claim simulator" },
-      { href: "/initiatives/shield#konsol", label: "Review console" },
       { href: "/standartlar/fhir-r4-entegrasyonu", label: "FHIR R4 integration" },
     ],
   },
@@ -323,9 +319,7 @@ export default function SutAuditView({ locale }: { locale: Locale }) {
       </ToolPanel>
       <p>
         {c.try} <Link href={localizedPath(locale, "/initiatives/shield#simulator")}>{c.trySim}</Link>
-        {locale === "tr" ? "nü veya " : " or the "}
-        <Link href={localizedPath(locale, "/initiatives/shield#konsol")}>{c.tryConsole}</Link>
-        {locale === "tr" ? "nu açın." : "."}
+        {locale === "tr" ? "nü açın." : "."}
       </p>
 
       <h2 id="guvenlik" className="mt-12">{c.security}</h2>

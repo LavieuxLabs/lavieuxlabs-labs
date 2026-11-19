@@ -32,12 +32,12 @@ export const LEGAL_LAST_UPDATED: string = Object.values(LEGAL_UPDATED).sort().re
 // the page's text. Rendered as "Son güncelleme" and used as the JSON-LD dateModified. This is not the PharmaDeux metrics
 // date (metrics.lastUpdated), which tracks product progress. Update a page's date whenever its text changes.
 export const STANDARDS_UPDATED = {
-  "/standartlar": "2026-10-24",
+  "/standartlar": "2026-11-19",
   "/standartlar/tisdale-score": "2026-11-18",
   "/standartlar/ckd-epi-2021": "2026-11-18",
   "/standartlar/kumulatif-organ-yuku": "2026-11-18",
-  "/standartlar/fhir-r4-entegrasyonu": "2026-10-24",
-  "/standartlar/sut-fatura-denetimi": "2026-10-24",
+  "/standartlar/fhir-r4-entegrasyonu": "2026-11-19",
+  "/standartlar/sut-fatura-denetimi": "2026-11-19",
 } as const;
 export type StandardPath = keyof typeof STANDARDS_UPDATED;
 
@@ -47,11 +47,11 @@ export const PILOT_PROTOCOL_REVISION = "2026-10-24";
 // Last content change of every page (sitemap lastModified), ISO 8601. Standards and legal pages read their own
 // sources above; the other pages carry the date of the last commit that changed their text.
 export const PAGE_UPDATED: Record<RoutePath, string> = {
-  "/": "2026-10-24",
-  "/initiatives/pharmadeux": "2026-11-17",
-  "/initiatives/shield": "2026-10-24",
-  "/about": "2026-10-24",
-  "/contact": "2026-10-24",
+  "/": "2026-11-19",
+  "/initiatives/pharmadeux": "2026-11-19",
+  "/initiatives/shield": "2026-11-19",
+  "/about": "2026-11-19",
+  "/contact": "2026-11-19",
   ...STANDARDS_UPDATED,
   ...LEGAL_UPDATED,
 };
@@ -156,6 +156,7 @@ export const navigation = defineContent({
     footerColumns: [
       {
         title: "Projeler",
+        href: "/#platformlar",
         links: [
           { href: "/initiatives/pharmadeux", label: "PharmaDeux CDSS" },
           { href: "/initiatives/shield", label: "Shield" },
@@ -164,6 +165,7 @@ export const navigation = defineContent({
       },
       {
         title: "Kurumsal",
+        href: "/about",
         links: [
           { href: "/about", label: "Hakkımızda" },
           { href: "/contact", label: "İletişim" },
@@ -172,6 +174,7 @@ export const navigation = defineContent({
       },
       {
         title: "Standartlar",
+        href: "/standartlar",
         links: [
           { href: "/standartlar", label: "Standartlar ve referanslar" },
           { href: "/standartlar/sut-fatura-denetimi", label: "SUT fatura denetimi" },
@@ -179,7 +182,7 @@ export const navigation = defineContent({
           { href: "/legal/quality", label: "Kalite ve MDR" },
         ],
       },
-    ] as { title: string; links: NavLink[] }[],
+    ] as { title: string; href: string; links: NavLink[] }[],
   },
   en: {
     products: [
@@ -216,6 +219,7 @@ export const navigation = defineContent({
     footerColumns: [
       {
         title: "Projects",
+        href: "/#platformlar",
         links: [
           { href: "/initiatives/pharmadeux", label: "PharmaDeux CDSS" },
           { href: "/initiatives/shield", label: "Shield" },
@@ -224,6 +228,7 @@ export const navigation = defineContent({
       },
       {
         title: "Organisation",
+        href: "/about",
         links: [
           { href: "/about", label: "About" },
           { href: "/contact", label: "Contact" },
@@ -232,6 +237,7 @@ export const navigation = defineContent({
       },
       {
         title: "Standards",
+        href: "/standartlar",
         links: [
           { href: "/standartlar", label: "Standards and references" },
           { href: "/standartlar/sut-fatura-denetimi", label: "SUT billing audit" },

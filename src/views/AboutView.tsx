@@ -74,7 +74,7 @@ const copy = defineContent<{
         {
           title: "Doğrulama",
           body: "Klinik doğrulama henüz yapılmadı. Plan, önce geçmiş vakalarda retrospektif test, sonra gölge modda pilot. Her çalışmadan önce kurumun etik kurul onayı, verinin kurum içinde anonimleştirilmesi ve Veri İşleme Sözleşmesi (DPA) gerekir.",
-          link: { label: "PharmaDeux doğrulama planı", href: "/initiatives/pharmadeux#protokol" },
+          link: { label: "PharmaDeux doğrulama planı", href: "/initiatives/pharmadeux#dogrulama" },
         },
       ],
       whyRules: "Neden kural tabanlı",
@@ -204,7 +204,7 @@ const copy = defineContent<{
         {
           title: "Validation",
           body: "Clinical validation has not been done yet. The plan is a retrospective test on past cases first, then a pilot in shadow mode. Every study needs the institution's ethics committee approval, anonymisation within the institution and a Data Processing Agreement (DPA) first.",
-          link: { label: "PharmaDeux validation plan", href: "/initiatives/pharmadeux#protokol" },
+          link: { label: "PharmaDeux validation plan", href: "/initiatives/pharmadeux#dogrulama" },
         },
       ],
       whyRules: "Why rule-based",

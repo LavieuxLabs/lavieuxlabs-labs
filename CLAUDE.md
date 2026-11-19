@@ -40,10 +40,10 @@ Ayrıntılı uygulama rehberi ve inceleme kontrol listesi: `.claude/skills/desig
 Kağıt yüzeyi kuralları:
   * Yazı tipi rolleri: Newsreader sayfa başlığı (h1), bölüm başlıkları, proje ve kişi adları, adım numaraları; IBM Plex Sans bütün akan metin, etiket ve tablolar; IBM Plex Mono yalnızca veri olan sayılar. Bölüm etiketi büyük harfli eyebrow değildir: sol sütunda küçük Newsreader (`text-ink-3`). Büyük harfli etiket, orta noktalı meta dizisi, bağlantı sonuna ok ve küçük etiketlerde mono kullanılmaz.
   * Renk: kağıt üzerinde mürekkep. Ürün aksanı yalnızca ürünün kendi adında ve aksan skalasının koyu adımındadır (PharmaDeux `teal-700`, Shield `indigo-700`). Şekillerdeki veri mürekkeptir; renk yalnızca klinik veya inceleme durumu taşıyan değerde kullanılır (`rose-700` yüksek risk, `amber-700` dikkat ve uzman incelemesi, `emerald-700` düşük risk).
-  * Yerleşim: 12 sütunlu editoryal ızgara (bölüm etiketi 3, içerik 9 sütun). Her bölümün iç düzeni içeriğine göre değişir; aynı kart kalıbı tekrar edilmez. Çerçeveli yüzey yalnızca şekil içindir (`Figure`: beyaz zemin, `rule` çerçeve, altyazı).
+  * Yerleşim: 12 sütunlu editoryal ızgara (bölüm etiketi 3, içerik 9 sütun). Her bölümün iç düzeni içeriğine göre değişir; aynı kart kalıbı tekrar edilmez. Çerçeveli yüzey yalnızca şekil içindir (`Figure`: kağıt zemin `bg-paper`, `rule` çerçeve, altyazı).
   * Şekiller (`src/components/home/HomeFigures.tsx`) gerçek bir modeli çizer: ikili kombinasyon formülü, `CLINICAL_CASES`, PharmaDeux düzlem listesi (`safetyPlaneGroups`), Shield örnek kural seti (`src/lib/claimRules.ts`), kanıt merdiveni. Bir modele dayanmayan şekil eklenmez; örnek veri altyazıda "kurgusal" diye yazılır.
   * Hareket yoktur: sayfa ilk yüklemede tamamdır; giriş animasyonu, ortam ışığı ve grain dekoru kullanılmaz.
-  * Hero, ne geliştirdiğimizi söyleyen başlık ile kim olduğumuzu ve aşamayı (THS, klinik kanıt, düzenleyici durum) veren "Kısaca" özetinden oluşur.
+  * Hero, ne geliştirdiğimizi söyleyen başlık ile kim olduğumuzu ve aşamayı düz metinle veren kısa açıklamadan oluşur (prototip, gerçek ortamda doğrulanmadı). Ayrı "Kısaca" kutusu yalnızca Shield sayfasında kalır (sahiplik ve aşama). THS ve CE durumu footer künyesinde yazılıdır.
 
 #### İki yüzeyde de geçerli tipografi ve renk
 
@@ -53,12 +53,12 @@ Kağıt yüzeyi kuralları:
 - Tek ekranda tek sakin aksan rengi kuralı uygulanır.
 - Kırmızı (`rose`), turuncu (`amber`) ve yeşil (`emerald`) yalnızca klinik şiddet ve risk durumları için ayrılmıştır (Shield red riski, PharmaDeux toksisite uyarısı); logo, link, aktif sekme gibi marka aksanı veya süs olarak kullanılmaz.
 - Ürün aksanı bir alarm rengine benzememelidir. `amber` skalası asla hardala yeniden eşlenmez.
-- Aşama ve düzenleyici durum ana sayfada "Kısaca" özetinde düz metinle yazılır; "ACTIVE", "LIVE", "canlı" gibi sahada çalışma izlenimi veren ifadeler hiçbir yerde yazılmaz.
+- Aşama ana sayfa hero metninde, düzenleyici durum (THS, CE işareti yok) footer künyesinde düz metinle yazılır; "ACTIVE", "LIVE", "canlı" gibi sahada çalışma izlenimi veren ifadeler hiçbir yerde yazılmaz.
 
 #### Shield ve ekip (sayfa kurallarından)
 
 - Skor her yerde "kural skoru"dur; SGK ret olasılığı, finansal kayıp veya tasarruf tahmini olarak sunulmaz.
-- Ekip tek kaynaktır: `TEAM` ve `teamCopy` (`src/lib/team.ts`); ana sayfa ekip bölümü, Hakkımızda ve JSON-LD buradan okur, isim, rol veya profil bağlantısı başka yerde kopyalanmaz. Ekip PharmaDeux üzerinde çalışır; Shield ekip üyelerine atfedilmez.
+- Ekip tek kaynaktır: `TEAM` ve `teamCopy` (`src/lib/team.ts`); Hakkımızda ekip bölümü ve JSON-LD buradan okur, isim, rol veya profil bağlantısı başka yerde kopyalanmaz. Ekip PharmaDeux üzerinde çalışır; Shield ekip üyelerine atfedilmez.
 
 #### Doğruluk ve hukuki sınırlar
 

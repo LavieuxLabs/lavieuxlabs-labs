@@ -31,7 +31,7 @@ export const metadata = defineMetadata("/initiatives/shield", {
  * with prototype behaviour kept apart from design goals (the review console opens on demand); the
  * retrospective validation plan; and ways to talk. Shield is presented as a hospital-billing prototype,
  * presented on this site; it is not a LavieuxLabs team product. Section ids are linked from elsewhere and
- * kept: #problem, #mimari, #simulator, #kapsam, #denetim, #izolasyon, #konsol, #retrospektif .
+ * rendered: #mimari, #simulator, #retrospektif.
  */
 
 /** "shown": works in the browser prototype on fictional data. "goal": defined in the design, not built. */

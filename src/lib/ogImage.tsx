@@ -48,12 +48,12 @@ const SURFACES = {
     mark: MARK_COLOR,
   },
   paper: {
-    background: "#F7F7F4",
+    background: "#E7E3DA",
     // Flat paper. Satori rejects `backgroundImage: "none"`, so the property is left out entirely.
     backgroundImage: undefined,
     text: "#16181C",
     muted: "#5F6570",
-    rule: "#D5D7D3",
+    rule: "#D3CEC2",
     mark: "#16181C",
   },
 } as const;

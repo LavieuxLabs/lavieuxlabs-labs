@@ -86,6 +86,10 @@
   --color-emerald-800: #255a42;
   --color-emerald-900: #1f4a37;
   --color-emerald-950: #0f2a1e;
+
+  /* Clinical caution on paper. Tailwind's amber-700 is 3.9:1 on #E7E3DA; this is 5.1:1 (WCAG AA).
+     The dark paper theme overrides it below. */
+  --color-amber-700: #9e4200;
 }
 
 /* Product hero washes are deliberately neutral. */
